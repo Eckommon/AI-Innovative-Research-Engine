@@ -1,10 +1,10 @@
 # Project Status / 프로젝트 상태
 
 **Project / 프로젝트:** AI-Innovative-Research-Engine / AI 기반 혁신 탐색 연구 엔진  
-**Baseline / 베이스라인:** `v0.4-reproducibility-lineage`  
+**Baseline / 베이스라인:** `v0.5-track-aligned-experiment`  
 **Date / 기준일:** 2026-08-22  
-**State / 상태:** `RAW_ALIGNMENT_FEASIBILITY_ACTIVE`  
-**Active Work Queue / 활성 작업 큐:** Issue #11 `AMBENCH-F02`
+**State / 상태:** `RAW_TRACK_CONTROLLED_EXPERIMENT_ACTIVE`  
+**Active Work Queue / 활성 작업 큐:** Issue #13 `AMBENCH-E03`
 
 ## 1. Completed / 완료
 
@@ -23,49 +23,51 @@
 - Issue #7 `EU-IEE-F02` — `COMPLETED`, `PASS_SECTOR_AGGREGATE / HOLD_FACILITY_DENOMINATOR`.
 - Issue #8 `EU-STEEL-R01` — `COMPLETED`, `HOLD / INCONCLUSIVE_LEGACY_VERSION_DIVERGENCE`.
 - Issue #10 `METHOD-001` — `COMPLETED`, snapshot recoverability promoted into source qualification.
+- Issue #11 `AMBENCH-F02` — **`COMPLETED — PASS`**, exact 21-track/repeat alignment with nested optical outcomes.
 
-## 2. Active — Issue #11 / 활성 — Issue #11
+## 2. Issue #11 Durable Result / Issue #11 지속 결과
 
-### `AMBENCH-F02 — Raw Snapshot & Replicate Alignment Feasibility / AM Bench raw snapshot·반복 정렬 검증`
+`AMBENCH-F02` passed its frozen feasibility gate using official NIST raw-source semantics and versioned PDR evidence. / 공식 NIST raw-source 의미·version PDR 증거로 고정 feasibility gate를 통과했다.
 
-**Objective / 목적:** freeze exact NIST PDR snapshots for AMB2022-03 thermography `mds2-2716` and optical microscopy `mds2-2718`, then determine the highest authoritative alignment resolution between thermography track/repeat identities and optical specimen/cross-section outcomes without speculative pairing. / exact snapshot을 고정하고 추정 없이 가능한 최고 정렬 해상도를 판정한다.
+- thermography `/ThermalData/Line_X_Y_Z/`: `Z` = one of three repeats per line / line별 3회 반복.
+- optical naming/workbook preserves matching case + track number / optical naming·workbook이 동일 case+track 번호 보존.
+- 21 single tracks = seven process cases × three repeats / 7조건×3반복.
+- each exact track has two optical cross-section measurements; they are nested spatial outcomes, not extra thermography repeats / track당 두 단면은 nested outcome.
+- optical XLSX SHA-256 = `2cfaac96aaca3dabb77b7029f842cdcc7e75c5a2cf3577d0734823246364a931`, exact downloaded/sidecar/PDR three-way match.
+- thermography HDF5 official SHA-256 = `f6fe21ec911707f72e7efda2932c77eae2b75d84765848878fe5beb6b728cd43`.
+- source `reproduction_risk = LOW`.
 
-### Why selected / 선정 이유
-- `AMBENCH-001` left `replicate_alignment` as its principal unresolved uncertainty.
-- Wave 1 synthesis ranks `C-US-004 Registered Manufacturing Quality` as the benchmark-grade next candidate after the KR grid HOLD path.
-- This is the second empirical calibration of the new snapshot/version-lineage gate after `EU-STEEL-R01`.
+Detailed: `research/AMBENCH-F02/README.md`; `CLM-014..015`; `DEC-011`; Run `32535986814`.
 
-### Frozen sources / 고정 소스
-- NIST PDR `mds2-2716` — thermography / 열화상
-- NIST PDR `mds2-2718` — optical microscopy / 광학현미경
-- official AMB2022-03 benchmark/challenge documentation for experiment semantics only / 실험 의미 해석용 공식 문서
+## 3. Active — Issue #13 / 활성 — Issue #13
 
-### Frozen gate / 고정 게이트
-- `PASS`: authoritative track/repeat-level mapping to optical target identities.
-- `PARTIAL`: exact snapshots + authoritative case-level mapping, but no defensible repeat-level one-to-one pairing; downstream work restricted to validated aggregation level.
-- `HOLD`: snapshot/identifier semantics unavailable or speculative pairing required.
+### `AMBENCH-E03 — Track-level Thermography → Melt-Pool Geometry Controlled Experiment`
 
-No post-hoc relaxation after raw inspection. / raw 검사 후 게이트 완화 금지.
+**Objective / 목적:** test whether thermography adds material predictive value beyond process parameters for track-level melt-pool depth/width using the exact 21-track alignment. / exact 21-track 정렬에서 thermography가 process parameter 대비 depth/width 예측 추가가치를 주는지 검증.
 
-## 3. Issue #8 Durable Result / Issue #8 지속 결과
+### Preregistered design / 사전등록 설계
+- canonical `n = 21` physical tracks; optical cross-sections do not inflate sample count / 표준 표본수 21.
+- target = per-track mean depth/width; cross-section spread retained as uncertainty / track 평균 depth/width.
+- validation = seven-fold leave-one-process-case-out; all three repeats of held-out case excluded from training / process-case LOCO.
+- models = low-capacity `PROCESS_ONLY`, `THERMO_ONLY`, `PROCESS_PLUS_THERMO` / 저용량 3모델군.
+- primary metric = LOCO RMSE for depth and width / 주 지표 RMSE.
+- material gate = ≥10% RMSE reduction on ≥1 target with no >10% degradation on the other / 기존 AMBENCH-001 기준 계승.
+- no CNN/transformer or post-hoc capacity escalation / 고용량·사후 용량확대 금지.
 
-`EU-STEEL-R01` remains `HOLD / INCONCLUSIVE_LEGACY_VERSION_DIVERGENCE`:
-- EEA frozen Hg numerator V3: 2008 `4,312.9 kg`, 2017 `3,327.1 kg`.
-- current EEA figure CSV: `35.0 → 20.5 g/kt = -41.4286%`, conflicting with 2019 narrative `-36%`; cause `UNKNOWN`.
-- exact historical `DS-066342` 2017 denominator unavailable through tested current official dissemination paths.
-- current replacement data and `null→0` assumptions are not used to force agreement.
+Detailed preregistration: `research/AMBENCH-E03/README.md`; Issue #13.
 
-Detailed: `research/EU-STEEL-R01/REPRODUCTION_RESULT.md`.
+## 4. Current Execution / 현재 실행
 
-## 4. Active Next Actions / 활성 다음 행동
+PR #14 is an execution-only trigger for **structural inspection before feature freezing**. / PR #14는 feature 고정 전 구조검사 전용이다.
 
-1. machine-inspect PDR landing/version metadata for `mds2-2716` and `mds2-2718`;
-2. retrieve README/update history and distribution manifests;
-3. hash accessible metadata/manifests and record snapshot lineage;
-4. inspect case/track/repeat/sample naming conventions;
-5. build explicit alignment matrix;
-6. apply Issue #11 PASS/PARTIAL/HOLD gate;
-7. only after gate completion decide whether any raw-level controlled ML experiment is justified.
+Run scope only: / 범위
+1. download exact NIST `mds2-2716` PDR v1.3.1 thermography HDF5 (~550 MB);
+2. verify SHA-256 against frozen NIST checksum;
+3. enumerate exactly 21 `Line_*` groups;
+4. record Signal shapes/dtypes/chunks/compression and source attributes;
+5. use **no optical outcomes and no model fitting**.
+
+After structural evidence, freeze a compact outcome-blind thermography feature manifest before any prediction result is computed. / 구조근거 확인 후 예측결과 계산 전 outcome-blind thermal feature manifest를 고정한다.
 
 ## 5. Persistent Holds / 지속 HOLD
 - KPX localized bus mapping — `HOLD`.
