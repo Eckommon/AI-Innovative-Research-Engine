@@ -3,8 +3,8 @@
 **Project / 프로젝트:** AI-Innovative-Research-Engine / AI 기반 혁신 탐색 연구 엔진  
 **Baseline / 베이스라인:** `v0.4-reproducibility-lineage`  
 **Date / 기준일:** 2026-08-22  
-**State / 상태:** `READY_FOR_NEXT_CANDIDATE`  
-**Active Work Queue / 활성 작업 큐:** none after Issue #10 methodology promotion / Issue #10 방법론 승격 완료 후 다음 후보 선정 대기
+**State / 상태:** `RAW_ALIGNMENT_FEASIBILITY_ACTIVE`  
+**Active Work Queue / 활성 작업 큐:** Issue #11 `AMBENCH-F02`
 
 ## 1. Completed / 완료
 
@@ -13,79 +13,64 @@
 - `LANG-001` bilingual policy mandatory / 한·영 병기 의무.
 - eight-stage innovation-discovery methodology + Dataset/Combination/Project IPS / 8단계 방법론·IPS 3종.
 - Obsidian MOC/tag knowledge layer and durable GitHub memory active / Obsidian 지식레이어·지속 메모리 활성.
-- `READ-001 / FACT-001 / UNKNOWN-001 / CONFLICT-001 / FRESH-001 / MEMORY-001 / WRITEBACK-001` mandatory / 환각·드리프트 방지 규약 의무.
-- normalized metadata schema promoted to **v0.3**, adding snapshot/version lineage and reproduction-risk gates / snapshot·버전 계보·재현위험 게이트 추가.
+- hallucination/drift controls `READ-001 / FACT-001 / UNKNOWN-001 / CONFLICT-001 / FRESH-001 / MEMORY-001 / WRITEBACK-001` mandatory.
+- normalized metadata schema **v0.3** includes snapshot/version lineage and `reproduction_risk` gate.
 
 ### Research / 연구
 - Issues #1–#4 Wave 0/1 initial queue — `COMPLETED`.
-- Issue #5 `KR-GRID-F01` — `COMPLETED`, research outcome `HOLD`.
+- Issue #5 `KR-GRID-F01` — `COMPLETED`, `HOLD`.
 - Issue #6 `EU-IEE-E01` — `COMPLETED`, empirical `VALIDATED`, novelty `LOW / NOT NOVEL`.
 - Issue #7 `EU-IEE-F02` — `COMPLETED`, `PASS_SECTOR_AGGREGATE / HOLD_FACILITY_DENOMINATOR`.
-- Issue #8 `EU-STEEL-R01` — `COMPLETED`, **`HOLD / INCONCLUSIVE_LEGACY_VERSION_DIVERGENCE`**.
-- Issue #10 `METHOD-001` — methodology hardening from #8; snapshot recoverability promoted to source qualification / #8 교훈을 source qualification으로 승격.
+- Issue #8 `EU-STEEL-R01` — `COMPLETED`, `HOLD / INCONCLUSIVE_LEGACY_VERSION_DIVERGENCE`.
+- Issue #10 `METHOD-001` — `COMPLETED`, snapshot recoverability promoted into source qualification.
 
-## 2. Issue #8 Final Result / Issue #8 최종 결과
+## 2. Active — Issue #11 / 활성 — Issue #11
 
-### `EU-STEEL-R01 — Independent Reproduction of Steel Mercury Intensity / 철강 수은집약도 독립 재현`
+### `AMBENCH-F02 — Raw Snapshot & Replicate Alignment Feasibility / AM Bench raw snapshot·반복 정렬 검증`
 
-**Frozen gate outcome / 고정 게이트:** `HOLD / INCONCLUSIVE_LEGACY_VERSION_DIVERGENCE`
+**Objective / 목적:** freeze exact NIST PDR snapshots for AMB2022-03 thermography `mds2-2716` and optical microscopy `mds2-2718`, then determine the highest authoritative alignment resolution between thermography track/repeat identities and optical specimen/cross-section outcomes without speculative pairing. / exact snapshot을 고정하고 추정 없이 가능한 최고 정렬 해상도를 판정한다.
 
-### V3 reproduced / V3 재현
-- official EEA `F1_3` Hg: **2008 = 4,312.9 kg; 2017 = 3,327.1 kg**.
-- official facility-level `F1_4` gives exactly the same frozen-filter totals / facility-level 합계도 정확히 일치.
-- historical PRODCOM archive schema and six target T-codes reproduced; 2008 unit = `kg` / historical archive schema·T-code·단위 재현.
-- current `DS-059359` dimensions/reporters/indicators/T-codes reproduced / 현행 API 구조 재현.
+### Why selected / 선정 이유
+- `AMBENCH-001` left `replicate_alignment` as its principal unresolved uncertainty.
+- Wave 1 synthesis ranks `C-US-004 Registered Manufacturing Quality` as the benchmark-grade next candidate after the KR grid HOLD path.
+- This is the second empirical calibration of the new snapshot/version-lineage gate after `EU-STEEL-R01`.
 
-### Primary-source conflict / 1차 출처 충돌
-Current EEA figure CSV distributes: / 현행 EEA figure CSV:
-- 2008 = `35.0 g/kt`
-- 2017 = `20.5 g/kt`
-- direct change = **`-41.4286%`**
+### Frozen sources / 고정 소스
+- NIST PDR `mds2-2716` — thermography / 열화상
+- NIST PDR `mds2-2718` — optical microscopy / 광학현미경
+- official AMB2022-03 benchmark/challenge documentation for experiment semantics only / 실험 의미 해석용 공식 문서
 
-The 2019 EEA briefing narrative states **`-36%`**. Cause remains `UNKNOWN`; do not infer revision/rounding without evidence. / 2019 본문 -36%와 충돌하며 원인은 근거 없이 추정하지 않는다.
+### Frozen gate / 고정 게이트
+- `PASS`: authoritative track/repeat-level mapping to optical target identities.
+- `PARTIAL`: exact snapshots + authoritative case-level mapping, but no defensible repeat-level one-to-one pairing; downstream work restricted to validated aggregation level.
+- `HOLD`: snapshot/identifier semantics unavailable or speculative pairing required.
 
-### Legacy denominator boundary / legacy 분모 경계
-- EEA historical denominator source `DS-066342` is discontinued.
-- tested current Eurostat COMEXT Statistics API, regular Statistics API and SDMX dataflow return `404 / not available for dissemination`.
-- surviving EUROPROMS archives do not contain the required 2017 denominator (`epanntotal-r2` through 2014; `epanntotal` through 2012).
-- current `DS-059359` is not silently substituted for historical `DS-066342`.
-- `null` reporter values are not treated as zero.
+No post-hoc relaxation after raw inspection. / raw 검사 후 게이트 완화 금지.
 
-**Interpretation / 해석:** historical `-36%` is not independently reproducible from a complete matched legacy input pair through the currently tested official dissemination paths. This is a reproducibility/data-lineage limitation, **not a falsification** of the historical EEA analysis. / historical matched input 복구 한계이며 과거 EEA 분석의 반증이 아니다.
+## 3. Issue #8 Durable Result / Issue #8 지속 결과
 
-Detailed result / 상세: `research/EU-STEEL-R01/REPRODUCTION_RESULT.md`
+`EU-STEEL-R01` remains `HOLD / INCONCLUSIVE_LEGACY_VERSION_DIVERGENCE`:
+- EEA frozen Hg numerator V3: 2008 `4,312.9 kg`, 2017 `3,327.1 kg`.
+- current EEA figure CSV: `35.0 → 20.5 g/kt = -41.4286%`, conflicting with 2019 narrative `-36%`; cause `UNKNOWN`.
+- exact historical `DS-066342` 2017 denominator unavailable through tested current official dissemination paths.
+- current replacement data and `null→0` assumptions are not used to force agreement.
 
-## 3. Methodology Promotion / 방법론 승격
+Detailed: `research/EU-STEEL-R01/REPRODUCTION_RESULT.md`.
 
-### Metadata Schema v0.3
-New first-class lineage fields include: / 신규 1급 계보 필드:
-- `snapshot_identifier`
-- `snapshot_hash`
-- `historical_version_retention`
-- `snapshot_recoverability`
-- `discontinued_at`
-- `replacement_dataset_id`
-- `replacement_correspondence_evidence`
-- `archive_or_mirror_status`
-- `reproduction_risk`
+## 4. Active Next Actions / 활성 다음 행동
 
-### Gate / 게이트
-A live current API/landing page does not prove historical reproducibility. Historical claims require an exact/official archived snapshot or authoritative replacement correspondence before strong validation. / 현재 접근 가능성이 historical 재현성을 증명하지 않으며 exact/official archive 또는 권위 있는 replacement correspondence가 필요하다.
+1. machine-inspect PDR landing/version metadata for `mds2-2716` and `mds2-2718`;
+2. retrieve README/update history and distribution manifests;
+3. hash accessible metadata/manifests and record snapshot lineage;
+4. inspect case/track/repeat/sample naming conventions;
+5. build explicit alignment matrix;
+6. apply Issue #11 PASS/PARTIAL/HOLD gate;
+7. only after gate completion decide whether any raw-level controlled ML experiment is justified.
 
-`reproduction_risk` is initially a **gate/modifier**, not a reweighting of the 100-point IPS. / 우선 IPS 재가중이 아닌 게이트·modifier로 운용.
-
-## 4. Persistent Holds / 지속 HOLD
-- `C-KR-001` localized/asset attribution — `HOLD`.
-- U.S. facility-level data-center energy/cooling/water — `HOLD_DATA_GAP`.
+## 5. Persistent Holds / 지속 HOLD
+- KPX localized bus mapping — `HOLD`.
 - generic EU facility-level production denominator — `HOLD`.
 - historical EEA steel-mercury exact legacy reproduction — `HOLD_LEGACY_VERSION_DIVERGENCE`.
-
-## 5. Next Actions / 다음 행동
-
-1. select the next controlled/reproduction candidate from `registry/RESEARCH_MATERIAL_LANDSCAPE.md` using IPS **plus** the new lineage gate / IPS+lineage gate로 다음 후보 선정;
-2. prefer a case with recoverable exact snapshots so the new `reproduction_risk` vocabulary can be calibrated against a second empirical case / exact snapshot 복구 가능한 2차 사례로 보정;
-3. do **not** change IPS weights until multiple reproduction cases justify recalibration / 복수 사례 전 IPS 가중치 유지;
-4. create the next issue only after freezing target, source crosswalk, snapshot/version provenance, metric and rejection/HOLD criterion / target·crosswalk·snapshot·metric·gate 사전고정 후 다음 Issue 생성.
 
 ## 6. Required Session Start / 세션 시작 의무
 `README.md → STATUS.md → context/PROJECT_MEMORY.md → context/SESSION_HANDOFF.md → relevant MOC → research object → active Issue → claim/decision records`
