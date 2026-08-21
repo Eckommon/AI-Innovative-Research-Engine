@@ -1,4 +1,4 @@
-name: AMBENCH-E03 Frozen Thermal Feature Extraction
+name: AMBENCH-E03 Preregistered LOCO Experiment
 
 on:
   pull_request:
@@ -11,51 +11,83 @@ permissions:
   contents: read
 
 jobs:
-  inspect:
+  experiment:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
-      - name: Install HDF5 reader
-        run: python -m pip install --disable-pip-version-check h5py
+      - name: Install frozen experiment dependencies
+        run: python -m pip install --disable-pip-version-check h5py openpyxl scikit-learn
 
-      - name: Download and verify frozen thermography snapshot
+      - name: Download and verify frozen NIST inputs
         shell: bash
         run: |
           set -euxo pipefail
           mkdir -p work/raw work/logs work/result
-          URL='https://data.nist.gov/od/ds/ark:/88434/mds2-2716/_v/1.3.1/Thermography/AMB2022-03-718-AMMT-StaringCamera_Signal.h5'
-          curl -fL --retry 3 --retry-delay 2 "$URL" -o work/raw/thermography.h5
-          ACTUAL=$(sha256sum work/raw/thermography.h5 | awk '{print $1}')
-          EXPECTED='f6fe21ec911707f72e7efda2932c77eae2b75d84765848878fe5beb6b728cd43'
-          echo "bytes=$(stat -c%s work/raw/thermography.h5)" | tee work/logs/integrity.txt
-          echo "actual_sha256=$ACTUAL" | tee -a work/logs/integrity.txt
-          echo "expected_sha256=$EXPECTED" | tee -a work/logs/integrity.txt
-          test "$ACTUAL" = "$EXPECTED"
+          THERMO_URL='https://data.nist.gov/od/ds/ark:/88434/mds2-2716/_v/1.3.1/Thermography/AMB2022-03-718-AMMT-StaringCamera_Signal.h5'
+          OPTICAL_URL='https://data.nist.gov/od/ds/ark:/88434/mds2-2718/_v/1.0.3/AMB2022-718-SH1-MeltPool_Cross-Section_Measurement_Results.xlsx'
+          curl -fL --retry 3 --retry-delay 2 "$THERMO_URL" -o work/raw/thermography.h5
+          curl -fL --retry 3 --retry-delay 2 "$OPTICAL_URL" -o work/raw/optical_results.xlsx
+          THERMO_ACTUAL=$(sha256sum work/raw/thermography.h5 | awk '{print $1}')
+          OPTICAL_ACTUAL=$(sha256sum work/raw/optical_results.xlsx | awk '{print $1}')
+          THERMO_EXPECTED='f6fe21ec911707f72e7efda2932c77eae2b75d84765848878fe5beb6b728cd43'
+          OPTICAL_EXPECTED='2cfaac96aaca3dabb77b7029f842cdcc7e75c5a2cf3577d0734823246364a931'
+          {
+            echo "thermo_bytes=$(stat -c%s work/raw/thermography.h5)"
+            echo "thermo_actual_sha256=$THERMO_ACTUAL"
+            echo "thermo_expected_sha256=$THERMO_EXPECTED"
+            echo "optical_bytes=$(stat -c%s work/raw/optical_results.xlsx)"
+            echo "optical_actual_sha256=$OPTICAL_ACTUAL"
+            echo "optical_expected_sha256=$OPTICAL_EXPECTED"
+          } | tee work/logs/integrity.txt
+          test "$THERMO_ACTUAL" = "$THERMO_EXPECTED"
+          test "$OPTICAL_ACTUAL" = "$OPTICAL_EXPECTED"
 
-      - name: Extract preregistered outcome-blind features
+      - name: Execute frozen feature, target, and LOCO pipeline
         shell: bash
         run: |
-          python - <<'PY' | tee work/logs/features.txt
-          import csv, math
-          import h5py, numpy as np
+          python - <<'PY' | tee work/logs/experiment.txt
+          import csv, json, math, re
+          from collections import defaultdict
           from pathlib import Path
 
-          def scalar(v):
-              a=np.asarray(v).reshape(-1)
-              return float(a[0])
+          import h5py
+          import numpy as np
+          from openpyxl import load_workbook
+          from sklearn.linear_model import Ridge
+          from sklearn.pipeline import Pipeline
+          from sklearn.preprocessing import StandardScaler
 
-          def identity(name):
+          CASES=['0','1.1','1.2','2.1','2.2','3.1','3.2']
+          PROCESS=['laser_power_W','scan_speed_mm_s','spot_size_um']
+          THERMO=[
+            'thermal_nonzero_fraction','thermal_positive_mean_dl','thermal_positive_std_dl',
+            'thermal_positive_p90_dl','thermal_positive_p99_dl','thermal_max_dl',
+            'thermal_active_pixels_frame_mean','thermal_active_pixels_frame_max',
+            'thermal_frame_sum_mean_dl','thermal_frame_sum_max_dl'
+          ]
+          MODELS={
+            'PROCESS_ONLY':PROCESS,
+            'THERMO_ONLY':THERMO,
+            'PROCESS_PLUS_THERMO':PROCESS+THERMO,
+          }
+          TARGETS=['depth_mean_um','width_mean_um']
+
+          def scalar(v):
+              return float(np.asarray(v).reshape(-1)[0])
+
+          def thermo_identity(name):
               t=name.removeprefix('Line_').split('_')
-              if len(t)==2:
-                  return t[0], int(t[1])
-              if len(t)==3:
-                  return f'{t[0]}.{t[1]}', int(t[2])
+              if len(t)==2: return t[0],int(t[1])
+              if len(t)==3: return f'{t[0]}.{t[1]}',int(t[2])
               raise ValueError(name)
+
+          def canonical_line(case,rep):
+              return f'Line {case}_{rep}'
 
           def hist_quantile(hist,q):
               n=int(hist[1:].sum())
@@ -64,18 +96,12 @@ jobs:
               c=np.cumsum(hist[1:])
               return float(np.searchsorted(c,rank,side='left')+1)
 
-          fields=[
-            'group','process_case','repeat','laser_power_W','scan_speed_mm_s','spot_size_um',
-            'thermal_nonzero_fraction','thermal_positive_mean_dl','thermal_positive_std_dl',
-            'thermal_positive_p90_dl','thermal_positive_p99_dl','thermal_max_dl',
-            'thermal_active_pixels_frame_mean','thermal_active_pixels_frame_max',
-            'thermal_frame_sum_mean_dl','thermal_frame_sum_max_dl'
-          ]
-          rows=[]
+          # A. Recompute the frozen 10 thermography features exactly as Run 3.
+          features=[]
           with h5py.File('work/raw/thermography.h5','r') as f:
               td=f['ThermalData']
               names=sorted(k for k in td if k.startswith('Line_'))
-              if len(names)!=21: raise SystemExit(f'Expected 21 tracks, got {len(names)}')
+              if len(names)!=21: raise SystemExit(f'Expected 21 thermal tracks, got {len(names)}')
               for name in names:
                   g=td[name]; ds=g['Signal']
                   hist=np.zeros(4096,dtype=np.int64)
@@ -84,8 +110,7 @@ jobs:
                   total=int(np.prod(ds.shape))
                   for start in range(0,ds.shape[0],25):
                       a=ds[start:min(start+25,ds.shape[0])]
-                      mask=a>0
-                      vals=a[mask]
+                      mask=a>0; vals=a[mask]
                       if vals.size:
                           h=np.bincount(vals.ravel(),minlength=4096)
                           hist[:len(h)] += h
@@ -98,9 +123,9 @@ jobs:
                       frame_sums.extend(a.sum(axis=(1,2),dtype=np.uint64).astype(np.float64).tolist())
                   mean=pos_sum/pos_n if pos_n else float('nan')
                   var=max(0.0,pos_sq/pos_n-mean*mean) if pos_n else float('nan')
-                  case,rep=identity(name)
+                  case,rep=thermo_identity(name)
                   row={
-                    'group':name,'process_case':case,'repeat':rep,
+                    'group':name,'line_id':canonical_line(case,rep),'process_case':case,'repeat':rep,
                     'laser_power_W':scalar(g.attrs['laser_power']),
                     'scan_speed_mm_s':scalar(g.attrs['scan_speed']),
                     'spot_size_um':scalar(g.attrs['spot_size']),
@@ -109,36 +134,169 @@ jobs:
                     'thermal_positive_std_dl':math.sqrt(var),
                     'thermal_positive_p90_dl':hist_quantile(hist,0.90),
                     'thermal_positive_p99_dl':hist_quantile(hist,0.99),
-                    'thermal_max_dl':vmax,
+                    'thermal_max_dl':float(vmax),
                     'thermal_active_pixels_frame_mean':float(np.mean(active)),
                     'thermal_active_pixels_frame_max':float(np.max(active)),
                     'thermal_frame_sum_mean_dl':float(np.mean(frame_sums)),
                     'thermal_frame_sum_max_dl':float(np.max(frame_sums)),
                   }
-                  rows.append(row)
-                  print('TRACK',row)
+                  for k in PROCESS+THERMO:
+                      if not math.isfinite(float(row[k])): raise SystemExit(f'Nonfinite feature {k} for {name}')
+                  features.append(row)
 
-          expected_cases={'0','1.1','1.2','2.1','2.2','3.1','3.2'}
-          if {r['process_case'] for r in rows} != expected_cases: raise SystemExit('Unexpected case set')
-          for case in expected_cases:
-              reps=sorted(r['repeat'] for r in rows if r['process_case']==case)
-              if reps != [1,2,3]: raise SystemExit(f'Bad repeats for {case}: {reps}')
-          for r in rows:
-              for k in fields[6:]:
-                  if not math.isfinite(float(r[k])): raise SystemExit(f'Non-finite {k} in {r["group"]}')
+          expected_lines={canonical_line(c,r) for c in CASES for r in (1,2,3)}
+          if {r['line_id'] for r in features} != expected_lines: raise SystemExit('Thermal line IDs mismatch')
 
-          out=Path('work/result/thermal_features.csv')
-          with out.open('w',newline='',encoding='utf-8') as fh:
-              w=csv.DictWriter(fh,fieldnames=fields); w.writeheader(); w.writerows(rows)
-          print('FEATURE_ROWS',len(rows))
-          print('FEATURE_COLUMNS',fields)
+          # B. Build optical target table strictly from exact line identities.
+          wb=load_workbook('work/raw/optical_results.xlsx',read_only=True,data_only=True)
+          ws=wb.active
+          header_row=None; headers=None
+          for ri,row in enumerate(ws.iter_rows(values_only=True),start=1):
+              vals=[str(v).strip() if v is not None else '' for v in row]
+              if any(v=='Case and Line No.' for v in vals):
+                  header_row=ri; headers=vals; break
+          if header_row is None: raise SystemExit('Optical header not found')
+
+          def unique_col(predicate,label):
+              hits=[i for i,h in enumerate(headers) if predicate(h)]
+              if len(hits)!=1: raise SystemExit(f'{label} column ambiguous: {[(i,headers[i]) for i in hits]}')
+              return hits[0]
+
+          line_col=unique_col(lambda h:h=='Case and Line No.','line')
+          depth_col=unique_col(lambda h:h.startswith('Depth') and ('µm' in h or 'um' in h.lower()),'depth')
+          width_col=unique_col(lambda h:h.startswith('Width') and ('µm' in h or 'um' in h.lower()),'width')
+          vel_col=unique_col(lambda h:h.startswith('Velocity'),'velocity')
+          power_col=unique_col(lambda h:h.startswith('Power'),'power')
+          beam_col=unique_col(lambda h:h.startswith('Beam diameter'),'beam')
+
+          raw_opt=defaultdict(list)
+          for ri,row in enumerate(ws.iter_rows(min_row=header_row+1,values_only=True),start=header_row+1):
+              line=str(row[line_col]).strip() if row[line_col] is not None else ''
+              if line not in expected_lines: continue
+              try:
+                  rec={
+                    'row':ri,'line_id':line,
+                    'depth_um':float(row[depth_col]),'width_um':float(row[width_col]),
+                    'velocity_mm_s':float(row[vel_col]),'power_W':float(row[power_col]),'beam_um':float(row[beam_col])
+                  }
+              except Exception as ex:
+                  raise SystemExit(f'Bad optical numeric row {ri}: {ex}')
+              raw_opt[line].append(rec)
+          if set(raw_opt)!=expected_lines: raise SystemExit(f'Optical line ID mismatch: missing={sorted(expected_lines-set(raw_opt))}')
+          if any(len(v)!=2 for v in raw_opt.values()):
+              raise SystemExit('Expected exactly 2 optical cross-sections per track: '+repr({k:len(v) for k,v in raw_opt.items()}))
+
+          feature_by_line={r['line_id']:r for r in features}
+          targets=[]
+          for line in sorted(expected_lines):
+              rr=raw_opt[line]; frow=feature_by_line[line]
+              # Independent cross-source process-parameter identity check.
+              for x in rr:
+                  if abs(x['velocity_mm_s']-frow['scan_speed_mm_s'])>1e-9: raise SystemExit(f'Velocity mismatch {line}')
+                  if abs(x['power_W']-frow['laser_power_W'])>1e-9: raise SystemExit(f'Power mismatch {line}')
+                  if abs(x['beam_um']-frow['spot_size_um'])>1e-9: raise SystemExit(f'Beam mismatch {line}')
+              depths=[x['depth_um'] for x in rr]; widths=[x['width_um'] for x in rr]
+              targets.append({
+                'line_id':line,'process_case':frow['process_case'],'repeat':frow['repeat'],
+                'depth_mean_um':float(np.mean(depths)),'width_mean_um':float(np.mean(widths)),
+                'depth_spread_um':abs(depths[0]-depths[1]),'width_spread_um':abs(widths[0]-widths[1]),
+                'depth_1_um':depths[0],'depth_2_um':depths[1],
+                'width_1_um':widths[0],'width_2_um':widths[1],
+              })
+          if len(targets)!=21: raise SystemExit(f'Expected 21 target rows, got {len(targets)}')
+
+          # C. Deterministic merge and frozen seven-fold LOCO.
+          target_by_line={r['line_id']:r for r in targets}
+          data=[]
+          for frow in features:
+              row=dict(frow); row.update(target_by_line[frow['line_id']]); data.append(row)
+          data=sorted(data,key=lambda r:(CASES.index(r['process_case']),r['repeat']))
+
+          oof=[]
+          fold_summaries=[]
+          for held in CASES:
+              train=[r for r in data if r['process_case']!=held]
+              test=[r for r in data if r['process_case']==held]
+              if len(train)!=18 or len(test)!=3: raise SystemExit(f'Bad fold sizes {held}: {len(train)}/{len(test)}')
+              fold_record={'held_out_case':held,'n_train':len(train),'n_test':len(test),'metrics':{}}
+              for target in TARGETS:
+                  ytr=np.array([r[target] for r in train],dtype=float)
+                  yte=np.array([r[target] for r in test],dtype=float)
+                  for model_name,cols in MODELS.items():
+                      Xtr=np.array([[r[c] for c in cols] for r in train],dtype=float)
+                      Xte=np.array([[r[c] for c in cols] for r in test],dtype=float)
+                      pipe=Pipeline([('scale',StandardScaler()),('ridge',Ridge(alpha=1.0,fit_intercept=True))])
+                      pipe.fit(Xtr,ytr)
+                      pred=pipe.predict(Xte)
+                      residual=yte-pred
+                      fold_rmse=float(np.sqrt(np.mean(residual**2)))
+                      fold_mae=float(np.mean(np.abs(residual)))
+                      fold_record['metrics'][f'{target}__{model_name}']={'rmse':fold_rmse,'mae':fold_mae}
+                      for row,truth,p in zip(test,yte,pred):
+                          oof.append({
+                            'line_id':row['line_id'],'process_case':held,'repeat':row['repeat'],
+                            'target':target,'model':model_name,'truth':float(truth),'prediction':float(p),
+                            'residual':float(truth-p)
+                          })
+              fold_summaries.append(fold_record)
+
+          # exactly 21 tracks × 2 targets × 3 models.
+          if len(oof)!=126: raise SystemExit(f'Expected 126 OOF rows, got {len(oof)}')
+          pooled={}
+          for target in TARGETS:
+              pooled[target]={}
+              for model_name in MODELS:
+                  rows=[r for r in oof if r['target']==target and r['model']==model_name]
+                  if len(rows)!=21: raise SystemExit('Incomplete OOF predictions')
+                  e=np.array([r['residual'] for r in rows],dtype=float)
+                  pooled[target][model_name]={
+                    'rmse':float(np.sqrt(np.mean(e**2))),
+                    'mae':float(np.mean(np.abs(e)))
+                  }
+
+          improvement={}
+          for target in TARGETS:
+              b=pooled[target]['PROCESS_ONLY']['rmse']
+              c=pooled[target]['PROCESS_PLUS_THERMO']['rmse']
+              improvement[target]=100.0*(b-c)/b
+          vals=list(improvement.values()); imax=max(vals); imin=min(vals)
+          if imax>=10.0 and imin>=-10.0:
+              gate='VALIDATED_MATERIAL_GAIN'
+          elif (imax>=10.0 and imin<-10.0) or (0.0<imax<10.0):
+              gate='MIXED'
+          else:
+              gate='NO_MATERIAL_GAIN'
+
+          result={
+            'experiment':'AMBENCH-E03','n_tracks':21,'n_process_cases':7,
+            'validation':'7-fold leave-one-process-case-out; pooled metrics across 21 OOF track predictions',
+            'estimator':'StandardScaler(train-fold only) + Ridge(alpha=1.0, fit_intercept=True)',
+            'feature_counts':{'process':3,'thermal':10,'combined':13},
+            'pooled_metrics':pooled,
+            'combined_vs_process_rmse_improvement_pct':improvement,
+            'gate':gate,
+            'folds':fold_summaries,
+          }
+          print('TARGET_HEADER_ROW',header_row)
+          print('OPTICAL_TARGET_ROWS',len(targets),'RAW_CROSS_SECTIONS',sum(len(v) for v in raw_opt.values()))
+          print('POOLED_METRICS',json.dumps(pooled,indent=2,sort_keys=True))
+          print('IMPROVEMENT_PCT',json.dumps(improvement,indent=2,sort_keys=True))
+          print('FROZEN_GATE_RESULT',gate)
+
+          Path('work/result/model_results.json').write_text(json.dumps(result,indent=2,sort_keys=True),encoding='utf-8')
+          with Path('work/result/target_table.csv').open('w',newline='',encoding='utf-8') as f:
+              w=csv.DictWriter(f,fieldnames=list(targets[0])); w.writeheader(); w.writerows(targets)
+          with Path('work/result/feature_table.csv').open('w',newline='',encoding='utf-8') as f:
+              fields=list(features[0]); w=csv.DictWriter(f,fieldnames=fields); w.writeheader(); w.writerows(features)
+          with Path('work/result/oof_predictions.csv').open('w',newline='',encoding='utf-8') as f:
+              fields=list(oof[0]); w=csv.DictWriter(f,fieldnames=fields); w.writeheader(); w.writerows(oof)
           PY
 
-      - name: Upload frozen feature evidence
+      - name: Upload preregistered experiment evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ambench-e03-run3-frozen-features
+          name: ambench-e03-run4-preregistered-results
           path: |
             work/logs/
             work/result/
