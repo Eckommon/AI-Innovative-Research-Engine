@@ -12,7 +12,7 @@ permissions:
   contents: read
 
 jobs:
-  inspect:
+  reproduce:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -21,72 +21,160 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Diagnose DS-059359 Statistics API dimension names
+      - name: Download official E-PRTR numerator and DS-059359 product slices
         shell: bash
         run: |
-          set -uxo pipefail
-          mkdir -p work/api work/logs
+          set -euxo pipefail
+          mkdir -p work/raw work/api work/logs work/result
+          EPRTR='https://sdi.eea.europa.eu/webdav/datastore/public/eea_t_ied-eprtr_p_2007-2022_v11_r00/User%20friendly%20.csv%20file/F1_3_Total%20Release%20at%20E-PRTR%20Annex%20I%20Activity%20into%20Air.csv'
           BASE='https://ec.europa.eu/eurostat/api/comext/dissemination/statistics/1.0/data/DS-059359'
-          : > work/logs/dimension_diagnostics.txt
+          curl -fL --retry 3 "$EPRTR" -o work/raw/eprtr_F1_3.csv
+          for YEAR in 2008 2017; do
+            for CODE in 2410T121 2410T122 2410T131 2410T132 2410T141 2410T142; do
+              curl -fL --retry 3 -G "$BASE" \
+                --data-urlencode 'lang=EN' \
+                --data-urlencode "time=$YEAR" \
+                --data-urlencode "product=$CODE" \
+                -o "work/api/${YEAR}_${CODE}.json"
+            done
+          done
+          sha256sum work/raw/eprtr_F1_3.csv work/api/*.json | tee work/logs/sha256.txt
 
-          query () {
-            NAME="$1"; shift
-            OUT="work/api/${NAME}.json"
-            echo "===== $NAME =====" | tee -a work/logs/dimension_diagnostics.txt
-            echo "ARGS: $*" | tee -a work/logs/dimension_diagnostics.txt
-            curl -sS -L -G "$BASE" --data-urlencode 'lang=EN' "$@" -o "$OUT"
-            echo "BYTES=$(wc -c < "$OUT")" | tee -a work/logs/dimension_diagnostics.txt
-            head -c 1200 "$OUT" | tr '\n' ' ' | tee -a work/logs/dimension_diagnostics.txt
-            echo | tee -a work/logs/dimension_diagnostics.txt
-          }
-
-          query time_only --data-urlencode 'time=2017'
-          query lower_prccode --data-urlencode 'time=2017' --data-urlencode 'prccode=2410T121'
-          query lower_product --data-urlencode 'time=2017' --data-urlencode 'product=2410T121'
-          query upper_PRODUCT --data-urlencode 'time=2017' --data-urlencode 'PRODUCT=2410T121'
-          query lower_decl --data-urlencode 'time=2017' --data-urlencode 'decl=2028'
-          query upper_DECL --data-urlencode 'time=2017' --data-urlencode 'DECL=2028'
-          query lower_indicators --data-urlencode 'time=2017' --data-urlencode 'indicators=APRODQNT'
-          query upper_INDICATORS --data-urlencode 'time=2017' --data-urlencode 'INDICATORS=APRODQNT'
-
-      - name: Summarize accepted dimensions
+      - name: Compute frozen-crosswalk reproduction candidate
         shell: bash
         run: |
-          python - <<'PY' | tee work/logs/dimension_summary.txt
+          python - <<'PY' | tee work/logs/reproduction.txt
           from pathlib import Path
-          import json
-          for p in sorted(Path('work/api').glob('*.json')):
-              print('\n===',p.stem,'===')
-              try:
+          import csv, json, math
+
+          YEARS=(2008,2017)
+          ACTS={'1(d)','2(a)','2(b)'}
+          PRODUCTS=['2410T121','2410T122','2410T131','2410T132','2410T141','2410T142']
+          REPORTERS=['EU28','IS','LI','NO','CH','XS']
+          HG={2008:0.0,2017:0.0}
+
+          # E-PRTR numerator from official F1_3 raw
+          with open('work/raw/eprtr_F1_3.csv',encoding='utf-8-sig',newline='') as f:
+              r=csv.DictReader(f)
+              selected=[]
+              for row in r:
+                  y=row.get('reportingYear','')
+                  act=(row.get('EPRTRAnnexIMainActivityCode') or '').replace('.','').replace(' ','')
+                  pol=(row.get('pollutant') or '').lower()
+                  if y in {'2008','2017'} and act in ACTS and 'mercur' in pol:
+                      val=float(row['emissions'])
+                      HG[int(y)]+=val
+                      selected.append(row)
+          print('HG_KG',HG,'ROWS',len(selected))
+
+          def index_map(cat_index):
+              if isinstance(cat_index,dict): return cat_index
+              if isinstance(cat_index,list): return {code:i for i,code in enumerate(cat_index)}
+              raise TypeError(cat_index)
+
+          def flat_index(ids,sizes,positions):
+              idx=0
+              for d,size in zip(ids,sizes):
+                  idx=idx*size+positions[d]
+              return idx
+
+          records=[]
+          api_meta={}
+          for y in YEARS:
+              for product in PRODUCTS:
+                  p=Path(f'work/api/{y}_{product}.json')
                   o=json.loads(p.read_text())
-              except Exception as e:
-                  print('JSON_ERROR',repr(e)); continue
-              if 'error' in o:
-                  print('ERROR',o['error']); continue
-              print('ID',o.get('id'))
-              print('SIZE',o.get('size'))
-              print('LABEL',o.get('label'))
-              print('DIM_KEYS',list((o.get('dimension') or {}).keys()))
-              for k,v in (o.get('dimension') or {}).items():
-                  cat=(v or {}).get('category',{})
-                  idx=cat.get('index')
-                  labels=cat.get('label')
-                  print('DIM',k,'LABEL',(v or {}).get('label'))
-                  print(' INDEX',idx if not isinstance(idx,dict) or len(idx)<80 else list(idx.items())[:80])
-                  if isinstance(labels,dict):
-                      print(' LABELS',list(labels.items())[:80])
-              vals=o.get('value')
-              if isinstance(vals,dict): print('VALUES',len(vals),list(vals.items())[:30])
-              elif isinstance(vals,list): print('VALUES',len(vals),[(i,x) for i,x in enumerate(vals) if x is not None][:30])
+                  if 'error' in o: raise RuntimeError((p.name,o['error']))
+                  ids=o['id']; sizes=o['size']; dims=o['dimension']; vals=o.get('value',{})
+                  rep_idx=index_map(dims['reporter']['category']['index'])
+                  prod_idx=index_map(dims['product']['category']['index'])
+                  ind_idx=index_map(dims['indicators']['category']['index'])
+                  time_idx=index_map(dims['time']['category']['index'])
+                  freq_idx=index_map(dims['freq']['category']['index'])
+                  api_meta[p.name]={
+                    'updated':o.get('updated'), 'id':ids, 'size':sizes,
+                    'product_label':dims['product']['category']['label'].get(product),
+                    'reporter_labels':{k:dims['reporter']['category']['label'].get(k) for k in REPORTERS}
+                  }
+                  for rep in REPORTERS:
+                      if rep not in rep_idx: raise RuntimeError(f'missing reporter {rep}')
+                      rec={'year':y,'product':product,'reporter':rep}
+                      for ind in ['APRODQNT','QNTUNIT','APQNTFLAG','APQNTBASE']:
+                          pos={'freq':freq_idx['A'],'reporter':rep_idx[rep],'product':prod_idx[product],
+                               'indicators':ind_idx[ind],'time':time_idx[str(y)]}
+                          k=str(flat_index(ids,sizes,pos))
+                          rec[ind]=vals.get(k)
+                      records.append(rec)
+
+          print('TARGET_RECORDS')
+          for rec in records: print(rec)
+
+          # Validate unit semantics and compute only if all EEA33 pieces are numeric or explicit zero.
+          steel={2008:0.0,2017:0.0}
+          unresolved=[]
+          per_year_product={}
+          for y in YEARS:
+              for prod in PRODUCTS:
+                  rows=[r for r in records if r['year']==y and r['product']==prod]
+                  units={r['QNTUNIT'] for r in rows if r['QNTUNIT'] is not None}
+                  if units - {'KG'}:
+                      unresolved.append({'year':y,'product':prod,'reason':'unit','units':sorted(units)})
+                  subtotal=0.0
+                  bad=[]
+                  for r in rows:
+                      q=r['APRODQNT']; flag=r['APQNTFLAG']
+                      if isinstance(q,(int,float)):
+                          subtotal+=float(q)
+                      elif q is None:
+                          # absent value is only acceptable as zero if the API explicitly reports a numeric zero; missing is not zero.
+                          bad.append({'reporter':r['reporter'],'quantity':q,'flag':flag})
+                      else:
+                          bad.append({'reporter':r['reporter'],'quantity':q,'flag':flag})
+                  per_year_product[(y,prod)]={'subtotal_kg':subtotal,'unresolved':bad}
+                  if bad: unresolved.append({'year':y,'product':prod,'reason':'non_numeric_or_missing','rows':bad})
+                  else: steel[y]+=subtotal
+
+          # EU28-only diagnostic, independent from EEA33 completeness.
+          eu28={y:0.0 for y in YEARS}
+          for r in records:
+              if r['reporter']=='EU28' and isinstance(r['APRODQNT'],(int,float)):
+                  eu28[r['year']]+=float(r['APRODQNT'])
+
+          result={
+            'hg_kg':HG,
+            'steel_eea33_kg':steel if not unresolved else None,
+            'steel_eu28_kg_diagnostic':eu28,
+            'unresolved':unresolved,
+            'per_year_product':{f'{k[0]}_{k[1]}':v for k,v in per_year_product.items()},
+            'api_meta':api_meta,
+            'frozen_reporters':REPORTERS,
+            'frozen_products':PRODUCTS,
+          }
+          if not unresolved:
+              intensity={y:HG[y]/steel[y] for y in YEARS}
+              change=(intensity[2017]/intensity[2008]-1)*100
+              result['intensity_kgHg_per_kgSteel']=intensity
+              result['change_pct']=change
+              result['gate']='PASS' if -38 <= change <= -34 else 'FAIL_OUTSIDE_GATE'
+              result['intensity_g_per_kilotonne']={y:intensity[y]*1_000_000_000 for y in YEARS}
+          else:
+              result['gate']='HOLD_UNRESOLVED_DENOMINATOR'
+
+          Path('work/result/reproduction_candidate.json').write_text(json.dumps(result,ensure_ascii=False,indent=2),encoding='utf-8')
+          with open('work/result/target_records.csv','w',encoding='utf-8',newline='') as f:
+              w=csv.DictWriter(f,fieldnames=['year','product','reporter','APRODQNT','QNTUNIT','APQNTFLAG','APQNTBASE'])
+              w.writeheader(); w.writerows(records)
+          print('RESULT_JSON')
+          print(json.dumps(result,ensure_ascii=False,indent=2))
           PY
 
-      - name: Upload dimension evidence
+      - name: Upload reproduction candidate evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: eu-steel-r01-dimension-diagnostics
+          name: eu-steel-r01-reproduction-candidate
           path: |
-            work/api/
+            work/result/
             work/logs/
-          if-no-files-found: warn
+          if-no-files-found: error
           retention-days: 30
