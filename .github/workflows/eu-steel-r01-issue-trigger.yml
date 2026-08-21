@@ -1,0 +1,129 @@
+name: EU-STEEL-R01 Issue Trigger
+
+on:
+  issues:
+    types: [edited]
+
+permissions:
+  contents: write
+  issues: read
+
+jobs:
+  inspect:
+    if: github.event.issue.number == 8
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Download and inspect official raw inputs
+        shell: bash
+        env:
+          RUN_ID: ${{ github.run_id }}
+          HEAD_SHA: ${{ github.sha }}
+        run: |
+          set -uxo pipefail
+          mkdir -p work/raw work/extracted work/logs research/EU-STEEL-R01
+          : > work/logs/download.txt
+
+          EPRTR_URL='https://sdi.eea.europa.eu/webdav/datastore/public/eea_t_ied-eprtr_p_2007-2022_v11_r00/User%20friendly%20.csv%20file/F1_3_Total%20Release%20at%20E-PRTR%20Annex%20I%20Activity%20into%20Air.csv'
+          curl -fL --retry 3 --retry-delay 2 -A 'AI-Innovative-Research-Engine/0.3' "$EPRTR_URL" -o work/raw/eprtr_F1_3.csv 2>&1 | tee -a work/logs/download.txt
+          echo "EPRTR_EXIT=${PIPESTATUS[0]}" | tee -a work/logs/download.txt
+
+          curl -fL --retry 3 --retry-delay 2 -G 'https://ec.europa.eu/eurostat/api/dissemination/files' \
+            --data-urlencode 'file=comext/EUROPROMS/epanntotal-r2.zip' \
+            -o work/raw/epanntotal-r2.zip 2>&1 | tee -a work/logs/download.txt
+          echo "PRODCOM_EXIT=${PIPESTATUS[0]}" | tee -a work/logs/download.txt
+
+          [ -f work/raw/eprtr_F1_3.csv ] && sha256sum work/raw/eprtr_F1_3.csv >> work/logs/sha256.txt || true
+          [ -f work/raw/epanntotal-r2.zip ] && sha256sum work/raw/epanntotal-r2.zip >> work/logs/sha256.txt || true
+          ls -lh work/raw > work/logs/files.txt 2>&1 || true
+
+          python - <<'PY' > work/logs/inspect.txt 2>&1
+          from pathlib import Path
+          import csv, io, zipfile
+
+          e=Path('work/raw/eprtr_F1_3.csv')
+          if e.exists():
+              b=e.read_bytes(); t=b.decode('utf-8-sig',errors='replace'); s=t[:20000]
+              try: d=csv.Sniffer().sniff(s,delimiters=',;\t|').delimiter
+              except Exception: d=';' if s.count(';')>s.count(',') else ','
+              print('EPRTR_SIZE',len(b)); print('EPRTR_DELIMITER',repr(d))
+              r=csv.reader(io.StringIO(t),delimiter=d)
+              for i,row in zip(range(6),r): print('EPRTR_ROW',i,row)
+          else: print('EPRTR_MISSING')
+
+          z=Path('work/raw/epanntotal-r2.zip')
+          if z.exists() and zipfile.is_zipfile(z):
+              with zipfile.ZipFile(z) as q:
+                  print('PRODCOM_MEMBERS')
+                  for n in q.namelist():
+                      print(n)
+                      if not n.endswith('/'):
+                          p=Path('work/extracted')/Path(n).name; p.write_bytes(q.read(n))
+          elif z.exists(): print('PRODCOM_NOT_ZIP',z.stat().st_size,z.read_bytes()[:300])
+          else: print('PRODCOM_MISSING')
+
+          targets=['2410T121','2410T122','2410T131','2410T132','2410T141','2410T142']
+          for p in sorted(Path('work/extracted').glob('*')):
+              if p.is_file():
+                  txt=p.read_bytes().decode('latin-1',errors='ignore')
+                  print('FILE',p.name,p.stat().st_size)
+                  print('TARGET_COUNTS',{x:txt.count(x) for x in targets})
+                  print('HEAD',txt[:2000].replace('\r','\\r').replace('\n','\\n'))
+          PY
+
+          python - <<'PY'
+          from pathlib import Path
+          from datetime import datetime, timezone
+          import os
+          def rd(n):
+              p=Path('work/logs')/n
+              return p.read_text(errors='replace') if p.exists() else '(not produced)'
+          now=datetime.now(timezone.utc)
+          body=f'''---
+id: EU-STEEL-R01-ACTION-INSPECTION
+type: experiment-log
+state: ACTIVE
+tags: [type/experiment, state/experiment, evidence/observed, region/eu, domain/industry]
+updated: {now.date().isoformat()}
+source_of_truth: github-actions
+---
+# EU-STEEL-R01 GitHub Actions Raw Inspection / GitHub Actions Raw 원천 검사
+
+**Generated / 생성:** {now.isoformat()}  
+**Workflow run / 실행:** `{os.environ.get('RUN_ID','UNKNOWN')}`  
+**Trigger:** Issue #8 edited
+
+## Download Log / 다운로드 로그
+```text
+{rd('download.txt')[-12000:]}
+```
+## SHA-256 / 무결성
+```text
+{rd('sha256.txt')}
+```
+## File Inventory / 파일 인벤토리
+```text
+{rd('files.txt')}
+```
+## Raw Schema Inspection / Raw 스키마 검사
+```text
+{rd('inspect.txt')[-24000:]}
+```
+
+Machine-generated evidence only; research promotion requires review. / 기계생성 근거이며 연구 승격은 별도 검토가 필요하다.
+'''
+          Path('research/EU-STEEL-R01/action_inspection.md').write_text(body,encoding='utf-8')
+          PY
+
+      - name: Commit report
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/EU-STEEL-R01/action_inspection.md
+          git commit -m 'experiment: record EU-STEEL-R01 issue-trigger inspection [skip ci]' || exit 0
+          git push
