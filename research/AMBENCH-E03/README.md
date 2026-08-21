@@ -23,7 +23,7 @@ related:
 # AMBENCH-E03 — Track-level Thermography → Melt-Pool Geometry Controlled Experiment / Track-level 열화상→용융풀 형상 통제실험
 
 **Issue / 이슈:** #13  
-**State / 상태:** `PREREGISTERED — THERMAL FEATURES FROZEN BEFORE OUTCOMES`  
+**State / 상태:** `PREREGISTERED — THERMAL FEATURES + EVALUATION RULES FROZEN BEFORE OUTCOMES`  
 **Parent feasibility / 상위 feasibility:** `AMBENCH-F02 — PASS`
 
 ## 1. Research Question / 연구 질문
@@ -118,21 +118,33 @@ Extraction is deterministic and may stream frame batches; streaming must reprodu
 - no manually chosen additional threshold above the source's native zeroing;
 - no feature selection based on depth/width correlations.
 
+Run `32537282914` successfully produced all 10 frozen finite features for all 21 tracks before optical outcomes were used. / Run `32537282914`에서 optical outcome 사용 전에 21개 track 모두 10개 frozen finite feature 추출에 성공했다.
+
 ## 8. Frozen Metrics / 고정 지표
 
-Primary: LOCO RMSE separately for `depth_mean_um` and `width_mean_um`. / depth·width별 LOCO RMSE.  
-Secondary: MAE, fold residuals, sensitivity to cross-section spread. / MAE·fold residual·단면 spread 민감도.
+Primary: / 주 지표
+- `LOCO_RMSE_depth` = **pooled RMSE over all 21 out-of-fold depth predictions**, not an unweighted average of seven fold RMSEs.
+- `LOCO_RMSE_width` = **pooled RMSE over all 21 out-of-fold width predictions**.
+
+Secondary: / 보조
+- pooled MAE over the same 21 out-of-fold predictions;
+- fold/case-level residual summaries;
+- optical cross-section spread retained as an uncertainty descriptor, not a sample weight unless separately preregistered.
+
+For each target, Combined-vs-Process improvement is: / 개선율
+
+`100 × (RMSE_PROCESS_ONLY − RMSE_PROCESS_PLUS_THERMO) / RMSE_PROCESS_ONLY`.
 
 ## 9. Frozen Gate / 고정 게이트
 
-Compare `PROCESS_PLUS_THERMO` with `PROCESS_ONLY`:
+Let `I_depth` and `I_width` be the two percentage RMSE improvements above, `I_max=max(...)`, `I_min=min(...)`. Gate precedence is evaluated in this exact order: / 아래 순서로 판정한다.
 
-- `VALIDATED_MATERIAL_GAIN`: ≥10% RMSE reduction on at least one target and no >10% RMSE degradation on the other.
-- `MIXED`: ≥10% gain on one target but >10% degradation on the other, or smaller positive gains that do not reach the material threshold.
-- `NO_MATERIAL_GAIN`: neither target improves by ≥10%.
-- `HOLD`: exact raw transport/decoding, feature extraction, or target construction requires unsupported assumptions.
+1. `HOLD` if exact transport/decoding, frozen feature extraction, exact target construction, or LOCO execution cannot be reproduced without unsupported assumptions.
+2. `VALIDATED_MATERIAL_GAIN` if `I_max >= 10` **and** `I_min >= -10`.
+3. `MIXED` if (`I_max >= 10` and `I_min < -10`) **or** (`0 < I_max < 10`).
+4. `NO_MATERIAL_GAIN` otherwise.
 
-The 10% threshold is inherited from `AMBENCH-001` and frozen before E03 outcome inspection. / 10% 기준은 `AMBENCH-001`에서 계승하며 E03 결과 확인 전에 고정한다.
+This precedence is a deterministic disambiguation of the already-frozen 10% material threshold; it does not change the threshold after seeing outcomes. / 이 우선순위는 기존 10% 기준의 결정론적 명확화이며 outcome 확인 후 threshold를 변경한 것이 아니다.
 
 ## 10. Leakage Controls / 누출 통제
 
@@ -150,7 +162,7 @@ The 10% threshold is inherited from `AMBENCH-001` and frozen before E03 outcome 
 2. ✅ enumerate exact 21 line groups and metadata;
 3. ✅ inspect Signal attrs/calibration metadata without optical outcomes;
 4. ✅ freeze compact thermography feature manifest and estimator;
-5. extract the frozen 10 features for all 21 tracks and integrity-check them;
+5. ✅ extract the frozen 10 features for all 21 tracks and integrity-check them;
 6. rebuild the 21-track optical target table from checksum-verified XLSX;
 7. run the three frozen model families under identical LOCO folds;
 8. apply the frozen gate without post-hoc model/feature expansion;
