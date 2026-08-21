@@ -4,6 +4,6 @@
 
 **Date / 기준일:** 2026-08-22  
 **State / 상태:** `RUN_REQUESTED`  
-**Attempt / 실행:** `4 — stdlib target extraction for E-PRTR and both PRODCOM archives`
+**Attempt / 실행:** `5 — DS-059359 exact T-code API query for 2008 and 2017`
 
 This file contains no research result. It exists only to produce a PR event whose workflow run can be queried through the connected GitHub tooling. / 본 파일은 연구결과가 아니며 연결된 GitHub 도구로 workflow run을 추적할 수 있는 PR 이벤트를 만들기 위해서만 존재한다.
