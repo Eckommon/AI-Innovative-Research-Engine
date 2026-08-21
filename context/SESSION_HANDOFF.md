@@ -4,9 +4,8 @@ type: memory
 state: ACTIVE
 tags:
   - type/memory
-  - state/experiment
-  - region/eu
-  - domain/industry
+  - state/candidate
+  - domain/governance
 created: 2026-08-22
 updated: 2026-08-22
 source_of_truth: github
@@ -20,86 +19,93 @@ source_of_truth: github
 ## 1. Current State / 현재 상태
 
 - Issues #1–#4 Wave 0/1 discovery: `COMPLETED`
-- Issue #5 `KR-GRID-F01`: `COMPLETED`, research outcome `HOLD`
+- Issue #5 `KR-GRID-F01`: `COMPLETED`, `HOLD`
 - Issue #6 `EU-IEE-E01`: `COMPLETED`, empirical `VALIDATED`, novelty `LOW / NOT NOVEL`
 - Issue #7 `EU-IEE-F02`: `COMPLETED`, `PASS_SECTOR_AGGREGATE / HOLD_FACILITY_DENOMINATOR`
-- **Active Issue / 활성 Issue:** **#8 `EU-STEEL-R01`**
+- Issue #8 `EU-STEEL-R01`: `COMPLETED`, **`HOLD / INCONCLUSIVE_LEGACY_VERSION_DIVERGENCE`**
+- Issue #10 `METHOD-001`: methodology hardening completed in this checkpoint / 방법론 보강 완료
+- **Project state / 프로젝트 상태:** `READY_FOR_NEXT_CANDIDATE`
 
-## 2. Active Objective / 활성 목적
+## 2. Issue #8 Final Checkpoint / Issue #8 최종 checkpoint
 
-**KO:** EEA가 발표한 EEA-33 철강 생산단위당 수은배출 2008→2017 `-36%` 관계를 raw/official E-PRTR + Eurostat PRODCOM 입력에서 독립 재현한다.  
-**EN:** Independently reproduce EEA's published EEA-33 2008→2017 `-36%` change in mercury emissions per unit steel production from raw/official E-PRTR + Eurostat PRODCOM inputs.
+### Frozen result / 고정 결과
+- E-PRTR activities: `1.(d)`, `2.(a)`, `2.(b)`
+- PRODCOM products: `2410T121-122`, `2410T131-132`, `2410T141-142`
+- 2008→2017; EEA-33
+- frozen narrative target: `-36%`
+- final gate: **`HOLD / INCONCLUSIVE_LEGACY_VERSION_DIVERGENCE`**
 
-## 3. Frozen Reference / 고정 기준
+### V3 reproduced / V3 재현
+- `F1_3` Hg 2008 = **4,312.9 kg**
+- `F1_3` Hg 2017 = **3,327.1 kg**
+- facility-level `F1_4` yields exactly the same totals
+- `epanntotal-r2` schema/T-codes reproduced; 2008 target unit = `kg`
+- current `DS-059359` actual dimensions = `freq / reporter / product / indicators / time`
+- indicators = `APRODQNT / QNTUNIT / APQNTFLAG / APQNTBASE`
 
-- E-PRTR: `1.(d)`, `2.(a)`, `2.(b)`
-- PRODCOM: `2410T121-122`, `2410T131-132`, `2410T141-142`
-- period: `2008–2017`
-- EEA-33 = EU-28 + Iceland + Liechtenstein + Norway + Switzerland + Serbia
-- Turkey absent from E-PRTR
-- reference = `2017 vs 2008 = -36%`
-- display unit = grams Hg / kilotonne steel
+### Material conflict / 핵심 충돌
+Current EEA figure CSV: / 현행 EEA figure CSV:
+- 2008 = `35.0 g/kt`
+- 2017 = `20.5 g/kt`
+- direct change = **`-41.4286%`**
 
-No post-hoc crosswalk substitution or tuning. / 사후 crosswalk 대체·tuning 금지.
+EEA 2019 briefing narrative states `-36%`. Cause remains `UNKNOWN`; do not infer revision/rounding. / 본문 -36%와 충돌하며 원인은 추정 금지.
 
-## 4. Resolved This Checkpoint / 이번 checkpoint 해결
+### Legacy boundary / legacy 경계
+- historical denominator source = `DS-066342`
+- tested current Eurostat COMEXT API, Statistics API and SDMX dataflow all return `404 / not available for dissemination`
+- surviving official EUROPROMS `epanntotal-r2` ends 2014; `epanntotal` ends 2012
+- current `DS-059359` must not be silently substituted
+- `null` must not be converted to zero
 
-### EEA numerator / 분자
-- historical EEA package lists `F1_3_Total Release at E-PRTR Annex I Activity into Air.csv` (~13 MB).
-- EEA Industrial Reporting v16 explicitly integrates historical E-PRTR data for 2007–2017.
-- v16 metadata defines pollutant releases/transfers as **kg/year**.
-- official direct-distribution directory is `https://sdi.eea.europa.eu/webdav/datastore/public/eea_t_ied-eprtr_p_2007-2024_v16_r00`.
+Detailed result: `research/EU-STEEL-R01/REPRODUCTION_RESULT.md`
+Evidence runs: `32534535674`, `32534683910`, `32534864866`.
 
-**Still not reproduced:** current execution environment has not transported/read the raw table bytes. / 실제 byte·row 읽기는 미완료.
+## 3. Methodology Promotion / 방법론 승격
 
-### PRODCOM denominator / 분모
-- EEA Figure 1 historical source = `DS-066342` total production.
-- Eurostat official EUROPROMS inventory lists `epanntotal-r2.zip` and `epanntotal.zip`.
-- Eurostat current Files API retrieves `/comext` special files with `?file=<relative-path>`.
-- current annual total-production dataset = `DS-059359` (1995 onward).
-- current fields: `APRODQNT` actual production quantity; `QNTUNIT` quantity unit; `APQNTFLAG`, `APQNTBASE` availability/rounding metadata.
+Issue #10 `METHOD-001` introduced snapshot/version lineage into source qualification. / source qualification에 snapshot/version 계보를 추가했다.
 
-**Do not assume** `DS-059359` is a one-to-one migration of historical `DS-066342` without authoritative correspondence. / 현행·과거 dataset 1:1 migration 가정 금지.
+### New schema / 신규 스키마
+`docs/METADATA_SCHEMA.md` = **v0.3**.
 
-## 5. Remaining UNKNOWN / 남은 미확인
+Key fields: / 핵심 필드:
+- `snapshot_identifier`
+- `snapshot_hash`
+- `historical_version_retention`
+- `snapshot_recoverability`
+- `discontinued_at`
+- `replacement_dataset_id`
+- `replacement_correspondence_evidence`
+- `archive_or_mirror_status`
+- `reproduction_risk`
 
-1. executable/raw read of E-PRTR `F1_3` or v16 equivalent and its row schema / E-PRTR raw 직접 읽기·schema;
-2. executable/raw read of historical `EUROPROMS/epanntotal-r2.zip` and legacy schema / historical PRODCOM ZIP 직접 읽기·schema;
-3. actual `QNTUNIT` of the six target steel rows for 2008/2017 / 목표 철강 row 실제 단위;
-4. exact reporter/aggregate procedure used by EEA for the EEA-33 steel denominator / EEA-33 분모 집계법;
-5. actual 2008/2017 numerator, denominator, intensities and independent percent change / 실제 수치·독립 변화율.
+`reproduction_risk` is a **gate/modifier**, not yet an IPS reweight. / 아직 IPS 재가중이 아닌 별도 게이트·modifier.
 
-`V2_PRIMARY_VERIFIED` source semantics must not be mislabeled `V3_REPRODUCED` before raw extraction succeeds. / raw 추출 전 V3 승격 금지.
+### Controlled rule / 통제 규칙
+A current accessible source does not establish historical reproducibility. Require exact/official archive recovery or authoritative replacement correspondence. / 현행 접근 가능성만으로 historical 재현성 인정 금지.
 
-## 6. Predefined Gate / 사전 게이트
+## 4. Exact Next Actions / 정확한 다음 행동
 
-- `PASS`: independent change within `-38%` to `-34%`.
-- `PARTIAL`: raw extraction reproducible but documented legacy/version differences prevent exact agreement.
-- `FAIL/HOLD`: unsupported assumptions required.
+1. read `registry/RESEARCH_MATERIAL_LANDSCAPE.md` and relevant synthesis/MOCs / 연구소재 landscape 재읽기;
+2. select the next controlled or reproduction candidate using **IPS + reproduction lineage gate** / IPS+lineage gate로 후보 선정;
+3. prefer a case with exact recoverable official snapshots to calibrate `reproduction_risk` against a second case / exact snapshot 가능한 2차 사례 우선;
+4. freeze target, crosswalk, snapshots/hashes, metric, tolerance and HOLD criterion before opening the next experiment / 다음 실험 전 사전고정;
+5. do not alter IPS weights until multiple lineage/reproduction cases justify recalibration / 복수 사례 전 IPS 재가중 금지.
 
-## 7. Exact Next Actions / 정확한 다음 행동
-
-1. obtain raw EEA table bytes through the official direct distribution and identify fields for year, country, Annex I activity, pollutant and quantity / EEA raw 확보·필드 확인;
-2. obtain `epanntotal-r2.zip` through Eurostat official Files API and inspect legacy columns / historical PRODCOM 확보;
-3. select only frozen activity/product/year/geography rows and record units/flags / 고정 filter 적용;
-4. freeze files/URLs/snapshot dates/hashes before computation / provenance 고정;
-5. compute `Hg_2008`, `Hg_2017`, `Steel_2008`, `Steel_2017`, then intensities and percent change / 수치 계산;
-6. compare to `-36%` without changing filters after seeing the result / 사후 filter 변경 금지;
-7. update Issue #8 + research artifact + Claim Ledger + STATUS + Handoff, and Project Memory only if a durable decision changes / writeback.
-
-## 8. Known Holds / 알려진 보류
+## 5. Known Holds / 알려진 보류
 - KPX localized bus mapping: `HOLD`.
-- Generic EU facility-level production denominator: `HOLD`.
-- raw web transport failures are access-path failures, not proof of data absence. / web transport 실패를 데이터 부재로 해석하지 않음.
+- generic EU facility-level production denominator: `HOLD`.
+- EEA steel-mercury exact historical legacy reproduction: `HOLD_LEGACY_VERSION_DIVERGENCE`.
 
-## 9. Mandatory Read Set Next Session / 다음 세션 의무 읽기
+## 6. Mandatory Read Set Next Session / 다음 세션 의무 읽기
 1. `README.md`
 2. `STATUS.md`
 3. `context/PROJECT_MEMORY.md`
 4. this file / 본 파일
 5. `docs/HALLUCINATION_CONTROL_PROTOCOL.md`
-6. `research/EU-STEEL-R01/README.md`
-7. Issue #8
+6. `docs/METADATA_SCHEMA.md`
+7. `registry/RESEARCH_MATERIAL_LANDSCAPE.md`
 8. `registry/CLAIM_LEDGER.md`, `registry/DECISION_LOG.md`
+9. `research/EU-STEEL-R01/REPRODUCTION_RESULT.md` when Issue #8 history is material / #8 이력이 필요할 때
 
 Official artifacts comply with `LANG-001`, `READ-001`, `FACT-001`, `UNKNOWN-001`, and `MEMORY-001`. / 공식 산출물은 관련 규약을 따른다.
