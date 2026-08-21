@@ -22,90 +22,90 @@ source_of_truth: github
 - Issue #5 `KR-GRID-F01`: `COMPLETED`, `HOLD`
 - Issue #6 `EU-IEE-E01`: `COMPLETED`, empirical `VALIDATED`, novelty `LOW / NOT NOVEL`
 - Issue #7 `EU-IEE-F02`: `COMPLETED`, `PASS_SECTOR_AGGREGATE / HOLD_FACILITY_DENOMINATOR`
-- Issue #8 `EU-STEEL-R01`: `COMPLETED`, **`HOLD / INCONCLUSIVE_LEGACY_VERSION_DIVERGENCE`**
-- Issue #10 `METHOD-001`: methodology hardening completed in this checkpoint / 방법론 보강 완료
-- **Project state / 프로젝트 상태:** `READY_FOR_NEXT_CANDIDATE`
+- Issue #8 `EU-STEEL-R01`: `COMPLETED`, `HOLD / INCONCLUSIVE_LEGACY_VERSION_DIVERGENCE`
+- Issue #10 `METHOD-001`: `COMPLETED`, snapshot/version lineage promoted
+- Issue #11 `AMBENCH-F02`: **`COMPLETED — PASS`**
+- **Active Issue / 활성 Issue:** #13 `AMBENCH-E03`
+- **Project state / 프로젝트 상태:** `RAW_TRACK_CONTROLLED_EXPERIMENT_ACTIVE`
 
-## 2. Issue #8 Final Checkpoint / Issue #8 최종 checkpoint
+## 2. AMBENCH-F02 Final Checkpoint / AMBENCH-F02 최종 checkpoint
 
 ### Frozen result / 고정 결과
-- E-PRTR activities: `1.(d)`, `2.(a)`, `2.(b)`
-- PRODCOM products: `2410T121-122`, `2410T131-132`, `2410T141-142`
-- 2008→2017; EEA-33
-- frozen narrative target: `-36%`
-- final gate: **`HOLD / INCONCLUSIVE_LEGACY_VERSION_DIVERGENCE`**
+**PASS — `TRACK_REPEAT_LEVEL_WITH_NESTED_OPTICAL_OUTCOMES`**
 
-### V3 reproduced / V3 재현
-- `F1_3` Hg 2008 = **4,312.9 kg**
-- `F1_3` Hg 2017 = **3,327.1 kg**
-- facility-level `F1_4` yields exactly the same totals
-- `epanntotal-r2` schema/T-codes reproduced; 2008 target unit = `kg`
-- current `DS-059359` actual dimensions = `freq / reporter / product / indicators / time`
-- indicators = `APRODQNT / QNTUNIT / APQNTFLAG / APQNTBASE`
+### Decisive evidence / 결정적 증거
+- NIST thermography README: `/ThermalData/Line_X_Y_Z/`, `Z` = one of three repeats per line.
+- NIST optical README: `...-L#-#.tiff`, with track case + track number.
+- official optical workbook preserves `Line 0_1 ... Line 3.2_3` and depth/width values.
+- exact 21 physical tracks = 7 cases × 3 repeats.
+- each line has two optical spatial cross-section outcomes; **do not** count these as extra thermography repeats.
 
-### Material conflict / 핵심 충돌
-Current EEA figure CSV: / 현행 EEA figure CSV:
-- 2008 = `35.0 g/kt`
-- 2017 = `20.5 g/kt`
-- direct change = **`-41.4286%`**
+### Snapshot lineage / snapshot 계보
+Evidence Run `32535986814` = `success`.
+- thermography HDF5 v1.3.1 official SHA-256: `f6fe21ec911707f72e7efda2932c77eae2b75d84765848878fe5beb6b728cd43`
+- scan-strategy HDF5 SHA-256: `7b7004753e150bc26632e9ce356e0440429160fa92cbff8fc8559202fdce2103`
+- optical XLSX SHA-256: `2cfaac96aaca3dabb77b7029f842cdcc7e75c5a2cf3577d0734823246364a931`
+- optical actual bytes = NIST sidecar = PDR metadata checksum.
+- tested version-specific PDR manifests directly recoverable.
+- `reproduction_risk = LOW`.
 
-EEA 2019 briefing narrative states `-36%`. Cause remains `UNKNOWN`; do not infer revision/rounding. / 본문 -36%와 충돌하며 원인은 추정 금지.
+Durable records: `research/AMBENCH-F02/README.md`, `CLM-014`, `CLM-015`, `DEC-011`; Issue #11 closed. Execution PR #12 closed without merge.
 
-### Legacy boundary / legacy 경계
-- historical denominator source = `DS-066342`
-- tested current Eurostat COMEXT API, Statistics API and SDMX dataflow all return `404 / not available for dissemination`
-- surviving official EUROPROMS `epanntotal-r2` ends 2014; `epanntotal` ends 2012
-- current `DS-059359` must not be silently substituted
-- `null` must not be converted to zero
+## 3. Active Issue #13 / 활성 Issue #13
 
-Detailed result: `research/EU-STEEL-R01/REPRODUCTION_RESULT.md`
-Evidence runs: `32534535674`, `32534683910`, `32534864866`.
+### `AMBENCH-E03 — Track-level Thermography → Melt-Pool Geometry Controlled Experiment`
 
-## 3. Methodology Promotion / 방법론 승격
+Preregistered before fitting: / fitting 전 사전등록
+- `n=21` tracks, not 42 optical rows
+- targets = track-level mean depth/width; cross-section spread retained separately
+- seven-fold leave-one-process-case-out validation
+- `PROCESS_ONLY`, `THERMO_ONLY`, `PROCESS_PLUS_THERMO`
+- primary metric = LOCO RMSE
+- material gain = ≥10% RMSE improvement on ≥1 target with no >10% degradation on the other
+- no CNN/transformer/high-capacity escalation
+- no outcome-aware thermal feature selection
 
-Issue #10 `METHOD-001` introduced snapshot/version lineage into source qualification. / source qualification에 snapshot/version 계보를 추가했다.
+Research record: `research/AMBENCH-E03/README.md`; open Issue #13.
 
-### New schema / 신규 스키마
-`docs/METADATA_SCHEMA.md` = **v0.3**.
+## 4. Current Execution Checkpoint / 현재 실행 checkpoint
 
-Key fields: / 핵심 필드:
-- `snapshot_identifier`
-- `snapshot_hash`
-- `historical_version_retention`
-- `snapshot_recoverability`
-- `discontinued_at`
-- `replacement_dataset_id`
-- `replacement_correspondence_evidence`
-- `archive_or_mirror_status`
-- `reproduction_risk`
+Execution-only PR #14 is open: `AMBENCH-E03: raw thermography structure inspection trigger`.
+Head branch: `ambench-e03-run`.
 
-`reproduction_risk` is a **gate/modifier**, not yet an IPS reweight. / 아직 IPS 재가중이 아닌 별도 게이트·modifier.
+Workflow: `.github/workflows/ambench-e03-pr.yml`.
 
-### Controlled rule / 통제 규칙
-A current accessible source does not establish historical reproducibility. Require exact/official archive recovery or authoritative replacement correspondence. / 현행 접근 가능성만으로 historical 재현성 인정 금지.
+Run 1 purpose only: / Run 1 목적 한정
+1. download frozen NIST `mds2-2716/pdr:v/1.3.1` thermography HDF5 (~549,979,044 bytes);
+2. verify exact SHA-256 `f6fe21ec...cd43`;
+3. inspect HDF5 structure with `h5py`;
+4. require exactly 21 `Line_*` groups and repeat IDs 1/2/3;
+5. record Signal shape/dtype/chunks/compression + group attributes;
+6. **no optical outcomes; no fitting**.
 
-## 4. Exact Next Actions / 정확한 다음 행동
+## 5. Exact Next Actions / 정확한 다음 행동
 
-1. read `registry/RESEARCH_MATERIAL_LANDSCAPE.md` and relevant synthesis/MOCs / 연구소재 landscape 재읽기;
-2. select the next controlled or reproduction candidate using **IPS + reproduction lineage gate** / IPS+lineage gate로 후보 선정;
-3. prefer a case with exact recoverable official snapshots to calibrate `reproduction_risk` against a second case / exact snapshot 가능한 2차 사례 우선;
-4. freeze target, crosswalk, snapshots/hashes, metric, tolerance and HOLD criterion before opening the next experiment / 다음 실험 전 사전고정;
-5. do not alter IPS weights until multiple lineage/reproduction cases justify recalibration / 복수 사례 전 IPS 재가중 금지.
+1. query PR #14 head workflow run for registration/completion;
+2. inspect Run 1 structural artifact/logs;
+3. if checksum/group-count fails, set Issue #13 `HOLD` or diagnose transport without changing the frozen experiment gate;
+4. if structure succeeds, freeze an **outcome-blind compact thermal feature manifest** using only documented/raw HDF5 semantics;
+5. only after feature freeze, build the checksum-traceable 21-track optical target table;
+6. execute identical LOCO folds for the three preregistered model families;
+7. apply `VALIDATED_MATERIAL_GAIN / MIXED / NO_MATERIAL_GAIN / HOLD` without post-hoc feature/model expansion;
+8. write back Claim/Decision/STATUS/Memory and close execution PR/Issue as appropriate.
 
-## 5. Known Holds / 알려진 보류
+## 6. Persistent Holds / 지속 HOLD
 - KPX localized bus mapping: `HOLD`.
 - generic EU facility-level production denominator: `HOLD`.
 - EEA steel-mercury exact historical legacy reproduction: `HOLD_LEGACY_VERSION_DIVERGENCE`.
 
-## 6. Mandatory Read Set Next Session / 다음 세션 의무 읽기
+## 7. Mandatory Read Set Next Session / 다음 세션 의무 읽기
 1. `README.md`
 2. `STATUS.md`
 3. `context/PROJECT_MEMORY.md`
 4. this file / 본 파일
-5. `docs/HALLUCINATION_CONTROL_PROTOCOL.md`
-6. `docs/METADATA_SCHEMA.md`
-7. `registry/RESEARCH_MATERIAL_LANDSCAPE.md`
+5. `research/AMBENCH-F02/README.md`
+6. `research/AMBENCH-E03/README.md`
+7. Issue #13 and PR #14
 8. `registry/CLAIM_LEDGER.md`, `registry/DECISION_LOG.md`
-9. `research/EU-STEEL-R01/REPRODUCTION_RESULT.md` when Issue #8 history is material / #8 이력이 필요할 때
 
-Official artifacts comply with `LANG-001`, `READ-001`, `FACT-001`, `UNKNOWN-001`, and `MEMORY-001`. / 공식 산출물은 관련 규약을 따른다.
+Official artifacts comply with `LANG-001`, `READ-001`, `FACT-001`, `UNKNOWN-001`, `FRESH-001`, and `MEMORY-001`. / 공식 산출물은 관련 규약을 따른다.
