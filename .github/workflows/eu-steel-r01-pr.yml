@@ -5,102 +5,45 @@ on:
     branches: [main]
     paths:
       - 'research/EU-STEEL-R01/TRIGGER.md'
-      - 'src/reproduce_eu_steel_mercury.py'
       - '.github/workflows/eu-steel-r01-pr.yml'
 
 permissions:
   contents: read
 
 jobs:
-  diagnose:
+  legacy:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
-      - name: Download EEA figure data and detailed E-PRTR raw
+      - name: Probe discontinued DS-066342 official endpoints
         shell: bash
         run: |
-          set -euxo pipefail
-          mkdir -p work/raw work/result work/logs
-          CHART='https://www.eea.europa.eu/en/analysis/maps-and-charts/mercury-emissions-per-unit-of-1/@@download/file'
-          F13='https://sdi.eea.europa.eu/webdav/datastore/public/eea_t_ied-eprtr_p_2007-2022_v11_r00/User%20friendly%20.csv%20file/F1_3_Total%20Release%20at%20E-PRTR%20Annex%20I%20Activity%20into%20Air.csv'
-          F14='https://sdi.eea.europa.eu/webdav/datastore/public/eea_t_ied-eprtr_p_2007-2022_v11_r00/User%20friendly%20.csv%20file/F1_4_Detailed%20releases%20at%20facility%20level%20with%20E-PRTR%20Sector%20and%20Annex%20I%20Activity%20detail%20into%20Air.csv'
-          curl -fL --retry 3 "$CHART" -o work/raw/eea_figure.csv || true
-          curl -fL --retry 3 "$F13" -o work/raw/f13.csv
-          curl -fL --retry 3 "$F14" -o work/raw/f14.csv
-          sha256sum work/raw/* | tee work/logs/sha256.txt
-          ls -lh work/raw | tee work/logs/files.txt
+          set -uxo pipefail
+          mkdir -p work/legacy work/logs
+          : > work/logs/probe.txt
+          probe () {
+            name="$1"; url="$2"; out="work/legacy/$name"
+            echo "===== $name =====" | tee -a work/logs/probe.txt
+            echo "$url" | tee -a work/logs/probe.txt
+            code=$(curl -sS -L -w '%{http_code}' -o "$out" "$url")
+            echo "HTTP=$code BYTES=$(wc -c < "$out")" | tee -a work/logs/probe.txt
+            head -c 3000 "$out" | tr '\n' ' ' | tee -a work/logs/probe.txt
+            echo | tee -a work/logs/probe.txt
+          }
+          probe comext_2017.json 'https://ec.europa.eu/eurostat/api/comext/dissemination/statistics/1.0/data/DS-066342?lang=EN&time=2017&product=2410T121'
+          probe comext_2008.json 'https://ec.europa.eu/eurostat/api/comext/dissemination/statistics/1.0/data/DS-066342?lang=EN&time=2008&product=2410T121'
+          probe dataflow.xml 'https://ec.europa.eu/eurostat/api/dissemination/sdmx/2.1/dataflow/ESTAT/DS-066342/latest?detail=allstubs'
+          probe regular_2017.json 'https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data/DS-066342?lang=EN&time=2017&product=2410T121'
+          probe landing.html 'https://ec.europa.eu/eurostat/web/products-datasets/-/DS-066342'
+          sha256sum work/legacy/* | tee work/logs/sha256.txt
 
-      - name: Diagnose figure and numerator semantics
-        shell: bash
-        run: |
-          python - <<'PY' | tee work/logs/diagnostic.txt
-          from pathlib import Path
-          import csv, io, collections, json
-
-          def read_rows(path):
-              b=Path(path).read_bytes()
-              t=b.decode('utf-8-sig',errors='replace')
-              sample=t[:50000]
-              try: delim=csv.Sniffer().sniff(sample,delimiters=',;\t|').delimiter
-              except Exception: delim=','
-              r=csv.DictReader(io.StringIO(t),delimiter=delim)
-              rows=list(r)
-              return r.fieldnames, rows, delim
-
-          chart=Path('work/raw/eea_figure.csv')
-          if chart.exists() and chart.stat().st_size:
-              print('EEA_FIGURE_BYTES',chart.stat().st_size)
-              print('EEA_FIGURE_HEAD',chart.read_text(encoding='utf-8-sig',errors='replace')[:10000])
-
-          targets={'1(d)','2(a)','2(b)'}
-          def norm(x): return (x or '').replace('.','').replace(' ','')
-
-          summary={}
-          for label,path in [('F13','work/raw/f13.csv'),('F14','work/raw/f14.csv')]:
-              fields,rows,delim=read_rows(path)
-              print(label,'DELIM',repr(delim),'FIELDS',fields,'ROWS',len(rows))
-              print(label,'SAMPLE')
-              for x in rows[:5]: print(x)
-              print(label,'ACTIVITY_LIKE_FIELDS',[f for f in fields if 'activ' in f.lower()])
-              print(label,'ID_LIKE_FIELDS',[f for f in fields if 'facility' in f.lower() or 'report' in f.lower()])
-              print(label,'POLLUTANT_LIKE_FIELDS',[f for f in fields if 'pollut' in f.lower()])
-              print(label,'EMISSION_LIKE_FIELDS',[f for f in fields if 'emiss' in f.lower() or 'release' in f.lower()])
-
-              # Try exact observed-friendly columns first, then fail closed if absent.
-              yearf=next((f for f in fields if f.lower()=='reportingyear'),None)
-              pollf=next((f for f in fields if f.lower()=='pollutant'),None)
-              emisf=next((f for f in fields if f.lower()=='emissions'),None)
-              act_candidates=[f for f in fields if 'annex' in f.lower() and 'activity' in f.lower() and 'code' in f.lower()]
-              print(label,'ACT_CANDIDATES',act_candidates,'YEAR',yearf,'POLL',pollf,'EMIS',emisf)
-              for actf in act_candidates:
-                  sums=collections.defaultdict(float); counts=collections.Counter(); countries=collections.defaultdict(set)
-                  for row in rows:
-                      y=row.get(yearf,'') if yearf else ''
-                      pol=(row.get(pollf,'') if pollf else '').lower()
-                      if y in {'2008','2017'} and 'mercur' in pol and norm(row.get(actf,'')) in targets:
-                          try: v=float(row.get(emisf,'') or 0)
-                          except Exception: continue
-                          sums[y]+=v; counts[y]+=1
-                          for cf in fields:
-                              if cf.lower()=='countryname': countries[y].add(row.get(cf,''))
-                  print(label,'ACT_FIELD_RESULT',actf,'SUMS',dict(sums),'COUNTS',dict(counts),'COUNTRIES',{y:sorted(v) for y,v in countries.items()})
-                  summary[f'{label}:{actf}']={'sums':dict(sums),'counts':dict(counts)}
-
-          Path('work/result/numerator_diagnostic.json').write_text(json.dumps(summary,indent=2),encoding='utf-8')
-          PY
-
-      - name: Upload diagnostic evidence
+      - name: Upload legacy endpoint evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: eu-steel-r01-run8-diagnostic
+          name: eu-steel-r01-run9-legacy-endpoints
           path: |
-            work/result/
+            work/legacy/
             work/logs/
-          if-no-files-found: error
           retention-days: 30
