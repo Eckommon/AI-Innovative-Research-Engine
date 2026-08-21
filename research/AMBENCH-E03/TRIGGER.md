@@ -4,6 +4,6 @@
 
 **Date / 기준일:** 2026-08-22  
 **State / 상태:** `RUN_REQUESTED`  
-**Attempt / 실행:** `1 — frozen mds2-2716 v1.3.1 HDF5 checksum + 21-line structure inspection`
+**Attempt / 실행:** `2 — inspect Signal attrs, root metadata and Calibration tree without outcomes`
 
 No optical outcomes are used in this run. No model or outcome-aware feature selection is permitted. / 본 run에서는 optical outcome을 사용하지 않으며 모델링·outcome-aware feature 선택을 금지한다.
