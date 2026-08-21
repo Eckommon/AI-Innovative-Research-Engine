@@ -22,17 +22,62 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Download official raw inputs
+      - name: Download official raw inputs with diagnostics
         shell: bash
         run: |
-          set -euxo pipefail
+          set -uxo pipefail
           mkdir -p work/raw work/extracted work/logs
+          : > work/logs/download.txt
+
           EPRTR_URL='https://sdi.eea.europa.eu/webdav/datastore/public/eea_t_ied-eprtr_p_2007-2022_v11_r00/User%20friendly%20.csv%20file/F1_3_Total%20Release%20at%20E-PRTR%20Annex%20I%20Activity%20into%20Air.csv'
-          curl -fL --retry 3 --retry-delay 2 -A 'AI-Innovative-Research-Engine/0.3' "$EPRTR_URL" -o work/raw/eprtr_F1_3.csv
-          curl -fL --retry 3 --retry-delay 2 -G 'https://ec.europa.eu/eurostat/api/dissemination/files' \
-            --data-urlencode 'file=comext/EUROPROMS/epanntotal-r2.zip' \
-            -o work/raw/epanntotal-r2.zip
-          sha256sum work/raw/eprtr_F1_3.csv work/raw/epanntotal-r2.zip | tee work/logs/sha256.txt
+          echo "EPRTR_URL=$EPRTR_URL" | tee -a work/logs/download.txt
+          curl -fL --retry 3 --retry-delay 2 -A 'AI-Innovative-Research-Engine/0.3' \
+            "$EPRTR_URL" -o work/raw/eprtr_F1_3.csv 2>&1 | tee -a work/logs/download.txt
+          echo "EPRTR_EXIT=${PIPESTATUS[0]}" | tee -a work/logs/download.txt
+
+          test_candidate () {
+            label="$1"; url="$2"; out="work/raw/${label}.bin"
+            echo "===== $label =====" | tee -a work/logs/download.txt
+            echo "$url" | tee -a work/logs/download.txt
+            curl -fL --retry 1 --retry-delay 1 -A 'AI-Innovative-Research-Engine/0.3' \
+              "$url" -o "$out" 2>&1 | tee -a work/logs/download.txt
+            code=${PIPESTATUS[0]}
+            echo "EXIT=$code" | tee -a work/logs/download.txt
+            if [ "$code" -eq 0 ]; then
+              file "$out" | tee -a work/logs/download.txt
+              ls -lh "$out" | tee -a work/logs/download.txt
+              if python - "$out" <<'PY'
+          import sys, zipfile
+          p=sys.argv[1]
+          raise SystemExit(0 if zipfile.is_zipfile(p) else 1)
+          PY
+              then
+                cp "$out" work/raw/epanntotal-r2.zip
+                echo "SELECTED=$label" | tee -a work/logs/download.txt
+                return 0
+              fi
+            fi
+            return 1
+          }
+
+          test_candidate api_comext \
+            'https://ec.europa.eu/eurostat/api/dissemination/files?file=comext/EUROPROMS/epanntotal-r2.zip' || true
+          if [ ! -f work/raw/epanntotal-r2.zip ]; then
+            test_candidate api_otherdata \
+              'https://ec.europa.eu/eurostat/api/dissemination/files?file=comext/COMEXT_OTHER_DATA/EUROPROMS/epanntotal-r2.zip' || true
+          fi
+          if [ ! -f work/raw/epanntotal-r2.zip ]; then
+            test_candidate legacy_comext \
+              'https://ec.europa.eu/eurostat/estat-navtree-portlet-prod/BulkDownloadListing?file=comext/EUROPROMS/epanntotal-r2.zip' || true
+          fi
+          if [ ! -f work/raw/epanntotal-r2.zip ]; then
+            test_candidate legacy_otherdata \
+              'https://ec.europa.eu/eurostat/estat-navtree-portlet-prod/BulkDownloadListing?file=COMEXT_OTHER_DATA/EUROPROMS/epanntotal-r2.zip' || true
+          fi
+
+          : > work/logs/sha256.txt
+          [ -f work/raw/eprtr_F1_3.csv ] && sha256sum work/raw/eprtr_F1_3.csv | tee -a work/logs/sha256.txt || true
+          [ -f work/raw/epanntotal-r2.zip ] && sha256sum work/raw/epanntotal-r2.zip | tee -a work/logs/sha256.txt || true
           ls -lh work/raw | tee work/logs/files.txt
 
       - name: Inspect official raw schemas
@@ -41,33 +86,45 @@ jobs:
           python - <<'PY' | tee work/logs/inspect.txt
           from pathlib import Path
           import csv, io, zipfile
+
           e=Path('work/raw/eprtr_F1_3.csv')
-          b=e.read_bytes(); t=b.decode('utf-8-sig',errors='replace'); s=t[:20000]
-          try: d=csv.Sniffer().sniff(s,delimiters=',;\t|').delimiter
-          except Exception: d=';' if s.count(';')>s.count(',') else ','
-          print('EPRTR_SIZE',len(b)); print('EPRTR_DELIMITER',repr(d))
-          r=csv.reader(io.StringIO(t),delimiter=d)
-          for i,row in zip(range(8),r): print('EPRTR_ROW',i,row)
-          with zipfile.ZipFile('work/raw/epanntotal-r2.zip') as z:
-              print('PRODCOM_MEMBERS')
-              for n in z.namelist():
-                  print(n)
-                  if not n.endswith('/'):
-                      p=Path('work/extracted')/Path(n).name; p.write_bytes(z.read(n))
+          if e.exists():
+              b=e.read_bytes(); t=b.decode('utf-8-sig',errors='replace'); s=t[:20000]
+              try: d=csv.Sniffer().sniff(s,delimiters=',;\t|').delimiter
+              except Exception: d=';' if s.count(';')>s.count(',') else ','
+              print('EPRTR_SIZE',len(b)); print('EPRTR_DELIMITER',repr(d))
+              r=csv.reader(io.StringIO(t),delimiter=d)
+              for i,row in zip(range(8),r): print('EPRTR_ROW',i,row)
+          else:
+              print('EPRTR_MISSING')
+
+          zpath=Path('work/raw/epanntotal-r2.zip')
+          if zpath.exists() and zipfile.is_zipfile(zpath):
+              with zipfile.ZipFile(zpath) as z:
+                  print('PRODCOM_MEMBERS')
+                  for n in z.namelist():
+                      print(n)
+                      if not n.endswith('/'):
+                          p=Path('work/extracted')/Path(n).name; p.write_bytes(z.read(n))
+          else:
+              print('PRODCOM_ZIP_MISSING')
+
           targets=['2410T121','2410T122','2410T131','2410T132','2410T141','2410T142']
           for p in sorted(Path('work/extracted').glob('*')):
               if p.is_file():
                   txt=p.read_bytes().decode('latin-1',errors='ignore')
                   print('FILE',p.name,p.stat().st_size)
                   print('TARGET_COUNTS',{x:txt.count(x) for x in targets})
-                  print('HEAD',txt[:2500].replace('\r','\\r').replace('\n','\\n'))
+                  print('HEAD',txt[:3000].replace('\r','\\r').replace('\n','\\n'))
           PY
 
       - name: Upload inspection evidence
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: eu-steel-r01-pr-inspection
           path: |
             work/logs/
             work/extracted/
+          if-no-files-found: warn
           retention-days: 30
