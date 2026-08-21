@@ -21,76 +21,70 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Query current Eurostat PRODCOM dataset
+      - name: Diagnose DS-059359 Statistics API dimension names
         shell: bash
         run: |
           set -uxo pipefail
           mkdir -p work/api work/logs
           BASE='https://ec.europa.eu/eurostat/api/comext/dissemination/statistics/1.0/data/DS-059359'
-          : > work/logs/api_download.txt
-          for YEAR in 2008 2017; do
-            for CODE in 2410T121 2410T122 2410T131 2410T132 2410T141 2410T142; do
-              OUT="work/api/${YEAR}_${CODE}.json"
-              echo "QUERY YEAR=$YEAR CODE=$CODE" | tee -a work/logs/api_download.txt
-              curl -sS -L -G "$BASE" \
-                --data-urlencode 'lang=EN' \
-                --data-urlencode "time=$YEAR" \
-                --data-urlencode "PRCCODE=$CODE" \
-                -o "$OUT"
-              STATUS=$?
-              echo "CURL_EXIT=$STATUS BYTES=$(wc -c < "$OUT" 2>/dev/null || echo 0)" | tee -a work/logs/api_download.txt
-              head -c 500 "$OUT" | tr '\n' ' ' | tee -a work/logs/api_download.txt
-              echo | tee -a work/logs/api_download.txt
-            done
-          done
+          : > work/logs/dimension_diagnostics.txt
 
-      - name: Inspect JSON-stat dimensions and values
+          query () {
+            NAME="$1"; shift
+            OUT="work/api/${NAME}.json"
+            echo "===== $NAME =====" | tee -a work/logs/dimension_diagnostics.txt
+            echo "ARGS: $*" | tee -a work/logs/dimension_diagnostics.txt
+            curl -sS -L -G "$BASE" --data-urlencode 'lang=EN' "$@" -o "$OUT"
+            echo "BYTES=$(wc -c < "$OUT")" | tee -a work/logs/dimension_diagnostics.txt
+            head -c 1200 "$OUT" | tr '\n' ' ' | tee -a work/logs/dimension_diagnostics.txt
+            echo | tee -a work/logs/dimension_diagnostics.txt
+          }
+
+          query time_only --data-urlencode 'time=2017'
+          query lower_prccode --data-urlencode 'time=2017' --data-urlencode 'prccode=2410T121'
+          query lower_product --data-urlencode 'time=2017' --data-urlencode 'product=2410T121'
+          query upper_PRODUCT --data-urlencode 'time=2017' --data-urlencode 'PRODUCT=2410T121'
+          query lower_decl --data-urlencode 'time=2017' --data-urlencode 'decl=2028'
+          query upper_DECL --data-urlencode 'time=2017' --data-urlencode 'DECL=2028'
+          query lower_indicators --data-urlencode 'time=2017' --data-urlencode 'indicators=APRODQNT'
+          query upper_INDICATORS --data-urlencode 'time=2017' --data-urlencode 'INDICATORS=APRODQNT'
+
+      - name: Summarize accepted dimensions
         shell: bash
         run: |
-          python - <<'PY' | tee work/logs/api_inspect.txt
+          python - <<'PY' | tee work/logs/dimension_summary.txt
           from pathlib import Path
-          import json, math
-
+          import json
           for p in sorted(Path('work/api').glob('*.json')):
-              print('\n===', p.name, '===')
+              print('\n===',p.stem,'===')
               try:
-                  obj=json.loads(p.read_text(encoding='utf-8'))
+                  o=json.loads(p.read_text())
               except Exception as e:
-                  print('JSON_ERROR',repr(e),p.read_text(errors='replace')[:1000]); continue
-              if isinstance(obj,dict) and ('error' in obj or 'errorCode' in obj):
-                  print('API_ERROR',obj); continue
-              print('TOP_KEYS',list(obj)[:30])
-              print('ID',obj.get('id'))
-              print('SIZE',obj.get('size'))
-              print('LABEL',obj.get('label'))
-              dim=obj.get('dimension',{})
-              print('DIM_KEYS',list(dim))
-              for dk,dv in dim.items():
-                  cat=(dv or {}).get('category',{}) if isinstance(dv,dict) else {}
+                  print('JSON_ERROR',repr(e)); continue
+              if 'error' in o:
+                  print('ERROR',o['error']); continue
+              print('ID',o.get('id'))
+              print('SIZE',o.get('size'))
+              print('LABEL',o.get('label'))
+              print('DIM_KEYS',list((o.get('dimension') or {}).keys()))
+              for k,v in (o.get('dimension') or {}).items():
+                  cat=(v or {}).get('category',{})
                   idx=cat.get('index')
                   labels=cat.get('label')
-                  print('DIM',dk,'LABEL',(dv or {}).get('label') if isinstance(dv,dict) else None)
-                  print('  INDEX',idx)
+                  print('DIM',k,'LABEL',(v or {}).get('label'))
+                  print(' INDEX',idx if not isinstance(idx,dict) or len(idx)<80 else list(idx.items())[:80])
                   if isinstance(labels,dict):
-                      sample=list(labels.items())[:120]
-                      print('  LABELS_SAMPLE',sample)
-              vals=obj.get('value')
-              status=obj.get('status')
-              if isinstance(vals,list):
-                  nonnull=[(i,v) for i,v in enumerate(vals) if v is not None]
-                  print('NONNULL_COUNT',len(nonnull),'SAMPLE',nonnull[:80])
-              elif isinstance(vals,dict):
-                  print('VALUE_DICT_COUNT',len(vals),'SAMPLE',list(vals.items())[:80])
-              else:
-                  print('VALUE_TYPE',type(vals).__name__,vals)
-              print('STATUS_SAMPLE',status if not isinstance(status,dict) else list(status.items())[:50])
+                      print(' LABELS',list(labels.items())[:80])
+              vals=o.get('value')
+              if isinstance(vals,dict): print('VALUES',len(vals),list(vals.items())[:30])
+              elif isinstance(vals,list): print('VALUES',len(vals),[(i,x) for i,x in enumerate(vals) if x is not None][:30])
           PY
 
-      - name: Upload API evidence
+      - name: Upload dimension evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: eu-steel-r01-ds059359-evidence
+          name: eu-steel-r01-dimension-diagnostics
           path: |
             work/api/
             work/logs/
