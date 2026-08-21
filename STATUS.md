@@ -1,66 +1,102 @@
 # Project Status / 프로젝트 상태
 
 **Project / 프로젝트:** AI-Innovative-Research-Engine / AI 기반 혁신 탐색 연구 엔진  
-**Baseline / 베이스라인:** `v0.2-bilingual`  
+**Baseline / 베이스라인:** `v0.3-knowledge-memory`  
 **Date / 기준일:** 2026-08-22  
-**State / 상태:** `WAVE1_COMPLETE_NEXT_EXPERIMENT_SELECTION`  
-**Active Program / 활성 프로그램:** Wave 1 complete → Issue #5 gate disposition → first cross-dataset controlled experiment / Wave 1 완료 → Issue #5 게이트 판정 → 첫 cross-dataset 통제실험
+**State / 상태:** `CROSS_DATASET_REPRODUCTION_ACTIVE`  
+**Active Work Queue / 활성 작업 큐:** Issue #8 `EU-STEEL-R01`
 
 ## 1. Completed / 완료
 
-- Repository established as the persistent source of truth for GPT-assisted research. / GitHub를 GPT 연구의 지속 기준 저장소로 확립.
-- `LANG-001` bilingual Korean-English policy made mandatory. / `LANG-001` 한글·영문 병기 규약 의무화.
-- Research-material landscape established across frontier opportunities and persistent bottlenecks. / 현대 유망영역과 잔존 병목을 포함한 연구 소재 지형 확립.
-- Issue #1 `AMBENCH-001` calibration completed with negative/conditional findings retained. / Issue #1 `AMBENCH-001` 보정 완료 및 부정적·조건부 결과 보존.
-- Metadata schema calibrated to v0.2 with aggregation, replication, and measurement-uncertainty fields. / 집계·반복·측정불확실성을 반영해 메타데이터 스키마 v0.2 보정.
-- Issue #2 U.S. first-pass dataset discovery completed. / Issue #2 미국 1차 데이터셋 탐색 완료.
-- Issue #3 Korea first-pass dataset discovery completed. / Issue #3 한국 1차 데이터셋 탐색 완료.
-- Issue #4 EU first-pass dataset discovery completed. / Issue #4 EU 1차 데이터셋 탐색 완료.
-- `research/WAVE1-SYNTHESIS.md` completed and feasibility tournament performed. / Wave 1 종합·feasibility tournament 완료.
+### Foundation / 기반
+- GitHub = persistent Source of Truth / 지속 기준 저장소.
+- `LANG-001` bilingual policy mandatory / 한·영 병기 의무.
+- eight-stage innovation discovery methodology established / 8단계 혁신탐색 방법론 확립.
+- Dataset / Combination / Project IPS separated / IPS 3종 분리.
+- metadata schema calibrated to v0.2 / 메타데이터 스키마 v0.2 보정.
 
-## 2. Wave 1 Comparative Finding / Wave 1 비교 결론
+### Research Material & Wave 1 / 소재·Wave 1
+- frontier + persistent-bottleneck research-material landscape completed / 유망영역+잔존병목 소재지형 완료.
+- Issue #1 `AMBENCH-001` — `COMPLETED`
+- Issue #2 U.S. / 미국 — `COMPLETED`
+- Issue #3 Korea / 한국 — `COMPLETED`
+- Issue #4 EU — `COMPLETED`
+- Wave 1 synthesis and feasibility tournament — `COMPLETED`
 
-- **Korea / 한국:** strongest high-frequency operational/grid data / 고빈도 운영·계통 데이터가 강점.
-- **United States / 미국:** strongest cross-agency diversity and benchmark-grade research datasets / 기관간 다양성과 benchmark-grade 연구데이터가 강점.
-- **European Union / EU:** strongest harmonization, classification, and cross-national semantics / 표준화·분류·국가간 의미체계가 강점.
+### Post-Wave 1 / Wave 1 이후
+- Issue #5 `KR-GRID-F01` — completed feasibility, outcome `HOLD`; no localized/asset-attributed KPX model. / 지역·설비 귀속 모델 승격 없음.
+- Issue #6 `EU-IEE-E01` — first cross-dataset controlled experiment; empirical `VALIDATED`, novelty `LOW / NOT NOVEL`.
+- Issue #7 `EU-IEE-F02` — `PARTIAL_PASS`: `PASS_SECTOR_AGGREGATE / HOLD_FACILITY_DENOMINATOR`.
 
-The engine should exploit each jurisdiction's comparative data advantage rather than require identical datasets everywhere. / 모든 국가에서 동일 데이터 구조를 요구하기보다 각 지역의 데이터 비교우위를 활용한다.
+### Knowledge & Memory / 지식·메모리
+- `KM-001` Obsidian-compatible knowledge management activated. / Obsidian 지식관리 도입.
+- repository root designated as Vault; GitHub Markdown remains authoritative. / 저장소 루트 Vault, GitHub Markdown 기준.
+- MOCs added for research, datasets, experiments, decisions. / 연구·데이터·실험·결정 MOC 추가.
+- controlled tag taxonomy added. / 통제 태그체계 추가.
+- `READ-001 / FACT-001 / UNKNOWN-001 / CONFLICT-001 / FRESH-001 / MEMORY-001 / WRITEBACK-001` made mandatory. / 환각·드리프트 방지 규약군 도입.
+- durable `context/PROJECT_MEMORY.md`, `context/SESSION_HANDOFF.md`, `registry/CLAIM_LEDGER.md`, `registry/DECISION_LOG.md` established. / 지속 메모리·인수인계·주장·결정 기록 확립.
 
-## 3. Issue #5 — KR-GRID-F01 / Issue #5 — KPX 모선 식별자 매핑 가능성
+## 2. Active Work — Issue #8 / 활성 작업 — Issue #8
 
-**Current gate / 현재 게이트:** `HOLD_PENDING_IDENTIFIER_VALIDATION`
+### `EU-STEEL-R01 — Independent Reproduction of Steel Mercury Intensity / 철강 수은집약도 독립 재현`
 
-### OBSERVED / 관측
-- KPX continues to publish monthly 5-minute bus-level state-estimation releases; official listings include 2026 May and June releases. / KPX는 2026년 5월·6월을 포함해 월별 모선별 5분 상태추정 자료를 계속 공개한다.
-- Public metadata exposes time, `bus_number`, estimated kV, and estimated MW-related values. / 공개 메타데이터는 시간, `bus_number`, 상태추정 kV, MW 관련 값을 제공한다.
-- No current authoritative public `bus_number → substation/geography` dictionary has been established by this review. / 이번 검토에서 현행 공식 공개 `bus_number → 변전소/지리` 사전은 확립되지 않았다.
+**Objective / 목적:** independently reproduce EEA's published EEA-33 `2008→2017 = -36%` mercury-emissions-per-unit-steel relationship from raw/official E-PRTR + Eurostat PRODCOM inputs. / raw 공식 입력으로 EEA -36% 관계 독립 재현.
 
-### DECISION / 판단
-Localized/asset-attributed promotion of `C-KR-001` remains **HOLD**. System-level time-series/anomaly research that does not infer precise infrastructure location may continue. / `C-KR-001`의 지역·설비 귀속 모델 승격은 **HOLD**한다. 정확한 중요 인프라 위치를 추정하지 않는 system-level 시계열·이상탐지 연구는 계속 가능하다.
+### Frozen crosswalk / 고정 crosswalk
+- E-PRTR: `1.(d)`, `2.(a)`, `2.(b)`
+- PRODCOM: `2410T121-122`, `2410T131-132`, `2410T141-142`
+- period: 2008–2017
+- geography: EEA-33; Turkey absent, Serbia included
 
-## 4. Closed Work Queue / 종료 Work Queue
+### Reproduction gate / 재현 게이트
+- `PASS`: independent change within ±2 percentage points of `-36%`.
+- `PARTIAL`: inputs reproducible but documented legacy/version differences prevent exact agreement.
+- `FAIL/HOLD`: unsupported assumptions required.
 
-- Issue #1 — AMBENCH-001 calibration / AMBENCH-001 보정 — `COMPLETED`
-- Issue #2 — Wave 1 US / 미국 — `COMPLETED`
-- Issue #3 — Wave 1 KR / 한국 — `COMPLETED`
-- Issue #4 — Wave 1 EU — `COMPLETED`
+### Current verified access findings / 현재 검증 접근
+- EEA historical bulk package lists Annex I activity-level air release CSV (~13 MB) and facility-level air release CSV (~101 MB). / EEA historical bulk 분자 후보 확인.
+- Current EEA Industrial Reporting provides downloadable 2007–2024 tabular data. / 현행 2007–2024 tabular 데이터 제공.
+- Eurostat DS-prefixed PRODCOM uses dedicated `api/comext/dissemination` endpoints with filtered queries. / PRODCOM 전용 API 경로 확인.
 
-## 5. Active / Next Work Queue / 활성·다음 Work Queue
+### Current UNKNOWN / 현재 미확인
+- exact executable download path/schema for the historical numerator in the current environment / 현재 환경에서 historical 분자 직접 추출 경로·schema;
+- active/archive dataset mapping for legacy `DS-066342` and published `T` steel codes / legacy PRODCOM dataset·T code 현행/보관 mapping;
+- relevant production quantity units / 생산수량 단위.
 
-1. Finalize Issue #5 as a completed feasibility assessment with `HOLD` outcome. / Issue #5를 `HOLD` 결과의 완료된 feasibility 평가로 정리.
-2. Promote a fallback candidate that does not depend on opaque critical-infrastructure mapping. / 불투명한 중요 인프라 mapping에 의존하지 않는 fallback 후보 승격.
-3. Execute the first post-Wave-1 cross-dataset controlled experiment. / Wave 1 이후 첫 cross-dataset 통제실험 수행.
-4. Introduce Obsidian-compatible knowledge management and Maps of Content. / Obsidian 호환 지식관리·MOC 도입.
-5. Introduce durable project-memory and read-before-reasoning safeguards against hallucination and context drift. / 환각·컨텍스트 드리프트 방지용 지속 프로젝트 메모리와 선읽기 규약 도입.
+No modern-code substitution or post-hoc filter tuning is allowed without authoritative correspondence. / 권위 correspondence 없는 현대코드 대체·사후 filter 조정 금지.
 
-## 6. Safety / 안전 경계
+## 3. Comparative Strategic Finding / 비교 전략 결론
 
-- Do not reconstruct or publish precise critical-infrastructure locations/topology from indirect public identifiers. / 간접 공개 식별자로 중요 인프라의 정확한 위치·토폴로지를 재구성·공개하지 않는다.
-- Do not promote a hypothesis because it is plausible; require evidence and predefined gates. / 그럴듯함만으로 가설을 승격하지 않고 증거·사전 게이트를 요구한다.
-- Preserve negative, held, and inconclusive results. / 부정적·보류·불확정 결과를 보존한다.
+- Korea / 한국: high-frequency operational/grid data / 고빈도 운영·계통 데이터.
+- U.S. / 미국: cross-agency diversity + benchmark research data / 기관간 다양성+benchmark.
+- EU: harmonized classification + cross-national semantics / 조화 분류+국가간 의미체계.
 
-## 7. Repository Sync Rule / 저장소 동기화 규칙
+Use jurisdiction-specific comparative data advantages under a common research schema rather than forcing identical source structures. / 동일 데이터 구조를 강제하지 않고 각 지역 비교우위를 공통 연구 schema에서 연결한다.
 
-Before material reasoning, read the durable project context and relevant research state; after material work, persist decisions, evidence, limitations, and next actions. / 실질 추론 전에 지속 프로젝트 컨텍스트와 관련 연구 상태를 읽고, 실질 작업 후 결정·증거·한계·다음 행동을 기록한다.
+## 4. Persistent Holds / 지속 HOLD
 
-Official artifacts comply with `LANG-001`. / 공식 산출물은 `LANG-001`을 따른다.
+- `C-KR-001` localized/asset attribution — `HOLD`
+- U.S. facility-level data-center energy/cooling/water — `HOLD_DATA_GAP`
+- generic EU facility-level production denominator — `HOLD`
+
+## 5. Next Actions / 다음 행동
+
+1. Continue Issue #8 raw numerator/denominator retrieval. / #8 raw 분자·분모 확보.
+2. Freeze query URLs/filters/snapshot metadata before calculation. / 계산 전 query·filter·snapshot 고정.
+3. Compute yearly inputs separately and reproduce 2008→2017 intensity change. / 연도별 분자·분모 및 변화율 재현.
+4. Compare against `-36%` without post-hoc tuning. / 사후 조정 없이 비교.
+5. Update Issue #8 + research artifact + Claim Ledger + Project Memory + Session Handoff. / 기록 동기화.
+6. After Issue #8, promote the next highest-information-gain experiment rather than automatically following highest IPS. / #8 이후 최고 IPS보다 정보이득이 큰 다음 실험 선정.
+
+## 6. Required Session Start / 세션 시작 의무
+
+Apply `READ-001`: / `READ-001` 적용:
+`README.md → STATUS.md → context/PROJECT_MEMORY.md → context/SESSION_HANDOFF.md → relevant MOC → relevant research object → active Issue → claims/decisions as needed`.
+
+## 7. Safety / 안전
+
+- no precise critical-infrastructure location/topology reconstruction from indirect identifiers / 중요 인프라 간접 식별자 기반 위치·토폴로지 재구성 금지;
+- no unsupported classification or denominator allocation / 근거 없는 분류·분모 배분 금지;
+- preserve `UNKNOWN`, `HOLD`, negative and non-novel results / 미확인·보류·부정적·비신규 결과 보존.
+
+Official artifacts comply with `LANG-001`, `READ-001`, `FACT-001`, and `MEMORY-001`. / 공식 산출물은 관련 규약을 따른다.
