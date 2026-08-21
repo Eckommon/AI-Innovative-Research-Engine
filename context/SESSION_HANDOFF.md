@@ -24,74 +24,83 @@ source_of_truth: github
 - Issue #7 `EU-IEE-F02`: `COMPLETED`, `PASS_SECTOR_AGGREGATE / HOLD_FACILITY_DENOMINATOR`
 - Issue #8 `EU-STEEL-R01`: `COMPLETED`, `HOLD / INCONCLUSIVE_LEGACY_VERSION_DIVERGENCE`
 - Issue #10 `METHOD-001`: `COMPLETED`, snapshot/version lineage promoted
-- Issue #11 `AMBENCH-F02`: **`COMPLETED — PASS`**
-- **Active Issue / 활성 Issue:** #13 `AMBENCH-E03`
-- **Project state / 프로젝트 상태:** `RAW_TRACK_CONTROLLED_EXPERIMENT_ACTIVE`
+- Issue #11 `AMBENCH-F02`: `COMPLETED — PASS`
+- Issue #13 `AMBENCH-E03`: **`COMPLETED — NO_MATERIAL_GAIN`**
+- **Active Issue / 활성 Issue:** none / 없음
+- **Project state / 프로젝트 상태:** `READY_FOR_NEXT_PREREGISTERED_HYPOTHESIS`
 
-## 2. AMBENCH-F02 Final Checkpoint / AMBENCH-F02 최종 checkpoint
+## 2. AMBENCH-F02 Durable Result / AMBENCH-F02 지속 결과
 
-### Frozen result / 고정 결과
 **PASS — `TRACK_REPEAT_LEVEL_WITH_NESTED_OPTICAL_OUTCOMES`**
 
-### Decisive evidence / 결정적 증거
-- NIST thermography README: `/ThermalData/Line_X_Y_Z/`, `Z` = one of three repeats per line.
-- NIST optical README: `...-L#-#.tiff`, with track case + track number.
-- official optical workbook preserves `Line 0_1 ... Line 3.2_3` and depth/width values.
-- exact 21 physical tracks = 7 cases × 3 repeats.
-- each line has two optical spatial cross-section outcomes; **do not** count these as extra thermography repeats.
+- exact 21 physical tracks = seven cases × three repeats
+- thermography `Line_X_Y_Z`: `Z` = repeat
+- optical naming/workbook preserves matching case + track number
+- two optical cross-sections per track are nested outcomes, not extra repeats
+- thermography SHA-256 `f6fe21ec911707f72e7efda2932c77eae2b75d84765848878fe5beb6b728cd43`
+- optical XLSX SHA-256 `2cfaac96aaca3dabb77b7029f842cdcc7e75c5a2cf3577d0734823246364a931`
+- `reproduction_risk = LOW`
 
-### Snapshot lineage / snapshot 계보
-Evidence Run `32535986814` = `success`.
-- thermography HDF5 v1.3.1 official SHA-256: `f6fe21ec911707f72e7efda2932c77eae2b75d84765848878fe5beb6b728cd43`
-- scan-strategy HDF5 SHA-256: `7b7004753e150bc26632e9ce356e0440429160fa92cbff8fc8559202fdce2103`
-- optical XLSX SHA-256: `2cfaac96aaca3dabb77b7029f842cdcc7e75c5a2cf3577d0734823246364a931`
-- optical actual bytes = NIST sidecar = PDR metadata checksum.
-- tested version-specific PDR manifests directly recoverable.
-- `reproduction_risk = LOW`.
+Source: `research/AMBENCH-F02/README.md`, `CLM-014..015`, `DEC-011`.
 
-Durable records: `research/AMBENCH-F02/README.md`, `CLM-014`, `CLM-015`, `DEC-011`; Issue #11 closed. Execution PR #12 closed without merge.
+## 3. AMBENCH-E03 Final Result / AMBENCH-E03 최종 결과
 
-## 3. Active Issue #13 / 활성 Issue #13
+### Frozen design / 고정 설계
+- canonical `n=21` tracks
+- targets = track-level mean depth/width
+- seven-fold leave-one-process-case-out
+- fold-local `StandardScaler` + `Ridge(alpha=1.0)` for all three model families
+- 3 process features; 10 outcome-blind raw-DL thermal features; 13 combined
+- no tuning or post-result capacity/feature expansion
 
-### `AMBENCH-E03 — Track-level Thermography → Melt-Pool Geometry Controlled Experiment`
+### Evidence sequence / 증거 순서
+- Run `32537038475`: exact HDF5 checksum + 21-line structure — success
+- Run `32537157650`: Signal/frame/calibration metadata, no outcomes — success
+- Run `32537282914`: frozen 10-feature extraction on 21 tracks before outcomes — success
+- Run `32537495534`: first optical-outcome combination + final preregistered LOCO experiment — success
 
-Preregistered before fitting: / fitting 전 사전등록
-- `n=21` tracks, not 42 optical rows
-- targets = track-level mean depth/width; cross-section spread retained separately
-- seven-fold leave-one-process-case-out validation
-- `PROCESS_ONLY`, `THERMO_ONLY`, `PROCESS_PLUS_THERMO`
-- primary metric = LOCO RMSE
-- material gain = ≥10% RMSE improvement on ≥1 target with no >10% degradation on the other
-- no CNN/transformer/high-capacity escalation
-- no outcome-aware thermal feature selection
+### Final pooled OOF metrics / 최종 pooled OOF
 
-Research record: `research/AMBENCH-E03/README.md`; open Issue #13.
+| Target | Process RMSE | Combined RMSE | Combined improvement |
+|---|---:|---:|---:|
+| mean depth | `19.6406 µm` | `23.4295 µm` | `-19.2914%` |
+| mean width | `14.1639 µm` | `17.1620 µm` | `-21.1668%` |
 
-## 4. Current Execution Checkpoint / 현재 실행 checkpoint
+Thermo-only RMSE: depth `31.8638 µm`, width `20.4189 µm`.
 
-Execution-only PR #14 is open: `AMBENCH-E03: raw thermography structure inspection trigger`.
-Head branch: `ambench-e03-run`.
+**Frozen gate: `NO_MATERIAL_GAIN`.**
 
-Workflow: `.github/workflows/ambench-e03-pr.yml`.
+Some process-case folds improved, but others degraded sharply; pooled gate remains controlling and no subgroup claim is promoted. / 일부 fold 개선이 있으나 pooled gate가 우선하며 subgroup 주장을 승격하지 않는다.
 
-Run 1 purpose only: / Run 1 목적 한정
-1. download frozen NIST `mds2-2716/pdr:v/1.3.1` thermography HDF5 (~549,979,044 bytes);
-2. verify exact SHA-256 `f6fe21ec...cd43`;
-3. inspect HDF5 structure with `h5py`;
-4. require exactly 21 `Line_*` groups and repeat IDs 1/2/3;
-5. record Signal shape/dtype/chunks/compression + group attributes;
-6. **no optical outcomes; no fitting**.
+Records: `research/AMBENCH-E03/README.md`, `research/AMBENCH-E03/RESULT.md`, `CLM-016..017`, `DEC-012`. Artifact `9465900222`, SHA-256 `9a7df463fb0ca774c7caf097bcea2b0bcb600c1644d62ba8da7faf1556a9e2ce`.
 
-## 5. Exact Next Actions / 정확한 다음 행동
+Issue #13 and execution PR #14 are closed; PR #14 was intentionally not merged. / Issue #13·실행 PR #14 종료, PR은 실행 전용으로 미병합.
 
-1. query PR #14 head workflow run for registration/completion;
-2. inspect Run 1 structural artifact/logs;
-3. if checksum/group-count fails, set Issue #13 `HOLD` or diagnose transport without changing the frozen experiment gate;
-4. if structure succeeds, freeze an **outcome-blind compact thermal feature manifest** using only documented/raw HDF5 semantics;
-5. only after feature freeze, build the checksum-traceable 21-track optical target table;
-6. execute identical LOCO folds for the three preregistered model families;
-7. apply `VALIDATED_MATERIAL_GAIN / MIXED / NO_MATERIAL_GAIN / HOLD` without post-hoc feature/model expansion;
-8. write back Claim/Decision/STATUS/Memory and close execution PR/Issue as appropriate.
+## 4. Governing Interpretation / 지배 해석
+
+- E03 proves the **specific frozen ten-feature raw-DL representation** did not add robust cross-process-case predictive value.
+- Do **not** rewrite E03, tune alpha, remove constant features, change splits, add temperature conversion, or escalate to deep models to improve this result.
+- E03 does **not** prove thermography is generally useless.
+- Any temperature-domain, spatial morphology, temporal dynamics, scan-path-aware, or higher-capacity follow-up is a **new hypothesis** requiring separate preregistration.
+
+## 5. Exact Next Action / 정확한 다음 행동
+
+Before opening the next experiment, perform a candidate triage across these independent follow-up directions: / 다음 실험 전 후보 triage
+1. physically calibrated temperature-domain representation;
+2. explicit temporal dynamics from 30,000 fps frames;
+3. spatial morphology only after physical image-axis/pixel semantics are grounded;
+4. scan-strategy-aware thermography features;
+5. additional compatible AM Bench experiments to increase independent process-condition sample size.
+
+Rank by: / 순위 기준
+- new information relative to E03;
+- sample-size/generalization benefit;
+- authoritative semantic grounding;
+- snapshot reproducibility;
+- overfitting risk;
+- experiment cost.
+
+Prefer the candidate that increases **independent process-condition information**, not merely feature/model complexity. / 단순 feature·모델 복잡도보다 독립 공정조건 정보량을 늘리는 후보를 우선한다.
 
 ## 6. Persistent Holds / 지속 HOLD
 - KPX localized bus mapping: `HOLD`.
@@ -105,7 +114,7 @@ Run 1 purpose only: / Run 1 목적 한정
 4. this file / 본 파일
 5. `research/AMBENCH-F02/README.md`
 6. `research/AMBENCH-E03/README.md`
-7. Issue #13 and PR #14
+7. `research/AMBENCH-E03/RESULT.md`
 8. `registry/CLAIM_LEDGER.md`, `registry/DECISION_LOG.md`
 
 Official artifacts comply with `LANG-001`, `READ-001`, `FACT-001`, `UNKNOWN-001`, `FRESH-001`, and `MEMORY-001`. / 공식 산출물은 관련 규약을 따른다.
