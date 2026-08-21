@@ -2,158 +2,133 @@
 
 ## Purpose / 목적
 
-**한국어**  
-이 규약은 GPT 기반 연구 작업이 `Eckommon/AI-Innovative-Research-Engine`의 지속적 상태와 어떻게 동기화되는지를 정의한다. GitHub는 공식 기준 기록이며 GPT 세션은 분석·조사·가설·검증을 수행하는 작업 공간이다.
+GitHub는 공식 지속 Source of Truth이고 GPT 세션은 분석·조사·가설·검증 작업공간이다. Obsidian은 동일 Markdown에 대한 탐색 레이어이며 별도 권위 저장소가 아니다.  
+GitHub is the official persistent Source of Truth; GPT sessions are analytical workspaces. Obsidian is a navigation layer over the same Markdown, not a separate authority.
 
-**English**  
-This protocol defines how GPT-assisted work remains synchronized with `Eckommon/AI-Innovative-Research-Engine`. GitHub is the official persistent system of record, while GPT sessions are analytical workspaces for research, synthesis, hypothesis generation, and validation.
+## A. Mandatory Session Start — `READ-001` / 의무 세션 시작
 
-## A. Session Start — READ BEFORE REASONING / 세션 시작 — 추론 전에 읽기
-
-프로젝트 관련 실질 작업 전 GPT는 채팅 기억만 의존하지 않고 저장소 상태를 우선 확인한다.  
-Before material project work, GPT should inspect repository state rather than rely only on chat memory.
-
-Minimum read set / 최소 확인 대상:
+실질 프로젝트 작업 전 아래 순서를 먼저 읽는다. 채팅·모델 기억만으로 작업을 시작하지 않는다. / Before material work, read the following sequence first; never begin from chat/model memory alone.
 
 1. `README.md`
 2. `STATUS.md`
-3. 관련 `docs/` / relevant `docs/`
-4. 관련 `registry/` 및 `research/` 객체 / relevant registry and research objects
-5. 관련 GitHub Issue와 최근 커밋 / relevant GitHub Issues and recent commits
+3. `context/PROJECT_MEMORY.md`
+4. `context/SESSION_HANDOFF.md`
+5. relevant `knowledge/MOC_*.md` / 관련 MOC
+6. relevant `research/` object / 관련 연구 객체
+7. relevant active/recent GitHub Issue / 활성·최근 Issue
+8. `registry/CLAIM_LEDGER.md` and `registry/DECISION_LOG.md` when claims/decisions are material / 중요 주장·결정 시 ledger/log
+9. relevant governance/schema files when changing rules or metadata / 규약·스키마 변경 시 관련 문서
 
-현재 사용자 지시와 저장소가 충돌하면 이를 숨기지 않고 명시적 변경으로 해결한다.  
-If current user instructions conflict with repository state, surface and resolve the conflict through an explicit change rather than silently assuming one side.
+If a mandatory artifact is missing, record the absence rather than infer its content. / 필수 문서 부재 시 내용을 추정하지 않고 부재를 기록한다.
 
-## B. During Work — CLASSIFY CLAIMS / 작업 중 — 주장 분류
+## B. Evidence Discipline / 증거 규율
 
-중요한 주장은 다음 증거 등급으로 구분한다. / Material claims are conceptually classified as:
+Material claims use: `OBSERVED`, `DERIVED`, `HYPOTHESIZED`, `VALIDATED`, `REJECTED`, `INCONCLUSIVE`.  
+중요 주장은 위 증거등급으로 구분한다.
 
-- `OBSERVED`
-- `DERIVED`
-- `HYPOTHESIZED`
-- `VALIDATED`
-- `REJECTED`
-- `INCONCLUSIVE`
+Apply `docs/HALLUCINATION_CONTROL_PROTOCOL.md`: / 환각 방지 규약 적용:
+- `FACT-001` evidence-bound claims / 증거 결속 주장;
+- `UNKNOWN-001` unknown stays unknown / 미확인은 미확인 유지;
+- `CONFLICT-001` explicit conflict resolution / 충돌 명시 해결;
+- `FRESH-001` dynamic facts reverified / 동적 사실 재검증;
+- `MEMORY-001` durable GitHub memory / 지속 GitHub 메모리;
+- `WRITEBACK-001` end-of-work writeback / 작업종료 기록.
 
-GPT는 가설을 검증 결과처럼 표현하지 않는다. / GPT must not present a hypothesis as a validated result.
+A hypothesis is never presented as validated merely because it is plausible. / 그럴듯함만으로 가설을 검증결과처럼 표현하지 않는다.
 
 ## C. Language Gate / 언어 게이트
 
-모든 공식 사람이 읽는 산출물은 `docs/LANGUAGE_POLICY.md`의 `LANG-001`을 적용한다.  
-All official human-readable artifacts are governed by `LANG-001` in `docs/LANGUAGE_POLICY.md`.
+All official human-readable artifacts comply with `LANG-001`. / 모든 공식 사람이 읽는 산출물은 `LANG-001` 준수.
 
-Before write / 기록 전:
+- Korean-English semantic parity / 한·영 의미 동등성;
+- preserve native fields/code/API/standards/proper names / 원천 필드·코드·API·표준·고유명 보존;
+- material caveats and uncertainty appear in both languages / 중요 제약·불확실성 양언어 반영.
 
-- 제목·핵심 설명·상태·판단·결론을 한국어/영어로 병기 / provide Korean-English bilingual titles, core descriptions, states, judgments, and conclusions;
-- 두 언어에 동일한 중요한 제약·불확실성을 반영 / preserve material caveats and uncertainty in both languages;
-- 데이터 필드명·코드·API·표준명·고유명은 원문 보존 / preserve native dataset fields, code, APIs, standards, and proper names.
+## D. Before Write / 기록 전
 
-## D. Before Repository Write / 저장소 기록 전
+1. fetch current file/Issue / 현재 파일·Issue 조회;
+2. preserve valid existing content / 유효 기존내용 보존;
+3. incorporate evidence, uncertainty and decision state / 증거·불확실성·판단상태 반영;
+4. check Claim Ledger/Decision Log to avoid contradiction / ledger/log 모순 확인;
+5. apply `LANG-001` / 병기 적용;
+6. use descriptive commit message / 설명 가능한 commit;
+7. avoid duplicate truth stores / 중복 Source of Truth 금지.
 
-1. 현재 파일·Issue 상태를 다시 읽는다. / Fetch the current file or Issue state.
-2. 의도적 교체가 아니면 기존 유효 내용을 보존한다. / Preserve valid existing content unless intentional replacement is required.
-3. 새로운 증거·결정·불확실성을 반영한다. / Incorporate new evidence, decisions, and uncertainty.
-4. `LANG-001`을 적용한다. / Apply `LANG-001`.
-5. 설명 가능한 커밋 메시지를 사용한다. / Use a descriptive commit message.
-6. 중복·모순 레지스트리를 만들지 않는다. / Avoid duplicate or contradictory registries.
+## E. End-of-Work Writeback / 작업 종료 기록
 
-## E. Session End — WRITE MATERIAL STATE / 세션 종료 — 실질 상태 기록
+Significant progress updates, as applicable: / 중요 진행 시 필요 항목 갱신:
 
-다음 중 하나 이상이 실질적으로 바뀌면 GitHub에 반영한다. / Write back when one or more of the following materially changes:
+1. relevant `research/` artifact;
+2. active GitHub Issue;
+3. `STATUS.md`;
+4. `context/SESSION_HANDOFF.md`;
+5. `context/PROJECT_MEMORY.md` **only for durable decision-relevant facts** / 지속 사실 변경 시에만;
+6. `registry/CLAIM_LEDGER.md` for material claims;
+7. `registry/DECISION_LOG.md` for material decisions;
+8. relevant MOC / 관련 MOC.
 
-- 연구 방향 / research direction;
-- 방법론 / methodology;
-- 소재·소스·데이터셋 인벤토리 / topic, source, or dataset inventory;
-- 평가·점수 / assessment or scoring;
-- 가설 / hypothesis;
-- feasibility 결과 / feasibility findings;
-- 실험 결과 / experiment results;
-- 프로젝트 상태 / project status;
-- 다음 행동 / next action.
+Chat-only conclusions remain provisional until recorded. / 채팅에만 있는 결론은 기록 전 잠정적이다.
 
-중요한 연구 진행은 최소한 해당 연구 객체와 `STATUS.md`를 갱신한다.  
-Significant research progress should update at least the relevant research artifact and `STATUS.md`.
-
-## F. Recommended Repository Taxonomy / 권장 저장소 구조
+## F. Repository / Obsidian Taxonomy / 저장소·Obsidian 구조
 
 ```text
 README.md
 STATUS.md
+.gitignore                 # excludes local .obsidian state
 
 docs/
   GOVERNANCE.md
   LANGUAGE_POLICY.md
   METHODOLOGY.md
   GPT_GITHUB_SYNC_PROTOCOL.md
+  HALLUCINATION_CONTROL_PROTOCOL.md
+  OBSIDIAN_KNOWLEDGE_MANAGEMENT.md
   METADATA_SCHEMA.md
+
+context/
+  PROJECT_MEMORY.md
+  SESSION_HANDOFF.md
+
+knowledge/
+  00_HOME.md
+  MOC_RESEARCH.md
+  MOC_DATASETS.md
+  MOC_EXPERIMENTS.md
+  MOC_DECISIONS.md
+  TAG_TAXONOMY.md
 
 registry/
   GLOBAL_PUBLIC_DATA_SOURCE_REGISTRY.md
   INNOVATION_POTENTIAL_SCORE.md
   RESEARCH_MATERIAL_LANDSCAPE.md
+  CLAIM_LEDGER.md
+  DECISION_LOG.md
 
 research/
-  <research-id>/
-    README.md
-    SOURCES.md
-    DATASET_PROFILE.md
-    HYPOTHESES.md
-    EXPERIMENT.md
-    RESULTS.md
+  <research-id>/...
 
-src/                  # 향후 자동화·분석 코드 / future automation and analysis code
-tests/                # 재현성 테스트 / reproducibility tests
-data/README.md         # 대용량·외부 데이터 취급 규칙 / external/large-data rules
+templates/
+  OBSIDIAN_NOTE_TEMPLATE.md
 ```
 
-## G. Synchronization Semantics / 동기화 의미
+Open the repository root as the Obsidian Vault. Standard Markdown links are canonical for GitHub compatibility. / 저장소 루트를 Vault로 열며 표준 Markdown 링크를 canonical로 사용한다.
 
-### `GitHub → GPT`
-- 저장소가 지속적 프로젝트 컨텍스트를 정의한다. / Repository files define durable project context.
-- 실질 작업 시작 시 관련 상태를 새로 읽는다. / Refresh relevant state before material work.
+## G. Drift Reconciliation / 드리프트 조정
 
-### `GPT → GitHub`
-- 중요한 결정·조사 결과·검증 결과를 커밋 또는 Issue에 보존한다. / Persist material decisions and findings through commits or Issues.
-- 채팅에만 남은 결론은 공식 기록되기 전까지 잠정적이다. / Chat-only conclusions remain provisional until recorded.
+If `STATUS.md`, Issue state, research artifact, memory, or chat disagree: / 상태가 불일치하면:
+1. inspect latest committed evidence and active Issue / 최신 commit 근거·Issue 확인;
+2. identify the divergence explicitly / 차이 명시;
+3. apply `CONFLICT-001` precedence / 충돌 우선순위 적용;
+4. reconcile durable files in the same session when possible / 가능하면 같은 세션에서 지속파일 동기화.
 
-이는 모든 대화가 자동 복제된다는 의미가 아니라 **workflow synchronization / 작업 흐름 동기화**를 의미한다.
+Do not silently average or merge contradictory states. / 충돌상태를 조용히 평균·혼합하지 않는다.
 
-## H. Status Discipline / 상태 관리
+## H. Work Queue / 작업 큐
 
-`STATUS.md`는 다음을 유지한다. / `STATUS.md` should maintain:
+Proceed by dependency and information gain, normally following official Issue order. If a HOLD/FAIL makes the current path invalid, record the gate result and promote the next defensible candidate rather than forcing continuation. / 선행조건·정보이득을 기준으로 공식 Issue 순서를 따르되 HOLD/FAIL이면 결과를 기록하고 강제 진행 대신 다음 방어 가능한 후보로 이동한다.
 
-- baseline/version / 베이스라인·버전;
-- active wave / 활성 Wave;
-- completed work / 완료 작업;
-- active work / 진행 작업;
-- blocked/hold items / 차단·보류 항목;
-- official work queue / 공식 Work Queue;
-- next actions / 다음 행동;
-- relevant latest commits when useful / 필요 시 주요 최근 커밋.
+## I. Human/GPT Roles / 사용자·GPT 역할
 
-## I. Drift Control / 드리프트 통제
+Within authorization, GPT may autonomously research, compare, score, generate hypotheses, critique, run feasibility analysis, design/execute permitted experiments, and update the repository. Records must let another GPT session or human reconstruct why a decision was made. / 권한 범위에서 GPT는 조사·비교·점수화·가설·비판·feasibility·허용 실험·저장소 갱신을 수행할 수 있으며 기록은 다른 세션/사람이 판단근거를 재구성할 수 있어야 한다.
 
-저장소와 채팅이 불일치할 경우 / When repository and chat diverge:
-
-1. 최신 저장소 상태를 확인 / inspect latest repository state;
-2. 차이를 명시 / identify the divergence;
-3. 기록된 결정을 미기록 가정보다 우선 / prefer explicit recorded decisions over unstored assumptions;
-4. 사용자가 의도적으로 방향을 바꾼 경우 저장소를 갱신 / update the repository when the user intentionally changes direction.
-
-## J. Work Queue Rule / Work Queue 규칙
-
-공식 Issue가 존재하면 원칙적으로 번호·선행조건 순으로 진행한다. 단, 사용자가 명시적으로 선행 연구를 요청하거나 새 증거가 기존 순서를 무효화하면 그 이유를 기록한 뒤 순서를 조정할 수 있다.  
-When official Issues exist, work proceeds in issue/dependency order by default. If the user explicitly requires precursor research or new evidence invalidates the order, the sequence may be changed after recording the rationale.
-
-## K. Commit Message Convention / 커밋 메시지 규칙
-
-- `docs: refine bilingual innovation discovery methodology`
-- `registry: add research material landscape`
-- `research: calibrate NIST AM Bench dataset profile`
-- `experiment: record feasibility test results`
-- `status: advance official work queue`
-
-## L. Human/GPT Roles / 사용자와 GPT 역할
-
-GPT는 사용자 권한 범위 내에서 자율적으로 조사, 비교, 점수화, 가설 생성, 비판적 검토, feasibility 분석 및 저장소 반영을 수행할 수 있다. 저장소는 다른 GPT 세션 또는 인간 검토자가 연구 의사결정의 근거를 재구성할 수 있을 정도의 증거를 보존해야 한다.  
-Within user authorization, GPT may autonomously research, compare, score, generate hypotheses, critique results, perform feasibility analysis, and update the repository. The repository must preserve enough evidence for another GPT session or a human reviewer to reconstruct why a research decision was made.
+Official artifacts comply with `LANG-001`, `READ-001`, `FACT-001`, and `MEMORY-001`. / 공식 산출물은 관련 규약을 따른다.
