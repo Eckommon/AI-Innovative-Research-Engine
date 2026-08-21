@@ -1,0 +1,110 @@
+name: AMBENCH-F02 PDR Snapshot Inspection
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'research/AMBENCH-F02/TRIGGER.md'
+      - '.github/workflows/ambench-f02-pr.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Fetch official NIST PDR metadata surfaces
+        shell: bash
+        run: |
+          set -uxo pipefail
+          mkdir -p work/raw work/logs work/result
+          : > work/logs/fetch.txt
+
+          probe () {
+            name="$1"; url="$2"; out="work/raw/$name"
+            echo "===== $name =====" | tee -a work/logs/fetch.txt
+            echo "$url" | tee -a work/logs/fetch.txt
+            code=$(curl -sS -L --retry 2 -A 'AI-Innovative-Research-Engine/0.4' -w '%{http_code}' -o "$out" "$url")
+            echo "HTTP=$code BYTES=$(wc -c < "$out") FINAL_TYPE=$(file -b "$out")" | tee -a work/logs/fetch.txt
+            head -c 1500 "$out" | tr '\n' ' ' | tee -a work/logs/fetch.txt
+            echo | tee -a work/logs/fetch.txt
+          }
+
+          probe 2716_landing.html 'https://data.nist.gov/od/id/mds2-2716'
+          probe 2718_landing.html 'https://data.nist.gov/od/id/mds2-2718'
+          probe 2716_readme.txt 'https://data.nist.gov/od/ds/mds2-2716/2716_README.txt'
+          probe 2718_readme.txt 'https://data.nist.gov/od/ds/mds2-2718/2718_README.txt'
+          probe 2716_ds_root.html 'https://data.nist.gov/od/ds/mds2-2716/'
+          probe 2718_ds_root.html 'https://data.nist.gov/od/ds/mds2-2718/'
+          probe 2716_doi.html 'https://doi.org/10.18434/mds2-2716'
+          probe 2718_doi.html 'https://doi.org/10.18434/mds2-2718'
+
+          sha256sum work/raw/* | tee work/logs/sha256.txt
+
+      - name: Extract PDR version, distribution and identifier evidence
+        shell: bash
+        run: |
+          python - <<'PY' | tee work/logs/inspect.txt
+          from pathlib import Path
+          import re, json, html, hashlib
+
+          roots=Path('work/raw')
+          datasets=['2716','2718']
+          summary={}
+          for ds in datasets:
+              print('\n### DATASET',ds)
+              files={p.name:p for p in roots.glob(ds+'_*')}
+              rec={'surfaces':{},'candidate_urls':[],'candidate_files':[],'tokens':{}}
+              corpus=[]
+              for name,p in sorted(files.items()):
+                  b=p.read_bytes(); text=b.decode('utf-8',errors='replace')
+                  corpus.append(text)
+                  rec['surfaces'][name]={'bytes':len(b),'sha256':hashlib.sha256(b).hexdigest()}
+                  print('SURFACE',name,'BYTES',len(b),'SHA256',rec['surfaces'][name]['sha256'])
+                  for pat in [r'https?://[^\s"\'<>]+', r'href=["\']([^"\']+)["\']', r'src=["\']([^"\']+)["\']']:
+                      for m in re.finditer(pat,text,re.I):
+                          u=m.group(1) if m.groups() else m.group(0)
+                          u=html.unescape(u).rstrip('.,);')
+                          if 'nist.gov' in u or u.startswith('/od/'):
+                              rec['candidate_urls'].append(u)
+                  for m in re.finditer(r'(?i)(?:file(?:name)?|download|data)[^\n]{0,120}',text):
+                      s=' '.join(m.group(0).split())
+                      if s not in rec['candidate_files']: rec['candidate_files'].append(s)
+              alltext='\n'.join(corpus)
+              for token in ['Version','Release History','Released','Revised','mds2-'+ds,'AMB2022','SH1','BP1','L0','L1.1','repeat','track','sample','cross-section','cross section','.zip','.csv','.xlsx','.tif','.tiff','.mat','.h5','.hdf5']:
+                  hits=[]
+                  for m in re.finditer(re.escape(token),alltext,re.I):
+                      a=max(0,m.start()-160); z=min(len(alltext),m.end()+260)
+                      snippet=' '.join(alltext[a:z].split())
+                      if snippet not in hits: hits.append(snippet)
+                      if len(hits)>=20: break
+                  if hits:
+                      rec['tokens'][token]=hits
+                      print('TOKEN',token)
+                      for h in hits: print(' ',h)
+              rec['candidate_urls']=sorted(set(rec['candidate_urls']))
+              print('CANDIDATE_URLS',len(rec['candidate_urls']))
+              for u in rec['candidate_urls'][:300]: print('URL',u)
+              print('FILE_HINTS',len(rec['candidate_files']))
+              for x in rec['candidate_files'][:200]: print('HINT',x)
+              summary[ds]=rec
+          Path('work/result/pdr_surface_summary.json').write_text(json.dumps(summary,indent=2,ensure_ascii=False),encoding='utf-8')
+          PY
+
+      - name: Upload PDR inspection evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ambench-f02-pdr-snapshot-inspection
+          path: |
+            work/logs/
+            work/result/
+          if-no-files-found: error
+          retention-days: 30
