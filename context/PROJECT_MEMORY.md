@@ -108,11 +108,25 @@ source_of_truth: github
 - **Source:** Issue #10 `METHOD-001`; `docs/METADATA_SCHEMA.md` v0.3; `registry/GLOBAL_PUBLIC_DATA_SOURCE_REGISTRY.md` v0.2; `DEC-010`
 - **verified_at:** 2026-08-22
 
-### `MEM-014` — Queue State After Method Hardening / 방법론 보강 후 큐 상태
-- **KO:** Issue #8 재현과 Issue #10 방법론 보강 이후 프로젝트는 `READY_FOR_NEXT_CANDIDATE` 상태다. 다음 후보는 IPS와 snapshot/version lineage gate를 함께 적용하여 선정한다.
-- **EN:** After Issue #8 reproduction and Issue #10 methodology hardening, the project is `READY_FOR_NEXT_CANDIDATE`. The next candidate must be selected using IPS together with the snapshot/version-lineage gate.
-- **State:** `ACTIVE`
-- **Source:** `STATUS.md`
+### `MEM-014` — Former Queue State / 이전 큐 상태
+- **KO:** Issue #8·#10 이후의 `READY_FOR_NEXT_CANDIDATE` 상태는 Issue #11 `AMBENCH-F02` 착수로 종료됐다.
+- **EN:** The post-Issue-#8/#10 `READY_FOR_NEXT_CANDIDATE` state ended when Issue #11 `AMBENCH-F02` began.
+- **State:** `SUPERSEDED_BY_MEM-015`
+- **Source:** historical `STATUS.md`; Issue #11
+- **verified_at:** 2026-08-22
+
+### `MEM-015` — AMBENCH-F02 Track-Level Alignment PASS / AM Bench track-level 정렬 PASS
+- **KO:** Issue #11 `AMBENCH-F02`는 `COMPLETED — PASS`다. NIST thermography README의 `/ThermalData/Line_X_Y_Z/`에서 `Z`가 각 line의 3개 반복 중 하나로 명시되고, optical README·checksum 검증 XLSX가 동일 case+track 번호를 보존한다. 따라서 21개 single-track에 대해 exact track/repeat ID 조인이 가능하다. 단, optical은 line당 두 단면 측정이므로 이를 별도 thermography 반복으로 취급하지 않고 nested/집계 outcome으로 사용한다.
+- **EN:** Issue #11 `AMBENCH-F02` completed as `PASS`. NIST thermography defines `Z` in `/ThermalData/Line_X_Y_Z/` as one of three repeats per line, while the optical README and checksum-verified workbook preserve matching case+track numbers. Exact track/repeat joins are therefore available for all 21 single tracks. Because optical data contain two cross-sections per line, they must be modeled as nested/aggregated outcomes rather than extra thermography repeats.
+- **State:** `VALIDATED`
+- **Source:** closed Issue #11; Run `32535986814`; `research/AMBENCH-F02/README.md`; `CLM-014..015`; `DEC-011`
+- **verified_at:** 2026-08-22
+
+### `MEM-016` — AM Bench Snapshot Risk Low / AM Bench snapshot 위험 낮음
+- **KO:** `mds2-2716`·`mds2-2718`의 시험한 version-specific PDR manifest는 공식 NIST에서 직접 복구되며 optical 결과 XLSX는 actual bytes·sidecar·PDR metadata checksum이 3중 일치한다. 두 소스의 `reproduction_risk`는 `LOW`로 판정한다.
+- **EN:** Tested version-specific PDR manifests for `mds2-2716` and `mds2-2718` are directly recoverable from NIST, and the optical result workbook has an exact three-way checksum match across downloaded bytes, sidecar, and PDR metadata. `reproduction_risk` is `LOW` for both sources.
+- **State:** `VALIDATED`
+- **Source:** Run `32535986814`; `research/AMBENCH-F02/README.md`
 - **verified_at:** 2026-08-22
 
 ## Maintenance Rule / 유지 규칙
