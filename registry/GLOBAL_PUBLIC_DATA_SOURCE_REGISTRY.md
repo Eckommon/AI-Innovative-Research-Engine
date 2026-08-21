@@ -1,12 +1,14 @@
-# Global Public Data Source Registry v0.1 / 글로벌 공공데이터 소스 레지스트리 v0.1
+# Global Public Data Source Registry v0.2 / 글로벌 공공데이터 소스 레지스트리 v0.2
 
 ## Purpose / 목적
 
 권위 있는 공공·연구 데이터 소스를 국가·지역·기관별로 관리하고, 혁신 탐색 파이프라인에서 우선 조사할 소스를 기록한다. 이 문서는 소스 수준 레지스트리이며 개별 데이터셋 승인 목록이 아니다.  
 Maintain an authoritative shortlist of public/research data sources by jurisdiction and institution for the innovation-discovery pipeline. This is a source-level registry, not an approval list for individual datasets.
 
-데이터 개수·API·접근조건·플랫폼 기능은 변할 수 있으므로 각 조사 Wave에서 재검증한다.  
-Dataset counts, APIs, access conditions, and platform capabilities are dynamic and must be re-verified during each research wave.
+데이터 개수·API·접근조건·플랫폼 기능뿐 아니라 **historical snapshot retention/recoverability**도 변할 수 있으므로 각 조사·재현 Wave에서 재검증한다.  
+Dataset counts, APIs, access conditions, platform capabilities, and **historical snapshot retention/recoverability** are dynamic and must be re-verified during research and reproduction waves.
+
+**v0.2 lesson / v0.2 교훈:** `EU-STEEL-R01` showed that an official dataset ID may remain citable after the exact historical dataflow required for reproduction is no longer disseminated. Current accessibility and historical recoverability are therefore tracked separately. / 공식 dataset ID가 인용 가능하게 남아 있어도 재현에 필요한 historical dataflow가 더 이상 배포되지 않을 수 있으므로 현재 접근성과 historical 복구가능성을 분리한다.
 
 ## Wave 0 — Methodological Benchmark / 방법론 기준
 
@@ -45,8 +47,8 @@ Dataset counts, APIs, access conditions, and platform capabilities are dynamic a
 | Source | URL | Primary Use / 주요 용도 | Notes / 비고 | Status |
 |---|---|---|---|---|
 | data.europa.eu | https://data.europa.eu/ | 범EU 오픈데이터 탐색 / pan-European open-data discovery | DCAT-AP 기반 통합 / DCAT-AP integration | `PRIORITY_A` |
-| Eurostat | https://ec.europa.eu/eurostat/ | 조화된 EU 통계 / harmonized EU statistics | 국가 간 비교 backbone / cross-national backbone | `PRIORITY_A` |
-| European Environment Agency | https://www.eea.europa.eu/ | 환경·기후 / environment and climate | 산업·에너지·환경 조인 / industry-energy-environment joins | `PRIORITY_A` |
+| Eurostat | https://ec.europa.eu/eurostat/ | 조화된 EU 통계 / harmonized EU statistics | 국가 간 비교 backbone; historical dataset retention must be checked per claim / 국가간 비교 backbone·historical 보존성 별도 확인 | `PRIORITY_A` |
+| European Environment Agency | https://www.eea.europa.eu/ | 환경·기후 / environment and climate | 산업·에너지·환경 조인; chart/raw snapshot hashes recommended / 산업·에너지·환경 조인·snapshot hash 권고 | `PRIORITY_A` |
 | ENTSO-E Transparency Platform | https://transparency.entsoe.eu/ | 발전·부하·전력망 / electricity generation, load, grid | 고가치 전력시스템 후보 / high-value power-system candidate | `PRIORITY_A` |
 
 ## Wave 2 — Secondary Expansion / 2차 확장
@@ -72,6 +74,7 @@ Dataset counts, APIs, access conditions, and platform capabilities are dynamic a
 
 각 소스는 점진적으로 다음을 기록한다. / Each source should progressively capture:
 
+### Current access / 현재 접근
 - `source_id`
 - jurisdiction / 관할
 - operator/publisher / 운영·발행기관
@@ -88,6 +91,18 @@ Dataset counts, APIs, access conditions, and platform capabilities are dynamic a
 - harvesting feasibility / 수집 가능성
 - last verified date / 최종 검증일
 
+### Historical reproducibility / Historical 재현성
+- `historical_version_retention`: `strong / partial / none / unknown`
+- `snapshot_recoverability`: `exact / current_only / archive_only / unavailable / unknown`
+- snapshot/version identifier and hash when bytes are available / byte 확보 시 snapshot ID·hash
+- discontinuation date if applicable / 배포중단일
+- official replacement dataset, if any / 공식 replacement dataset
+- `replacement_correspondence_evidence`: `authoritative / partial / weak / none`
+- archive/mirror status / archive·mirror 상태
+- `reproduction_risk`: `low / medium / high / blocked`
+
+**Rule / 규칙:** a live current API does not prove historical reproducibility, and a similar successor dataset does not prove historical equivalence. / 현재 API가 살아 있다는 사실은 historical 재현성을 증명하지 않으며 유사 후속 dataset도 historical 동등성을 증명하지 않는다.
+
 ## Current Priority Logic / 현재 우선순위 논리
 
 Wave 1 데이터셋 선별은 단순 국가 순회가 아니라 `registry/RESEARCH_MATERIAL_LANDSCAPE.md`에서 선정된 고가치 소재를 중심으로 수행한다.  
@@ -97,5 +112,7 @@ Wave 1 dataset discovery is guided by the high-value topics selected in `registr
 1. United States / 미국 — Data.gov, NIST, DOE, NOAA, EPA, USGS
 2. Korea / 한국 — data.go.kr, KOSIS, KMA, electricity and spatial sources
 3. EU / 유럽연합 — data.europa.eu, Eurostat, EEA, ENTSO-E
+
+Historical reproduction candidates receive an additional lineage gate before experiment promotion. / historical 재현 후보는 실험 승격 전 별도 lineage gate를 적용한다.
 
 공식 산출물은 `LANG-001`을 따른다. / Official artifacts comply with `LANG-001`.
