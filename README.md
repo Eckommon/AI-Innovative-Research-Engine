@@ -70,7 +70,7 @@ Topics are not selected on trendiness alone; **data accessibility, joinability, 
 ## Geographic Waves / 지역 확장 단계
 
 - **Wave 0** — NIST AM Bench: 방법론 보정 기준 / methodological calibration benchmark.
-- **Wave 1** — United States / 미국, Korea / 한국, European Union / EU.
+- **Wave 1** — United States / 미국, Korea / 한국, European Union / EU. — `COMPLETED`
 - **Wave 2** — Japan / 일본, United Kingdom / 영국, Singapore / 싱가포르.
 - **Wave 3** — Canada / 캐나다, Australia / 호주, OECD, World Bank, additional regions / 기타 지역.
 
@@ -83,12 +83,32 @@ Topics are not selected on trendiness alone; **data accessibility, joinability, 
 - `REJECTED` — 사전 정의된 기준에서 기각 / failed the predefined criteria.
 - `INCONCLUSIVE` — 증거 부족 또는 모호 / insufficient or ambiguous evidence.
 
+## Knowledge, Obsidian & Durable Memory / 지식관리·Obsidian·지속 메모리
+
+**한국어**  
+저장소 루트를 Obsidian Vault로 열 수 있도록 구성했다. GitHub Markdown이 계속 공식 기준 기록이며, Obsidian은 MOC(Map of Content), 표준 Markdown links, backlinks, tags, graph를 이용한 탐색 레이어다. GPT는 프로젝트 사실을 모델 내부 기억에 의존하지 않고 `READ-001`에 따라 지속 컨텍스트를 먼저 읽는다.
+
+**English**  
+The repository root is structured to open directly as an Obsidian Vault. GitHub Markdown remains the authoritative record; Obsidian provides MOCs, standard Markdown links, backlinks, tags, and graph navigation. GPT does not rely on opaque model memory for project facts and follows `READ-001` to load durable context first.
+
+### Required Start Path / 의무 시작 경로
+`README → STATUS → PROJECT_MEMORY → SESSION_HANDOFF → relevant MOC → research object → active Issue → claim/decision records as needed`
+
+### Knowledge Entry / 지식관리 진입점
+- [`knowledge/00_HOME.md`](knowledge/00_HOME.md) — Obsidian / knowledge home.
+- [`context/PROJECT_MEMORY.md`](context/PROJECT_MEMORY.md) — durable verified project memory / 지속 검증 프로젝트 메모리.
+- [`context/SESSION_HANDOFF.md`](context/SESSION_HANDOFF.md) — latest operational checkpoint / 최신 운영 checkpoint.
+- [`registry/CLAIM_LEDGER.md`](registry/CLAIM_LEDGER.md) — claim/evidence state / 주장·증거 상태.
+- [`registry/DECISION_LOG.md`](registry/DECISION_LOG.md) — durable decisions / 지속 의사결정.
+
 ## Core Artifacts / 핵심 문서
 
 - [`STATUS.md`](STATUS.md) — 현재 상태·Work Queue·다음 행동 / live state, work queue, and next actions.
 - [`docs/GOVERNANCE.md`](docs/GOVERNANCE.md) — 프로젝트 범위·의사결정 원칙 / governance and decision rules.
 - [`docs/METHODOLOGY.md`](docs/METHODOLOGY.md) — 공식 연구 방법론 / official research methodology.
 - [`docs/GPT_GITHUB_SYNC_PROTOCOL.md`](docs/GPT_GITHUB_SYNC_PROTOCOL.md) — GPT ↔ GitHub 동기화 규약 / synchronization protocol.
+- [`docs/HALLUCINATION_CONTROL_PROTOCOL.md`](docs/HALLUCINATION_CONTROL_PROTOCOL.md) — `READ-001`, evidence/memory/freshness safeguards / 환각·드리프트 방지.
+- [`docs/OBSIDIAN_KNOWLEDGE_MANAGEMENT.md`](docs/OBSIDIAN_KNOWLEDGE_MANAGEMENT.md) — `KM-001` knowledge-management policy / 지식관리 규약.
 - [`docs/LANGUAGE_POLICY.md`](docs/LANGUAGE_POLICY.md) — 한글/영문 병기 규약 / Korean-English bilingual policy.
 - [`docs/METADATA_SCHEMA.md`](docs/METADATA_SCHEMA.md) — 정규화 연구 메타데이터 스키마 / normalized research metadata schema.
 - [`registry/GLOBAL_PUBLIC_DATA_SOURCE_REGISTRY.md`](registry/GLOBAL_PUBLIC_DATA_SOURCE_REGISTRY.md) — 글로벌 공공데이터 소스 레지스트리 / global public-data source registry.
@@ -97,18 +117,19 @@ Topics are not selected on trendiness alone; **data accessibility, joinability, 
 ## Repository Role / 저장소 역할
 
 **한국어**  
-이 저장소는 프로젝트의 **공식 지속 기록이자 기준 상태(Source of Truth)** 이다. GPT 세션은 분석·조사·가설 생성·비판적 검토를 수행하는 작업 공간이며, 중요한 연구 상태와 결정은 GitHub에 반영한다.
+이 저장소는 프로젝트의 **공식 지속 기록이자 기준 상태(Source of Truth)** 이다. GPT 세션은 분석·조사·가설 생성·비판적 검토를 수행하는 작업 공간이며, 중요한 연구 상태·증거·결정은 GitHub에 반영한다.
 
 **English**  
-This repository is the project's **official persistent system of record and source of truth**. GPT sessions are analytical workspaces for research, synthesis, hypothesis generation, experimentation, and critical review; material project state and decisions are persisted to GitHub.
+This repository is the project's **official persistent system of record and source of truth**. GPT sessions are analytical workspaces for research, synthesis, hypothesis generation, experimentation, and critical review; material project state, evidence, and decisions are persisted to GitHub.
 
 ## Language Rule / 언어 규칙
 
-프로젝트의 향후 **사람이 읽는 모든 주요 연구·거버넌스·상태·Issue 산출물은 한국어와 영어를 병기**한다. 원천 데이터의 컬럼명, 코드, API 필드, 표준명, 고유명사는 정확성을 위해 원문을 보존한다. 자세한 규칙은 `docs/LANGUAGE_POLICY.md`를 따른다.  
-All future **human-readable major research, governance, status, and Issue artifacts shall be maintained bilingually in Korean and English**. Native dataset fields, code, API keys, standards, and proper names remain in their authoritative original form for precision. See `docs/LANGUAGE_POLICY.md`.
+프로젝트의 향후 **사람이 읽는 모든 주요 연구·거버넌스·상태·Issue 산출물은 한국어와 영어를 병기**한다. 원천 데이터의 컬럼명, 코드, API 필드, 표준명, 고유명사는 정확성을 위해 원문을 보존한다.  
+All future **human-readable major research, governance, status, and Issue artifacts shall be maintained bilingually in Korean and English**. Native dataset fields, code, API keys, standards, and proper names remain in their authoritative original form for precision.
 
 ## Current Baseline / 현재 베이스라인
 
-**Baseline:** `v0.2-bilingual`  
-**Current program:** Research-material landscape → `AMBENCH-001` calibration → Wave 1 US → Korea → EU.  
-**현재 프로그램:** 연구 소재 탐색 → `AMBENCH-001` 보정 → Wave 1 미국 → 한국 → EU.
+**Baseline:** `v0.3-knowledge-memory`  
+**Active Work Queue:** Issue #8 `EU-STEEL-R01` — independent E-PRTR × PRODCOM steel-mercury reproduction / 철강 수은집약도 독립 재현.
+
+Official artifacts comply with `LANG-001`, `READ-001`, `FACT-001`, and `MEMORY-001`. / 공식 산출물은 관련 규약을 따른다.
