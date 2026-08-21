@@ -1,7 +1,7 @@
 ---
 id: AMBENCH-E03
 type: experiment
-state: PREREGISTERED
+state: PREREGISTERED_FEATURES_FROZEN
 evidence_class: HYPOTHESIZED
 region: us
 domain: manufacturing
@@ -23,7 +23,7 @@ related:
 # AMBENCH-E03 — Track-level Thermography → Melt-Pool Geometry Controlled Experiment / Track-level 열화상→용융풀 형상 통제실험
 
 **Issue / 이슈:** #13  
-**State / 상태:** `PREREGISTERED`  
+**State / 상태:** `PREREGISTERED — THERMAL FEATURES FROZEN BEFORE OUTCOMES`  
 **Parent feasibility / 상위 feasibility:** `AMBENCH-F02 — PASS`
 
 ## 1. Research Question / 연구 질문
@@ -33,7 +33,7 @@ related:
 
 ## 2. Frozen Sources & Alignment / 고정 소스·정렬
 
-- NIST thermography `mds2-2716`
+- NIST thermography `mds2-2716`, exact PDR v1.3.1 distribution
 - NIST optical microscopy `mds2-2718`
 - exact `case + repeat/track` alignment validated by `AMBENCH-F02`
 - thermography HDF5 official checksum: `f6fe21ec911707f72e7efda2932c77eae2b75d84765848878fe5beb6b728cd43`
@@ -48,8 +48,8 @@ Primary target per track: / track별 주 target
 - `width_mean_um` = mean of the two optical cross-section width measurements
 
 Secondary uncertainty descriptors: / 보조 불확실성 기술량
-- cross-section depth spread
-- cross-section width spread
+- `depth_spread_um` = absolute difference between the two depth measurements
+- `width_spread_um` = absolute difference between the two width measurements
 
 No duplication of a thermography signal into two independent supervised samples. / 하나의 thermography signal을 두 독립 supervised sample로 복제하지 않는다.
 
@@ -60,26 +60,70 @@ Seven-fold **leave-one-process-case-out (LOCO)** using cases:
 
 Each fold holds out all three repeats belonging to one process case. / 각 fold에서 하나의 process case에 속한 3개 반복을 모두 holdout한다.
 
-## 5. Frozen Model Families / 고정 모델군
+## 5. Frozen Model Family / 고정 모델군
 
-1. `PROCESS_ONLY`: low-capacity regression on laser power + scan speed + spot size.
-2. `THERMO_ONLY`: the same low-capacity regression family on preregistered compact thermography features.
-3. `PROCESS_PLUS_THERMO`: process parameters + identical thermography features.
+All three comparisons use the same deterministic low-capacity estimator: / 세 비교 모두 동일 저용량 추정기 사용.
 
-No CNN, transformer, deep video model, or capacity escalation is allowed in E03. / E03에서는 CNN·Transformer·deep video model 및 결과 기반 용량확대를 금지한다.
+**`Ridge(alpha=1.0, fit_intercept=True)` after fold-local standardization.**
 
-## 6. Thermography Feature Freeze Rule / 열화상 feature 고정 규칙
+- `PROCESS_ONLY`: `laser_power_W`, `scan_speed_mm_s`, `spot_size_um`
+- `THERMO_ONLY`: the ten frozen raw-signal summary features in §7
+- `PROCESS_PLUS_THERMO`: the three process fields + the same ten thermal features
 
-Before outcome fitting, derive a compact interpretable feature manifest from each track's raw `Signal` using only the thermography source and physics-neutral summary operations. Candidate feature classes may include distributional intensity summaries, temporal duration/frame-count descriptors, peak/quantile statistics, and simple spatial extent/centroid descriptors **only where raw HDF5 axes/units make the operation unambiguous**. / outcome fitting 전에 thermography source만으로 해석가능한 소규모 feature manifest를 고정하며, HDF5 축·단위가 명확한 경우에만 분포·시간·peak/quantile·단순 공간범위 등의 기술량을 허용한다.
+Standardization mean/variance is fitted on the training tracks inside each LOCO fold only. / 표준화 평균·분산은 각 LOCO fold의 training track에서만 적합한다.
 
-Any feature requiring an undocumented temperature conversion, calibration interpretation, or arbitrary threshold is `HOLD` unless the exact rule is first grounded in NIST metadata. / 문서화되지 않은 온도변환·calibration 해석·임의 threshold가 필요한 feature는 NIST 근거가 먼저 확보되지 않는 한 HOLD한다.
+No hyperparameter search, CNN, transformer, deep video model, feature expansion, or capacity escalation is allowed in E03. / E03에서는 hyperparameter 탐색·CNN·Transformer·deep video model·feature 추가·결과 기반 용량확대를 금지한다.
 
-## 7. Frozen Metrics / 고정 지표
+## 6. Outcome-Blind Raw Structure Evidence / Outcome 비사용 raw 구조 근거
+
+GitHub Actions Runs `32537038475` and `32537157650` inspected only thermography source structure before any optical target use. / optical target 사용 전에 thermography 구조만 검사했다.
+
+Observed / 관측:
+- downloaded bytes: `549,979,044`
+- actual SHA-256 = frozen official SHA-256: exact match
+- exactly `21` `Line_*` groups
+- each `Signal`: shape `[700, 640, 304]`, dtype `uint16`, gzip, chunks `[25,25,25]`
+- `Signal.n_frames = 700`
+- `Signal.units = digital levels`
+- `Signal.bit_depth = 12`
+- NIST source threshold: `threshold_level = 100`, `threshold_zeros = true`
+- camera frame rate: `30,000 frames/s`
+- group attributes directly preserve laser power, scan speed, and D4σ spot size
+- NIST calibration metadata exists, but the primary E03 feature set does **not** convert digital levels to temperature.
+
+This evidence makes the first axis authoritative as frame/time index through `n_frames=700`; the two remaining dimensions are treated only as image-grid pixel axes, without inventing a physical pixel-size conversion. / `n_frames=700` 근거로 첫 축은 frame/time index로 확정하며 나머지 두 축은 물리 pixel 크기를 추정하지 않고 영상 격자 축으로만 취급한다.
+
+## 7. Frozen Thermography Feature Manifest / 고정 열화상 feature 명세
+
+The following **10 features are frozen before optical outcome construction/fitting** and are computed from each raw 12-bit `Signal` in digital levels. The source's already-applied zeroing/threshold semantics are preserved; no new arbitrary intensity threshold is introduced. / 다음 10개 feature를 optical outcome 구성·fitting 전에 고정하며 별도 임의 threshold를 추가하지 않는다.
+
+| Feature | Definition / 정의 |
+|---|---|
+| `thermal_nonzero_fraction` | fraction of all voxels/pixels across 700 frames with raw value `>0` |
+| `thermal_positive_mean_dl` | mean digital level over values `>0` |
+| `thermal_positive_std_dl` | population standard deviation of digital levels over values `>0` |
+| `thermal_positive_p90_dl` | 90th percentile among values `>0`, derived from exact 12-bit histogram |
+| `thermal_positive_p99_dl` | 99th percentile among values `>0`, derived from exact 12-bit histogram |
+| `thermal_max_dl` | maximum raw digital level |
+| `thermal_active_pixels_frame_mean` | mean count of `>0` pixels per frame |
+| `thermal_active_pixels_frame_max` | maximum count of `>0` pixels in any frame |
+| `thermal_frame_sum_mean_dl` | mean per-frame sum of raw digital levels |
+| `thermal_frame_sum_max_dl` | maximum per-frame sum of raw digital levels |
+
+Extraction is deterministic and may stream frame batches; streaming must reproduce the same statistics as full-array evaluation. / 추출은 결정론적이며 frame batch streaming을 허용하되 full-array 계산과 동일 통계를 산출해야 한다.
+
+### Explicit exclusions / 명시적 제외
+- no temperature-converted features in primary E03;
+- no centroid/shape/connected-component features because physical spatial-axis calibration is not yet required or frozen;
+- no manually chosen additional threshold above the source's native zeroing;
+- no feature selection based on depth/width correlations.
+
+## 8. Frozen Metrics / 고정 지표
 
 Primary: LOCO RMSE separately for `depth_mean_um` and `width_mean_um`. / depth·width별 LOCO RMSE.  
 Secondary: MAE, fold residuals, sensitivity to cross-section spread. / MAE·fold residual·단면 spread 민감도.
 
-## 8. Frozen Gate / 고정 게이트
+## 9. Frozen Gate / 고정 게이트
 
 Compare `PROCESS_PLUS_THERMO` with `PROCESS_ONLY`:
 
@@ -90,24 +134,26 @@ Compare `PROCESS_PLUS_THERMO` with `PROCESS_ONLY`:
 
 The 10% threshold is inherited from `AMBENCH-001` and frozen before E03 outcome inspection. / 10% 기준은 `AMBENCH-001`에서 계승하며 E03 결과 확인 전에 고정한다.
 
-## 9. Leakage Controls / 누출 통제
+## 10. Leakage Controls / 누출 통제
 
 - case-level split only; random row/track split prohibited
 - fold-local preprocessing/scaling only
 - no optical outcomes in thermography feature construction
-- no held-out outcomes for feature selection
+- no held-out outcomes for feature selection or tuning
 - failed/missing tracks explicitly recorded; no silent deletion
 - track-level sample count remains 21; optical cross-sections do not inflate `n`
+- all three model families use identical LOCO folds and target rows
 
-## 10. Execution Order / 실행 순서
+## 11. Execution Order / 실행 순서
 
-1. download thermography HDF5 and verify official SHA-256;
-2. enumerate exact 21 line groups and metadata;
-3. rebuild the 21-track optical target table from checksum-verified XLSX;
-4. freeze the compact thermography feature manifest;
-5. implement deterministic extraction and integrity checks;
-6. run the three model families under identical LOCO folds;
-7. apply the frozen gate without post-hoc model/feature expansion;
-8. record negative as well as positive results.
+1. ✅ download thermography HDF5 and verify official SHA-256;
+2. ✅ enumerate exact 21 line groups and metadata;
+3. ✅ inspect Signal attrs/calibration metadata without optical outcomes;
+4. ✅ freeze compact thermography feature manifest and estimator;
+5. extract the frozen 10 features for all 21 tracks and integrity-check them;
+6. rebuild the 21-track optical target table from checksum-verified XLSX;
+7. run the three frozen model families under identical LOCO folds;
+8. apply the frozen gate without post-hoc model/feature expansion;
+9. record negative as well as positive results.
 
 Official artifacts comply with `LANG-001`, `READ-001`, `FACT-001`, `UNKNOWN-001`, `FRESH-001`, and the snapshot-lineage gate. / 관련 규약 준수.
