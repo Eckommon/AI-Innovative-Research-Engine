@@ -1,0 +1,120 @@
+name: EU-STEEL-R01 Reproduction
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/reproduce_eu_steel_mercury.py'
+      - '.github/workflows/eu-steel-r01-reproduce.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Download official raw inputs
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p work/raw work/extracted work/logs
+
+          EPRTR_URL='https://sdi.eea.europa.eu/webdav/datastore/public/eea_t_ied-eprtr_p_2007-2022_v11_r00/User%20friendly%20.csv%20file/F1_3_Total%20Release%20at%20E-PRTR%20Annex%20I%20Activity%20into%20Air.csv'
+          curl -fL --retry 3 --retry-delay 2 \
+            -A 'AI-Innovative-Research-Engine/0.3' \
+            "$EPRTR_URL" \
+            -o work/raw/eprtr_F1_3.csv
+
+          curl -fL --retry 3 --retry-delay 2 -G \
+            'https://ec.europa.eu/eurostat/api/dissemination/files' \
+            --data-urlencode 'file=comext/EUROPROMS/epanntotal-r2.zip' \
+            -o work/raw/epanntotal-r2.zip
+
+          sha256sum work/raw/eprtr_F1_3.csv work/raw/epanntotal-r2.zip | tee work/logs/sha256.txt
+          ls -lh work/raw | tee work/logs/files.txt
+
+      - name: Inspect raw schemas and target codes
+        shell: bash
+        run: |
+          set -euxo pipefail
+          python - <<'PY' | tee work/logs/inspect.txt
+          from pathlib import Path
+          import csv, io, zipfile
+
+          e = Path('work/raw/eprtr_F1_3.csv')
+          raw = e.read_bytes()
+          text = raw.decode('utf-8-sig', errors='replace')
+          sample = text[:20000]
+          try:
+              delim = csv.Sniffer().sniff(sample, delimiters=',;\t|').delimiter
+          except Exception:
+              delim = ';' if sample.count(';') > sample.count(',') else ','
+          r = csv.reader(io.StringIO(text), delimiter=delim)
+          print('EPRTR_DELIMITER', repr(delim))
+          for i, row in zip(range(5), r):
+              print('EPRTR_ROW', i, row)
+
+          zpath = Path('work/raw/epanntotal-r2.zip')
+          with zipfile.ZipFile(zpath) as z:
+              print('PRODCOM_MEMBERS')
+              for n in z.namelist():
+                  print(n)
+                  if not n.endswith('/'):
+                      out = Path('work/extracted') / Path(n).name
+                      out.write_bytes(z.read(n))
+
+          targets = ['2410T121','2410T122','2410T131','2410T132','2410T141','2410T142']
+          print('TARGET_CODE_COUNTS')
+          for p in sorted(Path('work/extracted').glob('*')):
+              if not p.is_file():
+                  continue
+              b = p.read_bytes()
+              txt = b.decode('latin-1', errors='ignore')
+              counts = {t: txt.count(t) for t in targets}
+              print(p.name, p.stat().st_size, counts)
+              print('HEAD', txt[:1000].replace('\r','\\r').replace('\n','\\n'))
+          PY
+
+      - name: Run conservative harness in inspect mode
+        shell: bash
+        continue-on-error: true
+        run: |
+          set -uxo pipefail
+          PROD_MEMBER=$(python - <<'PY'
+          import zipfile
+          z=zipfile.ZipFile('work/raw/epanntotal-r2.zip')
+          files=[n for n in z.namelist() if not n.endswith('/')]
+          print(files[0] if len(files)==1 else '')
+          PY
+          )
+          if [ -n "$PROD_MEMBER" ]; then
+            python src/reproduce_eu_steel_mercury.py \
+              --eprtr work/raw/eprtr_F1_3.csv \
+              --prodcom work/raw/epanntotal-r2.zip \
+              --prodcom-member "$PROD_MEMBER" \
+              --workdir work/harness \
+              --inspect 2>&1 | tee work/logs/harness-inspect.txt
+          else
+            echo 'ZIP has multiple members; harness auto-inspect deferred until schema review.' | tee work/logs/harness-inspect.txt
+          fi
+
+      - name: Upload reproducibility evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: eu-steel-r01-evidence
+          path: |
+            work/logs/
+            work/extracted/
+          if-no-files-found: error
+          retention-days: 30
