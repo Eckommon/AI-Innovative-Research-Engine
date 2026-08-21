@@ -39,31 +39,32 @@ source_of_truth: github
 - **verified_at:** 2026-08-22
 
 ### `MEM-004` — KR-GRID-F01 HOLD / 한국 계통 mapping HOLD
-- **KO:** KPX `bus_number`를 현행 공개 근거만으로 지역·설비에 안정적으로 귀속하는 경로는 확립되지 않았다. `C-KR-001` 지역/설비 모델은 HOLD이며 지리 귀속 없는 system-level 연구만 허용된다.
-- **EN:** A defensible current public mapping from KPX `bus_number` to stable geography/assets has not been established. Localized/asset-attributed `C-KR-001` remains HOLD; system-level research without geographic attribution remains eligible.
-- **State:** `VALIDATED` feasibility outcome = `HOLD`
-- **Source:** Issue #5; `research/KR-GRID-F01/README.md`
+- **KO:** KPX `bus_number`를 현행 공개 근거만으로 지역·설비에 안정적으로 귀속하는 경로는 확립되지 않았다. Issue #5 feasibility는 `HOLD` 결과로 완료됐다. 지리 귀속 없는 system-level 연구만 허용된다.
+- **EN:** A defensible current public mapping from KPX `bus_number` to stable geography/assets has not been established. Issue #5 feasibility is complete with a `HOLD` outcome. System-level research without geographic attribution remains eligible.
+- **State:** `VALIDATED`
+- **Source:** closed Issue #5; `research/KR-GRID-F01/README.md`
 - **verified_at:** 2026-08-22
 
 ### `MEM-005` — First Cross-Dataset Experiment / 첫 cross-dataset 실험
 - **KO:** `EU-IEE-E01`은 EEA 산업배출 + Eurostat 산업 GVA 관계에서 사전 decoupling gate를 통과했다. 실증상태는 `VALIDATED`이나 신규성은 `LOW / NOT NOVEL`이다.
 - **EN:** `EU-IEE-E01` passed its predefined decoupling gate using the EEA industrial-emissions + Eurostat industrial-GVA relationship. Empirical state is `VALIDATED`; novelty is `LOW / NOT NOVEL`.
 - **State:** `VALIDATED`
-- **Source:** Issue #6; `research/EU-IEE-E01/README.md`
+- **Source:** closed Issue #6; `research/EU-IEE-E01/README.md`
 - **verified_at:** 2026-08-22
 
 ### `MEM-006` — Active Work Queue / 활성 Work Queue
-- **KO:** 현재 활성 연구 큐는 Issue #7 `EU-IEE-F02`이며, sector-level emissions/output normalization과 facility-level denominator 가능성을 분리 검증한다.
-- **EN:** The active research queue is Issue #7 `EU-IEE-F02`, separating sector-level emissions/output normalization feasibility from facility-level denominator feasibility.
+- **KO:** 현재 활성 연구 큐는 Issue #8 `EU-STEEL-R01`이며 EEA가 발표한 E-PRTR × PRODCOM 철강 수은집약도 2008→2017 `-36%` 관계를 raw 공식 입력에서 독립 재현한다.
+- **EN:** The active research queue is Issue #8 `EU-STEEL-R01`, independently reproducing EEA's published E-PRTR × PRODCOM steel-mercury intensity 2008→2017 `-36%` relationship from official raw inputs.
 - **State:** `ACTIVE`
-- **Source:** Issue #7
+- **Source:** Issue #8; `research/EU-STEEL-R01/README.md`
 - **verified_at:** 2026-08-22
+- **supersedes:** previous `MEM-006` active Issue #7 state.
 
 ### `MEM-007` — Facility Denominator Constraint / 시설 분모 제약
 - **KO:** 국가·sector 생산량을 임의로 개별 시설에 배분하여 시설단위 배출효율을 만들지 않는다. plant-level production denominator 또는 권위 있는 allocation method가 필요하다.
 - **EN:** Do not arbitrarily allocate country/sector production to individual facilities to create facility-level efficiency metrics. Plant-level production denominators or an authoritative allocation method are required.
 - **State:** `VALIDATED` governance decision
-- **Source:** Issue #7; EEA methodology evidence; `registry/DECISION_LOG.md`
+- **Source:** closed Issue #7; `research/EU-IEE-F02/README.md`; `registry/DECISION_LOG.md`
 - **verified_at:** 2026-08-22
 
 ### `MEM-008` — Obsidian Knowledge Layer / Obsidian 지식 레이어
@@ -87,6 +88,13 @@ source_of_truth: github
 - **Source:** `docs/GOVERNANCE.md`, Issue #5
 - **verified_at:** 2026-08-22
 
+### `MEM-011` — EU Normalization Granularity / EU 정규화 해상도
+- **KO:** Issue #7은 `PASS_SECTOR_AGGREGATE / HOLD_FACILITY_DENOMINATOR`로 완료됐다. 명시적 E-PRTR activity ↔ PRODCOM product mapping이 있는 sector 집계는 가능하지만 일반 시설단위 분모는 보류한다.
+- **EN:** Issue #7 completed as `PASS_SECTOR_AGGREGATE / HOLD_FACILITY_DENOMINATOR`. Explicitly mapped E-PRTR activity ↔ PRODCOM product sector aggregation is feasible; a generic facility denominator remains held.
+- **State:** `VALIDATED`
+- **Source:** closed Issue #7; `research/EU-IEE-F02/README.md`
+- **verified_at:** 2026-08-22
+
 ## Maintenance Rule / 유지 규칙
 
 - Add only durable, decision-relevant facts. / 지속적 의사결정 관련 사실만 추가.
@@ -94,4 +102,4 @@ source_of_truth: github
 - Dynamic facts require freshness verification. / 동적 사실은 최신성 재검증.
 - `context/SESSION_HANDOFF.md` carries operational detail; this file stays compact. / 운영 세부는 Session Handoff에 두고 본 파일은 압축 유지.
 
-Official artifacts comply with `LANG-001`. / 공식 산출물은 `LANG-001`을 따른다.
+Official artifacts comply with `LANG-001`, `READ-001`, and `MEMORY-001`. / 공식 산출물은 관련 규약을 따른다.
