@@ -1,78 +1,77 @@
-# Normalized Research Metadata Schema v0.1
+# Normalized Research Metadata Schema v0.1 / 정규화 연구 메타데이터 스키마 v0.1
 
-Purpose: provide a common representation for datasets discovered from heterogeneous US, Korean, EU, and later global public-data systems.
+## Purpose / 목적
 
-This is a research-layer schema, not a replacement for native DCAT/DCAT-AP/CKAN or agency metadata. Native metadata should be preserved where possible and mapped into this normalized layer.
+서로 다른 미국·한국·EU 및 향후 글로벌 공공데이터 시스템에서 발견되는 데이터셋을 공통 연구 레이어로 표현한다. 이 스키마는 DCAT/DCAT-AP/CKAN 또는 기관 고유 메타데이터를 대체하지 않으며, 원본 메타데이터를 가능한 한 보존한 뒤 정규화 레이어에 매핑한다.  
+Provide a common research-layer representation for datasets discovered from heterogeneous US, Korean, EU, and later global public-data systems. This schema does not replace native DCAT/DCAT-AP/CKAN or agency metadata; native metadata should be preserved where possible and mapped into this normalized layer.
 
-## 1. Source-Level Fields
+## 1. Source-Level Fields / 소스 수준 필드
 
-| Field | Required | Description |
+| Field | Required | 한국어 / English |
 |---|---|---|
-| `source_id` | yes | Stable internal source identifier |
-| `source_name` | yes | Official source/catalog name |
-| `jurisdiction` | yes | Country/region/global |
-| `publisher` | yes | Operating agency/organization |
-| `canonical_url` | yes | Official source URL |
-| `catalog_api` | no | API/catalog endpoint |
-| `metadata_standard` | no | DCAT, DCAT-AP, CKAN, custom, etc. |
-| `access_auth` | yes | none/key/account/other |
-| `license_policy` | no | Reuse/license summary |
-| `last_verified_at` | yes | Verification date |
+| `source_id` | yes | 안정적 내부 소스 ID / stable internal source identifier |
+| `source_name` | yes | 공식 소스·카탈로그명 / official source or catalog name |
+| `jurisdiction` | yes | 국가·지역·글로벌 / country, region, or global |
+| `publisher` | yes | 운영·발행기관 / operating publisher or agency |
+| `canonical_url` | yes | 공식 URL / official URL |
+| `catalog_api` | no | API·카탈로그 endpoint / catalog or API endpoint |
+| `metadata_standard` | no | DCAT, DCAT-AP, CKAN, custom 등 / metadata standard |
+| `access_auth` | yes | none/key/account/other / 인증 방식 |
+| `license_policy` | no | 재사용·라이선스 요약 / reuse and licensing summary |
+| `last_verified_at` | yes | 최종 검증일 / last verification date |
 
-## 2. Dataset-Level Fields
+## 2. Dataset-Level Fields / 데이터셋 수준 필드
 
-| Field | Required | Description |
+| Field | Required | 한국어 / English |
 |---|---|---|
-| `dataset_id` | yes | Stable internal dataset identifier |
-| `native_id` | no | Publisher/catalog native ID |
-| `title` | yes | Dataset title |
-| `publisher` | yes | Dataset publisher |
-| `description` | yes | Source description or faithful summary |
-| `landing_page` | yes | Official dataset page |
-| `distributions` | yes | File/API/service endpoints |
-| `formats` | yes | CSV, JSON, XML, SHP, image, binary, etc. |
-| `schema_url` | no | Schema/data dictionary link |
-| `license` | no | Dataset-specific license/rights |
-| `update_frequency` | no | Update cadence |
-| `temporal_start` | no | Coverage start |
-| `temporal_end` | no | Coverage end |
-| `spatial_scope` | no | Geographic coverage |
-| `spatial_resolution` | no | Facility/grid/admin/coordinate/etc. |
-| `unit_system` | no | Key measurement units |
-| `language` | no | Metadata/data language |
-| `access_status` | yes | accessible/limited/unavailable/unknown |
+| `dataset_id` | yes | 내부 데이터셋 ID / stable internal dataset identifier |
+| `native_id` | no | 원천기관 ID / publisher-native identifier |
+| `title` | yes | 데이터셋 제목 / dataset title |
+| `publisher` | yes | 발행기관 / publisher |
+| `description` | yes | 원문 설명 또는 충실한 요약 / source description or faithful summary |
+| `landing_page` | yes | 공식 landing page / official landing page |
+| `distributions` | yes | 파일/API/service endpoint / file, API, or service endpoints |
+| `formats` | yes | CSV, JSON, XML, SHP, image, binary 등 / formats |
+| `schema_url` | no | 스키마·data dictionary / schema or data dictionary URL |
+| `license` | no | 라이선스·권리 / license or rights |
+| `update_frequency` | no | 갱신주기 / update cadence |
+| `temporal_start` | no | 시작시점 / coverage start |
+| `temporal_end` | no | 종료시점 / coverage end |
+| `spatial_scope` | no | 공간 범위 / geographic scope |
+| `spatial_resolution` | no | facility/grid/admin/coordinate 등 / spatial granularity |
+| `unit_system` | no | 주요 단위 / key units |
+| `language` | no | 메타데이터·데이터 언어 / metadata/data language |
+| `access_status` | yes | accessible/limited/unavailable/unknown / 접근 상태 |
 
-## 3. Research Qualification Fields
+## 3. Research Qualification Fields / 연구 적격성 필드
 
-| Field | Required | Description |
+| Field | Required | 한국어 / English |
 |---|---|---|
-| `domain` | yes | Manufacturing, energy, climate, logistics, etc. |
-| `data_structure_class` | yes | experiment, time-series, panel, image, geospatial, event, administrative, etc. |
-| `input_candidates` | no | Possible predictors/features |
-| `outcome_candidates` | no | Ground truth/targets/outcomes |
+| `domain` | yes | 제조·전력·기후·물류 등 / manufacturing, energy, climate, logistics, etc. |
+| `topic_track` | yes | `FRONTIER` 또는 `PERSISTENT_BOTTLENECK` / research-material track |
+| `data_structure_class` | yes | experiment, time-series, panel, image, geospatial, event, administrative 등 / data structure class |
+| `input_candidates` | no | 잠재 입력·predictor / possible predictors or features |
+| `outcome_candidates` | no | 결과·정답값 / ground truth or target candidates |
 | `ground_truth_strength` | yes | none/weak/moderate/strong |
-| `candidate_join_keys` | no | Entity/time/space/classification/material/etc. |
-| `join_constraints` | no | Semantic/alignment caveats |
-| `dataset_ips` | no | 0–100 once assessed |
-| `ips_rationale` | no | Written criterion-level rationale |
+| `candidate_join_keys` | no | entity/time/space/classification/material 등 / candidate join dimensions |
+| `join_constraints` | no | 의미·정렬 제약 / semantic and alignment caveats |
+| `dataset_ips` | no | 실제 데이터 검토 후 0–100 / 0–100 after inspection |
+| `ips_rationale` | no | 기준별 점수 근거 / criterion-level rationale |
 | `research_state` | yes | DISCOVERED/SCREENING/CANDIDATE/etc. |
 
-## 4. Provenance and Evidence Fields
+## 4. Provenance and Evidence / 출처·증거 필드
 
-| Field | Required | Description |
+| Field | Required | 한국어 / English |
 |---|---|---|
 | `evidence_class` | yes | OBSERVED/DERIVED/HYPOTHESIZED/VALIDATED/REJECTED/INCONCLUSIVE |
-| `retrieved_at` | yes | Retrieval/inspection timestamp |
-| `source_citations` | yes | Official pages/docs supporting the record |
-| `transformations` | no | Any parsing/normalization/derivation performed |
-| `assumptions` | no | Explicit research assumptions |
-| `known_limitations` | no | Missingness, bias, coverage, semantic limits |
+| `retrieved_at` | yes | 조회·검토 시각 / retrieval or inspection timestamp |
+| `source_citations` | yes | 공식 출처·문서 / official source references |
+| `source_version` | no | 데이터·문서 버전 / source version or snapshot |
+| `transformations` | no | 파싱·정규화·파생 / parsing, normalization, derivation |
+| `assumptions` | no | 명시적 가정 / explicit assumptions |
+| `known_limitations` | no | 결측·편향·범위·의미 한계 / missingness, bias, coverage, semantic limits |
 
-## 5. Combination Record
-
-A dataset relationship should be represented separately from the individual dataset records.
-
-Minimum fields:
+## 5. Combination Record / 데이터 결합 기록
 
 ```yaml
 combination_id:
@@ -88,12 +87,15 @@ hypothesis_ids: []
 state:
 ```
 
-## 6. Hypothesis Record
+각 데이터셋의 개별 기록과 조합 기록을 분리한다. / Combination records remain separate from individual dataset records.
+
+## 6. Hypothesis Record / 가설 기록
 
 ```yaml
 hypothesis_id:
 combination_id:
-claim:
+claim_ko:
+claim_en:
 target:
 mechanism:
 scope:
@@ -104,7 +106,7 @@ evidence_class: HYPOTHESIZED
 state:
 ```
 
-## 7. Experiment Record
+## 7. Experiment Record / 실험 기록
 
 ```yaml
 experiment_id:
@@ -114,16 +116,18 @@ method:
 train_test_or_evaluation_design:
 metrics:
 sensitivity_checks:
-result:
-limitations:
+result_ko:
+result_en:
+limitations_ko:
+limitations_en:
 evidence_class:
 final_state:
 reproducibility_reference:
 ```
 
-## 8. Cross-National Normalization Fields
+## 8. Cross-National Normalization / 국가 간 정규화 필드
 
-When multiple jurisdictions are involved, add as applicable:
+필요 시 / As applicable:
 
 - `classification_system_native`
 - `classification_mapping`
@@ -135,6 +139,14 @@ When multiple jurisdictions are involved, add as applicable:
 - `geographic_level_mapping`
 - `unit_conversion`
 
-## 9. Schema Evolution Rule
+## 9. Language Fields / 언어 필드
 
-This v0.1 schema should be calibrated against `AMBENCH-001` and at least one dataset from each Wave 1 jurisdiction before being treated as stable. New fields should be added because real research objects require them, not merely to maximize metadata coverage.
+공식 연구 해석·가설·결론은 `*_ko` / `*_en` 또는 병기 가능한 구조를 사용한다. 데이터 원문 필드명은 번역하여 덮어쓰지 않는다.  
+Official interpretations, hypotheses, and conclusions use `*_ko` / `*_en` or equivalent bilingual structures. Native dataset field names are never overwritten by translations.
+
+## 10. Schema Evolution Rule / 스키마 진화 규칙
+
+이 v0.1은 `AMBENCH-001`과 Wave 1의 미국·한국·EU 최소 1개 데이터셋씩에 적용한 뒤 안정화한다. 실제 연구 객체가 요구할 때만 필드를 추가한다.  
+This v0.1 schema is calibrated against `AMBENCH-001` and at least one Wave 1 dataset from each of the US, Korea, and EU before stabilization. New fields are added because real research objects require them, not to maximize metadata coverage.
+
+공식 산출물은 `LANG-001`을 따른다. / Official artifacts comply with `LANG-001`.
