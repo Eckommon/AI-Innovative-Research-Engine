@@ -1,0 +1,73 @@
+name: EU-STEEL-R01 PR Reproduction
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'research/EU-STEEL-R01/TRIGGER.md'
+      - 'src/reproduce_eu_steel_mercury.py'
+      - '.github/workflows/eu-steel-r01-pr.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Download official raw inputs
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p work/raw work/extracted work/logs
+          EPRTR_URL='https://sdi.eea.europa.eu/webdav/datastore/public/eea_t_ied-eprtr_p_2007-2022_v11_r00/User%20friendly%20.csv%20file/F1_3_Total%20Release%20at%20E-PRTR%20Annex%20I%20Activity%20into%20Air.csv'
+          curl -fL --retry 3 --retry-delay 2 -A 'AI-Innovative-Research-Engine/0.3' "$EPRTR_URL" -o work/raw/eprtr_F1_3.csv
+          curl -fL --retry 3 --retry-delay 2 -G 'https://ec.europa.eu/eurostat/api/dissemination/files' \
+            --data-urlencode 'file=comext/EUROPROMS/epanntotal-r2.zip' \
+            -o work/raw/epanntotal-r2.zip
+          sha256sum work/raw/eprtr_F1_3.csv work/raw/epanntotal-r2.zip | tee work/logs/sha256.txt
+          ls -lh work/raw | tee work/logs/files.txt
+
+      - name: Inspect official raw schemas
+        shell: bash
+        run: |
+          python - <<'PY' | tee work/logs/inspect.txt
+          from pathlib import Path
+          import csv, io, zipfile
+          e=Path('work/raw/eprtr_F1_3.csv')
+          b=e.read_bytes(); t=b.decode('utf-8-sig',errors='replace'); s=t[:20000]
+          try: d=csv.Sniffer().sniff(s,delimiters=',;\t|').delimiter
+          except Exception: d=';' if s.count(';')>s.count(',') else ','
+          print('EPRTR_SIZE',len(b)); print('EPRTR_DELIMITER',repr(d))
+          r=csv.reader(io.StringIO(t),delimiter=d)
+          for i,row in zip(range(8),r): print('EPRTR_ROW',i,row)
+          with zipfile.ZipFile('work/raw/epanntotal-r2.zip') as z:
+              print('PRODCOM_MEMBERS')
+              for n in z.namelist():
+                  print(n)
+                  if not n.endswith('/'):
+                      p=Path('work/extracted')/Path(n).name; p.write_bytes(z.read(n))
+          targets=['2410T121','2410T122','2410T131','2410T132','2410T141','2410T142']
+          for p in sorted(Path('work/extracted').glob('*')):
+              if p.is_file():
+                  txt=p.read_bytes().decode('latin-1',errors='ignore')
+                  print('FILE',p.name,p.stat().st_size)
+                  print('TARGET_COUNTS',{x:txt.count(x) for x in targets})
+                  print('HEAD',txt[:2500].replace('\r','\\r').replace('\n','\\n'))
+          PY
+
+      - name: Upload inspection evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: eu-steel-r01-pr-inspection
+          path: |
+            work/logs/
+            work/extracted/
+          retention-days: 30
