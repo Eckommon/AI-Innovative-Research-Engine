@@ -21,89 +21,78 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Download official EEA and Eurostat raw inputs
+      - name: Query current Eurostat PRODCOM dataset
         shell: bash
         run: |
-          set -euxo pipefail
-          mkdir -p work/raw work/extracted work/logs work/targets
-          EPRTR='https://sdi.eea.europa.eu/webdav/datastore/public/eea_t_ied-eprtr_p_2007-2022_v11_r00/User%20friendly%20.csv%20file/F1_3_Total%20Release%20at%20E-PRTR%20Annex%20I%20Activity%20into%20Air.csv'
-          BASE='https://ec.europa.eu/eurostat/api/dissemination/files?file=comext/COMEXT_OTHER_DATA/EUROPROMS'
-          curl -fL --retry 3 "$EPRTR" -o work/raw/eprtr_F1_3.csv
-          curl -fL --retry 3 "$BASE/epanntotal-r2.zip" -o work/raw/epanntotal-r2.zip
-          curl -fL --retry 3 "$BASE/epanntotal.zip" -o work/raw/epanntotal.zip
-          sha256sum work/raw/* | tee work/logs/sha256.txt
-          ls -lh work/raw | tee work/logs/files.txt
+          set -uxo pipefail
+          mkdir -p work/api work/logs
+          BASE='https://ec.europa.eu/eurostat/api/comext/dissemination/statistics/1.0/data/DS-059359'
+          : > work/logs/api_download.txt
+          for YEAR in 2008 2017; do
+            for CODE in 2410T121 2410T122 2410T131 2410T132 2410T141 2410T142; do
+              OUT="work/api/${YEAR}_${CODE}.json"
+              echo "QUERY YEAR=$YEAR CODE=$CODE" | tee -a work/logs/api_download.txt
+              curl -sS -L -G "$BASE" \
+                --data-urlencode 'lang=EN' \
+                --data-urlencode "time=$YEAR" \
+                --data-urlencode "PRCCODE=$CODE" \
+                -o "$OUT"
+              STATUS=$?
+              echo "CURL_EXIT=$STATUS BYTES=$(wc -c < "$OUT" 2>/dev/null || echo 0)" | tee -a work/logs/api_download.txt
+              head -c 500 "$OUT" | tr '\n' ' ' | tee -a work/logs/api_download.txt
+              echo | tee -a work/logs/api_download.txt
+            done
+          done
 
-      - name: Extract target rows and inspect schemas
+      - name: Inspect JSON-stat dimensions and values
         shell: bash
         run: |
-          python - <<'PY' | tee work/logs/inspect.txt
+          python - <<'PY' | tee work/logs/api_inspect.txt
           from pathlib import Path
-          import csv, zipfile, collections
+          import json, math
 
-          targets={'2410T121','2410T122','2410T131','2410T132','2410T141','2410T142'}
-          acts={'1(d)','2(a)','2(b)'}
-
-          # E-PRTR target rows
-          with open('work/raw/eprtr_F1_3.csv',encoding='utf-8-sig',newline='') as f:
-              r=csv.DictReader(f)
-              print('EPRTR_COLUMNS',r.fieldnames)
-              rows=[]
-              totals=collections.defaultdict(float)
-              countries=set()
-              for row in r:
-                  act=(row.get('EPRTRAnnexIMainActivityCode') or '').replace('.','').replace(' ','')
-                  year=row.get('reportingYear') or ''
-                  pol=(row.get('pollutant') or '').lower()
-                  if year in {'2008','2017'} and act in acts and 'mercur' in pol:
-                      rows.append(row); countries.add(row.get('countryName',''))
-                      try: totals[year]+=float(row.get('emissions') or 0)
-                      except ValueError: pass
-          with open('work/targets/eprtr_mercury_2008_2017.csv','w',encoding='utf-8',newline='') as f:
-              w=csv.DictWriter(f,fieldnames=r.fieldnames); w.writeheader(); w.writerows(rows)
-          print('EPRTR_TARGET_ROWS',len(rows))
-          print('EPRTR_COUNTRIES',sorted(countries))
-          print('EPRTR_TOTALS_KG',dict(totals))
-          for row in rows: print('EPRTR_TARGET',row)
-
-          # PRODCOM targets from both legacy archives
-          for zname in ['epanntotal-r2.zip','epanntotal.zip']:
-              with zipfile.ZipFile('work/raw/'+zname) as z:
-                  members=[n for n in z.namelist() if not n.endswith('/')]
-                  print('ZIP',zname,'MEMBERS',members)
-                  for member in members:
-                      out=Path('work/extracted')/(zname.replace('.zip','')+'__'+Path(member).name)
-                      out.write_bytes(z.read(member))
-                      try:
-                          with out.open(encoding='latin-1',newline='') as f:
-                              rr=csv.DictReader(f)
-                              headers=rr.fieldnames
-                              allrows=list(rr)
-                      except Exception as ex:
-                          print('READ_FAIL',out.name,repr(ex)); continue
-                      print('FILE',out.name,'COLUMNS',headers,'ROWS',len(allrows))
-                      if not headers or 'PERIOD' not in headers or 'PRCCODE' not in headers: continue
-                      periods=[x.get('PERIOD','') for x in allrows if x.get('PERIOD')]
-                      print('PERIOD_MINMAX',min(periods),max(periods))
-                      sub=[x for x in allrows if x.get('PRCCODE') in targets and x.get('PERIOD','')[:4] in {'2008','2017'}]
-                      out_target=Path('work/targets')/(out.stem+'_targets.csv')
-                      with out_target.open('w',encoding='utf-8',newline='') as f:
-                          w=csv.DictWriter(f,fieldnames=headers); w.writeheader(); w.writerows(sub)
-                      print('TARGET_ROWS',len(sub))
-                      print('PERIOD_COUNTS',dict(collections.Counter(x.get('PERIOD') for x in sub)))
-                      print('TARGET_QNTUNIT',dict(collections.Counter(x.get('QNTUNIT') for x in sub)))
-                      print('TARGET_DECL',sorted({x.get('DECL') for x in sub}))
-                      for row in sub: print('PRODCOM_TARGET',zname,row)
+          for p in sorted(Path('work/api').glob('*.json')):
+              print('\n===', p.name, '===')
+              try:
+                  obj=json.loads(p.read_text(encoding='utf-8'))
+              except Exception as e:
+                  print('JSON_ERROR',repr(e),p.read_text(errors='replace')[:1000]); continue
+              if isinstance(obj,dict) and ('error' in obj or 'errorCode' in obj):
+                  print('API_ERROR',obj); continue
+              print('TOP_KEYS',list(obj)[:30])
+              print('ID',obj.get('id'))
+              print('SIZE',obj.get('size'))
+              print('LABEL',obj.get('label'))
+              dim=obj.get('dimension',{})
+              print('DIM_KEYS',list(dim))
+              for dk,dv in dim.items():
+                  cat=(dv or {}).get('category',{}) if isinstance(dv,dict) else {}
+                  idx=cat.get('index')
+                  labels=cat.get('label')
+                  print('DIM',dk,'LABEL',(dv or {}).get('label') if isinstance(dv,dict) else None)
+                  print('  INDEX',idx)
+                  if isinstance(labels,dict):
+                      sample=list(labels.items())[:120]
+                      print('  LABELS_SAMPLE',sample)
+              vals=obj.get('value')
+              status=obj.get('status')
+              if isinstance(vals,list):
+                  nonnull=[(i,v) for i,v in enumerate(vals) if v is not None]
+                  print('NONNULL_COUNT',len(nonnull),'SAMPLE',nonnull[:80])
+              elif isinstance(vals,dict):
+                  print('VALUE_DICT_COUNT',len(vals),'SAMPLE',list(vals.items())[:80])
+              else:
+                  print('VALUE_TYPE',type(vals).__name__,vals)
+              print('STATUS_SAMPLE',status if not isinstance(status,dict) else list(status.items())[:50])
           PY
 
-      - name: Upload target evidence
+      - name: Upload API evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: eu-steel-r01-target-evidence
+          name: eu-steel-r01-ds059359-evidence
           path: |
+            work/api/
             work/logs/
-            work/targets/
-            work/extracted/
           if-no-files-found: warn
           retention-days: 30
