@@ -4,6 +4,6 @@
 
 **Date / 기준일:** 2026-08-22  
 **State / 상태:** `RUN_REQUESTED`  
-**Attempt / 실행:** `3 — extract the 10 frozen outcome-blind thermal features for all 21 tracks`
+**Attempt / 실행:** `4 — exact optical targets + frozen 7-fold LOCO PROCESS/THERMO/COMBINED evaluation`
 
-The feature manifest and Ridge estimator were committed to `research/AMBENCH-E03/README.md` before this run. No optical outcomes are used here. / feature 명세와 Ridge 추정기는 본 run 전에 연구기록에 고정되었으며 이번 run에서는 optical outcome을 사용하지 않는다.
+The 10 thermal features, Ridge estimator, pooled OOF metric definition, and gate precedence were committed to `research/AMBENCH-E03/README.md` before this run. This is the first run that combines optical outcomes with the frozen thermal features. / 10개 thermal feature, Ridge 추정기, pooled OOF 지표 정의, gate 우선순위는 본 run 전에 연구기록에 고정됐으며 이번이 optical outcome과 frozen thermal feature를 처음 결합하는 run이다.
