@@ -20,91 +20,199 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Fetch official NIST PDR metadata surfaces
+      - name: Download small authoritative NIST files and version metadata
         shell: bash
         run: |
-          set -uxo pipefail
-          mkdir -p work/raw work/logs work/result
-          : > work/logs/fetch.txt
+          set -euxo pipefail
+          mkdir -p work/raw work/versions work/logs work/result
 
-          probe () {
-            name="$1"; url="$2"; out="work/raw/$name"
-            echo "===== $name =====" | tee -a work/logs/fetch.txt
-            echo "$url" | tee -a work/logs/fetch.txt
-            code=$(curl -sS -L --retry 2 -A 'AI-Innovative-Research-Engine/0.4' -w '%{http_code}' -o "$out" "$url")
-            echo "HTTP=$code BYTES=$(wc -c < "$out") FINAL_TYPE=$(file -b "$out")" | tee -a work/logs/fetch.txt
-            head -c 1500 "$out" | tr '\n' ' ' | tee -a work/logs/fetch.txt
-            echo | tee -a work/logs/fetch.txt
-          }
+          curl -fL --retry 3 'https://data.nist.gov/od/ds/mds2-2716/2716_README.txt' -o work/raw/2716_README.txt
+          curl -fL --retry 3 'https://data.nist.gov/od/ds/mds2-2718/2718_README.txt' -o work/raw/2718_README.txt
+          curl -fL --retry 3 'https://data.nist.gov/od/id/mds2-2716' -o work/raw/2716_current.json
+          curl -fL --retry 3 'https://data.nist.gov/od/id/mds2-2718' -o work/raw/2718_current.json
 
-          probe 2716_landing.html 'https://data.nist.gov/od/id/mds2-2716'
-          probe 2718_landing.html 'https://data.nist.gov/od/id/mds2-2718'
-          probe 2716_readme.txt 'https://data.nist.gov/od/ds/mds2-2716/2716_README.txt'
-          probe 2718_readme.txt 'https://data.nist.gov/od/ds/mds2-2718/2718_README.txt'
-          probe 2716_ds_root.html 'https://data.nist.gov/od/ds/mds2-2716/'
-          probe 2718_ds_root.html 'https://data.nist.gov/od/ds/mds2-2718/'
-          probe 2716_doi.html 'https://doi.org/10.18434/mds2-2716'
-          probe 2718_doi.html 'https://doi.org/10.18434/mds2-2718'
+          XLSX='https://data.nist.gov/od/ds/ark:/88434/mds2-2718/AMB2022-718-SH1-MeltPool_Cross-Section_Measurement_Results.xlsx'
+          curl -fL --retry 3 "$XLSX" -o work/raw/optical_measurements.xlsx
+          curl -fL --retry 3 "$XLSX.sha256" -o work/raw/optical_measurements.xlsx.sha256
 
-          sha256sum work/raw/* | tee work/logs/sha256.txt
+          # Small checksum companions for large thermography and scan-strategy files.
+          curl -fL --retry 3 'https://data.nist.gov/od/ds/ark:/88434/mds2-2716/Thermography/AMB2022-03-718-AMMT-StaringCamera_Signal.h5.sha256' -o work/raw/thermography.h5.sha256 || true
+          curl -fL --retry 3 'https://data.nist.gov/od/ds/ark:/88434/mds2-2716/ScanStrategy/AMB2022-03-AMMT-718-Pad_XYPT.h5.sha256' -o work/raw/scan_strategy.h5.sha256 || true
 
-      - name: Extract PDR version, distribution and identifier evidence
+          for spec in \
+            '2716 1.1.0' '2716 1.2.0' '2716 1.3.0' '2716 1.3.1' \
+            '2718 1.0.0' '2718 1.0.1' '2718 1.0.2' '2718 1.0.3'; do
+            set -- $spec
+            ds="$1"; ver="$2"
+            url="https://data.nist.gov/od/id/ark:/88434/mds2-${ds}/pdr:v/${ver}"
+            code=$(curl -sS -L -w '%{http_code}' -o "work/versions/${ds}_${ver}.json" "$url")
+            echo "$ds $ver HTTP=$code BYTES=$(wc -c < "work/versions/${ds}_${ver}.json")" | tee -a work/logs/version_fetch.txt
+          done
+
+          sha256sum work/raw/* work/versions/* | sort | tee work/logs/sha256.txt
+          ls -lh work/raw work/versions | tee work/logs/files.txt
+
+      - name: Verify NIST checksums and inspect optical workbook
         shell: bash
         run: |
-          python - <<'PY' | tee work/logs/inspect.txt
+          python - <<'PY' | tee work/logs/workbook_inspect.txt
           from pathlib import Path
-          import re, json, html, hashlib
+          import hashlib, json, re, zipfile, xml.etree.ElementTree as ET
 
-          roots=Path('work/raw')
-          datasets=['2716','2718']
-          summary={}
-          for ds in datasets:
-              print('\n### DATASET',ds)
-              files={p.name:p for p in roots.glob(ds+'_*')}
-              rec={'surfaces':{},'candidate_urls':[],'candidate_files':[],'tokens':{}}
-              corpus=[]
-              for name,p in sorted(files.items()):
-                  b=p.read_bytes(); text=b.decode('utf-8',errors='replace')
-                  corpus.append(text)
-                  rec['surfaces'][name]={'bytes':len(b),'sha256':hashlib.sha256(b).hexdigest()}
-                  print('SURFACE',name,'BYTES',len(b),'SHA256',rec['surfaces'][name]['sha256'])
-                  for pat in [r'https?://[^\s"\'<>]+', r'href=["\']([^"\']+)["\']', r'src=["\']([^"\']+)["\']']:
-                      for m in re.finditer(pat,text,re.I):
-                          u=m.group(1) if m.groups() else m.group(0)
-                          u=html.unescape(u).rstrip('.,);')
-                          if 'nist.gov' in u or u.startswith('/od/'):
-                              rec['candidate_urls'].append(u)
-                  for m in re.finditer(r'(?i)(?:file(?:name)?|download|data)[^\n]{0,120}',text):
-                      s=' '.join(m.group(0).split())
-                      if s not in rec['candidate_files']: rec['candidate_files'].append(s)
-              alltext='\n'.join(corpus)
-              for token in ['Version','Release History','Released','Revised','mds2-'+ds,'AMB2022','SH1','BP1','L0','L1.1','repeat','track','sample','cross-section','cross section','.zip','.csv','.xlsx','.tif','.tiff','.mat','.h5','.hdf5']:
-                  hits=[]
-                  for m in re.finditer(re.escape(token),alltext,re.I):
-                      a=max(0,m.start()-160); z=min(len(alltext),m.end()+260)
-                      snippet=' '.join(alltext[a:z].split())
-                      if snippet not in hits: hits.append(snippet)
-                      if len(hits)>=20: break
-                  if hits:
-                      rec['tokens'][token]=hits
-                      print('TOKEN',token)
-                      for h in hits: print(' ',h)
-              rec['candidate_urls']=sorted(set(rec['candidate_urls']))
-              print('CANDIDATE_URLS',len(rec['candidate_urls']))
-              for u in rec['candidate_urls'][:300]: print('URL',u)
-              print('FILE_HINTS',len(rec['candidate_files']))
-              for x in rec['candidate_files'][:200]: print('HINT',x)
-              summary[ds]=rec
-          Path('work/result/pdr_surface_summary.json').write_text(json.dumps(summary,indent=2,ensure_ascii=False),encoding='utf-8')
+          raw=Path('work/raw')
+          xlsx=raw/'optical_measurements.xlsx'
+          actual=hashlib.sha256(xlsx.read_bytes()).hexdigest()
+          companion=(raw/'optical_measurements.xlsx.sha256').read_text(errors='replace').strip().split()[0].lower()
+          current=json.loads((raw/'2718_current.json').read_text())
+          meta_hash=None
+          meta_size=None
+          for c in current.get('components',[]):
+              if c.get('filepath')=='AMB2022-718-SH1-MeltPool_Cross-Section_Measurement_Results.xlsx':
+                  meta_hash=((c.get('checksum') or {}).get('hash') or '').lower()
+                  meta_size=c.get('size')
+                  break
+          print('XLSX_BYTES',xlsx.stat().st_size,'META_SIZE',meta_size)
+          print('XLSX_SHA256_ACTUAL',actual)
+          print('XLSX_SHA256_COMPANION',companion)
+          print('XLSX_SHA256_METADATA',meta_hash)
+          print('XLSX_HASH_MATCH',actual==companion==meta_hash)
+
+          # Dependency-free XLSX reader for strings/numbers/formulas.
+          NS={'m':'http://schemas.openxmlformats.org/spreadsheetml/2006/main',
+              'r':'http://schemas.openxmlformats.org/officeDocument/2006/relationships'}
+          with zipfile.ZipFile(xlsx) as z:
+              shared=[]
+              if 'xl/sharedStrings.xml' in z.namelist():
+                  root=ET.fromstring(z.read('xl/sharedStrings.xml'))
+                  for si in root.findall('m:si',NS):
+                      shared.append(''.join(t.text or '' for t in si.iterfind('.//m:t',NS)))
+              wb=ET.fromstring(z.read('xl/workbook.xml'))
+              relroot=ET.fromstring(z.read('xl/_rels/workbook.xml.rels'))
+              rels={x.attrib['Id']:x.attrib['Target'] for x in relroot}
+              sheets=[]
+              for sh in wb.find('m:sheets',NS):
+                  rid=sh.attrib.get('{%s}id'%NS['r'])
+                  target=rels[rid]
+                  if not target.startswith('xl/'): target='xl/'+target.lstrip('/')
+                  sheets.append((sh.attrib['name'],target))
+              print('SHEETS',sheets)
+
+              def colnum(ref):
+                  letters=re.match(r'([A-Z]+)',ref).group(1)
+                  n=0
+                  for ch in letters: n=n*26+ord(ch)-64
+                  return n
+              for sname,target in sheets:
+                  root=ET.fromstring(z.read(target))
+                  rows=[]
+                  for row in root.findall('.//m:sheetData/m:row',NS):
+                      vals={}
+                      for c in row.findall('m:c',NS):
+                          ref=c.attrib.get('r','A1'); typ=c.attrib.get('t')
+                          v=c.find('m:v',NS)
+                          val='' if v is None else (v.text or '')
+                          if typ=='s' and val!='': val=shared[int(val)]
+                          elif typ=='inlineStr': val=''.join(t.text or '' for t in c.iterfind('.//m:t',NS))
+                          vals[colnum(ref)]=val
+                      if vals:
+                          maxc=max(vals); rows.append([vals.get(i,'') for i in range(1,maxc+1)])
+                  print('\nSHEET',sname,'ROWS',len(rows))
+                  for row in rows[:80]: print('ROW',row)
+
+          Path('work/result/workbook_verification.json').write_text(json.dumps({
+              'actual_sha256':actual,'companion_sha256':companion,'metadata_sha256':meta_hash,
+              'bytes':xlsx.stat().st_size,'metadata_bytes':meta_size,'hash_match':actual==companion==meta_hash
+          },indent=2),encoding='utf-8')
           PY
 
-      - name: Upload PDR inspection evidence
+      - name: Extract thermography and optical identifier semantics
+        shell: bash
+        run: |
+          python - <<'PY' | tee work/logs/identifier_semantics.txt
+          from pathlib import Path
+          import re, json
+
+          for ds in ['2716','2718']:
+              text=Path(f'work/raw/{ds}_README.txt').read_text(encoding='utf-8',errors='replace')
+              print('\n### README',ds)
+              print(text)
+
+          t=Path('work/raw/2716_README.txt').read_text(encoding='utf-8',errors='replace')
+          o=Path('work/raw/2718_README.txt').read_text(encoding='utf-8',errors='replace')
+          patterns={
+            'thermo_line_group':r'/Line_X_Y_Z/.{0,1000}',
+            'thermo_repeat':r'Z corresponds to one of three repeats.{0,1000}',
+            'optical_single_naming':r'Single track micrograph naming convention.{0,1400}',
+            'optical_measurement_results':r'Measurement_Results.{0,1600}',
+          }
+          result={}
+          for name,pat in patterns.items():
+              corpus=t if name.startswith('thermo') else o
+              m=re.search(pat,corpus,re.I|re.S)
+              result[name]=' '.join(m.group(0).split()) if m else None
+              print(name,result[name])
+          Path('work/result/identifier_semantics.json').write_text(json.dumps(result,indent=2),encoding='utf-8')
+          PY
+
+      - name: Compare version-specific PDR manifests
+        shell: bash
+        run: |
+          python - <<'PY' | tee work/logs/version_compare.txt
+          from pathlib import Path
+          import json, hashlib
+
+          def component_map(o):
+              out={}
+              for c in o.get('components',[]):
+                  fp=c.get('filepath')
+                  if not fp: continue
+                  out[fp]={
+                    'size':c.get('size'),
+                    'sha256':((c.get('checksum') or {}).get('hash')),
+                    'downloadURL':c.get('downloadURL'),
+                    'type':c.get('@type')
+                  }
+              return out
+
+          summary={}
+          for ds in ['2716','2718']:
+              print('\n### DATASET',ds)
+              records=[]
+              for p in sorted(Path('work/versions').glob(ds+'_*.json')):
+                  raw=p.read_bytes()
+                  try: o=json.loads(raw)
+                  except Exception as e:
+                      print('BAD_JSON',p.name,repr(e),raw[:500]); continue
+                  rec={
+                    'file':p.name,'version':o.get('version'),'id':o.get('@id'),'doi':o.get('doi'),
+                    'modified':o.get('modified'),'revised':o.get('revised'),'annotated':o.get('annotated'),
+                    'manifest_sha256':hashlib.sha256(raw).hexdigest(),
+                    'components':component_map(o)
+                  }
+                  records.append(rec)
+                  print('VERSION',rec['version'],'ID',rec['id'],'COMPONENTS',len(rec['components']),'MANIFEST_SHA',rec['manifest_sha256'])
+              for a,b in zip(records,records[1:]):
+                  ka,kb=set(a['components']),set(b['components'])
+                  changed=[]
+                  for k in sorted(ka&kb):
+                      if a['components'][k].get('sha256') != b['components'][k].get('sha256') or a['components'][k].get('size') != b['components'][k].get('size'):
+                          changed.append(k)
+                  print('DIFF',a['version'],'->',b['version'],'ADDED',len(kb-ka),'REMOVED',len(ka-kb),'CHANGED',len(changed))
+                  for x in sorted(kb-ka)[:30]: print(' ADDED',x)
+                  for x in sorted(ka-kb)[:30]: print(' REMOVED',x)
+                  for x in changed[:30]: print(' CHANGED',x)
+              summary[ds]=records
+          Path('work/result/version_lineage.json').write_text(json.dumps(summary,indent=2),encoding='utf-8')
+          PY
+
+      - name: Upload Run 2 evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ambench-f02-pdr-snapshot-inspection
+          name: ambench-f02-run2-small-files
           path: |
             work/logs/
             work/result/
+            work/raw/*.sha256
           if-no-files-found: error
           retention-days: 30
