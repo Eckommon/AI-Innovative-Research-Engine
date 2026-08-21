@@ -1,9 +1,9 @@
 # AMBENCH-E03 Execution Trigger / 실행 트리거
 
-**Purpose / 목적:** Trigger the traceable pull-request workflow for preregistered Issue #13 structural inspection only. / 사전등록된 Issue #13의 구조검사 전용 PR workflow 실행.
+**Purpose / 목적:** Trigger the traceable pull-request workflow for preregistered Issue #13. / 사전등록된 Issue #13 실행용 PR workflow 트리거.
 
 **Date / 기준일:** 2026-08-22  
 **State / 상태:** `RUN_REQUESTED`  
-**Attempt / 실행:** `2 — inspect Signal attrs, root metadata and Calibration tree without outcomes`
+**Attempt / 실행:** `3 — extract the 10 frozen outcome-blind thermal features for all 21 tracks`
 
-No optical outcomes are used in this run. No model or outcome-aware feature selection is permitted. / 본 run에서는 optical outcome을 사용하지 않으며 모델링·outcome-aware feature 선택을 금지한다.
+The feature manifest and Ridge estimator were committed to `research/AMBENCH-E03/README.md` before this run. No optical outcomes are used here. / feature 명세와 Ridge 추정기는 본 run 전에 연구기록에 고정되었으며 이번 run에서는 optical outcome을 사용하지 않는다.
