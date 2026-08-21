@@ -15,7 +15,6 @@ source_of_truth: github
 AI-Innovative-Research-Engine의 Obsidian 시작 허브다. / This is the Obsidian start hub for AI-Innovative-Research-Engine.
 
 ## Start Here / 시작 순서
-
 1. [Project README / 프로젝트 설명](../README.md)
 2. [Project Status / 프로젝트 상태](../STATUS.md)
 3. [Project Memory / 지속 프로젝트 메모리](../context/PROJECT_MEMORY.md)
@@ -27,7 +26,6 @@ AI-Innovative-Research-Engine의 Obsidian 시작 허브다. / This is the Obsidi
 9. [Tag Taxonomy / 태그 체계](TAG_TAXONOMY.md)
 
 ## Core Rules / 핵심 규칙
-
 - [Governance / 거버넌스](../docs/GOVERNANCE.md)
 - [Methodology / 방법론](../docs/METHODOLOGY.md)
 - [GPT ↔ GitHub Sync / 동기화 규약](../docs/GPT_GITHUB_SYNC_PROTOCOL.md)
@@ -36,13 +34,16 @@ AI-Innovative-Research-Engine의 Obsidian 시작 허브다. / This is the Obsidi
 - [Language Policy / 병기 규약](../docs/LANGUAGE_POLICY.md)
 
 ## Current Active Research / 현재 활성 연구
-
-- [EU-IEE-F02 — Facility–Sector Emissions-to-Output Feasibility / 시설·Sector 배출–산업생산 정규화](../research/EU-IEE-F02/README.md)
+- [EU-STEEL-R01 — E-PRTR × PRODCOM steel-mercury independent reproduction / 철강 수은집약도 독립 재현](../research/EU-STEEL-R01/README.md) — Issue #8 `ACTIVE`
 
 ## Recent Completed / 최근 완료
-
-- [EU-IEE-E01 — First cross-dataset controlled experiment / 첫 cross-dataset 통제실험](../research/EU-IEE-E01/README.md)
-- [KR-GRID-F01 — Bus-Identifier Mapping Feasibility / 모선 식별자 매핑 가능성](../research/KR-GRID-F01/README.md)
+- [EU-IEE-F02 — Facility–Sector normalization feasibility / 시설·Sector 정규화 feasibility](../research/EU-IEE-F02/README.md) — `PARTIAL_PASS`
+- [EU-IEE-E01 — First cross-dataset controlled experiment / 첫 cross-dataset 통제실험](../research/EU-IEE-E01/README.md) — empirical `VALIDATED`, novelty `LOW`
+- [KR-GRID-F01 — Bus-Identifier Mapping Feasibility / 모선 식별자 매핑 가능성](../research/KR-GRID-F01/README.md) — `HOLD`
 - [Wave 1 Synthesis / Wave 1 종합](../research/WAVE1-SYNTHESIS.md)
 
-`LANG-001` compliant / 한글·영문 병기 규약 준수.
+## Evidence & Decisions / 증거·결정
+- [Claim Ledger](../registry/CLAIM_LEDGER.md)
+- [Decision Log](../registry/DECISION_LOG.md)
+
+Official artifacts comply with `LANG-001`, `READ-001`, and `MEMORY-001`. / 공식 산출물은 관련 규약을 따른다.
