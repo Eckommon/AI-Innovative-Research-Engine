@@ -1,0 +1,21 @@
+# Obsidian local/device-specific state
+.obsidian/
+.trash/
+
+# OS/editor artifacts
+.DS_Store
+Thumbs.db
+*.swp
+*.tmp
+
+# Python / analysis caches
+__pycache__/
+*.pyc
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Local environments / secrets
+.env
+.env.*
+.venv/
+venv/
