@@ -17,114 +17,75 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
-      - name: Download official raw inputs with diagnostics
+      - name: Download official EEA and Eurostat raw inputs
         shell: bash
         run: |
-          set -uxo pipefail
-          mkdir -p work/raw work/extracted work/logs
-          : > work/logs/download.txt
-
-          EPRTR_URL='https://sdi.eea.europa.eu/webdav/datastore/public/eea_t_ied-eprtr_p_2007-2022_v11_r00/User%20friendly%20.csv%20file/F1_3_Total%20Release%20at%20E-PRTR%20Annex%20I%20Activity%20into%20Air.csv'
-          echo "EPRTR_URL=$EPRTR_URL" | tee -a work/logs/download.txt
-          curl -fL --retry 3 --retry-delay 2 -A 'AI-Innovative-Research-Engine/0.3' \
-            "$EPRTR_URL" -o work/raw/eprtr_F1_3.csv 2>&1 | tee -a work/logs/download.txt
-          echo "EPRTR_EXIT=${PIPESTATUS[0]}" | tee -a work/logs/download.txt
-
-          test_candidate () {
-            label="$1"; url="$2"; out="work/raw/${label}.bin"
-            echo "===== $label =====" | tee -a work/logs/download.txt
-            echo "$url" | tee -a work/logs/download.txt
-            curl -fL --retry 1 --retry-delay 1 -A 'AI-Innovative-Research-Engine/0.3' \
-              "$url" -o "$out" 2>&1 | tee -a work/logs/download.txt
-            code=${PIPESTATUS[0]}
-            echo "EXIT=$code" | tee -a work/logs/download.txt
-            if [ "$code" -eq 0 ]; then
-              file "$out" | tee -a work/logs/download.txt
-              ls -lh "$out" | tee -a work/logs/download.txt
-              if python - "$out" <<'PY'
-          import sys, zipfile
-          p=sys.argv[1]
-          raise SystemExit(0 if zipfile.is_zipfile(p) else 1)
-          PY
-              then
-                cp "$out" work/raw/epanntotal-r2.zip
-                echo "SELECTED=$label" | tee -a work/logs/download.txt
-                return 0
-              fi
-            fi
-            return 1
-          }
-
-          test_candidate api_comext \
-            'https://ec.europa.eu/eurostat/api/dissemination/files?file=comext/EUROPROMS/epanntotal-r2.zip' || true
-          if [ ! -f work/raw/epanntotal-r2.zip ]; then
-            test_candidate api_otherdata \
-              'https://ec.europa.eu/eurostat/api/dissemination/files?file=comext/COMEXT_OTHER_DATA/EUROPROMS/epanntotal-r2.zip' || true
-          fi
-          if [ ! -f work/raw/epanntotal-r2.zip ]; then
-            test_candidate legacy_comext \
-              'https://ec.europa.eu/eurostat/estat-navtree-portlet-prod/BulkDownloadListing?file=comext/EUROPROMS/epanntotal-r2.zip' || true
-          fi
-          if [ ! -f work/raw/epanntotal-r2.zip ]; then
-            test_candidate legacy_otherdata \
-              'https://ec.europa.eu/eurostat/estat-navtree-portlet-prod/BulkDownloadListing?file=COMEXT_OTHER_DATA/EUROPROMS/epanntotal-r2.zip' || true
-          fi
-
-          : > work/logs/sha256.txt
-          [ -f work/raw/eprtr_F1_3.csv ] && sha256sum work/raw/eprtr_F1_3.csv | tee -a work/logs/sha256.txt || true
-          [ -f work/raw/epanntotal-r2.zip ] && sha256sum work/raw/epanntotal-r2.zip | tee -a work/logs/sha256.txt || true
+          set -euxo pipefail
+          mkdir -p work/raw work/extracted work/logs work/targets
+          EPRTR='https://sdi.eea.europa.eu/webdav/datastore/public/eea_t_ied-eprtr_p_2007-2022_v11_r00/User%20friendly%20.csv%20file/F1_3_Total%20Release%20at%20E-PRTR%20Annex%20I%20Activity%20into%20Air.csv'
+          BASE='https://ec.europa.eu/eurostat/api/dissemination/files?file=comext/COMEXT_OTHER_DATA/EUROPROMS'
+          curl -fL --retry 3 "$EPRTR" -o work/raw/eprtr_F1_3.csv
+          curl -fL --retry 3 "$BASE/epanntotal-r2.zip" -o work/raw/epanntotal-r2.zip
+          curl -fL --retry 3 "$BASE/epanntotal.zip" -o work/raw/epanntotal.zip
+          sha256sum work/raw/* | tee work/logs/sha256.txt
           ls -lh work/raw | tee work/logs/files.txt
 
-      - name: Inspect official raw schemas
+      - name: Extract target rows and inspect schemas
         shell: bash
         run: |
           python - <<'PY' | tee work/logs/inspect.txt
           from pathlib import Path
-          import csv, io, zipfile
-
-          e=Path('work/raw/eprtr_F1_3.csv')
-          if e.exists():
-              b=e.read_bytes(); t=b.decode('utf-8-sig',errors='replace'); s=t[:20000]
-              try: d=csv.Sniffer().sniff(s,delimiters=',;\t|').delimiter
-              except Exception: d=';' if s.count(';')>s.count(',') else ','
-              print('EPRTR_SIZE',len(b)); print('EPRTR_DELIMITER',repr(d))
-              r=csv.reader(io.StringIO(t),delimiter=d)
-              for i,row in zip(range(8),r): print('EPRTR_ROW',i,row)
-          else:
-              print('EPRTR_MISSING')
-
-          zpath=Path('work/raw/epanntotal-r2.zip')
-          if zpath.exists() and zipfile.is_zipfile(zpath):
-              with zipfile.ZipFile(zpath) as z:
-                  print('PRODCOM_MEMBERS')
-                  for n in z.namelist():
-                      print(n)
-                      if not n.endswith('/'):
-                          p=Path('work/extracted')/Path(n).name; p.write_bytes(z.read(n))
-          else:
-              print('PRODCOM_ZIP_MISSING')
+          import pandas as pd, zipfile
 
           targets=['2410T121','2410T122','2410T131','2410T132','2410T141','2410T142']
-          for p in sorted(Path('work/extracted').glob('*')):
-              if p.is_file():
-                  txt=p.read_bytes().decode('latin-1',errors='ignore')
-                  print('FILE',p.name,p.stat().st_size)
-                  print('TARGET_COUNTS',{x:txt.count(x) for x in targets})
-                  print('HEAD',txt[:3000].replace('\r','\\r').replace('\n','\\n'))
+          acts=['1(d)','2(a)','2(b)']
+
+          e=Path('work/raw/eprtr_F1_3.csv')
+          edf=pd.read_csv(e,dtype=str)
+          print('EPRTR_COLUMNS',edf.columns.tolist())
+          norm_act=edf['EPRTRAnnexIMainActivityCode'].str.replace('.','',regex=False).str.replace(' ','',regex=False)
+          pol=edf['pollutant'].str.lower()
+          years=edf['reportingYear'].isin(['2008','2017'])
+          esub=edf[years & norm_act.isin(acts) & pol.str.contains('mercur',na=False)].copy()
+          esub.to_csv('work/targets/eprtr_mercury_2008_2017.csv',index=False)
+          print('EPRTR_TARGET_ROWS',len(esub))
+          print('EPRTR_COUNTRIES',sorted(esub.countryName.dropna().unique().tolist()))
+          print('EPRTR_TOTALS_KG',esub.groupby('reportingYear')['emissions'].apply(lambda x: pd.to_numeric(x,errors='coerce').sum()).to_dict())
+          print(esub.to_string(index=False))
+
+          for name in ['epanntotal-r2.zip','epanntotal.zip']:
+              zp=Path('work/raw')/name
+              with zipfile.ZipFile(zp) as z:
+                  members=[n for n in z.namelist() if not n.endswith('/')]
+                  print('ZIP',name,'MEMBERS',members)
+                  for member in members:
+                      out=Path('work/extracted')/(name.replace('.zip','')+'__'+Path(member).name)
+                      out.write_bytes(z.read(member))
+                      try:
+                          df=pd.read_csv(out,dtype=str)
+                      except Exception as ex:
+                          print('READ_FAIL',out.name,repr(ex)); continue
+                      print('FILE',out.name,'COLUMNS',df.columns.tolist(),'ROWS',len(df))
+                      if 'PERIOD' in df.columns and 'PRCCODE' in df.columns:
+                          print('PERIOD_MINMAX',df.PERIOD.dropna().min(),df.PERIOD.dropna().max())
+                          sub=df[df.PRCCODE.isin(targets) & df.PERIOD.str[:4].isin(['2008','2017'])].copy()
+                          sub.to_csv('work/targets/'+out.stem+'_targets.csv',index=False)
+                          print('TARGET_ROWS',len(sub),'PERIOD_COUNTS',sub.PERIOD.value_counts().to_dict())
+                          print('TARGET_QNTUNIT',sub.QNTUNIT.value_counts(dropna=False).to_dict() if 'QNTUNIT' in sub else {})
+                          print('TARGET_DECL',sorted(sub.DECL.dropna().unique().tolist()) if 'DECL' in sub else [])
+                          print(sub.to_string(index=False))
           PY
 
-      - name: Upload inspection evidence
-        if: always()
+      - name: Upload target evidence
         uses: actions/upload-artifact@v4
         with:
-          name: eu-steel-r01-pr-inspection
+          name: eu-steel-r01-target-evidence
           path: |
             work/logs/
+            work/targets/
             work/extracted/
-          if-no-files-found: warn
           retention-days: 30
