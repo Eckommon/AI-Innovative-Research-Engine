@@ -1,131 +1,120 @@
 ---
 id: EU-STEEL-R01
 type: experiment
-state: EXPERIMENT
-evidence_class: HYPOTHESIZED
+state: INCONCLUSIVE
+evidence_class: DERIVED
 region: eu
 domain: industry
 tags:
   - type/experiment
-  - state/experiment
-  - evidence/hypothesized
+  - state/inconclusive
+  - evidence/reproduced
   - region/eu
   - domain/industry
-  - risk/classification
+  - risk/version-drift
 created: 2026-08-22
 updated: 2026-08-22
 source_of_truth: github
 related:
   - research/EU-IEE-F02/README.md
+  - research/EU-STEEL-R01/REPRODUCTION_RESULT.md
 ---
 
 # EU-STEEL-R01 — E-PRTR × PRODCOM 철강 수은집약도 독립 재현 / Independent Reproduction of E-PRTR × PRODCOM Steel Mercury Intensity
 
 **Issue / 이슈:** #8  
-**State / 상태:** `EXPERIMENT — RAW_INPUT_RETRIEVAL`  
-**Reproduction harness / 재현 하네스:** `src/reproduce_eu_steel_mercury.py`  
-**GitHub Actions / 자동 재현:** `.github/workflows/eu-steel-r01-reproduce.yml`, `.github/workflows/eu-steel-r01-issue-trigger.yml`
+**State / 상태:** `COMPLETED — HOLD / INCONCLUSIVE_LEGACY_VERSION_DIVERGENCE`  
+**Detailed result / 상세 결과:** [REPRODUCTION_RESULT.md](./REPRODUCTION_RESULT.md)  
+**Reproduction harness / 재현 하네스:** `src/reproduce_eu_steel_mercury.py`
 
 ## 1. Reproduction Target / 재현 대상
 
-**KO:** EEA가 발표한 EEA-33의 `mercury emissions per unit of steel production`이 2008 대비 2017년 **36% 감소**했다는 관계를 공식 raw E-PRTR + Eurostat PRODCOM 입력에서 독립 계산한다.  
-**EN:** Independently calculate from official raw E-PRTR + Eurostat PRODCOM inputs the EEA-published relationship that EEA-33 `mercury emissions per unit of steel production` was **36% lower in 2017 than in 2008**.
+**KO:** EEA가 2019 briefing에서 서술한 EEA-33 `mercury emissions per unit of steel production`의 2008→2017 **-36%** 관계를 공식 E-PRTR + Eurostat PRODCOM 입력에서 독립 재현한다.  
+**EN:** Independently reproduce from official E-PRTR + Eurostat PRODCOM inputs the EEA 2019 briefing narrative that EEA-33 `mercury emissions per unit of steel production` was **36% lower in 2017 than in 2008**.
 
 ## 2. Frozen Published Crosswalk / 고정 공식 Crosswalk
 
 - E-PRTR activities: `1.(d)`, `2.(a)`, `2.(b)`
-- PRODCOM products: `2410T121-122`, `2410T131-132`, `2410T141-142`
-- years: `2008–2017`
-- geography: EEA-33 = EU-28 + Iceland + Liechtenstein + Norway + Switzerland + Serbia; Turkey absent from E-PRTR
-- special note: EEA reports one corrected UK point for 2009
+- PRODCOM products: `2410T121`, `2410T122`, `2410T131`, `2410T132`, `2410T141`, `2410T142`
+- years: `2008`, `2017`
+- geography: EEA-33 = EU-28 + Iceland + Liechtenstein + Norway + Switzerland + Serbia
+- Turkey absent from E-PRTR
+- chart unit: grams Hg / kilotonne steel
 
-The crosswalk is frozen before calculation. / 계산 전 crosswalk를 고정한다.
+The crosswalk and gate were frozen before calculation. No post-hoc tuning was permitted. / 계산 전 crosswalk·게이트를 고정했으며 사후 조정을 허용하지 않았다.
 
-## 3. Raw Access Discovery / Raw 접근 발견
+## 3. V3 Reproduced Numerator / V3 재현 분자
 
-### E-PRTR numerator / E-PRTR 분자
-`OBSERVED`, `V2_PRIMARY_VERIFIED`
+Official EEA historical files were machine-read in GitHub Actions. / 공식 EEA historical 파일을 GitHub Actions에서 기계 판독했다.
 
-EEA historical user-friendly data package `eea_t_ied-eprtr_p_2007-2022_v11_r00` lists:
-- `F1_3_Total Release at E-PRTR Annex I Activity into Air.csv` (~13 MB)
-- `F1_4_Detailed releases at facility level with E-PRTR Sector and Annex I Activity detail into Air.csv` (~101 MB)
+| Source | 2008 Hg | 2017 Hg | Result |
+|---|---:|---:|---|
+| `F1_3` activity aggregate | 4,312.9 kg | 3,327.1 kg | reproduced |
+| `F1_4` facility detail | 4,312.9 kg | 3,327.1 kg | reproduced |
 
-This establishes a raw numerator path at Annex I activity granularity. / Annex I activity 해상도의 raw 분자 경로 확인.
+The exact equality of the two totals rules out aggregate-vs-facility resolution as the cause of the reproduction mismatch. / 두 합계가 정확히 일치하므로 aggregate/facility 해상도 차이는 불일치 원인이 아니다.
 
-Index / 인덱스: `https://sdi.eea.europa.eu/webdav/datastore/public/eea_t_ied-eprtr_p_2007-2022_v11_r00/User%20friendly%20.csv%20file/`
+## 4. Primary-Source Version Conflict / 1차 출처 버전 불일치
 
-Current EEA Industrial Reporting also exposes downloadable 2007–2024 tabular data and standardizes pollutant-release quantities in `kg/year`. / 현행 EEA Industrial Reporting도 2007–2024 tabular 다운로드를 제공하고 pollutant release 단위를 `kg/year`로 표준화한다.
+The EEA briefing narrative states `-36%`. The **currently distributed EEA chart CSV** contains: / EEA briefing 본문은 `-36%`를 서술하지만 현행 배포 chart CSV는 다음 값을 포함한다.
 
-### PRODCOM denominator / PRODCOM 분모
-`OBSERVED`, `V2_PRIMARY_VERIFIED`
+- 2008: `35.0 g/kt`
+- 2017: `20.5 g/kt`
+- direct change: **`-41.4286%`**
 
-- Eurostat/data.europa.eu identify **`DS-066342` as Total production**. / `DS-066342 = Total production` 확인.
-- Official EUROPROMS bulk inventory lists `epanntotal-r2.zip` and `epanntotal.zip`. / 공식 historical bulk archive 확인.
-- Current Eurostat Quick Guide identifies **`DS-059359`** as annual total production from 1995 onward. / 현행 annual total-production dataset 확인.
-- Current field semantics: `APRODQNT` = Actual production quantity; `QNTUNIT` = Quantity unit. / 현행 필드 의미 확인.
-- The published steel `T` codes retain explicit crude-steel semantics in statistical code lists. / 발표된 T-code의 조강 종류·공정 의미 확인.
+Therefore the narrative percentage and current chart-data values are internally inconsistent. The cause is not inferred without evidence. / 따라서 본문 퍼센트와 현행 chart 데이터가 내부적으로 불일치하며 원인은 근거 없이 추정하지 않는다.
 
-**Compatibility caution / 호환 주의:** `DS-059359` is a current compatibility reference and is **not assumed to be a one-to-one migration** of historical `DS-066342` without authoritative correspondence. / 현행 dataset을 historical dataset과 임의 동일시하지 않는다.
+## 5. PRODCOM Denominator / PRODCOM 분모
 
-### Reference semantics / 기준 의미
-EEA's published figure states that the ratio uses the above E-PRTR activity codes and PRODCOM product codes and reports 2017 intensity 36% below 2008. The chart unit is mercury grams per kilotonne of steel production. / EEA 공식 figure는 해당 code 조합과 2017년 -36%를 명시하며 chart 단위는 철강생산 kilotonne당 수은 grammes다.
+### Historical / 과거
+EEA cites `DS-066342` (`Total production by PRODCOM list`). The dataset is now discontinued. Direct probes of current official Eurostat interfaces returned `404` / `not available for dissemination` for: / EEA가 사용한 `DS-066342`는 현재 폐지됐고 현행 공식 인터페이스 직접 조회에서 다음 모두 404를 반환했다.
 
-## 4. Predefined Calculation / 사전 계산식
+- COMEXT Statistics API, 2008/2017
+- regular Statistics API
+- SDMX dataflow
 
-```text
-Hg_t = sum(E-PRTR mercury-to-air releases for activities 1.(d), 2.(a), 2.(b))
-Steel_t = sum(PRODCOM total-production quantities for 2410T121-122, 2410T131-132, 2410T141-142)
-Intensity_t = Hg_t / Steel_t
-Change_2008_2017 = (Intensity_2017 / Intensity_2008 - 1) * 100
-```
+Official EUROPROMS legacy archives remain downloadable, but observed ranges are insufficient: / 공식 legacy archive는 다운로드 가능하지만 기간이 부족하다.
 
-Units must be harmonized before division. / 나눗셈 전 단위를 일치시킨다.
+- `epanntotal-r2.zip`: through 2014
+- `epanntotal.zip`: through 2012
 
-## 5. Frozen Gate / 고정 게이트
+Thus the exact legacy 2017 denominator used by the historical EEA analysis cannot presently be recovered through the tested official dissemination paths. / 원 EEA 분석의 정확한 legacy 2017 분모를 시험한 공식 배포경로에서 현재 복구할 수 없다.
 
-- `PASS`: `Change_2008_2017` within `-38%` to `-34%` and inputs/crosswalk reproducible.
-- `PARTIAL`: numerator/denominator reproducible but documented legacy/version differences prevent ±2%p agreement.
-- `FAIL/HOLD`: unsupported assumptions are required to recover numerator, denominator, geography, units, or legacy code semantics.
+### Current compatibility diagnostic / 현행 호환 진단
+Current `DS-059359` was successfully queried with actual dimensions `freq / reporter / product / indicators / time`; the six literal T-codes exist and use `KG`. / 현행 `DS-059359`의 실제 구조와 T-code·KG 단위를 재현했다.
 
-No post-hoc filter change solely to force agreement with `-36%`. / `-36%`에 맞추기 위한 사후 filter 변경 금지.
+However, EEA-33 extra reporters contain `null` for `LI`, `CH`, and 2008 `XS` on the tested products. `null` was not converted to zero. / EEA-33 추가 reporter의 일부가 `null`이며 이를 0으로 변환하지 않았다.
 
-## 6. Reproducibility Harness / 재현 하네스
+For diagnosis only, the six-code EU28 sums were: / 진단 전용 EU28 합계:
+- 2008: `168,619,860,319 kg`
+- 2017: `129,543,917,700 kg`
 
-`src/reproduce_eu_steel_mercury.py` enforces: / 다음을 코드 수준에서 강제한다.
-- fixed years, activity codes, product codes, and EEA-33 scope / 고정 연도·활동·제품·지역범위;
-- SHA-256 fingerprints before analysis / 분석 전 SHA-256;
-- schema and delimiter inspection / schema·delimiter 검사;
-- fail-closed behavior for ambiguous columns/units/reporters / 열·단위·reporter가 모호하면 추정하지 않고 실패;
-- separate numerator/denominator calculation before intensity / 집약도 전 분자·분모 분리계산;
-- frozen `-38%..-34%` reproduction gate / 고정 재현 게이트.
+Combining those EU28-only values with the reproduced numerator gives `+0.4126%`, **not** an EEA-33 reproduction result. / 해당 EU28-only 계산은 `+0.4126%`이나 EEA-33 재현값으로 승격하지 않는다.
 
-GitHub Actions runners are used as the network-capable reproducibility environment because the current chat execution container cannot resolve the official EEA/Eurostat hosts. / 현재 채팅 실행 컨테이너의 외부 DNS 제한을 피하기 위해 GitHub-hosted runner를 공식 raw 재현환경으로 사용한다.
+## 6. Frozen Gate / 고정 게이트
 
-## 7. Resolved vs Unknown / 해결·미확인
+Predefined gate: / 사전 게이트:
+- `PASS`: independent change within `-38%..-34%` with reproducible matched inputs.
+- `PARTIAL`: numerator and denominator reproducible, but documented legacy/version differences prevent exact agreement.
+- `FAIL/HOLD`: unsupported assumptions are required to recover numerator, denominator, geography, units, or code semantics.
 
-### Resolved / 해결
-- EEA target ratio/crosswalk/reference change / 기준 ratio·crosswalk·변화율;
-- EEA-33 membership / EEA-33 구성;
-- E-PRTR historical raw filename and official directory / historical raw 파일명·공식 경로;
-- E-PRTR pollutant-release unit semantics = `kg/year` / 배출 단위 의미;
-- historical `DS-066342` and EUROPROMS annual-total-production archive identity / historical 분모 source;
-- current `DS-059359`, `APRODQNT`, `QNTUNIT` semantics / 현행 호환 참조 의미.
+### Final / 최종
 
-### `UNKNOWN` pending GitHub Actions raw inspection / Actions raw 검사 대기
-- exact E-PRTR CSV column schema and target 2008/2017 Hg rows / E-PRTR 실제 열·목표 행;
-- `epanntotal-r2.zip` internal member/schema and six target-code rows / historical ZIP 내부 schema·목표 행;
-- actual target-row quantity unit and defensible EEA-33 denominator aggregation / 실제 수량단위·분모 집계;
-- independent 2008/2017 numerator, denominator, intensity and percent change / 독립 계산값.
+**`HOLD / INCONCLUSIVE_LEGACY_VERSION_DIVERGENCE`**
 
-These remain unknown until machine-generated raw inspection or an equivalent V3 extraction is reviewed. / 기계 raw 검사 또는 동등한 V3 추출 전까지 미확인으로 유지한다.
+`PASS` is not granted. `PARTIAL` is also not granted under the original definition because the exact historical 2017 denominator is not reproducibly extractable. / 정확한 historical 2017 분모가 재현 추출되지 않으므로 `PASS`뿐 아니라 원 정의상의 `PARTIAL`도 부여하지 않는다.
 
-## 8. Next Actions / 다음 행동
+This is **not a falsification** of the historical EEA analysis. It is a reproducibility and data-lineage limitation. / 과거 EEA 분석의 반증이 아니라 재현성·데이터 계보 한계다.
 
-1. Trigger GitHub Actions raw inspection through Issue #8 edit. / Issue #8 edit로 Actions 검사 실행.
-2. Review `research/EU-STEEL-R01/action_inspection.md` if generated. / 생성된 raw 검사파일 검토.
-3. Adapt parser only to observed official schema, without changing the frozen crosswalk. / 관측 schema에만 parser 보정.
-4. Execute full numerator/denominator calculation and preserve result JSON. / 분자·분모 계산 및 JSON 보존.
-5. Compare to EEA `-36%` under the frozen gate. / 고정 게이트 비교.
-6. Update Claim Ledger, Decision Log if needed, Memory, Handoff, STATUS, MOCs, and Issue #8. / 기록 동기화.
+## 7. Evidence Runs / 증거 Run
+
+- GitHub Actions Run `32534535674` — frozen EEA-33 denominator attempt → `HOLD_UNRESOLVED_DENOMINATOR`
+- Run `32534683910` — EEA figure CSV + `F1_3`/`F1_4` numerator diagnostic
+- Run `32534864866` — discontinued `DS-066342` endpoint recovery probe
+
+## 8. Research Lesson / 연구 교훈
+
+**KO:** URL·dataset ID뿐 아니라 과거 snapshot의 실제 복구 가능성까지 재현성 메타데이터로 관리해야 한다. 후속 방법론에는 `snapshot recoverability / historical version retention`을 명시적 평가필드로 추가할 가치가 있다.  
+**EN:** Reproducibility metadata must track not only URLs and dataset IDs but whether historical snapshots remain recoverable. `Snapshot recoverability / historical version retention` should be considered as an explicit future qualification field.
 
 Official artifacts comply with `LANG-001`, `READ-001`, `FACT-001`, `UNKNOWN-001`, and `WRITEBACK-001`. / 공식 산출물은 관련 규약을 따른다.
