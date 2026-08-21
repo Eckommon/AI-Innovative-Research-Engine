@@ -52,13 +52,12 @@ source_of_truth: github
 - **Source:** closed Issue #6; `research/EU-IEE-E01/README.md`
 - **verified_at:** 2026-08-22
 
-### `MEM-006` — Active Work Queue / 활성 Work Queue
-- **KO:** 현재 활성 연구 큐는 Issue #8 `EU-STEEL-R01`이며 EEA가 발표한 E-PRTR × PRODCOM 철강 수은집약도 2008→2017 `-36%` 관계를 raw 공식 입력에서 독립 재현한다.
-- **EN:** The active research queue is Issue #8 `EU-STEEL-R01`, independently reproducing EEA's published E-PRTR × PRODCOM steel-mercury intensity 2008→2017 `-36%` relationship from official raw inputs.
-- **State:** `ACTIVE`
+### `MEM-006` — Former Active Issue #8 / 이전 활성 Issue #8
+- **KO:** Issue #8 `EU-STEEL-R01`은 EEA 철강 수은집약도 historical `-36%` 관계의 독립 재현으로 시작됐다.
+- **EN:** Issue #8 `EU-STEEL-R01` began as an independent reproduction of EEA's historical steel-mercury `-36%` relationship.
+- **State:** `SUPERSEDED_BY_MEM-012`
 - **Source:** Issue #8; `research/EU-STEEL-R01/README.md`
 - **verified_at:** 2026-08-22
-- **supersedes:** previous `MEM-006` active Issue #7 state.
 
 ### `MEM-007` — Facility Denominator Constraint / 시설 분모 제약
 - **KO:** 국가·sector 생산량을 임의로 개별 시설에 배분하여 시설단위 배출효율을 만들지 않는다. plant-level production denominator 또는 권위 있는 allocation method가 필요하다.
@@ -93,6 +92,27 @@ source_of_truth: github
 - **EN:** Issue #7 completed as `PASS_SECTOR_AGGREGATE / HOLD_FACILITY_DENOMINATOR`. Explicitly mapped E-PRTR activity ↔ PRODCOM product sector aggregation is feasible; a generic facility denominator remains held.
 - **State:** `VALIDATED`
 - **Source:** closed Issue #7; `research/EU-IEE-F02/README.md`
+- **verified_at:** 2026-08-22
+
+### `MEM-012` — EU-STEEL-R01 Final HOLD / 철강 수은집약도 재현 최종 HOLD
+- **KO:** Issue #8은 `COMPLETED — HOLD / INCONCLUSIVE_LEGACY_VERSION_DIVERGENCE`다. EEA `F1_3`·`F1_4`에서 2008 수은 4,312.9 kg, 2017 3,327.1 kg가 V3 재현됐지만, EEA가 사용한 historical `DS-066342`의 exact 2017 분모는 시험한 현행 Eurostat 공식 API/dataflow에서 더 이상 배포되지 않는다. 현행 EEA figure CSV의 35.0→20.5 g/kt는 -41.4286%로 2019 briefing 본문의 -36%와 충돌한다. 원인은 UNKNOWN으로 유지한다.
+- **EN:** Issue #8 completed as `HOLD / INCONCLUSIVE_LEGACY_VERSION_DIVERGENCE`. EEA `F1_3` and `F1_4` V3-reproduce Hg totals of 4,312.9 kg (2008) and 3,327.1 kg (2017), but the exact 2017 denominator from historical `DS-066342` is no longer disseminated through tested current Eurostat official APIs/dataflow. The current EEA figure CSV's 35.0→20.5 g/kt implies -41.4286%, conflicting with the 2019 briefing narrative -36%; cause remains UNKNOWN.
+- **State:** `VALIDATED` project outcome
+- **Source:** closed Issue #8; `research/EU-STEEL-R01/REPRODUCTION_RESULT.md`; `CLM-010..013`; `DEC-009`
+- **verified_at:** 2026-08-22
+
+### `MEM-013` — Snapshot/Version Lineage Gate / Snapshot·버전 계보 게이트
+- **KO:** historical 연구는 현재 URL/API 접근성만으로 재현 가능하다고 판단하지 않는다. exact/official archived snapshot 또는 요구 범위를 덮는 권위 있는 replacement correspondence가 필요하다. `reproduction_risk`는 우선 IPS 가중치가 아닌 별도 gate/modifier다.
+- **EN:** Historical research is not considered reproducible from current URL/API accessibility alone. It requires an exact/official archived snapshot or authoritative replacement correspondence covering the required scope. `reproduction_risk` is initially a separate gate/modifier rather than an IPS weight.
+- **State:** `VALIDATED` methodology policy
+- **Source:** Issue #10 `METHOD-001`; `docs/METADATA_SCHEMA.md` v0.3; `registry/GLOBAL_PUBLIC_DATA_SOURCE_REGISTRY.md` v0.2; `DEC-010`
+- **verified_at:** 2026-08-22
+
+### `MEM-014` — Queue State After Method Hardening / 방법론 보강 후 큐 상태
+- **KO:** Issue #8 재현과 Issue #10 방법론 보강 이후 프로젝트는 `READY_FOR_NEXT_CANDIDATE` 상태다. 다음 후보는 IPS와 snapshot/version lineage gate를 함께 적용하여 선정한다.
+- **EN:** After Issue #8 reproduction and Issue #10 methodology hardening, the project is `READY_FOR_NEXT_CANDIDATE`. The next candidate must be selected using IPS together with the snapshot/version-lineage gate.
+- **State:** `ACTIVE`
+- **Source:** `STATUS.md`
 - **verified_at:** 2026-08-22
 
 ## Maintenance Rule / 유지 규칙
