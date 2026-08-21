@@ -140,16 +140,21 @@ jobs:
       - name: Write inspection report into repository
         if: always()
         shell: bash
+        env:
+          RUN_ID: ${{ github.run_id }}
+          HEAD_SHA: ${{ github.sha }}
         run: |
           mkdir -p research/EU-STEEL-R01
           python - <<'PY'
           from pathlib import Path
           from datetime import datetime, timezone
+          import os
 
           def read(name):
               p=Path('work/logs')/name
               return p.read_text(errors='replace') if p.exists() else '(not produced)'
 
+          now = datetime.now(timezone.utc)
           body = f'''---
 id: EU-STEEL-R01-ACTION-INSPECTION
 type: experiment-log
@@ -160,15 +165,15 @@ tags:
   - evidence/observed
   - region/eu
   - domain/industry
-updated: {datetime.now(timezone.utc).date().isoformat()}
+updated: {now.date().isoformat()}
 source_of_truth: github-actions
 ---
 
 # EU-STEEL-R01 GitHub Actions Raw Inspection / GitHub Actions Raw 원천 검사
 
-**Generated / 생성:** {datetime.now(timezone.utc).isoformat()}  
-**Workflow run / 실행:** `${{{{ github.run_id }}}}`  
-**Commit / 커밋:** `${{{{ github.sha }}}}`
+**Generated / 생성:** {now.isoformat()}  
+**Workflow run / 실행:** `{os.environ.get('RUN_ID', 'UNKNOWN')}`  
+**Commit / 커밋:** `{os.environ.get('HEAD_SHA', 'UNKNOWN')}`
 
 ## Download Log / 다운로드 로그
 ```text
