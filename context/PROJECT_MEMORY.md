@@ -129,6 +129,13 @@ source_of_truth: github
 - **Source:** Run `32535986814`; `research/AMBENCH-F02/README.md`
 - **verified_at:** 2026-08-22
 
+### `MEM-017` — AMBENCH-E03 Negative Calibration / AM Bench 음성 보정
+- **KO:** Issue #13 `AMBENCH-E03`은 `COMPLETED — NO_MATERIAL_GAIN`이다. 21개 physical track, process-case LOCO, 동일 Ridge, outcome-blind 10개 raw-DL thermography feature를 사전고정한 뒤 실행했으며 Combined 대비 Process-only pooled RMSE 개선율은 depth `-19.2914%`, width `-21.1668%`로 둘 다 악화했다. 이 결과를 E03 내부 tuning으로 제거하지 않는다.
+- **EN:** Issue #13 `AMBENCH-E03` completed as `NO_MATERIAL_GAIN`. With 21 physical tracks, process-case LOCO, identical Ridge models, and ten outcome-blind raw-DL thermography features frozen before outcomes, Combined-vs-Process pooled RMSE improvement was `-19.2914%` for depth and `-21.1668%` for width. The result must not be tuned away inside E03.
+- **State:** `VALIDATED`
+- **Source:** closed Issue #13; Run `32537495534`; artifact `9465900222`; `research/AMBENCH-E03/RESULT.md`; `CLM-016..017`; `DEC-012`
+- **verified_at:** 2026-08-22
+
 ## Maintenance Rule / 유지 규칙
 
 - Add only durable, decision-relevant facts. / 지속적 의사결정 관련 사실만 추가.
