@@ -1,4 +1,4 @@
-name: AMBENCH-E03 Raw Thermography Structure Probe
+name: AMBENCH-E03 Frozen Thermal Feature Extraction
 
 on:
   pull_request:
@@ -13,7 +13,7 @@ permissions:
 jobs:
   inspect:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -37,78 +37,108 @@ jobs:
           echo "expected_sha256=$EXPECTED" | tee -a work/logs/integrity.txt
           test "$ACTUAL" = "$EXPECTED"
 
-      - name: Inspect HDF5 structure and metadata only
+      - name: Extract preregistered outcome-blind features
         shell: bash
         run: |
-          python - <<'PY' | tee work/logs/structure.txt
-          import json, re
+          python - <<'PY' | tee work/logs/features.txt
+          import csv, math
+          import h5py, numpy as np
           from pathlib import Path
-          import h5py
 
-          def enc(v):
-              if isinstance(v, bytes): return v.decode('utf-8','replace')
-              if hasattr(v,'tolist'): return v.tolist()
-              if hasattr(v,'item'):
-                  try: return v.item()
-                  except Exception: pass
-              return str(v)
+          def scalar(v):
+              a=np.asarray(v).reshape(-1)
+              return float(a[0])
 
-          path='work/raw/thermography.h5'
+          def identity(name):
+              t=name.removeprefix('Line_').split('_')
+              if len(t)==2:
+                  return t[0], int(t[1])
+              if len(t)==3:
+                  return f'{t[0]}.{t[1]}', int(t[2])
+              raise ValueError(name)
+
+          def hist_quantile(hist,q):
+              n=int(hist[1:].sum())
+              if n<=0: return float('nan')
+              rank=max(1,math.ceil(q*n))
+              c=np.cumsum(hist[1:])
+              return float(np.searchsorted(c,rank,side='left')+1)
+
+          fields=[
+            'group','process_case','repeat','laser_power_W','scan_speed_mm_s','spot_size_um',
+            'thermal_nonzero_fraction','thermal_positive_mean_dl','thermal_positive_std_dl',
+            'thermal_positive_p90_dl','thermal_positive_p99_dl','thermal_max_dl',
+            'thermal_active_pixels_frame_mean','thermal_active_pixels_frame_max',
+            'thermal_frame_sum_mean_dl','thermal_frame_sum_max_dl'
+          ]
           rows=[]
-          metadata=[]
-          with h5py.File(path,'r') as f:
-              print('ROOT_KEYS',list(f.keys()))
-              print('ROOT_ATTRS',{k:enc(v) for k,v in f.attrs.items()})
-
-              def visitor(name,obj):
-                  rec={'path':'/'+name,'type':'dataset' if isinstance(obj,h5py.Dataset) else 'group','attrs':{k:enc(v) for k,v in obj.attrs.items()}}
-                  if isinstance(obj,h5py.Dataset):
-                      rec.update({'shape':list(obj.shape),'dtype':str(obj.dtype),'chunks':list(obj.chunks) if obj.chunks else None,'compression':obj.compression})
-                  metadata.append(rec)
-              f.visititems(visitor)
-
-              td=f.get('ThermalData')
-              if td is None: raise SystemExit('ThermalData group missing')
-              line_names=sorted([k for k in td.keys() if k.startswith('Line_')])
-              print('THERMALDATA_KEYS',list(td.keys()))
-              print('LINE_GROUP_COUNT',len(line_names))
-              for name in line_names:
-                  g=td[name]
-                  attrs={k:enc(v) for k,v in g.attrs.items()}
-                  datasets={}
-                  for dk,dv in g.items():
-                      if isinstance(dv,h5py.Dataset):
-                          datasets[dk]={
-                            'shape':list(dv.shape),'dtype':str(dv.dtype),
-                            'chunks':list(dv.chunks) if dv.chunks else None,
-                            'compression':dv.compression,
-                            'attrs':{k:enc(v) for k,v in dv.attrs.items()}
-                          }
-                  m=re.fullmatch(r'Line_(.+)_(\d+)',name)
-                  repeat=int(m.group(2)) if m else None
-                  row={'group':name,'repeat':repeat,'attrs':attrs,'datasets':datasets}
+          with h5py.File('work/raw/thermography.h5','r') as f:
+              td=f['ThermalData']
+              names=sorted(k for k in td if k.startswith('Line_'))
+              if len(names)!=21: raise SystemExit(f'Expected 21 tracks, got {len(names)}')
+              for name in names:
+                  g=td[name]; ds=g['Signal']
+                  hist=np.zeros(4096,dtype=np.int64)
+                  pos_n=0; pos_sum=0.0; pos_sq=0.0; vmax=0
+                  active=[]; frame_sums=[]
+                  total=int(np.prod(ds.shape))
+                  for start in range(0,ds.shape[0],25):
+                      a=ds[start:min(start+25,ds.shape[0])]
+                      mask=a>0
+                      vals=a[mask]
+                      if vals.size:
+                          h=np.bincount(vals.ravel(),minlength=4096)
+                          hist[:len(h)] += h
+                          vf=vals.astype(np.float64)
+                          pos_n += int(vals.size)
+                          pos_sum += float(vf.sum())
+                          pos_sq += float(np.square(vf).sum())
+                          vmax=max(vmax,int(vals.max()))
+                      active.extend(mask.sum(axis=(1,2)).astype(np.int64).tolist())
+                      frame_sums.extend(a.sum(axis=(1,2),dtype=np.uint64).astype(np.float64).tolist())
+                  mean=pos_sum/pos_n if pos_n else float('nan')
+                  var=max(0.0,pos_sq/pos_n-mean*mean) if pos_n else float('nan')
+                  case,rep=identity(name)
+                  row={
+                    'group':name,'process_case':case,'repeat':rep,
+                    'laser_power_W':scalar(g.attrs['laser_power']),
+                    'scan_speed_mm_s':scalar(g.attrs['scan_speed']),
+                    'spot_size_um':scalar(g.attrs['spot_size']),
+                    'thermal_nonzero_fraction':pos_n/total,
+                    'thermal_positive_mean_dl':mean,
+                    'thermal_positive_std_dl':math.sqrt(var),
+                    'thermal_positive_p90_dl':hist_quantile(hist,0.90),
+                    'thermal_positive_p99_dl':hist_quantile(hist,0.99),
+                    'thermal_max_dl':vmax,
+                    'thermal_active_pixels_frame_mean':float(np.mean(active)),
+                    'thermal_active_pixels_frame_max':float(np.max(active)),
+                    'thermal_frame_sum_mean_dl':float(np.mean(frame_sums)),
+                    'thermal_frame_sum_max_dl':float(np.max(frame_sums)),
+                  }
                   rows.append(row)
-                  print('LINE',json.dumps(row,sort_keys=True,default=str))
+                  print('TRACK',row)
 
-              print('\nNON_LINE_METADATA')
-              for rec in metadata:
-                  if '/ThermalData/Line_' not in rec['path']:
-                      print('META',json.dumps(rec,sort_keys=True,default=str))
+          expected_cases={'0','1.1','1.2','2.1','2.2','3.1','3.2'}
+          if {r['process_case'] for r in rows} != expected_cases: raise SystemExit('Unexpected case set')
+          for case in expected_cases:
+              reps=sorted(r['repeat'] for r in rows if r['process_case']==case)
+              if reps != [1,2,3]: raise SystemExit(f'Bad repeats for {case}: {reps}')
+          for r in rows:
+              for k in fields[6:]:
+                  if not math.isfinite(float(r[k])): raise SystemExit(f'Non-finite {k} in {r["group"]}')
 
-          Path('work/result/hdf5_structure.json').write_text(json.dumps({
-              'source_version':'mds2-2716/pdr:v/1.3.1',
-              'source_sha256':'f6fe21ec911707f72e7efda2932c77eae2b75d84765848878fe5beb6b728cd43',
-              'line_group_count':len(rows),'lines':rows,'metadata':metadata
-          },indent=2,default=str),encoding='utf-8')
-          if len(rows) != 21: raise SystemExit(f'Expected 21 line groups, found {len(rows)}')
-          if any(r['repeat'] not in {1,2,3} for r in rows): raise SystemExit('Unexpected repeat identifier')
+          out=Path('work/result/thermal_features.csv')
+          with out.open('w',newline='',encoding='utf-8') as fh:
+              w=csv.DictWriter(fh,fieldnames=fields); w.writeheader(); w.writerows(rows)
+          print('FEATURE_ROWS',len(rows))
+          print('FEATURE_COLUMNS',fields)
           PY
 
-      - name: Upload structural evidence only
+      - name: Upload frozen feature evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: ambench-e03-structure-metadata
+          name: ambench-e03-run3-frozen-features
           path: |
             work/logs/
             work/result/
