@@ -1,0 +1,92 @@
+name: AMBENCH-E03 Raw Thermography Structure Probe
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'research/AMBENCH-E03/TRIGGER.md'
+      - '.github/workflows/ambench-e03-pr.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install HDF5 reader
+        run: python -m pip install --disable-pip-version-check h5py
+
+      - name: Download and verify frozen thermography snapshot
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p work/raw work/logs work/result
+          URL='https://data.nist.gov/od/ds/ark:/88434/mds2-2716/_v/1.3.1/Thermography/AMB2022-03-718-AMMT-StaringCamera_Signal.h5'
+          curl -fL --retry 3 --retry-delay 2 "$URL" -o work/raw/thermography.h5
+          ACTUAL=$(sha256sum work/raw/thermography.h5 | awk '{print $1}')
+          EXPECTED='f6fe21ec911707f72e7efda2932c77eae2b75d84765848878fe5beb6b728cd43'
+          echo "bytes=$(stat -c%s work/raw/thermography.h5)" | tee work/logs/integrity.txt
+          echo "actual_sha256=$ACTUAL" | tee -a work/logs/integrity.txt
+          echo "expected_sha256=$EXPECTED" | tee -a work/logs/integrity.txt
+          test "$ACTUAL" = "$EXPECTED"
+
+      - name: Inspect HDF5 structure only
+        shell: bash
+        run: |
+          python - <<'PY' | tee work/logs/structure.txt
+          import json, re
+          from pathlib import Path
+          import h5py
+
+          path='work/raw/thermography.h5'
+          rows=[]
+          with h5py.File(path,'r') as f:
+              print('ROOT_KEYS',list(f.keys()))
+              td=f.get('ThermalData')
+              if td is None:
+                  raise SystemExit('ThermalData group missing')
+              print('THERMALDATA_KEYS',list(td.keys()))
+              line_names=sorted([k for k in td.keys() if k.startswith('Line_')])
+              print('LINE_GROUP_COUNT',len(line_names))
+              for name in line_names:
+                  g=td[name]
+                  attrs={k:(v.item() if hasattr(v,'item') and getattr(v,'shape',())==() else str(v)) for k,v in g.attrs.items()}
+                  datasets={}
+                  for dk,dv in g.items():
+                      if isinstance(dv,h5py.Dataset):
+                          datasets[dk]={'shape':list(dv.shape),'dtype':str(dv.dtype),'chunks':list(dv.chunks) if dv.chunks else None,'compression':dv.compression}
+                  m=re.fullmatch(r'Line_(.+)_(\d+)',name)
+                  repeat=int(m.group(2)) if m else None
+                  row={'group':name,'repeat':repeat,'attrs':attrs,'datasets':datasets}
+                  rows.append(row)
+                  print('LINE',json.dumps(row,sort_keys=True,default=str))
+
+          Path('work/result/hdf5_structure.json').write_text(json.dumps({
+              'source_version':'mds2-2716/pdr:v/1.3.1',
+              'source_sha256':'f6fe21ec911707f72e7efda2932c77eae2b75d84765848878fe5beb6b728cd43',
+              'line_group_count':len(rows),
+              'lines':rows
+          },indent=2,default=str),encoding='utf-8')
+          if len(rows) != 21:
+              raise SystemExit(f'Expected 21 line groups, found {len(rows)}')
+          if any(r['repeat'] not in {1,2,3} for r in rows):
+              raise SystemExit('Unexpected repeat identifier')
+          PY
+
+      - name: Upload structural evidence only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ambench-e03-run1-structure
+          path: |
+            work/logs/
+            work/result/
+          if-no-files-found: error
+          retention-days: 30
