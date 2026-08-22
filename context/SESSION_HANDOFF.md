@@ -2,12 +2,12 @@
 id: SESSION-HANDOFF
 type: memory
 state: ACTIVE
-checkpoint_id: CHK-20260822-D11-PREREG
-active_issue: 27
-active_research: AMBENCH-D11
-last_completed_issue: 26
-last_completed_research: AMBENCH-F10
-last_decision: DEC-026
+checkpoint_id: CHK-20260822-D11-MIXED
+active_issue: none
+active_research: none
+last_completed_issue: 27
+last_completed_research: AMBENCH-D11
+last_decision: DEC-027
 created: 2026-08-22
 updated: 2026-08-22
 source_of_truth: github
@@ -21,101 +21,82 @@ tags:
 
 ## 1. Current State / 현재 상태
 
-- **Checkpoint:** `CHK-20260822-D11-PREREG`
-- **Active Issue:** #27 `AMBENCH-D11`
-- **Active research:** `AMBENCH-D11`
-- **Last completed:** Issue #26 `AMBENCH-F10 — HOLD_PUBLICATION_NOT_VERIFIED`
-- **Last decision:** `DEC-026`
-- **Project state:** `D11_PREREGISTERED__EXECUTION_NOT_YET_RUN`
+- **Checkpoint:** `CHK-20260822-D11-MIXED`
+- **Active Issue:** none
+- **Active research:** none
+- **Last completed:** Issue #27 `AMBENCH-D11 — MIXED_TEMPORAL_INFORMATION`
+- **Last decision:** `DEC-027`
+- **Project state:** `D11_COMPLETED__MIXED_TEMPORAL_INFORMATION`
 - **Cost:** `COST-001 — zero incremental monetary cost`
 - **Raw data:** `RAW-001 — RAW_DATA_TRANSIENT_ONLY`
 
-## 2. Why D11 / D11 선정 이유
+## 2. D11 Execution / D11 실행
 
-D06 showed the prior thermography representation was `PROCESS_CASE_PROXY_DOMINANT`. E09 showed that coupling case medians changed magnitude but not the seven-case ordering. F10 verified same-BP4 confocal measurement provenance but could not qualify an exact current public confocal dataset, so the frozen fallback is a within-BP4 temporal-information diagnostic.
+- Run `32553063163`, Job `96982816961`: `success`.
+- Execution-only PR #28: closed without merge.
+- Result: `research/AMBENCH-D11/RESULT.md`.
+- Claims: `CLM-041`, `CLM-042`, `CLM-043`.
+- Decision: `DEC-027`.
+- Memory: `MEM-030-AMBENCH-D11`.
 
-D11 asks only whether the 21 BP4 dynamic-coupling waveforms contain repeat-level temporal structure beyond case labels. / D11은 21개 BP4 coupling waveform이 case label을 넘어 repeat 수준 시간구조를 갖는지만 진단한다.
+### Integrity / 무결성
+- exact NIST `mds2-3842` v1.0.3 manifest verified;
+- ZIP `93,566 B`, SHA-256 `8c4278eb621c1638465e13e87339fe0daba1dcae138f24b9c1d86c186cd74f66` matched;
+- `21 = 7×3` authoritative tracks valid;
+- 8/8 frozen descriptors valid;
+- normalized waveform grid `901/901` valid;
+- Actions artifacts `0`;
+- `RAW_TEARDOWN=SUCCESS`.
 
-## 3. Frozen Source / 고정 source
+## 3. Frozen D11 Result / 고정 D11 결과
 
-- NIST PDR `mds2-3842`
-- version `1.0.3`
-- ZIP bytes `93,566`
-- SHA-256 `8c4278eb621c1638465e13e87339fe0daba1dcae138f24b9c1d86c186cd74f66`
-- 21 authoritative tracks = 7 cases × 3 repeats
-- case `3.2` three distinct archive files previously verified
-- coupling = dimensionless `P_lc = 1 - P_rho/P_app`, 100 kHz
+Descriptor within-case fractions:
+- `median_mid = 0.0003519954` — CASE_DOMINATED
+- `iqr_mid = 0.5706644395` — REPEAT_INFORMATIVE
+- `mad_diff_mid = 0.0000003314` — CASE_DOMINATED
+- `ac1_mid = 0.1841574694` — MIXED_VARIATION
+- `early_contrast = 0.2235847868` — REPEAT_INFORMATIVE
+- `late_contrast = 0.3750992986` — REPEAT_INFORMATIVE
+- `early_shape_slope = 0.6611836993` — REPEAT_INFORMATIVE
+- `late_shape_slope = 0.7350150566` — REPEAT_INFORMATIVE
 
-## 4. Prior-Observation Boundary / 기존 관측 경계
+Counts:
+- `CASE_DOMINATED_COUNT = 2/8`
+- `REPEAT_INFORMATIVE_COUNT = 5/8`
 
-- `RAW_COUPLING_PREOBSERVED = YES` from E09.
-- `E09_CASE_MEDIANS_PREOBSERVED = YES`.
-- `NEW_D11_TEMPORAL_DIAGNOSTICS_UNCOMPUTED_AT_PREREG = YES`.
-- D11 is **not** fully outcome-blind.
+Direct normalized waveform:
+- `WF_MEDIAN_WITHIN = 0.0043387546`
+- `WF_HIGH_REPEAT_FRACTION = 0.0`
+- valid grid `901/901`
 
-## 5. Frozen D11 Diagnostic / 고정 D11 진단
+Descriptor PCA:
+- `PCA95_DIM = 6`
+- cumulative through PC6 = `96.2788%`.
 
-Primary descriptors / 주 descriptor exactly eight:
-1. `median_mid`
-2. `iqr_mid`
-3. `mad_diff_mid`
-4. `ac1_mid`
-5. `early_contrast`
-6. `late_contrast`
-7. `early_shape_slope`
-8. `late_shape_slope`
+**Frozen final gate:** `MIXED_TEMPORAL_INFORMATION`.
 
-Normalized-time rules:
-- `tau=(t-t_min)/(t_max-t_min)`
-- primary shape domain `0.05..0.95`
-- central domain `0.20..0.80`
-- no smoothing/manual crop/peak selection.
+## 4. Controlling Interpretation / 지배 해석
 
-Primary diagnostics:
-- descriptor case-vs-repeat `within_fraction`;
-- normalized waveform 901-point case-vs-repeat variance;
-- descriptor PCA / `PCA95_DIM`.
+The direct waveform amplitude is overwhelmingly case-structured, but derived dispersion/edge/slope descriptors show material within-case repeat variation. This coexistence is the D11 result; do not collapse it into a pure case-proxy claim or a proven repeat-level physical-signal claim.
 
-Secondary only:
-- seven-case median Spearman associations with BP4 power, scan speed, beam diameter, and normalized VED;
-- secondary process association cannot change final gate.
+D11 does not establish physical-outcome utility, prediction/generalization, causality, or benefit from higher-capacity models. / 물리효용·예측·인과·고용량모델 이득을 확립하지 않는다.
 
-Frozen gates:
-- `COUPLING_PROCESS_CASE_PROXY_DOMINANT`
-- `REPEAT_LEVEL_TEMPORAL_INFORMATION_PRESENT`
-- `MIXED_TEMPORAL_INFORMATION`
-- `HOLD_DATA_INTEGRITY`
+## 5. Exact Next Eligible Work / 정확한 다음 eligible 작업
 
-Detailed thresholds and no-post-hoc rules are authoritative in `research/AMBENCH-D11/README.md`.
+No experiment is active. / 활성 실험 없음.
 
-## 6. Interpretation Boundary / 해석 경계
+Before any modeling, separately preregister a diagnostic/validation relationship that distinguishes whether the repeat-sensitive descriptor family reflects:
+1. reproducible temporal morphology;
+2. measurement/noise structure;
+3. condition-specific instability;
+4. or information that survives independent-condition or qualified same-specimen physical-outcome validation.
 
-D11 does not establish:
-- physical-outcome utility;
-- prediction/generalization;
-- causality;
-- same-BP4 confocal relation;
-- benefit from higher-capacity models.
+Do not tune D11 or add FFT/wavelet/neural features inside the completed diagnostic. / 완료 D11 내부 tuning·feature rescue 금지.
 
-No FFT/wavelet/neural rescue, alternative descriptor selection, BP1 outcome substitution, or threshold tuning is authorized inside D11.
+## 6. Persistent Boundaries / 지속 경계
 
-## 7. Exact Next Action / 정확한 다음 행동
-
-Execute Issue #27 under the frozen preregistration:
-1. verify exact NIST source/checksum and all 21 identities;
-2. compute exactly the eight frozen descriptors;
-3. compute descriptor and waveform repeat-vs-case variance;
-4. compute `PCA95_DIM`;
-5. compute descriptive process associations;
-6. apply exactly one frozen gate;
-7. write durable result/claims/decision and close/update Issue #27;
-8. synchronize STATUS/HANDOFF;
-9. persist no raw source bytes or raw-data Actions artifact.
-
-Records:
-- `research/AMBENCH-D11/README.md`
-- `research/AMBENCH-D11/WORK_QUEUE.md`
-- Issue #27
-- `registry/DEC-026.md`
-- `registry/CLM-040.md`
-- `context/MEM-029-AMBENCH-D11.md`
+- same-BP4 confocal branch: `HOLD_PUBLICATION_NOT_VERIFIED`;
+- BP1↔BP4 physical track/repeat pairing: prohibited;
+- BP4 roughness conflict: unresolved;
+- AMB2025-07 predictive thermal↔geometry: HOLD pending public thermography source;
+- no model-capacity escalation merely to compensate for missing independent validation.
