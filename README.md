@@ -141,11 +141,11 @@ All future **human-readable major research, governance, status, and Issue artifa
 ## Current Baseline / 현재 베이스라인
 
 **Latest verified baseline label / 최신 검증 baseline label:** `v0.7-thermal-dynamics-feasibility`  
-**Checkpoint / 운영 checkpoint:** `CHK-20260822-D06-PROXY`  
-**Active Work Queue / 활성 작업 큐:** `none`  
+**Checkpoint / 운영 checkpoint:** `CHK-20260822-F07-ACTIVE`  
+**Active Work Queue / 활성 작업 큐:** Issue #21 `AMBENCH-F07` — AMB2025-07 independent-condition expansion source/identity feasibility / 독립 공정조건 확장 source·identity feasibility  
 **Last completed / 최근 완료:** Issue #19 `AMBENCH-D06` — **`PROCESS_CASE_PROXY_DOMINANT`**  
-**Next direction / 다음 방향:** outcome-blind triage for **independent process-condition expansion or a genuinely different sensing/data relationship**; no model-capacity escalation on the same 21-track representation. / 독립 공정조건 확대 또는 다른 sensing/data 관계 후보 선별, 동일 21-track 표현 고용량화 금지.
+**Current direction / 현재 방향:** verify a reproducible, outcome-blind AMB2025-07 source/version/identifier path before any prediction; no model-capacity escalation on the same 2022 21-track representation. / 예측 전 AMB2025-07 source·version·identifier 재현성 검증, 동일 2022 21-track 고용량화 금지.
 
-See [`STATUS.md`](STATUS.md) and [`context/SESSION_HANDOFF.md`](context/SESSION_HANDOFF.md) for the current synchronized operational state. / 최신 동기 운영상태는 해당 문서 참조.
+See [`STATUS.md`](STATUS.md), [`context/SESSION_HANDOFF.md`](context/SESSION_HANDOFF.md), and [`research/AMBENCH-F07/README.md`](research/AMBENCH-F07/README.md) for the current synchronized operational state. / 최신 동기 운영상태는 해당 문서 참조.
 
 Official artifacts comply with `LANG-001`, `COST-001`, `READ-001`, `STATE-001`, `CHECKPOINT-001`, `FACT-001`, and `MEMORY-001`. / 공식 산출물은 관련 규약을 따른다.
