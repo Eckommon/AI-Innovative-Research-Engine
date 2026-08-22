@@ -74,10 +74,10 @@ source_of_truth: github
 - **verified_at:** 2026-08-22
 
 ### `MEM-009` — Hallucination Control / 환각 방지
-- **KO:** 실질 작업 전 `READ-001` 선읽기가 의무이며, 미확인은 `UNKNOWN/HOLD`로 유지하고 ChatGPT 모델 기억을 프로젝트 사실의 단독 근거로 사용하지 않는다.
-- **EN:** `READ-001` is mandatory before material work; unknowns remain `UNKNOWN/HOLD`, and ChatGPT model memory is never used as the sole authority for project facts.
+- **KO:** 실질 작업 전 `READ-001` 선읽기와 `STATE-001` live 상태정합이 의무이며, 미확인은 `UNKNOWN/HOLD`로 유지하고 ChatGPT 모델 기억을 프로젝트 사실의 단독 근거로 사용하지 않는다.
+- **EN:** `READ-001` read-first and `STATE-001` live-state reconciliation are mandatory before material work; unknowns remain `UNKNOWN/HOLD`, and ChatGPT model memory is never the sole authority for project facts.
 - **State:** `VALIDATED` policy
-- **Source:** `docs/HALLUCINATION_CONTROL_PROTOCOL.md`
+- **Source:** `docs/HALLUCINATION_CONTROL_PROTOCOL.md`; `DEC-017`
 - **verified_at:** 2026-08-22
 
 ### `MEM-010` — Critical Infrastructure Safety / 중요 인프라 안전
@@ -136,11 +136,47 @@ source_of_truth: github
 - **Source:** closed Issue #13; Run `32537495534`; artifact `9465900222`; `research/AMBENCH-E03/RESULT.md`; `CLM-016..017`; `DEC-012`
 - **verified_at:** 2026-08-22
 
+### `MEM-018` — Zero-Cost Governance / 무비용 거버넌스
+- **KO:** `COST-001`은 모든 프로젝트 작업을 추가 금전비용 0원으로 기본 제한한다. 비용이 발생하거나 합리적으로 발생 가능하면 실행 전에 사용자 명시승인이 필요하며, billing이 불명확하면 `HOLD_COST_APPROVAL`이다. 무비용 경로가 막혀도 유료대체를 묵시 실행하지 않는다.
+- **EN:** `COST-001` makes zero incremental monetary cost the default boundary for all project work. Any action that incurs or may reasonably incur cost requires explicit user approval before execution; uncertain billing is `HOLD_COST_APPROVAL`. A blocked no-cost route is never silently replaced by a paid one.
+- **State:** `VALIDATED` policy
+- **Source:** `docs/NO_COST_POLICY.md`; `DEC-013`
+- **verified_at:** 2026-08-22
+
+### `MEM-019` — AMBENCH-F04 Calibration Boundary / AM Bench 보정 경계
+- **KO:** Issue #15 `AMBENCH-F04`는 `PARTIAL`이다. 현행 v1.3.1 corrected Sakuma-Hattori calibration과 effective `ε≈0.5` 의미는 방어 가능하게 복구됐으나, 2022 원 single-track challenge의 repeat별 emissivity·steady-state 30-pixel 위치·smoothing 세부와 버전계보 차이 때문에 exact historical TTAM/TSCR/TLCR 재현은 승인되지 않는다.
+- **EN:** Issue #15 `AMBENCH-F04` is `PARTIAL`. The current v1.3.1 corrected Sakuma-Hattori calibration and effective `ε≈0.5` semantics are defensibly recoverable, but repeat-specific emissivity, steady-state 30-pixel location, smoothing details, and version-lineage differences prevent exact historical TTAM/TSCR/TLCR reproduction.
+- **State:** `VALIDATED` project outcome
+- **Source:** closed Issue #15; `research/AMBENCH-F04/RESULT.md`; `CLM-018..021`; `DEC-014`
+- **verified_at:** 2026-08-22
+
+### `MEM-020` — AMBENCH-E05 MIXED / AM Bench E05 혼합 결과
+- **KO:** Issue #17 `AMBENCH-E05`는 current corrected-calibration 기반 8개 thermal occupancy-dynamics feature에서 width Combined-vs-Process pooled RMSE를 `+13.200372%` 개선했지만 depth는 `-61.413380%` 악화하여 `MIXED`다. 결과를 사후 tuning하지 않고 두 target의 비대칭을 함께 보존한다.
+- **EN:** Issue #17 `AMBENCH-E05` is `MIXED`: eight current-corrected-calibration thermal occupancy-dynamics features improved width Combined-vs-Process pooled RMSE by `+13.200372%` but degraded depth by `-61.413380%`. The asymmetry is retained without post-hoc tuning.
+- **State:** `VALIDATED_MIXED`
+- **Source:** closed Issue #17; Run `32540607059`; `research/AMBENCH-E05/RESULT.md`; `CLM-022..023`; `DEC-015`
+- **verified_at:** 2026-08-22
+
+### `MEM-021` — AMBENCH-D06 Process-Case Proxy / AM Bench process-case proxy 지배
+- **KO:** Issue #19 `AMBENCH-D06`은 outcome을 사용하지 않은 진단에서 E05 8개 feature 모두 `CASE_DOMINATED`, `PCA95_DIM=2`, 첫 2개 PC 설명분산 `98.2647%`로 확인되어 `PROCESS_CASE_PROXY_DOMINANT`로 종료됐다. 따라서 E05 width 개선은 기록상 유지하지만 독립 repeat-level·일반화 근거로 승격하지 않으며, 동일 21 tracks·표현의 모델 고용량화는 다음 단계에서 제외한다. 독립 공정조건 확대 또는 다른 sensing/data 관계를 우선한다.
+- **EN:** Issue #19 `AMBENCH-D06` completed as `PROCESS_CASE_PROXY_DOMINANT`: all eight E05 features were `CASE_DOMINATED`, `PCA95_DIM=2`, and the first two PCs explained `98.2647%` of standardized thermal variance in an outcome-blind diagnostic. The E05 width gain remains recorded but is not promoted as independent repeat-level/generalizable evidence; model-capacity escalation on the same 21 tracks/representation is excluded as the next step. Independent process-condition expansion or a different sensing/data relationship is prioritized.
+- **State:** `V3_REPRODUCED / VALIDATED_DIRECTION_GATE`
+- **Source:** closed Issue #19; Run `32541722347`; `research/AMBENCH-D06/RESULT.md`; `CLM-024..025`; `DEC-016`
+- **verified_at:** 2026-08-22
+
+### `MEM-022` — Live-State Continuity Checkpoint / live 상태 연속성 checkpoint
+- **KO:** 프로젝트 연속성은 대화 기억이 아니라 `live GitHub state → READ-001 → STATE-001 reconciliation → synchronized STATUS/SESSION_HANDOFF checkpoint → WRITEBACK-001` 순환으로 유지한다. `STATUS.md`와 `SESSION_HANDOFF.md`의 checkpoint 필드는 동일해야 하고, live Issue와 불일치하면 먼저 `STATE_DRIFT_DETECTED`를 교정한다.
+- **EN:** Project continuity is maintained through the cycle `live GitHub state → READ-001 → STATE-001 reconciliation → synchronized STATUS/SESSION_HANDOFF checkpoint → WRITEBACK-001`, not through conversational memory. `STATUS.md` and `SESSION_HANDOFF.md` checkpoint fields must match; disagreement with live Issue state is corrected first as `STATE_DRIFT_DETECTED`.
+- **State:** `VALIDATED` governance policy
+- **Source:** `docs/HALLUCINATION_CONTROL_PROTOCOL.md`; `docs/GPT_GITHUB_SYNC_PROTOCOL.md`; `DEC-017`
+- **verified_at:** 2026-08-22
+
 ## Maintenance Rule / 유지 규칙
 
 - Add only durable, decision-relevant facts. / 지속적 의사결정 관련 사실만 추가.
 - Supersede old items explicitly; do not silently rewrite historical decisions. / 과거 결정을 조용히 덮지 말고 supersede 관계 명시.
-- Dynamic facts require freshness verification. / 동적 사실은 최신성 재검증.
+- Dynamic facts require freshness verification against live GitHub state. / 동적 사실은 live GitHub 상태로 최신성 재검증.
 - `context/SESSION_HANDOFF.md` carries operational detail; this file stays compact. / 운영 세부는 Session Handoff에 두고 본 파일은 압축 유지.
+- ChatGPT/model memory may assist navigation but is never the sole project authority. / 모델 메모리는 탐색 보조일 뿐 단독 권위 아님.
 
-Official artifacts comply with `LANG-001`, `READ-001`, and `MEMORY-001`. / 공식 산출물은 관련 규약을 따른다.
+Official artifacts comply with `LANG-001`, `COST-001`, `READ-001`, `STATE-001`, and `MEMORY-001`. / 공식 산출물은 관련 규약을 따른다.
