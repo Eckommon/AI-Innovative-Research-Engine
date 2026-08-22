@@ -2,12 +2,12 @@
 id: SESSION-HANDOFF
 type: memory
 state: ACTIVE
-checkpoint_id: CHK-20260822-F16-PARTIAL-PUBLIC-ENDPOINT
-active_issue: none
-active_research: none
+checkpoint_id: CHK-20260822-F17-ACTIVE-X16-SOURCE-PAIR
+active_issue: 35
+active_research: AMBENCH-F17
 last_completed_issue: 34
 last_completed_research: AMBENCH-F16
-last_decision: DEC-038
+last_decision: DEC-039
 created: 2026-08-22
 updated: 2026-08-22
 source_of_truth: github
@@ -16,61 +16,44 @@ source_of_truth: github
 # Session Handoff / 세션 인수인계
 
 ## Current State / 현재 상태
-- **Checkpoint:** `CHK-20260822-F16-PARTIAL-PUBLIC-ENDPOINT`
-- **Active Issue:** none
-- **Active research:** none
-- **Last completed:** #34 `AMBENCH-F16 — PARTIAL_PUBLIC_ENDPOINT_READY`
-- **Last decision:** `DEC-038`
+- Checkpoint: `CHK-20260822-F17-ACTIVE-X16-SOURCE-PAIR`
+- Active Issue: #35
+- Active research: `AMBENCH-F17`
+- Last completed: #34 `AMBENCH-F16 — PARTIAL_PUBLIC_ENDPOINT_READY`
+- Last decision: `DEC-039`
 
 ## Cost Authority / 비용 권위
-`COST-001` + `DEC-028`: any potentially billable action requires explicit user approval **before execution**. Spending first/reporting later is prohibited. Unknown billing = `HOLD_COST_APPROVAL`.
+`COST-001` + `DEC-028`: any potentially billable action requires explicit user approval before execution. Spending first/reporting later is prohibited. Unknown billing = `HOLD_COST_APPROVAL`.
 
-## Preserved E14 / E14 보존
-E14 remains frozen at `HOLD_SOURCE_INTEGRITY`. Do not redesign it or replace its authoritative stationary-Al source with inferred/digitized/unverified values.
+## Preserved Earlier Branches / 기존 branch 보존
+- E14 remains frozen `HOLD_SOURCE_INTEGRITY`; do not redesign.
+- F16 finalized `PARTIAL_PUBLIC_ENDPOINT_READY`; do not numerically model `mds2-3761` yet.
 
-## F15 → F16 / F15 → F16
-F15 selected NIST `mds2-3761` as a strong registered process–structure asset and resolved to `PARTIAL_REGISTERED_SCHEMA_READY` because immutable source provenance/bytes were not established.
+## Active F17 / 활성 F17
+F17 tests whether original Overhang X16 provides a stronger checksum-verifiable same-build process–structure source pair.
 
-F16 separately preregistered the source-integrity/access gate before further retrieval work. A single zero-cost Part 1 availability probe immediately before F16 freeze had failed with zero bytes recovered; this chronology is disclosed in the preregistration.
+Candidate pair:
+- in-situ process monitoring: `ark:/88434/mds2-2309`;
+- current Data.gov/PDR XCT identity: `ark:/88434/mds2-2514`;
+- same July 3, 2019 build and sixteen technical replicate parts.
 
-## F16 Result / F16 결과
-**Frozen gate:** `PARTIAL_PUBLIC_ENDPOINT_READY`.
+Frozen source conflict:
+- NIST AMMT dataset summary currently lists X16 XCT data DOI as `mds2-2309`;
+- current Data.gov XCT metadata identifies XCT DOI/identifier `mds2-2514` and describes it as post-build XCT of the sixteen parts from in-situ `mds2-2309`.
+This conflict must be preserved and adjudicated, not silently corrected.
 
-Verified current official state:
-- identifier `ark:/88434/mds2-3761`;
-- Data.gov/NIST current Part endpoints:
-  - `part1.zip`
-  - `part02.zip`
-  - `part03.zip`
-  - `part04.zip`
-- Data.gov issued `2025-05-09`, modified `2025-03-13`;
-- NIST AMS 100-69 confirms registered numerical CSV data organized by layer/part and machine-coordinate alignment;
-- F15 registered schema/registration semantics remain qualified.
+Current metadata evidence already seen before/at F17 start:
+- in-situ Data.gov: 89 resources with systematic ZIP/file + `.sha256` sidecars; issued 2020-10-16, modified 2020-10-06;
+- XCT Data.gov: 70 resources, DOI access `mds2-2514`, spreadsheet/STL/TIFF resources with `.sha256` sidecars; issued 2022-02-28, modified 2021-12-03.
 
-Still `UNKNOWN / DATA_GAP`:
-- exact data-bearing PDR release/version lineage;
-- authoritative immutable checksum/equivalent byte identifier for each Part ZIP;
-- Part 1 authoritative bytes/local SHA;
-- authoritative archive inventory.
+`NEW_X16_NUMERICAL_OUTCOME_BLIND = YES`: no numerical process-monitoring or XCT outcome values have been analyzed.
 
-Post-preregistration Part 1 retrieval attempts:
-1. Data.gov/NIST web download path — failed to return bytes;
-2. direct NIST URL through provided transient downloader — download failed.
+## Frozen F17 gates
+- `PASS_X16_CHECKSUMMED_PAIR_READY`
+- `PARTIAL_X16_SOURCE_READY`
+- `HOLD_X16_IDENTITY_CONFLICT`
+- `HOLD_X16_ACCESS_OR_SCALE`
+- `REJECT_NOT_DETERMINISTICALLY_PAIRED`
 
-Per frozen order, Parts 2–4 were not attempted because Part 1 did not pass.
-
-Durable artifacts:
-- `research/AMBENCH-F16/README.md`
-- `research/AMBENCH-F16/RESULT.md`
-- `CLM-056..058`
-- `DEC-037..038`
-- `MEM-037-AMBENCH-F16`
-
-## Exact Next Eligible Work / 정확한 다음 eligible 작업
-No experiment is active.
-
-Do not start numerical process–structure modeling and do not keep blindly retrying the same failing ZIP endpoint. Next preference:
-1. targeted official NIST/PDR search for version-pinned component manifests/checksums or an official immutable alternative distribution;
-2. if not available under verified zero-cost constraints, triage another authoritative external process–structure dataset.
-
-Any paid/potentially paid retrieval, source, or compute route requires prior explicit user approval.
+## Next execution
+Use official current NIST/Data.gov evidence only. Verify same-build/part identity, checksum-sidecar structure, resolve DOI conflict by authority, attempt small zero-cost source document/sidecar access from each dataset, inspect only non-numerical semantics needed for future reproducible pairing. No modeling.
