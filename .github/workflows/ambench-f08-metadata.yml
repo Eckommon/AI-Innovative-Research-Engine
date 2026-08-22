@@ -21,7 +21,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p work/current work/version work/small
+          mkdir -p work/current work/version work/history work/small
           curl -fL --retry 3 'https://data.nist.gov/od/id/mds2-3842' -o work/current/current.json
           python - <<'PY'
           import hashlib, json
@@ -46,13 +46,17 @@ jobs:
               raise SystemExit('NO_CURRENT_VERSION')
           Path('work/version.txt').write_text(str(ver),encoding='utf-8')
           PY
-      - name: Fetch exact current version manifest
+      - name: Fetch exact current version and tested lineage manifests
         shell: bash
         run: |
           set -euo pipefail
           VER=$(cat work/version.txt)
-          URL="https://data.nist.gov/od/id/ark:/88434/mds2-3842/pdr:v/${VER}"
-          curl -fL --retry 3 "$URL" -o work/version/exact.json
+          curl -fL --retry 3 "https://data.nist.gov/od/id/ark:/88434/mds2-3842/pdr:v/${VER}" -o work/version/exact.json
+          for V in 1.0.0 1.0.1 1.0.2 1.0.3; do
+            URL="https://data.nist.gov/od/id/ark:/88434/mds2-3842/pdr:v/${V}"
+            CODE=$(curl -sS -L -w '%{http_code}' -o "work/history/${V}.json" "$URL")
+            echo "HISTORY_FETCH version=${V} http=${CODE} bytes=$(wc -c < work/history/${V}.json)"
+          done
           python - <<'PY'
           import hashlib,json
           from pathlib import Path
@@ -66,9 +70,22 @@ jobs:
               return {c.get('filepath'):(c.get('size'),((c.get('checksum') or {}).get('hash'))) for c in o.get('components',[]) if c.get('filepath')}
           ma,mb=mp(oa),mp(ob)
           print('CURRENT_VS_EXACT_COMPONENTS_IDENTICAL',ma==mb)
-          print('CURRENT_COMPONENTS',len(ma),'EXACT_COMPONENTS',len(mb))
+          records=[]
+          for p in sorted(Path('work/history').glob('*.json')):
+              raw=p.read_bytes()
+              try: o=json.loads(raw)
+              except Exception:
+                  print('HISTORY_BAD_JSON',p.name); continue
+              rec=(o.get('version'),o.get('@id'),hashlib.sha256(raw).hexdigest(),mp(o))
+              records.append(rec)
+              print('HISTORY_VERSION',rec[0],'ID',rec[1],'MANIFEST_SHA256',rec[2],'COMPONENTS',len(rec[3]))
+          for x,y in zip(records,records[1:]):
+              ax,ay=x[3],y[3]
+              added=sorted(set(ay)-set(ax)); removed=sorted(set(ax)-set(ay))
+              changed=sorted(k for k in set(ax)&set(ay) if ax[k]!=ay[k])
+              print('HISTORY_DIFF',x[0],'TO',y[0],'ADDED',added,'REMOVED',removed,'CHANGED',changed)
           PY
-      - name: Fetch only small README and checksum companions
+      - name: Fetch only small README and summary metadata
         shell: bash
         run: |
           set -euo pipefail
@@ -81,7 +98,7 @@ jobs:
               size=c.get('size')
               url=c.get('downloadURL')
               low=fp.lower()
-              safe=(('readme' in low and low.endswith(('.txt','.md'))) or low.endswith('.sha256'))
+              safe=(('readme' in low and low.endswith(('.txt','.md'))) or low=='summary_of_data_files.csv' or low.endswith('.sha256'))
               if safe and isinstance(size,(int,float)) and size <= 2_000_000 and url:
                   print(fp+'\t'+str(int(size))+'\t'+url)
           PY
@@ -92,12 +109,12 @@ jobs:
             printf 'SMALL_FILE %s bytes=%s actual_sha256=' "$fp" "$size"
             sha256sum "work/small/$safe" | awk '{print $1}'
           done < work/small/urls.tsv
-      - name: Extract outcome-blind semantics from README metadata
+      - name: Extract outcome-blind README and repeat-file semantics
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
-          import re
+          import csv,re
           from pathlib import Path
           files=[p for p in Path('work/small').iterdir() if 'readme' in p.name.lower()]
           print('README_COUNT',len(files))
@@ -109,9 +126,15 @@ jobs:
                   s=' '.join(line.split())
                   if s and terms.search(s):
                       print(f'README_LINE {n}: {s[:1000]}')
+          p=Path('work/small/summary_of_data_files.csv')
+          if p.exists():
+              rows=list(csv.reader(p.read_text(encoding='utf-8-sig',errors='replace').splitlines()))
+              print('SUMMARY_ROWS',len(rows))
+              for i,row in enumerate(rows):
+                  print('SUMMARY_ROW',i,row)
           PY
       - name: Confirm COST-001 and outcome-blind boundary
         run: |
           echo 'COST-001: standard public-repository ubuntu-latest only.'
           echo 'No GPU/larger runner, no artifact upload, no paid API/data.'
-          echo 'No large measurement component and no outcome/result table downloaded.'
+          echo 'No dynamic_laser_coupling_data.zip and no coupling time-series values downloaded.'
