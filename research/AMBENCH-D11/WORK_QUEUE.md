@@ -1,32 +1,41 @@
 ---
 id: AMBENCH-D11-WORK-QUEUE
 type: work-queue
-state: ACTIVE
+state: COMPLETED
 created: 2026-08-22
 updated: 2026-08-22
 source_of_truth: github
 related:
   - research/AMBENCH-D11/README.md
-  - registry/DEC-026.md
+  - research/AMBENCH-D11/RESULT.md
+  - registry/DEC-027.md
   - Issue #27
+  - Run 32553063163
 ---
 
 # AMBENCH-D11 Work Queue / 작업 큐
 
-**KO:** D11은 F10 HOLD 이후 immediate fallback으로 승인된 현재 공식 진단 Work Queue이며, GitHub Issue #27이 활성 상태다. numerical execution이 시작되면 frozen `README.md`의 descriptor·threshold·gate를 변경하지 않는다.
+**Final state / 최종 상태:** **`COMPLETED — MIXED_TEMPORAL_INFORMATION`**.
 
-**EN:** D11 is the current official diagnostic Work Queue approved as the immediate fallback after the F10 HOLD, with GitHub Issue #27 active. Once numerical execution begins, the frozen descriptors, thresholds, and gates in `README.md` must not change.
+**KO:** F10 HOLD 이후 immediate fallback으로 실행된 D11은 exact NIST `mds2-3842` v1.0.3의 21개 BP4 coupling waveform에서 mixed information structure를 확인했다. direct normalized waveform은 강한 case 구조를 보였지만 8개 frozen derived temporal descriptor 중 5개는 repeat-informative였고 `PCA95_DIM=6`이었다. 결과를 physical utility 또는 predictive evidence로 승격하지 않는다.
 
-Execution boundary / 실행 경계:
-- source: NIST `mds2-3842` v1.0.3;
-- expected ZIP SHA-256: `8c4278eb621c1638465e13e87339fe0daba1dcae138f24b9c1d86c186cd74f66`;
-- checksum verification mandatory;
-- 21 authoritative tracks required;
-- standard public-repository runner or local compute only;
-- `COST-001`: zero incremental monetary cost;
-- `RAW-001`: raw source bytes transient only;
-- no paid route, GPU/larger runner, or raw-data artifact upload;
-- apply exactly one frozen D11 gate;
-- write `RESULT.md`, claims, decision, Issue disposition, STATUS/HANDOFF after execution.
+**EN:** D11, executed as the immediate fallback after the F10 HOLD, found a mixed information structure in the 21 BP4 coupling waveforms from exact NIST `mds2-3842` v1.0.3. The direct normalized waveform was strongly case-structured, while five of eight frozen derived temporal descriptors were repeat-informative and `PCA95_DIM=6`. The result is not promoted to physical utility or predictive evidence.
 
-**Current state:** `PREREGISTERED — ISSUE #27 ACTIVE — EXECUTION NOT YET RUN`.
+Execution / 실행:
+- Run `32553063163`, Job `96982816961`: `success`;
+- exact source/checksum verified;
+- 21 authoritative tracks;
+- Actions artifact count `0`;
+- `RAW_TEARDOWN=SUCCESS`;
+- `COST-001` additional monetary cost `0`.
+
+Durable records / 지속 기록:
+- `research/AMBENCH-D11/RESULT.md`
+- `registry/CLM-041.md`
+- `registry/CLM-042.md`
+- `registry/CLM-043.md`
+- `registry/DEC-027.md`
+- `context/MEM-030-AMBENCH-D11.md`
+- closed Issue #27
+
+Any continuation requires a new preregistration. / 후속은 새 사전등록 필요.
