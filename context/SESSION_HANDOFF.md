@@ -2,12 +2,12 @@
 id: SESSION-HANDOFF
 type: memory
 state: ACTIVE
-checkpoint_id: CHK-20260822-F07-ACTIVE
-active_issue: 21
-active_research: AMBENCH-F07
-last_completed_issue: 19
-last_completed_research: AMBENCH-D06
-last_decision: DEC-018
+checkpoint_id: CHK-20260822-F08-ACTIVE
+active_issue: 22
+active_research: AMBENCH-F08
+last_completed_issue: 21
+last_completed_research: AMBENCH-F07
+last_decision: DEC-019
 created: 2026-08-22
 updated: 2026-08-22
 source_of_truth: github
@@ -20,121 +20,124 @@ tags:
 # Session Handoff / 세션 인수인계
 
 > **Latest operational checkpoint only / 최신 운영 checkpoint 전용**  
-> 다음 세션은 live GitHub 상태를 먼저 확인한 뒤 이 checkpoint와 대조하여 작업을 재개한다. / The next session first reads live GitHub state, reconciles it against this checkpoint, then resumes work.
+> 다음 세션은 live GitHub 상태를 먼저 확인하고 이 checkpoint와 대조한 뒤 작업을 재개한다. / The next session first reads live GitHub state, reconciles it against this checkpoint, then resumes work.
 
 ## 1. Current State / 현재 상태
 
-- **Checkpoint:** `CHK-20260822-F07-ACTIVE`
-- **Active Issue / 활성 Issue:** #21 `AMBENCH-F07`
-- **Active research / 활성 연구:** `AMBENCH-F07`
-- **Last completed / 최근 완료:** Issue #19 `AMBENCH-D06`
-- **Last direction decision / 최근 방향 결정:** `DEC-018`
-- **Project state / 프로젝트 상태:** `F07_INDEPENDENT_INFORMATION_FEASIBILITY_ACTIVE`
+- **Checkpoint:** `CHK-20260822-F08-ACTIVE`
+- **Active Issue / 활성 Issue:** #22 `AMBENCH-F08`
+- **Active research / 활성 연구:** `AMBENCH-F08`
+- **Last completed / 최근 완료:** Issue #21 `AMBENCH-F07 — PARTIAL_SOURCE_READY`
+- **Last direction decision / 최근 방향 결정:** `DEC-019`
+- **Project state / 프로젝트 상태:** `F08_DISTINCT_MODALITY_FEASIBILITY_ACTIVE`
 - **Cost boundary / 비용경계:** `COST-001 — zero incremental monetary cost`; paid/maybe-paid execution requires explicit user approval first.
 
 Recent chain / 최근 계보:
 - #13 `AMBENCH-E03` → `NO_MATERIAL_GAIN`
 - #15 `AMBENCH-F04` → `PARTIAL`
 - #17 `AMBENCH-E05` → `MIXED`
-- #19 `AMBENCH-D06` → **`PROCESS_CASE_PROXY_DOMINANT`**
-- #21 `AMBENCH-F07` → **ACTIVE source/identity feasibility**
+- #19 `AMBENCH-D06` → `PROCESS_CASE_PROXY_DOMINANT`
+- #21 `AMBENCH-F07` → `PARTIAL_SOURCE_READY`
+- #22 `AMBENCH-F08` → **ACTIVE outcome-blind identity/information feasibility**
 
-## 2. Controlling D06 Result / D06 지배 결과
+## 2. D06 Governing Constraint / D06 지배 제약
 
-Run `32541722347` completed `success` under the preregistered outcome-blind design. / 사전등록 outcome 비사용 설계로 실행 성공.
-
-- exact frozen thermography checksum passed;
-- exact `21 = 7 cases × 3 repeats` tracks;
-- exact same eight E05 calibrated thermal features;
-- no optical depth/width outcome downloaded or used;
+D06 Run `32541722347` established:
 - `case_dominated_count = 8/8`;
 - `PCA95_DIM = 2`;
 - first two PCs explain `98.2647%`;
-- gate = **`PROCESS_CASE_PROXY_DOMINANT`**.
+- gate = `PROCESS_CASE_PROXY_DOMINANT`.
 
-Consequence / 결과:
-- E05 width improvement remains recorded but is not promoted as causal/generalizable repeat-level evidence;
-- no model-capacity escalation on the same 21 tracks/representation;
-- next information must come from independent conditions or a genuinely different sensing/data relationship.
+Therefore / 따라서:
+- no simple capacity escalation on the same 2022 21-track thermal representation;
+- next work must add independent conditions or genuinely different physical information;
+- E05 width gain remains `MIXED` and is not generalized.
 
-Records: `research/AMBENCH-D06/RESULT.md`, `CLM-024..025`, `DEC-016`.
+## 3. F07 Final Result / F07 최종 결과
 
-## 3. Post-D06 Triage / D06 이후 후보 선별
+Issue #21 closed **`PARTIAL_SOURCE_READY`**. / #21 완료.
 
-`research/AMBENCH-POST-D06-TRIAGE.md` ranked: / 후보 순위
-1. **AMB2025-07 Alloy 718 pad cross-cycle feasibility** — selected;
-2. `mds2-3842` dynamic laser coupling — fallback distinct-modality feasibility;
-3. AMB2018-02 IN625 — later external-validation candidate with larger domain shift.
+Authoritative findings / 권위 근거:
+- AMB2025-07 bare IN718 has turnaround/skywriting conditions `0.75 ms` and `5.0 ms`;
+- three repeat plates per turnaround condition and two pad geometries;
+- optical melt-pool cross-section measurement PDR **`mds2-4103`** is public;
+- calibration/challenge PDR `mds2-3707` is public;
+- an exact version-identifiable public raw/analysis-ready AMB2025-07 thermography measurement PDR was not established.
 
-Selection rationale / 선택 근거:
-- NIST describes AMB2025-07 as adjacent-track arrays on bare Alloy 718 plate;
-- two pad geometries and two turnaround/skywriting times create a plausible independent-condition axis;
-- high-speed thermal quantities and melt-pool geometry remain within a closely related measurement family;
-- exact raw/analysis-ready thermal↔geometry paired public manifests are **not yet verified**, so a source/identity gate is required before modeling.
+Consequence / 후속:
+- no predictive AMB2025-07 thermal↔geometry experiment yet;
+- preserve the optical source and experiment hierarchy as qualified future assets;
+- missing thermal publication remains `NOT_VERIFIED_PUBLICATION`, not permanent-absence proof;
+- move to NIST PDR `mds2-3842` as the next distinct-modality feasibility candidate.
 
-Claims: `CLM-026..027`. Decision: `DEC-018`.
+Records: `research/AMBENCH-F07/RESULT.md`, `CLM-028..029`, `DEC-019`.
 
-## 4. Active F07 Frozen Boundary / F07 고정 경계
+## 4. Active F08 Frozen Boundary / F08 고정 경계
 
-Issue #21 and `research/AMBENCH-F07/README.md` are preregistered before deeper measurement inspection. / 심층 측정검사 전 사전등록 완료.
+Dataset: NIST PDR `mds2-3842`, **Dynamic Laser Coupling of Scanned Single Tracks on Bare IN718 with Varying Beam Diameter, Scan Speed, and Power**.
 
-F07 is **not a predictive experiment**. / 예측실험 아님.
+Official AMB2022-03 description establishes seven process cases based on laser power/scan speed/spot size, each repeated three times for `21` dynamic-coupling tracks. / 공식 설계 7 case × 3 repeat.
 
-During source/identity freezing: / source·identity 고정 중
-- no inspection of new AMB2025-07 geometry answer values;
-- no use of new outcome values to select sources, joins, IDs, conditions, or thresholds;
-- metadata, filenames, schemas, units, experiment design, versions, sizes, hashes/checksums and identifiers are eligible;
-- do not assume 2022↔2025 row/track identity;
-- do not substitute `mds2-3707` calibration/answer material for a missing raw measurement publication.
+**Identity separation / 식별자 분리:** F08 separately evaluates:
+1. process-case compatibility;
+2. repeat-label compatibility;
+3. physical track/specimen identity;
+4. aggregate relationship eligibility.
 
-Frozen gate / 고정 gate:
-1. `PASS_INDEPENDENT_EXPANSION_READY`
-2. `PARTIAL_SOURCE_READY`
-3. `HOLD_DATA_OR_IDENTITY_GAP`
-4. `REJECT_NO_INDEPENDENT_INFORMATION`
+Matching nominal cases never upgrades automatically to shared physical-track identity. / nominal case 일치로 동일 physical track 추정 금지.
+
+Frozen F08 gate / 고정 gate:
+- `PASS_DISTINCT_MODALITY_READY`
+- `PARTIAL_CASE_LEVEL_READY`
+- `HOLD_IDENTITY_OR_SEMANTIC_GAP`
+- `REJECT_REDUNDANT_INFORMATION`
+
+Issue #22 and `research/AMBENCH-F08/README.md` were created before deeper dataset inspection. / 심층검사 전 사전등록 완료.
 
 ## 5. Exact Next Action / 정확한 다음 행동
 
-Proceed metadata-first: / metadata 우선
-1. resolve current NIST PDR records/versions for AMB2025-07 calibration, thermography/thermal measurements/results, and optical/melt-pool geometry;
-2. enumerate public files, stable identifiers, sizes, hashes/checksums where exposed;
-3. recover experiment hierarchy: pad geometry, turnaround/skywriting time, bare/powder state, locations, repeats and measurement IDs;
-4. establish deterministic thermal↔geometry pairing semantics without inspecting outcome values;
-5. quantify **independent condition count**, not merely rows;
-6. assess snapshot/version lineage and `reproduction_risk`;
-7. apply `COST-001` before any large download/compute;
-8. assign exactly one F07 gate outcome;
-9. only after `PASS_INDEPENDENT_EXPANSION_READY` may a separate predictive/external-validation experiment be preregistered.
+Proceed **metadata-first and outcome-blind**:
+1. recover current PDR `mds2-3842` version/manifest and provenance;
+2. enumerate public files, sizes, stable identifiers and hashes/checksums where exposed;
+3. recover measured variables, units, acquisition/processing semantics, case and repeat naming;
+4. compare identifier semantics against BP1 thermography/optical without outcome values;
+5. classify supported relationship level: exact physical track / case+repeat / case-only / none;
+6. determine whether the dynamic-coupling modality is physically distinct from current thermal/process features;
+7. assess snapshot/version lineage and `reproduction_risk`;
+8. apply `COST-001` before any large download/compute;
+9. assign exactly one frozen F08 gate outcome;
+10. only after PASS/PARTIAL may a separate controlled experiment be preregistered.
 
 ## 6. Governance & Continuity / 거버넌스·연속성
 
 `DEC-017` remains controlling: / 지속 적용
-1. inspect current live Issue/repository state;
+1. inspect live Issue/repository state;
 2. read `README → STATUS → PROJECT_MEMORY → SESSION_HANDOFF`;
-3. read active research/Issue and Claim/Decision records;
+3. read active research/Issue + Claim/Decision records;
 4. compare live state against synchronized checkpoint;
 5. mismatch => `STATE_DRIFT_DETECTED` and reconcile before research progression.
 
-`.github/workflows/state-integrity.yml` is present as the zero-cost detective check. Current main branch protection/ruleset enforcement is not yet enabled; a green workflow is state-drift evidence, not a scientific-validation guarantee. / 자동 검사는 탐지장치이며 scientific truth를 보장하지 않는다.
+`.github/workflows/state-integrity.yml` is the zero-cost detective check. It is not a scientific validation guarantee. Required-check/ruleset enforcement is not currently configured on main. / 자동검사는 drift 탐지이며 과학적 검증 자체가 아니다. main required-check 강제는 현재 미설정.
 
 ## 7. Persistent Holds / 지속 HOLD
 
 - KPX localized bus mapping: `HOLD`.
 - generic EU facility-level production denominator: `HOLD`.
-- EEA steel-mercury exact historical legacy reproduction: `HOLD_LEGACY_VERSION_DIVERGENCE`.
-- exact historical 2022 AMB2022-03 repeat-level TTAM/TSCR/TLCR reproduction: `PARTIAL / under-specified historical semantics`.
+- EEA steel-mercury exact legacy reproduction: `HOLD_LEGACY_VERSION_DIVERGENCE`.
+- historical 2022 repeat-level TTAM/TSCR/TLCR exact reproduction: `PARTIAL`.
+- AMB2025-07 predictive thermal↔geometry experiment: `HOLD` pending public version-identifiable thermography measurement publication.
 
 ## 8. Mandatory Read Set Next Session / 다음 세션 의무 읽기
 
-0. current live open Issue(s), especially Issue #21 / live GitHub 상태
+0. current live open Issue(s), especially #22
 1. `README.md`
 2. `STATUS.md`
 3. `context/PROJECT_MEMORY.md`
-4. this file / 본 파일
+4. this file
 5. `research/AMBENCH-D06/RESULT.md`
-6. `research/AMBENCH-POST-D06-TRIAGE.md`
-7. `research/AMBENCH-F07/README.md`
-8. Issue #21
+6. `research/AMBENCH-F07/RESULT.md`
+7. `research/AMBENCH-F08/README.md`
+8. Issue #22
 9. `registry/CLAIM_LEDGER.md`
 10. `registry/DECISION_LOG.md`
 11. `docs/HALLUCINATION_CONTROL_PROTOCOL.md`
