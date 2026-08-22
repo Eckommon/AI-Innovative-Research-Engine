@@ -171,6 +171,13 @@ source_of_truth: github
 - **Source:** `docs/HALLUCINATION_CONTROL_PROTOCOL.md`; `docs/GPT_GITHUB_SYNC_PROTOCOL.md`; `DEC-017`
 - **verified_at:** 2026-08-22
 
+### `MEM-023` — AMBENCH-F08 Distinct Modality, Unpaired Boundary / F08 별도 modality·비paired 경계
+- **KO:** Issue #22 `AMBENCH-F08`은 `PARTIAL_CASE_LEVEL_READY`로 완료됐다. NIST PDR `mds2-3842`는 version `1.0.0`–`1.0.3` manifest와 checksum component가 재현 가능하고, dynamic laser coupling은 `P_lc = 1 - P_rho/P_app`의 100 kHz reflected-power-derived 별도 물리량이다. 그러나 BP1 thermography와 BP4 coupling은 서로 다른 bare plate이고 beam diameter 등 실제 공정조건도 달라 track/repeat pairing을 금지한다. 허용 관계는 actual process vectors를 보존한 `UNPAIRED_NOMINAL_CASE_FAMILY / AGGREGATE_ONLY`이다. case `3.2`의 Line2/Line3 filename 중복과 roughness `0.15 µm` vs `5.8 µm` 충돌은 `UNKNOWN/CONFLICT`로 유지한다.
+- **EN:** Issue #22 `AMBENCH-F08` completed as `PARTIAL_CASE_LEVEL_READY`. NIST PDR `mds2-3842` has reproducible version `1.0.0`–`1.0.3` manifests and checksum-recorded components, and dynamic laser coupling is a distinct 100 kHz reflected-power-derived observable defined by `P_lc = 1 - P_rho/P_app`. BP1 thermography and BP4 coupling use separate bare plates and differ in actual processing conditions such as beam diameter, so track/repeat pairing is prohibited. The supported relationship is `UNPAIRED_NOMINAL_CASE_FAMILY / AGGREGATE_ONLY` with actual process vectors preserved. The duplicate case `3.2` Line2/Line3 filename and roughness `0.15 µm` vs `5.8 µm` conflict remain `UNKNOWN/CONFLICT`.
+- **State:** `V2/V3_MIXED_EVIDENCE_GATE`
+- **Source:** closed Issue #22; Runs `32544186783`, `32544237853`; `research/AMBENCH-F08/RESULT.md`; `CLM-030..032`; `DEC-020`
+- **verified_at:** 2026-08-22
+
 ## Maintenance Rule / 유지 규칙
 
 - Add only durable, decision-relevant facts. / 지속적 의사결정 관련 사실만 추가.
