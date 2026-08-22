@@ -1,19 +1,19 @@
 ---
-checkpoint_id: CHK-20260822-E14-PREREG
-active_issue: 32
-active_research: AMBENCH-E14
-last_completed_issue: 31
-last_completed_research: AMBENCH-F13
-last_decision: DEC-033
+checkpoint_id: CHK-20260822-E14-HOLD-SOURCE-INTEGRITY
+active_issue: none
+active_research: none
+last_completed_issue: 32
+last_completed_research: AMBENCH-E14
+last_decision: DEC-034
 updated: 2026-08-22
 ---
 
 # Project Status / 프로젝트 상태
 
 **Project / 프로젝트:** AI-Innovative-Research-Engine / AI 기반 혁신 탐색 연구 엔진  
-**Latest verified baseline / 최신 검증 baseline:** `v0.17-e14-preregistered-external-physical-dynamics`  
-**State / 상태:** `E14_PREREGISTERED__NUMERICAL_PDR_ACCESS_AUTHORIZED_UNDER_FROZEN_METHOD`  
-**Active Work Queue / 활성 작업 큐:** Issue #32 `AMBENCH-E14`.
+**Latest verified baseline / 최신 검증 baseline:** `v0.18-e14-hold-source-integrity`  
+**State / 상태:** `E14_COMPLETED__HOLD_SOURCE_INTEGRITY`  
+**Active Work Queue / 활성 작업 큐:** none.
 
 ## Mandatory Governance / 필수 거버넌스
 - GitHub = persistent Source of Truth.
@@ -34,35 +34,39 @@ updated: 2026-08-22
 - #27 D11 — `MIXED_TEMPORAL_INFORMATION`
 - #29 D12 — `ROBUST_CONDITION_SPECIFIC_REPEAT_VARIATION`
 - #31 F13 — `PARTIAL_SAME_EXPERIMENT_EXTERNAL_VALIDATION_READY`
+- #32 E14 — **`HOLD_SOURCE_INTEGRITY`**
 
-## Active E14 / 활성 E14
-Preregistration: `research/AMBENCH-E14/README.md`.  
-Decision: `DEC-033`. Boundary claim: `CLM-051`. Memory: `MEM-034`.
+## E14 Final / E14 최종
+Result: `research/AMBENCH-E14/RESULT.md`.  
+Claims: `CLM-051..052`. Decisions: `DEC-033..034`. Memories: `MEM-034..035`.
 
-Frozen source:
+Frozen design was completed before stationary-Al numerical PDR time-series access. Official NIST/Data.gov metadata reverified:
 - NIST `mds2-2525` v1.3.1;
-- `Al_Spot_TDA_Results.csv` SHA-256 `3f0b6812f98535f5ffbb0e2fed31f084ad9a7f9cc393c04a43ed57f0bb14bf69`;
-- `Al_Spot_TDW_Results.csv` SHA-256 `06b280222eab5f82eb9dcfb0689f20a5011c16e115548cd94ce120e5a97b4f5c`.
+- `Al_Spot_TDA_Results.csv` expected SHA-256 `3f0b6812f98535f5ffbb0e2fed31f084ad9a7f9cc393c04a43ed57f0bb14bf69`;
+- `Al_Spot_TDW_Results.csv` expected SHA-256 `06b280222eab5f82eb9dcfb0689f20a5011c16e115548cd94ce120e5a97b4f5c`.
 
-Frozen primary analysis:
-- authoritative stationary-spot event clock, time zero at laser start;
-- adjacent TDW intervals define 20 µs-scale alignment;
-- interval mean absorbed power `A_i`;
-- width increment `ΔW_i`;
-- `rho_primary = Spearman(A_i, ΔW_i)`;
-- all circular shifts of `A` against fixed `ΔW` define the serial null;
-- no lag search, smoothing, manual crop, feature rescue, or high-capacity model.
+Execution blocker:
+- authoritative result CSV bytes could not be retrieved through the currently available verified zero-incremental-cost routes;
+- direct NIST fetch repeatedly timed out;
+- provided transient container had no direct NIST network route;
+- targeted public mirror/checksum search did not establish an exact alternative copy.
 
-Frozen gates:
-- `HOLD_SOURCE_INTEGRITY`
-- `HOLD_SCHEMA_OR_ALIGNMENT`
-- `POSITIVE_EXTERNAL_PHYSICAL_DYNAMICS`
-- `DISCORDANT_EXTERNAL_DYNAMICS`
-- `NO_MATERIAL_DYNAMIC_ASSOCIATION`
-- `INCONCLUSIVE_EXTERNAL_DYNAMICS`
+Numerical state:
+- stationary-Al PDR result values analyzed: `NO`;
+- aligned intervals: `NOT_COMPUTED`;
+- `rho_primary`: `NOT_COMPUTED`;
+- circular-shift null: `NOT_COMPUTED`;
+- sensitivity/descriptors: `NOT_COMPUTED`.
 
-Contamination boundary:
-`NEW_EXTERNAL_OUTCOME_BLIND = NO — PUBLICATION_LEVEL_AGGREGATES_PREOBSERVED` because unrelated scanned-Al publication aggregates were exposed in F13 triage. Stationary-spot numerical PDR time series had not been analyzed when E14 was frozen.
+Frozen final gate: **`HOLD_SOURCE_INTEGRITY`**.
 
-## Exact Next Action / 정확한 다음 행동
-Execute E14 exactly as preregistered using verified zero-incremental-cost public NIST access and provided transient compute. Persist only provenance/checksums/schema summaries/derived statistics/result; raw CSV bytes remain transient.
+Interpretation: this is an execution/source-retrieval HOLD, not evidence that the NIST files are absent, invalid, or that the physical relationship is negative.
+
+## Exact Next Eligible Work / 정확한 다음 eligible 작업
+No experiment is active.
+
+Preferred continuation:
+1. retry the **unchanged frozen E14** only when the exact authoritative NIST result files are retrievable through a verified zero-incremental-cost route; or
+2. triage another authoritative public external-validation asset without changing E14 based on unseen outcomes.
+
+Any paid/potentially paid retrieval route requires explicit user approval **before execution**.
