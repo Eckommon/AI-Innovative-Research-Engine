@@ -1,8 +1,8 @@
 ---
 id: AMBENCH-D06
 type: diagnostic
-state: PREREGISTERED
-evidence_class: HYPOTHESIZED
+state: COMPLETED
+evidence_class: OBSERVED_DERIVED
 region: us
 domain: manufacturing
 created: 2026-08-22
@@ -11,11 +11,13 @@ source_of_truth: github
 related:
   - research/AMBENCH-E05/RESULT.md
   - research/AMBENCH-F04/RESULT.md
+  - research/AMBENCH-D06/RESULT.md
 ---
 
 # AMBENCH-D06 — Outcome-Blind Thermal Representation Geometry Diagnostic / outcome 비사용 열표현 구조 진단
 
-**State / 상태:** `PREREGISTERED — OUTCOME-BLIND DIAGNOSTIC`  
+**State / 상태:** `COMPLETED — PROCESS_CASE_PROXY_DOMINANT`  
+**Evidence Run / 증거 Run:** `32541722347`  
 **Parent / 상위 결과:** `AMBENCH-E05 — MIXED`
 
 ## 1. Research Question / 연구 질문
@@ -135,5 +137,20 @@ Use only a public repository standard GitHub-hosted runner and public/free NIST/
 5. apply frozen diagnostic gate;
 6. persist result and next-direction decision;
 7. do not tune E05 or open a predictive experiment automatically.
+
+## 8. Final Result / 최종 결과
+
+Run `32541722347` completed successfully under the frozen design. / 고정 설계로 실행 성공.
+
+- `case_dominated_count = 8/8`
+- `PCA95_DIM = 2`
+- first two PCs explain `98.2647%` of standardized thermal variance
+- `strong_process_count = 4/8`; all four `any_hot_duration_*` features have `|r|≈0.981–0.985` with scan speed
+- frozen gate = **`PROCESS_CASE_PROXY_DOMINANT`**
+
+**KO:** 현재 8개 E05 feature는 repeat-level 독립정보보다 process-case 구조를 주로 표현하므로, 동일 21 tracks에서 단순 모델 고용량화는 후속 방향으로 허용하지 않는다. 다음 후보는 독립 process-condition 확장 또는 실제로 다른 sensing/data 관계를 우선한다.  
+**EN:** The current eight E05 features primarily encode process-case structure rather than substantial independent repeat-level information. Model-capacity escalation on the same 21 tracks is therefore not an eligible next direction; priority moves to independent process-condition expansion or a genuinely different sensing/data relationship.
+
+Detailed result / 상세 결과: [`RESULT.md`](RESULT.md).
 
 Official artifacts comply with `LANG-001`, `COST-001`, `READ-001`, `FACT-001`, and `UNKNOWN-001`. / 관련 규약 준수.
