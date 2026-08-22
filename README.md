@@ -86,18 +86,18 @@ Topics are not selected on trendiness alone; **data accessibility, joinability, 
 ## Knowledge, Obsidian & Durable Memory / 지식관리·Obsidian·지속 메모리
 
 **한국어**  
-저장소 루트를 Obsidian Vault로 열 수 있도록 구성했다. GitHub Markdown이 계속 공식 기준 기록이며, Obsidian은 MOC(Map of Content), 표준 Markdown links, backlinks, tags, graph를 이용한 탐색 레이어다. GPT는 프로젝트 사실을 모델 내부 기억에 의존하지 않고 `READ-001`에 따라 지속 컨텍스트를 먼저 읽는다.
+저장소 루트를 Obsidian Vault로 열 수 있도록 구성했다. GitHub Markdown이 계속 공식 기준 기록이며, Obsidian은 MOC(Map of Content), 표준 Markdown links, backlinks, tags, graph를 이용한 탐색 레이어다. GPT는 프로젝트 사실을 모델 내부 기억에 의존하지 않고 `READ-001`로 지속 컨텍스트를 읽으며, `STATE-001`로 **현재 live GitHub Issue 상태와 STATUS/HANDOFF checkpoint를 대조한 뒤** 실질 작업을 시작한다.
 
 **English**  
-The repository root is structured to open directly as an Obsidian Vault. GitHub Markdown remains the authoritative record; Obsidian provides MOCs, standard Markdown links, backlinks, tags, and graph navigation. GPT does not rely on opaque model memory for project facts and follows `READ-001` to load durable context first.
+The repository root is structured to open directly as an Obsidian Vault. GitHub Markdown remains the authoritative record; Obsidian provides MOCs, standard Markdown links, backlinks, tags, and graph navigation. GPT does not rely on opaque model memory for project facts: it loads durable context under `READ-001` and uses `STATE-001` to **reconcile current live GitHub Issue state against the STATUS/HANDOFF checkpoint** before material work.
 
 ### Required Start Path / 의무 시작 경로
-`README → STATUS → PROJECT_MEMORY → SESSION_HANDOFF → relevant MOC → research object → active Issue → claim/decision records as needed`
+`live GitHub state → README → STATUS → PROJECT_MEMORY → SESSION_HANDOFF → relevant MOC/research → recent Issue → claim/decision records → STATE-001 reconciliation`
 
 ### Knowledge Entry / 지식관리 진입점
 - [`knowledge/00_HOME.md`](knowledge/00_HOME.md) — Obsidian / knowledge home.
 - [`context/PROJECT_MEMORY.md`](context/PROJECT_MEMORY.md) — durable verified project memory / 지속 검증 프로젝트 메모리.
-- [`context/SESSION_HANDOFF.md`](context/SESSION_HANDOFF.md) — latest operational checkpoint / 최신 운영 checkpoint.
+- [`context/SESSION_HANDOFF.md`](context/SESSION_HANDOFF.md) — latest synchronized operational checkpoint / 최신 동기 운영 checkpoint.
 - [`registry/CLAIM_LEDGER.md`](registry/CLAIM_LEDGER.md) — claim/evidence state / 주장·증거 상태.
 - [`registry/DECISION_LOG.md`](registry/DECISION_LOG.md) — durable decisions / 지속 의사결정.
 
@@ -106,8 +106,10 @@ The repository root is structured to open directly as an Obsidian Vault. GitHub 
 - [`STATUS.md`](STATUS.md) — 현재 상태·Work Queue·다음 행동 / live state, work queue, and next actions.
 - [`docs/GOVERNANCE.md`](docs/GOVERNANCE.md) — 프로젝트 범위·의사결정 원칙 / governance and decision rules.
 - [`docs/METHODOLOGY.md`](docs/METHODOLOGY.md) — 공식 연구 방법론 / official research methodology.
-- [`docs/GPT_GITHUB_SYNC_PROTOCOL.md`](docs/GPT_GITHUB_SYNC_PROTOCOL.md) — GPT ↔ GitHub 동기화 규약 / synchronization protocol.
-- [`docs/HALLUCINATION_CONTROL_PROTOCOL.md`](docs/HALLUCINATION_CONTROL_PROTOCOL.md) — `READ-001`, evidence/memory/freshness safeguards / 환각·드리프트 방지.
+- [`docs/GPT_GITHUB_SYNC_PROTOCOL.md`](docs/GPT_GITHUB_SYNC_PROTOCOL.md) — GPT ↔ GitHub read-first/writeback/state-reconciliation 규약 / synchronization protocol.
+- [`docs/HALLUCINATION_CONTROL_PROTOCOL.md`](docs/HALLUCINATION_CONTROL_PROTOCOL.md) — `READ-001`, `STATE-001`, checkpoint, evidence/memory/freshness safeguards / 환각·드리프트 방지.
+- [`docs/NO_COST_POLICY.md`](docs/NO_COST_POLICY.md) — `COST-001`, 추가 금전비용 0원 기본·비용 가능 시 사전승인 / zero-cost default and approval gate.
+- [`.github/workflows/state-integrity.yml`](.github/workflows/state-integrity.yml) — STATUS/HANDOFF/live-Issue 상태 무결성 검사 / state-integrity check.
 - [`docs/OBSIDIAN_KNOWLEDGE_MANAGEMENT.md`](docs/OBSIDIAN_KNOWLEDGE_MANAGEMENT.md) — `KM-001` knowledge-management policy / 지식관리 규약.
 - [`docs/LANGUAGE_POLICY.md`](docs/LANGUAGE_POLICY.md) — 한글/영문 병기 규약 / Korean-English bilingual policy.
 - [`docs/METADATA_SCHEMA.md`](docs/METADATA_SCHEMA.md) — 정규화 연구 메타데이터 스키마 / normalized research metadata schema.
@@ -117,10 +119,19 @@ The repository root is structured to open directly as an Obsidian Vault. GitHub 
 ## Repository Role / 저장소 역할
 
 **한국어**  
-이 저장소는 프로젝트의 **공식 지속 기록이자 기준 상태(Source of Truth)** 이다. GPT 세션은 분석·조사·가설 생성·비판적 검토를 수행하는 작업 공간이며, 중요한 연구 상태·증거·결정은 GitHub에 반영한다.
+이 저장소는 프로젝트의 **공식 지속 기록이자 기준 상태(Source of Truth)** 이다. GPT 세션은 분석·조사·가설 생성·비판적 검토를 수행하는 작업 공간이며, 중요한 연구 상태·증거·결정은 GitHub에 반영한다. 파일을 읽었다는 사실만으로 최신성이 보장되지는 않으므로 live Issue 상태와 동기 checkpoint를 대조한다.
 
 **English**  
-This repository is the project's **official persistent system of record and source of truth**. GPT sessions are analytical workspaces for research, synthesis, hypothesis generation, experimentation, and critical review; material project state, evidence, and decisions are persisted to GitHub.
+This repository is the project's **official persistent system of record and source of truth**. GPT sessions are analytical workspaces for research, synthesis, hypothesis generation, experimentation, and critical review; material project state, evidence, and decisions are persisted to GitHub. Merely reading a file does not prove freshness, so live Issue state is reconciled against the synchronized checkpoint.
+
+## Cost Rule / 비용 규칙
+
+**`COST-001` is mandatory. / `COST-001` 의무 적용.**
+
+- Zero incremental monetary cost is the default execution boundary. / 추가 금전비용 0원이 기본 실행경계.
+- Any action that incurs or may reasonably incur monetary cost requires explicit user approval **before execution**. / 비용 발생·발생 가능 작업은 실행 전 사용자 명시승인 필요.
+- Unknown billing state = `HOLD_COST_APPROVAL`. / 비용상태 불명확 시 HOLD.
+- No silent paid substitution. / 묵시적 유료대체 금지.
 
 ## Language Rule / 언어 규칙
 
@@ -129,7 +140,12 @@ All future **human-readable major research, governance, status, and Issue artifa
 
 ## Current Baseline / 현재 베이스라인
 
-**Baseline:** `v0.3-knowledge-memory`  
-**Active Work Queue:** Issue #8 `EU-STEEL-R01` — independent E-PRTR × PRODCOM steel-mercury reproduction / 철강 수은집약도 독립 재현.
+**Latest verified baseline label / 최신 검증 baseline label:** `v0.7-thermal-dynamics-feasibility`  
+**Checkpoint / 운영 checkpoint:** `CHK-20260822-D06-PROXY`  
+**Active Work Queue / 활성 작업 큐:** `none`  
+**Last completed / 최근 완료:** Issue #19 `AMBENCH-D06` — **`PROCESS_CASE_PROXY_DOMINANT`**  
+**Next direction / 다음 방향:** outcome-blind triage for **independent process-condition expansion or a genuinely different sensing/data relationship**; no model-capacity escalation on the same 21-track representation. / 독립 공정조건 확대 또는 다른 sensing/data 관계 후보 선별, 동일 21-track 표현 고용량화 금지.
 
-Official artifacts comply with `LANG-001`, `READ-001`, `FACT-001`, and `MEMORY-001`. / 공식 산출물은 관련 규약을 따른다.
+See [`STATUS.md`](STATUS.md) and [`context/SESSION_HANDOFF.md`](context/SESSION_HANDOFF.md) for the current synchronized operational state. / 최신 동기 운영상태는 해당 문서 참조.
+
+Official artifacts comply with `LANG-001`, `COST-001`, `READ-001`, `STATE-001`, `CHECKPOINT-001`, `FACT-001`, and `MEMORY-001`. / 공식 산출물은 관련 규약을 따른다.
