@@ -1,27 +1,26 @@
 ---
-checkpoint_id: CHK-20260822-E09-INCONCLUSIVE
-active_issue: none
-active_research: none
+checkpoint_id: CHK-20260822-F10-PREREG
+active_issue: 26
+active_research: AMBENCH-F10
 last_completed_issue: 24
 last_completed_research: AMBENCH-E09
-last_decision: DEC-023
+last_decision: DEC-024
 updated: 2026-08-22
 ---
 
 # Project Status / 프로젝트 상태
 
 **Project / 프로젝트:** AI-Innovative-Research-Engine / AI 기반 혁신 탐색 연구 엔진  
-**Latest verified baseline label / 최신 검증 baseline:** `v0.9-unpaired-coupling-ordering-result`  
-**State / 상태:** `E09_COMPLETED__INCONCLUSIVE_CASE_LEVEL`  
-**Active Work Queue / 활성 작업 큐:** `none` — no follow-up experiment is automatically authorized. / 자동 승인된 후속 실험 없음.
+**Latest verified baseline label / 최신 검증 baseline:** `v0.10-same-bp4-confocal-feasibility`  
+**State / 상태:** `F10_PREREGISTERED__CONFOCAL_OUTCOME_NOT_ACCESSED`  
+**Active Work Queue / 활성 작업 큐:** Issue #26 `AMBENCH-F10`
 
 ## 1. Mandatory Governance / 필수 거버넌스
 
-- GitHub = persistent Source of Truth / 지속 기준 저장소.
-- `READ-001` + `STATE-001`: read and reconcile live GitHub state before material reasoning. / 실질 추론 전 live 상태 확인·정합.
-- `CHECKPOINT-001`: this file and `context/SESSION_HANDOFF.md` must carry identical checkpoint fields. / checkpoint 일치 의무.
-- `COST-001`: zero incremental monetary cost by default; paid/maybe-paid route requires explicit approval first. / 추가비용 0원 기본.
-- `RAW-001`: external authoritative raw data are `RAW_DATA_TRANSIENT_ONLY`; persist provenance/checksum/code/integrity inventory/derived results, not raw source bytes or raw-data Actions artifacts. / 외부 raw data는 일시 처리.
+- GitHub = persistent Source of Truth.
+- `READ-001` + `STATE-001` + `CHECKPOINT-001` remain mandatory.
+- `COST-001`: zero incremental monetary cost by default.
+- `RAW-001`: external authoritative raw data are `RAW_DATA_TRANSIENT_ONLY`.
 - `FACT-001`, `UNKNOWN-001`, `CONFLICT-001`, `FRESH-001`, `MEMORY-001`, `WRITEBACK-001` remain mandatory.
 
 ## 2. Completed AMBENCH Chain / 완료 계보
@@ -33,91 +32,78 @@ updated: 2026-08-22
 - #19 `AMBENCH-D06` — `PROCESS_CASE_PROXY_DOMINANT`.
 - #21 `AMBENCH-F07` — `PARTIAL_SOURCE_READY`.
 - #22 `AMBENCH-F08` — `PARTIAL_CASE_LEVEL_READY`.
-- #24 `AMBENCH-E09` — **`INCONCLUSIVE_CASE_LEVEL`**.
+- #24 `AMBENCH-E09` — `INCONCLUSIVE_CASE_LEVEL`.
 
-## 3. E09 Final Result / E09 최종 결과
+## 3. Post-E09 Triage / E09 이후 선별
 
-**Run:** `32550309862` / Job `96975852410` — `success`.  
-**Result:** `research/AMBENCH-E09/RESULT.md`.  
-**Claims:** `CLM-033..035`.  
-**Decision:** `DEC-023`.
+Triage artifact: `research/AMBENCH-POST-E09-TRIAGE.md`.
 
-### Source integrity / 원천 무결성
-- `mds2-3842` exact version `1.0.3` manifest SHA-256 = `b3fb55e489568f90fddcbaf8a7f790e8b2a15483f312bdc403f4d08f4419c1cb`;
-- coupling ZIP bytes `93,566`, expected = actual SHA-256 `8c4278eb621c1638465e13e87339fe0daba1dcae138f24b9c1d86c186cd74f66`;
-- filename-only preflight ran before numeric coupling access;
-- direct archive contains all `21/21` expected TXT files including distinct `3_2_1sv.txt`, `3_2_2sv.txt`, `3_2_3sv.txt`;
-- E09 analysis identity state = **`3.2_ID_RESOLVED_BY_ARCHIVE`**;
-- F08 summary CSV duplicate-filename provenance inconsistency remains historically recorded and is not silently rewritten.
+Decision question / 질문: which next relationship most directly breaks both D06 case-proxy dominance and E09 rank-only/cross-specimen limitations?
 
-### Frozen coupling case medians / coupling case 중앙값
-`0=.6347681`, `1.1=.7287823`, `1.2=.5507982`, `2.1=.6152821`, `2.2=.6480267`, `3.1=.6649222`, `3.2=.5964035`.
+Selected highest-leverage candidate / 선택 후보:
+**`BP4 dynamic-coupling temporal dynamics → same-BP4 laser-scanning-confocal 3D topography`**.
 
-### Critical structural result / 핵심 구조 결과
-`X_coupled` changes magnitudes but preserves exactly the same seven-case rank as `X_process`:  
-`1.1 > 2.2 > 3.1 > 0 > 3.2 > 2.1 > 1.2`.
+Why selected / 선정 이유:
+1. preserves time-resolved coupling instead of reducing it to a case scalar/rank;
+2. can test repeat-level information beyond process-case labels;
+3. uses the same BP4 specimen if source identity is established, removing E09's BP1↔BP4 separate-specimen limitation;
+4. links an in-situ distinct modality to an independent ex-situ physical consequence.
 
-Therefore all frozen endpoints have `delta_rho = 0`. / 모든 고정 endpoint에서 추가 rank 정보 0.
+Triage heuristic totals / 휴리스틱 총점:
+- cross-BP magnitude-sensitive aggregate: `56/100` — DEFER;
+- within-BP4 temporal-information diagnostic only: `86/100` — FALLBACK;
+- same-BP4 coupling dynamics ↔ confocal topography: `93/100` — SELECT, SOURCE GATE FIRST;
+- independent-condition expansion: `72/100` — HOLD/SECONDARY.
 
-Primary thermal:
-- `rho_process = 0.0714286`;
-- `rho_coupled = 0.0714286`;
-- `delta_rho = 0`;
-- factor-axis concordance = `2/3`.
+The score is a decision heuristic, not empirical validation. / 점수는 의사결정 휴리스틱이며 실증 검증점수가 아니다.
 
-Secondary descriptive / 보조 기술값:
-- thermal sensitivity: `rho_process = rho_coupled = 0.75`;
-- width: `-0.142857` for both;
-- depth: `1.0` for both.
+## 4. Active F10 / 활성 F10
 
-Exact `7! = 5040` permutation distribution for primary `delta_rho` is identically zero. / permutation delta 전부 0.
+**Issue:** #26 `AMBENCH-F10: BP4 coupling ↔ same-BP4 confocal topography source/identity feasibility`.
 
-### Frozen gate / 고정 gate
-**`INCONCLUSIVE_CASE_LEVEL`**.
+Official NIST AMB2022-03 documentation identifies `AMB2022-718-SH1-BP4` as the 3×7 single-track dynamic-coupling plate and states that coupling specimens were measured ex situ using laser scanning confocal microscopy for complete 3D surface profiles. / 공식 문서상 BP4 coupling specimen의 confocal 측정은 확인됨.
 
-Reason / 이유:
-- no incremental rank-order signal from coupling;
-- but primary process-only ordering itself is weak (`rho=0.07143`), so the stronger frozen `PROCESS_ONLY_OR_REDUNDANT_AT_CASE_LEVEL` label is not justified;
-- coupling is not declared generally useless/redundant.
+However, the exact current public version-identifiable BP4 confocal/topography publication/manifest and deterministic 21-track mapping have **not yet been established**. This is `NOT_YET_VERIFIED_PUBLICATION`, not proof of permanent absence. / 현 공개 publication·manifest·track map은 아직 미확립이며 영구부재 의미가 아님.
 
-## 4. Raw-Data & Cost Result / raw-data·비용 결과
+Claims:
+- `CLM-036` — official record establishes BP4 confocal measurement and 3D topography intent;
+- `CLM-037` — exact public version-identifiable confocal publication/track map not yet established.
 
-`RAW-001` execution succeeded:
-- NIST raw inputs existed only in ephemeral runner `work/raw`;
-- no raw source commit;
-- no `actions/upload-artifact` raw-data upload;
-- end-of-run `RAW_TEARDOWN=SUCCESS`;
-- standard public-repository `ubuntu-latest` only;
-- incremental monetary cost = `0` under `COST-001`.
+Decision: `DEC-024`.
+Memory: `MEM-027`.
 
-Policy records: `docs/RAW_DATA_TRANSIENT_POLICY.md`; `DEC-022`; `MEM-025`.
+### Outcome boundary / outcome 경계
+- `NEW_CONFOCAL_OUTCOME_BLIND = YES` — no numerical confocal/topography outcomes accessed.
+- `FULL_OUTCOME_BLIND = NO — COUPLING_PREOBSERVED` — E09 already observed BP4 coupling values.
+- F10 may inspect metadata, manifests, file inventories, checksums, README/data dictionaries, specimen IDs, track IDs, variable names/units.
+- F10 must not inspect or calculate numerical confocal height/topography outcomes.
 
-## 5. Controlling Interpretation / 지배 해석
+### Frozen F10 gates / 고정 gate
+1. `PASS_SAME_BP4_TRACK_LEVEL_READY`
+2. `PARTIAL_SAME_BP4_CASE_LEVEL_READY`
+3. `HOLD_PUBLICATION_NOT_VERIFIED`
+4. `HOLD_IDENTITY_OR_SEMANTIC_GAP`
+5. `REJECT_NOT_SAME_BP4_OR_NOT_DISTINCT`
 
-Supported / 허용:
-- BP4 coupling is a reproducible distinct modality;
-- E09 found no incremental **rank-order** information at the unpaired seven-case aggregate level;
-- direct ZIP evidence resolves case `3.2` third-file identity for analysis;
-- endpoint responses are heterogeneous and must not be collapsed into one causal story.
+## 5. Exact Next Action / 정확한 다음 행동
 
-Not permitted / 금지:
-- BP1↔BP4 track/repeat pairing;
-- identical-condition claim from matching case labels;
-- general statement that dynamic coupling is useless or universally redundant;
-- coupling-specific promotion of depth `rho=1.0`, because process-only has the same rank correlation;
-- post-hoc E09 threshold/feature tuning or model-capacity escalation;
-- harmonized roughness while `Ra=0.15 µm` vs `5.8 µm` conflict remains unresolved.
+Execute F10 as a **metadata-first source/identity feasibility** only:
+1. search authoritative NIST PDR/AM Bench sources for the BP4 confocal/topography publication;
+2. recover exact version/manifest if found;
+3. inspect file inventory/checksums without numerical outcome access;
+4. establish specimen and maximum defensible track/repeat identity level;
+5. document measurement-variable semantics and units;
+6. apply exactly one frozen F10 gate;
+7. write `RESULT.md`, claim/decision records, close/continue Issue #26, synchronize checkpoint.
 
-## 6. Exact Next Action / 정확한 다음 행동
+No predictive or association model is authorized by this checkpoint. / 이 checkpoint는 예측·상관 모델을 승인하지 않는다.
 
-No experiment is active. / 활성 실험 없음.
+## 6. Fallback / 대안
 
-Any continuation must be a **new separately preregistered scientific relationship**, not a tuning of E09. Eligible candidate families include:
-1. magnitude-sensitive relation rather than rank-only ordering;
-2. within-BP4 dynamic-coupling temporal structure;
-3. independent process-condition expansion.
-
-Candidate selection itself does not authorize execution. / 후보선정과 실행승인은 별개.
+If F10 cannot qualify the same-BP4 confocal source:
+- do not substitute BP1 optical data;
+- do not infer topography values from papers/figures;
+- preferred fallback is a separately preregistered **within-BP4 coupling temporal-information diagnostic** testing repeat-vs-case variance, temporal effective dimension, and process association without claiming physical-outcome utility.
 
 ## 7. Persistent Holds / 지속 HOLD
 
@@ -131,6 +117,4 @@ Candidate selection itself does not authorize execution. / 후보선정과 실�
 
 ## 8. Required Session Start / 세션 시작 의무
 
-`live GitHub state → README → STATUS → PROJECT_MEMORY → SESSION_HANDOFF → research/AMBENCH-E09/RESULT.md → closed Issue #24 → CLM-033..035 → DEC-023 → RAW-001/COST-001 → STATE-001 reconciliation`
-
-Official artifacts comply with `LANG-001`, `COST-001`, `RAW-001`, `READ-001`, `STATE-001`, `CHECKPOINT-001`, `FACT-001`, `UNKNOWN-001`, `CONFLICT-001`, `MEMORY-001`, and `WRITEBACK-001`. / 관련 규약 준수.
+`live GitHub state → README → STATUS → PROJECT_MEMORY/operational memory → SESSION_HANDOFF → research/AMBENCH-POST-E09-TRIAGE.md → research/AMBENCH-F10/README.md → Issue #26 → CLM-036..037 → DEC-024 → COST-001/RAW-001 → STATE-001 reconciliation`
