@@ -33,6 +33,9 @@ GitHub는 다음 항목의 지속적 기준 저장소다. / GitHub is the persis
 8. **Progressive scaling / 단계적 확장** — 고품질 사례에서 방법론을 검증한 뒤 대규모 수집·자동화로 확장한다. / Validate the method on strong cases before broad harvesting and automation.
 9. **Bilingual traceability / 한·영 병기 추적성** — 사람이 읽는 주요 산출물은 한국어와 영어를 병기한다. / Major human-readable artifacts are maintained in both Korean and English.
 10. **Native-term preservation / 원문 용어 보존** — 데이터 필드명·코드·표준·API·고유명사는 정확성을 위해 원문을 유지한다. / Native field names, code, standards, APIs, and proper names remain in their authoritative original form.
+11. **No-cost by default / 기본 무비용** — 모든 연구·검증·개발·자동화는 추가 금전비용 0원을 기본 조건으로 한다. 비용이 발생하거나 발생할 합리적 가능성이 있는 작업은 실행 전에 사용자의 명시적 승인을 받아야 하며, 비용 상태가 불명확하면 `HOLD_COST_APPROVAL`로 둔다. / All research, validation, development, and automation defaults to zero incremental monetary cost. Any action that incurs or may reasonably incur monetary cost requires explicit user approval before execution; uncertain billing status is `HOLD_COST_APPROVAL`.
+
+Detailed cost controls are defined in `docs/NO_COST_POLICY.md` (`COST-001`). / 세부 비용 통제는 `COST-001`을 따른다.
 
 ## 4. Research Object States / 연구 객체 상태
 
@@ -87,4 +90,4 @@ GitHub는 다음 항목의 지속적 기준 저장소다. / GitHub is the persis
 
 ## 9. Change Control / 변경 통제
 
-미션, 방법론, 점수체계, 증거등급, 상태 생명주기, 언어정책 등 핵심 규칙의 변경은 설명 가능한 커밋으로 남기고 활성 작업에 영향을 주면 `STATUS.md`에 반영한다. / Material changes to mission, methodology, scoring, evidence classes, lifecycle, or language policy require descriptive commits and must be reflected in `STATUS.md` when they affect active work.
+미션, 방법론, 점수체계, 증거등급, 상태 생명주기, 언어정책, 비용정책 등 핵심 규칙의 변경은 설명 가능한 커밋으로 남기고 활성 작업에 영향을 주면 `STATUS.md`에 반영한다. / Material changes to mission, methodology, scoring, evidence classes, lifecycle, language policy, or cost policy require descriptive commits and must be reflected in `STATUS.md` when they affect active work.
