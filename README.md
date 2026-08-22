@@ -141,11 +141,11 @@ All future **human-readable major research, governance, status, and Issue artifa
 ## Current Baseline / 현재 베이스라인
 
 **Latest verified baseline label / 최신 검증 baseline label:** `v0.7-thermal-dynamics-feasibility`  
-**Checkpoint / 운영 checkpoint:** `CHK-20260822-F08-ACTIVE`  
-**Active Work Queue / 활성 작업 큐:** Issue #22 `AMBENCH-F08` — `mds2-3842` dynamic-laser-coupling identity & information feasibility / 동적 레이저 결합 식별자·정보이득 가능성 검증  
-**Last completed / 최근 완료:** Issue #21 `AMBENCH-F07` — **`PARTIAL_SOURCE_READY`**  
-**Current direction / 현재 방향:** outcome-blind verification of `mds2-3842` version/measurement semantics and defensible alignment level to the 2022 thermography/optical family; matching process cases must not be treated as proof of shared physical tracks. / `mds2-3842` version·측정의미·정렬수준을 outcome 없이 검증하며 nominal case 일치를 동일 physical track 증거로 취급하지 않는다.
+**Checkpoint / 운영 checkpoint:** `CHK-20260822-F08-PARTIAL`  
+**Active Work Queue / 활성 작업 큐:** `none`  
+**Last completed / 최근 완료:** Issue #22 `AMBENCH-F08` — **`PARTIAL_CASE_LEVEL_READY`**  
+**Current direction / 현재 방향:** `mds2-3842` is retained as a reproducible distinct physical modality, but BP1↔BP4 track/repeat pairing is prohibited. Any continuation requires a new outcome-blind preregistration for an **unpaired nominal-case-family/aggregate relationship** with explicit process parameters and unresolved source conflicts preserved. / `mds2-3842`를 distinct modality로 보존하되 BP1↔BP4 track/repeat pairing은 금지하며, 후속은 실제 공정변수·미해결 출처충돌을 명시한 unpaired case-family/aggregate 관계의 별도 사전등록부터 시작한다.
 
-See [`STATUS.md`](STATUS.md), [`context/SESSION_HANDOFF.md`](context/SESSION_HANDOFF.md), [`research/AMBENCH-F07/RESULT.md`](research/AMBENCH-F07/RESULT.md), and [`research/AMBENCH-F08/README.md`](research/AMBENCH-F08/README.md) for the current synchronized operational state. / 최신 동기 운영상태는 해당 문서 참조.
+See [`STATUS.md`](STATUS.md), [`context/SESSION_HANDOFF.md`](context/SESSION_HANDOFF.md), and [`research/AMBENCH-F08/RESULT.md`](research/AMBENCH-F08/RESULT.md) for the current synchronized operational state. / 최신 동기 운영상태는 해당 문서 참조.
 
-Official artifacts comply with `LANG-001`, `COST-001`, `READ-001`, `STATE-001`, `CHECKPOINT-001`, `FACT-001`, and `MEMORY-001`. / 공식 산출물은 관련 규약을 따른다.
+Official artifacts comply with `LANG-001`, `COST-001`, `READ-001`, `STATE-001`, `CHECKPOINT-001`, `FACT-001`, `CONFLICT-001`, and `MEMORY-001`. / 공식 산출물은 관련 규약을 따른다.
