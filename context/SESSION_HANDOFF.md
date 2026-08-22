@@ -2,12 +2,12 @@
 id: SESSION-HANDOFF
 type: memory
 state: ACTIVE
-checkpoint_id: CHK-20260822-F13-PARTIAL-EXTERNAL-VALIDATION
-active_issue: none
-active_research: none
+checkpoint_id: CHK-20260822-E14-PREREG
+active_issue: 32
+active_research: AMBENCH-E14
 last_completed_issue: 31
 last_completed_research: AMBENCH-F13
-last_decision: DEC-032
+last_decision: DEC-033
 created: 2026-08-22
 updated: 2026-08-22
 source_of_truth: github
@@ -15,76 +15,38 @@ source_of_truth: github
 
 # Session Handoff / 세션 인수인계
 
-## 1. Current State / 현재 상태
-- **Checkpoint:** `CHK-20260822-F13-PARTIAL-EXTERNAL-VALIDATION`
-- **Active Issue:** none
-- **Active research:** none
-- **Last completed:** Issue #31 `AMBENCH-F13 — PARTIAL_SAME_EXPERIMENT_EXTERNAL_VALIDATION_READY`
-- **Last decision:** `DEC-032`
-- **Project state:** `F13_COMPLETED__PARTIAL_SAME_EXPERIMENT_EXTERNAL_VALIDATION_READY`
+## Current State / 현재 상태
+- **Checkpoint:** `CHK-20260822-E14-PREREG`
+- **Active Issue:** #32
+- **Active research:** `AMBENCH-E14`
+- **Last completed:** #31 `AMBENCH-F13 — PARTIAL_SAME_EXPERIMENT_EXTERNAL_VALIDATION_READY`
+- **Last decision:** `DEC-033`
 
-## 2. Cost Authority / 비용 권위
-`COST-001` + `DEC-028`: any potentially billable action requires explicit user approval **before execution**. Spending first/reporting later is prohibited and is not retroactive authorization. Unknown billing = `HOLD_COST_APPROVAL`. Zero-cost routes may proceed only when zero incremental charge is established.
+## Cost Authority / 비용 권위
+`COST-001` + `DEC-028`: any potentially billable action requires explicit user approval **before execution**. Spending first/reporting later is prohibited. Unknown billing = `HOLD_COST_APPROVAL`. E14 may use only verified zero-incremental-cost public NIST access and already-provided transient compute.
 
-## 3. D12 Context / D12 맥락
-D12 found `ROBUST_CONDITION_SPECIFIC_REPEAT_VARIATION` in five BP4 temporal descriptors: sampling-robust `5/5`, common repeat-index structured `0/5`, condition-specific residual dominant `5/5`. This did not prove physical instability; it created an external-validation bottleneck.
+## E14 Frozen Experiment / E14 고정 실험
+Source:
+- NIST `mds2-2525` v1.3.1;
+- `Al_Spot_TDA_Results.csv` expected SHA-256 `3f0b6812f98535f5ffbb0e2fed31f084ad9a7f9cc393c04a43ed57f0bb14bf69`;
+- `Al_Spot_TDW_Results.csv` expected SHA-256 `06b280222eab5f82eb9dcfb0689f20a5011c16e115548cd94ce120e5a97b4f5c`.
 
-## 4. F13 Triage & Result / F13 선별·결과
-Post-D12 triage selected NIST A-AMB2022-01 `mds2-2525` as the strongest current external physical-validation asset.
+Primary frozen analysis:
+- use authoritative event clocks, time zero at laser start;
+- cap common laser-on window at `[0, 0.001982] s`;
+- adjacent TDW timestamps define intervals;
+- interval mean absorbed power `A_i`;
+- `ΔW_i = W(t_{i+1}) - W(t_i)`;
+- primary Spearman association with all circular shifts as serial null;
+- relative-absorption sensitivity if deterministically available;
+- descriptive-only transfer of `early_contrast`, `late_contrast`, `early_shape_slope`;
+- no lag/window tuning, smoothing, manual crop, FFT/wavelet/neural rescue, or high-capacity ML.
 
-Why:
-- materials/conditions independent of BP4 IN718;
-- time-resolved integrating-sphere absorptance;
-- simultaneous high-speed X-ray melt-pool measurement provenance;
-- aluminum stationary-spot branch exposes time-dependent absorption and time-dependent melt-pool width result components;
-- checksum-bearing public PDR components and reproducible data-bearing `v1.3.1` snapshot.
+Frozen gates:
+`HOLD_SOURCE_INTEGRITY`, `HOLD_SCHEMA_OR_ALIGNMENT`, `POSITIVE_EXTERNAL_PHYSICAL_DYNAMICS`, `DISCORDANT_EXTERNAL_DYNAMICS`, `NO_MATERIAL_DYNAMIC_ASSOCIATION`, `INCONCLUSIVE_EXTERNAL_DYNAMICS`.
 
-Release note:
-- PDR release history reports `v1.3.2` on 2026-01-07 as `added to additiveman collection`;
-- F13 freezes `v1.3.1` at component level unless a future experiment independently verifies unchanged relevant `v1.3.2` component bytes/checksums.
+## Contamination Boundary / 오염 경계
+Inherited F13 state: `NEW_EXTERNAL_OUTCOME_BLIND = NO — PUBLICATION_LEVEL_AGGREGATES_PREOBSERVED` because unrelated scanned-Al aggregate geometry values were exposed during triage. No stationary-spot PDR numerical time series had been analyzed when E14 preregistration was frozen.
 
-Repeat boundary:
-- 2024 benchmark publication reports repeated measurements, including three repeated scanned-Al measurements under identical conditions;
-- current public PDR component inventory does not establish >=3 separately identifiable repeat-level absorptance + geometry event pairs;
-- therefore direct repeat-level D12 replication is not authorized.
-
-**Frozen F13 gate:** `PARTIAL_SAME_EXPERIMENT_EXTERNAL_VALIDATION_READY`.
-
-Durable artifacts:
-- `research/AMBENCH-POST-D12-TRIAGE.md`
-- `research/AMBENCH-F13/README.md`
-- `research/AMBENCH-F13/AMENDMENT-01.md`
-- `research/AMBENCH-F13/RESULT.md`
-- `CLM-048..050`
-- `DEC-031..032`
-- `MEM-032`, `MEM-033`
-
-## 5. Outcome-Blindness Integrity / outcome-blindness 무결성
-During source triage, publication-level aggregate scanned-Al geometry values were exposed before F13 preregistration. F13 `AMENDMENT-01` corrects the state to:
-
-`NEW_EXTERNAL_OUTCOME_BLIND = NO — PUBLICATION_LEVEL_AGGREGATES_PREOBSERVED`.
-
-No numerical PDR result CSV was downloaded or analyzed. Those preobserved publication aggregates were not used in the F13 source-readiness gate and must not be used to tune a future experiment.
-
-## 6. Exact Next Eligible Work / 정확한 다음 eligible 작업
-No experiment is active.
-
-Next eligible step: separately preregister a **low-degree-of-freedom A-AMB aluminum stationary-spot time-resolved absorptance ↔ time-dependent melt-pool-width morphology experiment** as external physical validation.
-
-Before numerical PDR access, freeze:
-1. exact source version/checksums;
-2. time-zero/alignment;
-3. resampling;
-4. absorptance normalization;
-5. minimal D11/D12-derived descriptor transfer;
-6. geometry transform/endpoints;
-7. exact statistics/null/gate;
-8. treatment of publication-level aggregates already observed.
-
-Do not call this repeat-level D12 generalization. Do not add high-capacity ML.
-
-## 7. Persistent Holds / 지속 경계
-- same-BP4 confocal: `HOLD_PUBLICATION_NOT_VERIFIED`;
-- FLaMI comparable public dynamic-coupling dataset: exact PDR not verified;
-- AMB2025-07 predictive thermal↔geometry: HOLD pending public thermography publication;
-- any paid/possibly paid source or compute route: prior explicit user approval required.
+## Exact Next Action / 정확한 다음 행동
+Execute E14 exactly as `research/AMBENCH-E14/README.md`, using RAW-001 transient handling. Persist only provenance, checksums, schema/integrity summaries, derived statistics, claims, decision, and final checkpoint.
