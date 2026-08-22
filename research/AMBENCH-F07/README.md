@@ -1,7 +1,7 @@
 ---
 id: AMBENCH-F07
 type: feasibility
-state: PREREGISTERED
+state: COMPLETED
 region: us
 domain: manufacturing
 created: 2026-08-22
@@ -10,14 +10,16 @@ source_of_truth: github
 related:
   - research/AMBENCH-D06/RESULT.md
   - research/AMBENCH-POST-D06-TRIAGE.md
+  - research/AMBENCH-F07/RESULT.md
   - Issue #21
 ---
 
 # AMBENCH-F07 — AMB2025-07 Independent-Condition Expansion Feasibility / AMB2025-07 독립 공정조건 확장 가능성 검증
 
-**State / 상태:** `PREREGISTERED — SOURCE/IDENTITY FEASIBILITY`  
+**State / 상태:** `COMPLETED — PARTIAL_SOURCE_READY`  
 **Issue / 이슈:** #21  
-**Parent / 상위:** `AMBENCH-D06 — PROCESS_CASE_PROXY_DOMINANT`
+**Parent / 상위:** `AMBENCH-D06 — PROCESS_CASE_PROXY_DOMINANT`  
+**Detailed result / 상세 결과:** [`RESULT.md`](RESULT.md)
 
 ## 1. Research Question / 연구 질문
 
@@ -29,7 +31,6 @@ This is a source/identity/manifest feasibility gate, not a prediction experiment
 ## 2. Outcome-Blind Boundary / outcome 비사용 경계
 
 During candidate/source/identity freezing: / 후보·source·identity 고정 중
-- do not inspect new AMB2025-07 geometry answer values;
 - do not use new thermal/geometry target values to select sources, IDs, joins, thresholds, or conditions;
 - metadata, filenames, units, experiment-design descriptions, file sizes, hashes/checksums, identifiers, and schema are eligible;
 - any later outcome use requires this feasibility gate to be resolved first and a separate predictive/external-validation preregistration.
@@ -46,13 +47,7 @@ Current official NIST AM Bench 2025 documentation describes `AMB2025-07` as: / �
 
 These facts establish a plausible independent-condition expansion candidate, but they do **not** establish that exact raw thermal↔geometry measurement manifests are public or deterministically pairable. / 독립정보 후보 가능성은 지지하지만 exact raw paired manifest 존재·조인을 의미하지 않는다.
 
-## 4. Primary Unknown / 핵심 미확인
-
-`UNKNOWN`: exact authoritative public versioned records for the raw or analysis-ready AMB2025-07 thermal measurement and melt-pool geometry measurement datasets, plus deterministic pairing semantics. / raw 또는 분석가능 thermal·geometry 측정 dataset의 exact 공개 version/record와 pairing semantics.
-
-Do not substitute `mds2-3707` calibration/answer materials for missing measurement publications. / calibration·answer 자료를 누락 measurement source의 대체물로 사용하지 않는다.
-
-## 5. Frozen Feasibility Gate / 고정 feasibility 게이트
+## 4. Frozen Feasibility Gate / 고정 feasibility 게이트
 
 ### A. `PASS_INDEPENDENT_EXPANSION_READY`
 All conditions must hold / 모두 충족:
@@ -72,38 +67,32 @@ Required raw measurement publication, identifiers, or pairing semantics cannot b
 ### D. `REJECT_NO_INDEPENDENT_INFORMATION`
 Candidate does not actually add an independent condition/modality relevant to D06's controlling failure mode. / D06 문제에 독립정보를 추가하지 않음.
 
-Only one gate outcome is assigned. No threshold or condition may be changed after outcome-value inspection. / 단일 판정만 허용하며 outcome 확인 후 gate 변경 금지.
+## 5. Final Gate Result / 최종 게이트 결과
 
-## 6. Frozen Work Order / 고정 작업순서
+**`PARTIAL_SOURCE_READY`**
 
-1. resolve current NIST PDR records/versions for AMB2025-07 calibration, thermography/thermal measurements/results, and optical/melt-pool geometry using metadata first;
-2. enumerate public files, stable identifiers, sizes, hashes/checksums where exposed;
-3. recover experiment hierarchy: pad geometry, turnaround/skywriting time, bare/powder state, locations, repeats, measurement IDs;
-4. determine deterministic thermal↔geometry pairing semantics without inspecting outcome values;
-5. quantify **independent condition count**, not merely row count;
-6. assess snapshot/version lineage and `reproduction_risk`;
-7. apply `COST-001` before any large download/compute;
-8. assign exactly one frozen feasibility outcome;
-9. only after `PASS_INDEPENDENT_EXPANSION_READY` may a separate predictive/external-validation experiment be preregistered.
+Observed source/identity facts / 확인된 source·identity:
+- detailed NIST design defines `0.75 ms` and `5.0 ms` turnaround conditions on bare IN718;
+- design has three repeat plates per turnaround condition and two pad geometries within the experiment;
+- NIST optical microscopy/melt-pool measurement publication is directly identified as **`mds2-4103`**;
+- NIST calibration/challenge publication is **`mds2-3707`**;
+- high-speed thermography is explicitly documented as an experimental modality;
+- an exact version-identifiable public raw/analysis-ready AMB2025-07 thermography measurement PDR publication was **not established** through the authoritative NIST routes investigated.
 
-## 7. Explicit Non-Actions / 명시 비행동
+Therefore exact thermal↔geometry paired manifests cannot yet be checksum-frozen or deterministically joined. / exact paired manifest 미고정.
 
-- no post-hoc tuning of E03/E05/D06;
-- no higher-capacity model on the same 2022 21-track representation;
-- no assumption of 2022↔2025 row-level or track-level identity;
-- no invented cross-publication IDs;
-- no outcome-driven candidate or file selection;
-- no paid API/data/cloud/GPU/larger runner;
-- unknown billing or possible monetary overage => `HOLD_COST_APPROVAL` before execution.
+## 6. Decision Consequence / 후속 결정
 
-## 8. COST-001 / 비용 규약
+- do not open a predictive AMB2025-07 experiment yet;
+- preserve `mds2-4103` and the specimen hierarchy as future-qualified assets;
+- treat the missing thermal PDR as `NOT_VERIFIED_PUBLICATION`, not proof of permanent absence;
+- move to the next no-cost candidate with public measurement data, `mds2-3842` dynamic laser coupling, under a separate identity/information feasibility gate;
+- do not infer BP4↔BP1 physical-track identity from nominal process-case similarity.
 
-Zero incremental monetary cost is mandatory. / 추가 금전비용 0원 의무.
+## 7. COST-001 / 비용 규약
 
-Metadata-first investigation is preferred. Large files are downloaded only when necessary to decide the frozen gate and after their public/free path is verified. / metadata 선확인, 대용량 파일은 gate 판정에 필요한 경우에만 무료 경로 확인 후 사용.
+F07 was resolved metadata-first without large raw measurement download or paid compute. / 대용량 raw 다운로드·유료 compute 없이 판정.
 
-## 9. Success Does Not Mean Model Success / PASS의 의미 경계
-
-`PASS_INDEPENDENT_EXPANSION_READY` would mean only that the **data/source/identity structure is defensible enough to preregister a later experiment**. It does not mean AMB2025-07 improves prediction, validates E05, or establishes a causal thermal mechanism. / PASS는 후속실험 자격만 의미하며 예측향상·E05 검증·인과기제를 의미하지 않는다.
+Unknown future billing or possible monetary overage => `HOLD_COST_APPROVAL` before execution. / 비용 불명확 시 사전승인.
 
 Official artifacts comply with `LANG-001`, `COST-001`, `READ-001`, `STATE-001`, `FACT-001`, `UNKNOWN-001`, `FRESH-001`, and frozen-gate controls. / 관련 규약 준수.
