@@ -2,12 +2,12 @@
 id: SESSION-HANDOFF
 type: memory
 state: ACTIVE
-checkpoint_id: CHK-20260822-F08-PARTIAL
-active_issue: none
-active_research: none
+checkpoint_id: CHK-20260822-E09-PREREG
+active_issue: 24
+active_research: AMBENCH-E09
 last_completed_issue: 22
 last_completed_research: AMBENCH-F08
-last_decision: DEC-020
+last_decision: DEC-021
 created: 2026-08-22
 updated: 2026-08-22
 source_of_truth: github
@@ -24,133 +24,121 @@ tags:
 
 ## 1. Current State / 현재 상태
 
-- **Checkpoint:** `CHK-20260822-F08-PARTIAL`
-- **Active Issue / 활성 Issue:** `none`
-- **Active research / 활성 연구:** `none`
-- **Last completed / 최근 완료:** Issue #22 `AMBENCH-F08 — PARTIAL_CASE_LEVEL_READY`
-- **Last decision / 최근 결정:** `DEC-020`
-- **Project state / 프로젝트 상태:** `READY_FOR_SEPARATE_UNPAIRED_RELATIONSHIP_PREREGISTRATION`
-- **Cost boundary / 비용경계:** `COST-001 — zero incremental monetary cost`; paid/maybe-paid execution requires explicit user approval first.
+- **Checkpoint:** `CHK-20260822-E09-PREREG`
+- **Active Issue:** #24 `AMBENCH-E09`
+- **Active research:** `AMBENCH-E09`
+- **Last completed:** #22 `AMBENCH-F08 — PARTIAL_CASE_LEVEL_READY`
+- **Last direction decision:** `DEC-021`
+- **Project state:** `E09_PREREGISTERED__COUPLING_OUTCOME_NOT_ACCESSED`
+- **Cost boundary:** `COST-001 — zero incremental monetary cost`.
 
-Recent chain / 최근 계보:
-- #13 `AMBENCH-E03` → `NO_MATERIAL_GAIN`
-- #15 `AMBENCH-F04` → `PARTIAL`
-- #17 `AMBENCH-E05` → `MIXED`
-- #19 `AMBENCH-D06` → `PROCESS_CASE_PROXY_DOMINANT`
-- #21 `AMBENCH-F07` → `PARTIAL_SOURCE_READY`
-- #22 `AMBENCH-F08` → **`PARTIAL_CASE_LEVEL_READY`**
+## 2. What Was Frozen / 고정된 설계
 
-## 2. F08 Final Evidence / F08 최종 근거
+E09 is an **unpaired nominal-case-family aggregate ordering test**. / 비paired nominal case-family 집계 ordering 검증.
 
-PDR `mds2-3842` is version-identifiable and reproducible. / version·snapshot 재현 가능.
+Scientific question / 과학적 질문:
+- Does BP4 coupling-informed process-energy ordering correspond to BP1 thermal-response ordering better than BP4 process-only VED ordering? / coupling 정보가 process-only보다 BP1 thermal ordering과 더 잘 대응하는가?
 
-### Version / 버전
-- current = `1.0.3`;
-- official version-specific manifests recovered for `1.0.0`–`1.0.3`;
-- each tested version retains the same 3 component paths/sizes/checksums;
-- current exact-version manifest ID = `ark:/88434/mds2-3842/pdr:v/1.0.3`.
+Cross-BP pairing remains prohibited. / BP1↔BP4 track/repeat pairing 금지.
 
-### Components / component
-- `3842_README.txt` — `7,469 B` — SHA-256 `50d24d8dc85cd9075c774c3363c5dbbf1a0a769c4349979d82c76fa6b9b906be` — byte verified;
-- `dynamic_laser_coupling_data.zip` — `93,566 B` — SHA-256 `8c4278eb621c1638465e13e87339fe0daba1dcae138f24b9c1d86c186cd74f66` — PDR manifest only, **not downloaded**;
-- `summary_of_data_files.csv` — `496 B` — SHA-256 `abf339b8a2b36b69bc11a31e4600a3cc845dd4f705b6a96a7a543e990824f3b4` — byte verified.
+### Primary predictor
+- `X_process = official BP4 VEDσ/VED0`.
+- `C_track` = median BP4 coupling for normalized record time `0.20 <= τ <= 0.80`, no smoothing/manual crop.
+- `C_case` = median across unique authoritative BP4 files.
+- `X_coupled = X_process × (C_case/C_case0)`.
 
-### Measurement semantics / 측정의미
-- `P_lc = 1 - P_rho/P_app`;
-- unitless coupling, nominal range `0–1`;
-- calibrated integrating hemisphere;
-- `100 kHz` acquisition;
-- first data column = time from track initiation `[ms]`; second = instantaneous coupling;
-- coupling is an approximation of absorption, not guaranteed exact absorbed energy.
+### Primary BP1 endpoint
+- case median of E05 `hot_pixel_time_integral_1298C_px_s`.
+- sensitivity: `any_hot_duration_1298C_s`.
 
-**Distinct modality:** YES — reflected-power-derived coupling is physically distinct from thermography. / 반사전력 기반 별도 물리량.
+### Secondary geometry
+- width and depth both retained; track-level nested optical cross-sections are first aggregated to track mean, then case median.
 
-## 3. Repeat & Provenance Conflicts / 반복·출처 충돌
+### Statistics
+- `rho_process = Spearman(X_process,Y_thermal)`;
+- `rho_coupled = Spearman(X_coupled,Y_thermal)`;
+- `delta_rho_thermal = rho_coupled-rho_process`.
+- axis contrasts: spot `1.1−1.2`, speed `2.2−2.1`, power `3.1−3.2`.
+- exact case-label permutation reference is reported only as exploratory calibration, not as randomized causal inference.
 
-### Case `3.2` repeat filename
-`summary_of_data_files.csv` records `3_2_2sv.txt` for both Line 2 and Line 3. / Line 2·3 동일 filename.
+### Full positive gate
+`CROSS_MODAL_ORDERING_SIGNAL` requires:
+1. 7 analyzable case families;
+2. `rho_coupled >= 0.70`;
+3. `delta_rho_thermal >= +0.20`;
+4. thermal axis sign concordance `3/3`;
+5. no integrity failure.
 
-- Do not infer/correct `3_2_3sv.txt`.
-- exact third-repeat identity = `CONFLICT / UNKNOWN`.
-- tested 1.0.0–1.0.3 component lineage does not resolve it.
+Other frozen outcomes:
+- `PARTIAL_CROSS_MODAL_SIGNAL`;
+- `PROCESS_ONLY_OR_REDUNDANT_AT_CASE_LEVEL`;
+- `NO_COHERENT_CROSS_MODAL_RELATIONSHIP`;
+- `MIXED_ENDPOINT_SPECIFIC`;
+- `HOLD_DATA_INTEGRITY`.
 
-### Surface roughness
-- current `3842_README.txt`: `Ra = 0.15 µm`;
-- 2022 AMB2022-03 challenge document: `Ra = 5.8 µm` for dynamic coupling.
+Detailed: `research/AMBENCH-E09/README.md`; Issue #24; `registry/DEC-021.md`.
 
-State = `ACTIVE_SOURCE_CONFLICT — CAUSE UNKNOWN`. / 조용한 화해·평균 금지.
+## 3. Outcome-Blindness Boundary / outcome 비사용 경계
 
-## 4. BP1 ↔ BP4 Identity / BP1↔BP4 식별자 경계
+- `NEW_MODALITY_OUTCOME_BLIND = YES`: BP4 `mds2-3842` coupling values have not been accessed for E09.
+- `FULL_OUTCOME_BLIND = NO — BP1_PREOBSERVED`: BP1 outcomes were previously observed in E03/E05/D06. Do not claim otherwise.
+- Primary BP1 endpoint is frozen at the NIST-defined `1298 °C` melt-midpoint based pre-existing E05 feature; geometry keeps width/depth symmetrically.
 
-Official NIST AMB2022-03 design separates:
-- `BP1` = bare plate #1, 3×7 single tracks, in-situ thermography;
-- `BP4` = bare plate #4, 3×7 single tracks, in-situ dynamic laser coupling.
+## 4. Identity & Provenance Constraints / 식별자·출처 제약
 
-Therefore:
-- physical specimen identity = `NO`;
-- exact track identity = `NO / NOT_AUTHORIZED`;
-- cross-BP repeat pairing = `NOT ESTABLISHED`.
+- BP1 and BP4 are separate bare plates.
+- matching case labels preserve a homologous perturbation family, not identical process conditions.
+- NIST process tables: BP1 spot family `67/49/82 µm`; BP4 `110/76/131 µm`; power/speed perturbation pattern otherwise corresponds nominally.
+- case `3.2`: F08 summary records the Line 2 filename for both Line 2 and Line 3; do not infer a missing filename.
+- after ZIP download, perform **filename-only** inventory before reading coupling numbers.
+- if direct archive evidence resolves three unique `3.2` files, record resolution; otherwise use only unique verified files and run mandatory sensitivity excluding `3.2`.
+- fewer than 6 analyzable case families => `HOLD_DATA_INTEGRITY`.
+- surface roughness conflict (`0.15 µm` current README vs `5.8 µm` 2022 challenge document) remains unresolved and is excluded from harmonized covariates.
 
-Matching case labels do not mean identical process conditions. / 동일 case label ≠ 동일 조건.
-- BP1 baseline/speed/power family D4σ = `67 µm`; BP4 = `110 µm`;
-- BP1 spot variants = `49 / 82 µm`; BP4 = `76 / 131 µm`;
-- scan/setup context also differs.
+## 5. Exact Next Action / 정확한 다음 행동
 
-Supported relationship level: **`UNPAIRED_NOMINAL_CASE_FAMILY / AGGREGATE_ONLY`** with explicit process-parameter vectors. / actual parameter를 보존한 비paired case-family/aggregate 관계만 허용.
+Scientific execution has not started. / 아직 값 기반 실행 전.
 
-## 5. Frozen Gate / 고정 gate
+Next:
+1. live-state reconciliation against Issue #24 and this checkpoint;
+2. reverify frozen NIST PDR versions/checksums;
+3. confirm `COST-001` no-cost path;
+4. download `mds2-3842` ZIP (~94 kB by F08 manifest);
+5. filename-only `3.2` preflight;
+6. frozen coupling feature extraction;
+7. frozen BP1 endpoint recovery;
+8. case-level statistics + axis concordance + permutation reference;
+9. one frozen gate only;
+10. `RESULT.md` + Claim/Decision/Issue/STATUS/HANDOFF/MEMORY writeback.
 
-- `PASS_DISTINCT_MODALITY_READY` — not met;
-- **`PARTIAL_CASE_LEVEL_READY` — met**;
-- `HOLD_IDENTITY_OR_SEMANTIC_GAP` — not selected;
-- `REJECT_REDUNDANT_INFORMATION` — false.
+No feature, target, threshold, window, or gate may be changed after BP4 coupling outcome access inside E09. / outcome 접근 후 사후 변경 금지.
 
-Records: Runs `32544186783`, `32544237853`; `research/AMBENCH-F08/RESULT.md`; `CLM-030..032`; `DEC-020`; closed Issue #22; closed unmerged execution PR #23.
+## 6. Persistent Holds / 지속 HOLD
 
-## 6. Exact Next Action / 정확한 다음 행동
-
-**No controlled experiment is active or automatically authorized. / 활성·자동승인 실험 없음.**
-
-If the project continues on this path, first create a separate **outcome-blind unpaired relationship preregistration**. Before coupling/thermal/optical outcome access it must freeze:
-1. a scientific question compatible with separate BP1/BP4 specimens;
-2. actual BP1/BP4 process parameter vectors and the limited nominal case-family correspondence;
-3. no repeat-level pairing and no assumed exact `3.2` third-repeat identity;
-4. treatment of roughness conflict — default exclusion from harmonized covariates unless independently resolved;
-5. aggregation level, estimator, domain-shift handling, uncertainty, null interpretation and non-causal boundary;
-6. `COST-001` check before downloading outcome-bearing data;
-7. a new Issue only after the above gate is frozen.
-
-Do not open this experiment merely because F08 completed. / F08 완료만으로 후속실험 개시 금지.
-
-## 7. Persistent Holds / 지속 HOLD
-
-- KPX localized bus mapping: `HOLD`.
-- generic EU facility-level production denominator: `HOLD`.
-- EEA steel-mercury exact legacy reproduction: `HOLD_LEGACY_VERSION_DIVERGENCE`.
-- historical 2022 repeat-level TTAM/TSCR/TLCR exact reproduction: `PARTIAL`.
-- AMB2025-07 predictive thermal↔geometry experiment: `HOLD` pending public version-identifiable thermography publication.
 - BP1↔BP4 direct track/repeat join: `NOT_AUTHORIZED`.
-- dynamic-coupling case `3.2` third-repeat identity: `CONFLICT / UNKNOWN`.
-- harmonized dynamic-coupling surface roughness: `ACTIVE_SOURCE_CONFLICT`.
+- BP4 `3.2` third-repeat identity: `CONFLICT / UNKNOWN` pending direct archive evidence.
+- harmonized BP4 surface roughness: `ACTIVE_SOURCE_CONFLICT`.
+- AMB2025-07 thermal↔geometry prediction: `HOLD` pending public version-identifiable thermography publication.
 
-## 8. Mandatory Read Set Next Session / 다음 세션 의무 읽기
+## 7. Mandatory Read Set Next Session / 다음 세션 의무 읽기
 
-0. current live open/closed Issue state
+0. live open Issue state — expect #24
 1. `README.md`
 2. `STATUS.md`
 3. `context/PROJECT_MEMORY.md`
 4. this file
-5. `research/AMBENCH-D06/RESULT.md`
-6. `research/AMBENCH-F07/RESULT.md`
-7. `research/AMBENCH-F08/README.md`
-8. `research/AMBENCH-F08/RESULT.md`
-9. closed Issue #22
-10. `registry/CLAIM_LEDGER.md`
-11. `registry/DECISION_LOG.md`
-12. `docs/HALLUCINATION_CONTROL_PROTOCOL.md`
-13. `docs/GPT_GITHUB_SYNC_PROTOCOL.md`
-14. `docs/NO_COST_POLICY.md`
+5. `context/MEM-024-AMBENCH-E09.md`
+6. `research/AMBENCH-E09/README.md`
+7. Issue #24
+8. `registry/DEC-021.md`
+9. `research/AMBENCH-F08/RESULT.md`
+10. `research/AMBENCH-F02/README.md`
+11. `research/AMBENCH-E05/RESULT.md`
+12. `research/AMBENCH-D06/RESULT.md`
+13. `registry/CLAIM_LEDGER.md`
+14. `registry/DECISION_LOG.md`
+15. governance/cost files
 
-Then apply `STATE-001`; do not continue from conversation memory alone. / 이후 상태정합 후 진행.
+Then apply `STATE-001`; do not continue from chat memory alone. / 상태정합 후 진행.
 
-Official artifacts comply with `LANG-001`, `COST-001`, `READ-001`, `STATE-001`, `CHECKPOINT-001`, `FACT-001`, `UNKNOWN-001`, `CONFLICT-001`, `FRESH-001`, `MEMORY-001`, and `WRITEBACK-001`. / 관련 규약 준수.
+Official artifacts comply with `LANG-001`, `COST-001`, `READ-001`, `STATE-001`, `CHECKPOINT-001`, `FACT-001`, `UNKNOWN-001`, `CONFLICT-001`, `MEMORY-001`, and `WRITEBACK-001`. / 관련 규약 준수.
