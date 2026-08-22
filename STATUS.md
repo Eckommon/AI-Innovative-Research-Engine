@@ -1,19 +1,19 @@
 ---
-checkpoint_id: CHK-20260822-F10-PREREG
-active_issue: 26
-active_research: AMBENCH-F10
-last_completed_issue: 24
-last_completed_research: AMBENCH-E09
-last_decision: DEC-024
+checkpoint_id: CHK-20260822-F10-HOLD
+active_issue: none
+active_research: none
+last_completed_issue: 26
+last_completed_research: AMBENCH-F10
+last_decision: DEC-025
 updated: 2026-08-22
 ---
 
 # Project Status / 프로젝트 상태
 
 **Project / 프로젝트:** AI-Innovative-Research-Engine / AI 기반 혁신 탐색 연구 엔진  
-**Latest verified baseline label / 최신 검증 baseline:** `v0.10-same-bp4-confocal-feasibility`  
-**State / 상태:** `F10_PREREGISTERED__CONFOCAL_OUTCOME_NOT_ACCESSED`  
-**Active Work Queue / 활성 작업 큐:** Issue #26 `AMBENCH-F10`
+**Latest verified baseline label / 최신 검증 baseline:** `v0.11-same-bp4-confocal-publication-hold`  
+**State / 상태:** `F10_COMPLETED__HOLD_PUBLICATION_NOT_VERIFIED`  
+**Active Work Queue / 활성 작업 큐:** `none` — next eligible fallback requires a new preregistration. / 다음 fallback은 새 사전등록 필요.
 
 ## 1. Mandatory Governance / 필수 거버넌스
 
@@ -33,79 +33,59 @@ updated: 2026-08-22
 - #21 `AMBENCH-F07` — `PARTIAL_SOURCE_READY`.
 - #22 `AMBENCH-F08` — `PARTIAL_CASE_LEVEL_READY`.
 - #24 `AMBENCH-E09` — `INCONCLUSIVE_CASE_LEVEL`.
+- #26 `AMBENCH-F10` — **`HOLD_PUBLICATION_NOT_VERIFIED`**.
 
-## 3. Post-E09 Triage / E09 이후 선별
+## 3. F10 Final Result / F10 최종 결과
 
-Triage artifact: `research/AMBENCH-POST-E09-TRIAGE.md`.
+Result: `research/AMBENCH-F10/RESULT.md`.  
+Claims: `CLM-038`, `CLM-039`.  
+Decision: `DEC-025`.  
+Memory: `context/MEM-028-AMBENCH-F10.md`.
 
-Decision question / 질문: which next relationship most directly breaks both D06 case-proxy dominance and E09 rank-only/cross-specimen limitations?
+### Verified / 검증됨
+- Official NIST AMB2022-03 Version 1.01 identifies `AMB2022-718-SH1-BP4` as the dynamic-coupling single-track plate.
+- The same document states that BP4/coupling specimens were measured ex situ using laser scanning confocal microscopy for complete 3D surface profiles.
+- The intended confocal information includes steady-state height profiles, track-end mass accumulation/loss, chevron-feature shape, and related 3D topography.
+- Therefore same-BP4 distinct ex-situ topography measurement provenance is verified.
 
-Selected highest-leverage candidate / 선택 후보:
-**`BP4 dynamic-coupling temporal dynamics → same-BP4 laser-scanning-confocal 3D topography`**.
+### Not established / 미확립
+- exact public BP4 confocal/topography PDR identifier;
+- exact version/manifest;
+- component paths/sizes/checksums;
+- deterministic mapping to the 21 BP4 coupling tracks/repeats.
 
-Why selected / 선정 이유:
-1. preserves time-resolved coupling instead of reducing it to a case scalar/rank;
-2. can test repeat-level information beyond process-case labels;
-3. uses the same BP4 specimen if source identity is established, removing E09's BP1↔BP4 separate-specimen limitation;
-4. links an in-situ distinct modality to an independent ex-situ physical consequence.
+Current NIST Direct AM Bench Data Links list AMB2022-03 PDR publications `mds2-2716`, `mds2-2718`, `mds2-2775`, and `mds2-3842`, but no separately identified BP4 confocal/topography publication was established in F10 targeted searches.
 
-Triage heuristic totals / 휴리스틱 총점:
-- cross-BP magnitude-sensitive aggregate: `56/100` — DEFER;
-- within-BP4 temporal-information diagnostic only: `86/100` — FALLBACK;
-- same-BP4 coupling dynamics ↔ confocal topography: `93/100` — SELECT, SOURCE GATE FIRST;
-- independent-condition expansion: `72/100` — HOLD/SECONDARY.
-
-The score is a decision heuristic, not empirical validation. / 점수는 의사결정 휴리스틱이며 실증 검증점수가 아니다.
-
-## 4. Active F10 / 활성 F10
-
-**Issue:** #26 `AMBENCH-F10: BP4 coupling ↔ same-BP4 confocal topography source/identity feasibility`.
-
-Official NIST AMB2022-03 documentation identifies `AMB2022-718-SH1-BP4` as the 3×7 single-track dynamic-coupling plate and states that coupling specimens were measured ex situ using laser scanning confocal microscopy for complete 3D surface profiles. / 공식 문서상 BP4 coupling specimen의 confocal 측정은 확인됨.
-
-However, the exact current public version-identifiable BP4 confocal/topography publication/manifest and deterministic 21-track mapping have **not yet been established**. This is `NOT_YET_VERIFIED_PUBLICATION`, not proof of permanent absence. / 현 공개 publication·manifest·track map은 아직 미확립이며 영구부재 의미가 아님.
-
-Claims:
-- `CLM-036` — official record establishes BP4 confocal measurement and 3D topography intent;
-- `CLM-037` — exact public version-identifiable confocal publication/track map not yet established.
-
-Decision: `DEC-024`.
-Memory: `MEM-027`.
+**Important:** `NOT_YET_VERIFIED_PUBLICATION` is not proof of permanent absence. / 영구 부재 증명이 아님.
 
 ### Outcome boundary / outcome 경계
-- `NEW_CONFOCAL_OUTCOME_BLIND = YES` — no numerical confocal/topography outcomes accessed.
-- `FULL_OUTCOME_BLIND = NO — COUPLING_PREOBSERVED` — E09 already observed BP4 coupling values.
-- F10 may inspect metadata, manifests, file inventories, checksums, README/data dictionaries, specimen IDs, track IDs, variable names/units.
-- F10 must not inspect or calculate numerical confocal height/topography outcomes.
+- `NEW_CONFOCAL_OUTCOME_BLIND = YES` remained intact.
+- no numerical confocal/topography outcomes were accessed.
+- no BP1 optical substitution.
+- no inferred track pairing from case labels.
+- no paid route or confocal raw-data download.
 
-### Frozen F10 gates / 고정 gate
-1. `PASS_SAME_BP4_TRACK_LEVEL_READY`
-2. `PARTIAL_SAME_BP4_CASE_LEVEL_READY`
-3. `HOLD_PUBLICATION_NOT_VERIFIED`
-4. `HOLD_IDENTITY_OR_SEMANTIC_GAP`
-5. `REJECT_NOT_SAME_BP4_OR_NOT_DISTINCT`
+### Frozen gate / 고정 gate
+**`HOLD_PUBLICATION_NOT_VERIFIED`**.
 
-## 5. Exact Next Action / 정확한 다음 행동
+`PASS_SAME_BP4_TRACK_LEVEL_READY` and `PARTIAL_SAME_BP4_CASE_LEVEL_READY` are not satisfied because the exact public confocal measurement publication/component set is not established. `REJECT_NOT_SAME_BP4_OR_NOT_DISTINCT` is also not satisfied because the official measurement provenance supports the scientific branch.
 
-Execute F10 as a **metadata-first source/identity feasibility** only:
-1. search authoritative NIST PDR/AM Bench sources for the BP4 confocal/topography publication;
-2. recover exact version/manifest if found;
-3. inspect file inventory/checksums without numerical outcome access;
-4. establish specimen and maximum defensible track/repeat identity level;
-5. document measurement-variable semantics and units;
-6. apply exactly one frozen F10 gate;
-7. write `RESULT.md`, claim/decision records, close/continue Issue #26, synchronize checkpoint.
+## 4. Exact Next Action / 정확한 다음 행동
 
-No predictive or association model is authorized by this checkpoint. / 이 checkpoint는 예측·상관 모델을 승인하지 않는다.
+No experiment is currently active. / 현재 활성 실험 없음.
 
-## 6. Fallback / 대안
+The immediate eligible fallback is a **new separately preregistered within-BP4 dynamic-coupling temporal-information diagnostic** that tests whether the 21 coupling waveforms contain repeat-level information beyond process case through:
+1. repeat-vs-case variance decomposition;
+2. frozen temporal descriptors;
+3. temporal effective dimension/PCA;
+4. process association;
+5. no physical-outcome utility claim.
 
-If F10 cannot qualify the same-BP4 confocal source:
-- do not substitute BP1 optical data;
-- do not infer topography values from papers/figures;
-- preferred fallback is a separately preregistered **within-BP4 coupling temporal-information diagnostic** testing repeat-vs-case variance, temporal effective dimension, and process association without claiming physical-outcome utility.
+Do not automatically execute this fallback without a new preregistration/work-queue activation. / 새 사전등록·큐 활성화 없이 자동 실행 금지.
 
-## 7. Persistent Holds / 지속 HOLD
+The same-BP4 confocal branch remains HOLD and may be reopened only if an exact authoritative public publication becomes verifiable.
+
+## 5. Persistent Holds / 지속 HOLD
 
 - KPX localized bus mapping — `HOLD`.
 - generic EU facility-level production denominator — `HOLD`.
@@ -114,7 +94,8 @@ If F10 cannot qualify the same-BP4 confocal source:
 - AMB2025-07 predictive thermal↔geometry experiment — `HOLD` pending version-identifiable public thermography publication.
 - BP1↔BP4 direct track/repeat join — `NOT_AUTHORIZED`.
 - harmonized BP4 surface roughness — `ACTIVE_SOURCE_CONFLICT`.
+- BP4 same-specimen confocal analysis — `HOLD_PUBLICATION_NOT_VERIFIED`.
 
-## 8. Required Session Start / 세션 시작 의무
+## 6. Required Session Start / 세션 시작 의무
 
-`live GitHub state → README → STATUS → PROJECT_MEMORY/operational memory → SESSION_HANDOFF → research/AMBENCH-POST-E09-TRIAGE.md → research/AMBENCH-F10/README.md → Issue #26 → CLM-036..037 → DEC-024 → COST-001/RAW-001 → STATE-001 reconciliation`
+`live GitHub state → README → STATUS → PROJECT_MEMORY/operational memory → SESSION_HANDOFF → research/AMBENCH-F10/RESULT.md → closed Issue #26 → CLM-038..039 → DEC-025 → COST-001/RAW-001 → STATE-001 reconciliation`
