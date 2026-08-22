@@ -2,12 +2,12 @@
 id: SESSION-HANDOFF
 type: memory
 state: ACTIVE
-checkpoint_id: CHK-20260822-F17-PARTIAL-X16-SOURCE-READY
+checkpoint_id: CHK-20260822-F18-PARTIAL-MANAGEABLE-X16-ROUTE
 active_issue: none
 active_research: none
-last_completed_issue: 35
-last_completed_research: AMBENCH-F17
-last_decision: DEC-040
+last_completed_issue: 36
+last_completed_research: AMBENCH-F18
+last_decision: DEC-042
 created: 2026-08-22
 updated: 2026-08-22
 source_of_truth: github
@@ -16,11 +16,11 @@ source_of_truth: github
 # Session Handoff / 세션 인수인계
 
 ## Current State / 현재 상태
-- Checkpoint: `CHK-20260822-F17-PARTIAL-X16-SOURCE-READY`
+- Checkpoint: `CHK-20260822-F18-PARTIAL-MANAGEABLE-X16-ROUTE`
 - Active Issue: none
 - Active research: none
-- Last completed: #35 `AMBENCH-F17 — PARTIAL_X16_SOURCE_READY`
-- Last decision: `DEC-040`
+- Last completed: #36 `AMBENCH-F18 — PARTIAL_MANAGEABLE_X16_ROUTE_READY`
+- Last decision: `DEC-042`
 
 ## Cost Authority / 비용 권위
 `COST-001` + `DEC-028`: any potentially billable action requires explicit user approval before execution. Spending first/reporting later is prohibited. Unknown billing = `HOLD_COST_APPROVAL`.
@@ -28,48 +28,48 @@ source_of_truth: github
 ## Preserved branches / 보존 branch
 - E14 remains frozen `HOLD_SOURCE_INTEGRITY`; no redesign.
 - F16 remains `PARTIAL_PUBLIC_ENDPOINT_READY`; no numerical `mds2-3761` modeling.
+- F17 remains `PARTIAL_X16_SOURCE_READY` with current XCT identity `mds2-2514` and same-build X16 in-situ identity `mds2-2309`.
 
-## F17 Result / F17 결과
-Frozen final gate: **`PARTIAL_X16_SOURCE_READY`**.
+## F18 Result / F18 결과
+Frozen final gate: **`PARTIAL_MANAGEABLE_X16_ROUTE_READY`**.
 
-Qualified pair:
-- in-situ: `ark:/88434/mds2-2309`;
-- current XCT identity: `ark:/88434/mds2-2514`;
-- same July 3, 2019 AMMT Overhang X16 build;
-- same sixteen technical replicate parts;
-- deterministic metadata-level labels `1-1`…`4-4` / `Part1_1`…`Part4_4`.
+Frozen representation before numerical outcome access:
+- XCT: `OverhangX16_ImageHistograms.xlsx` + `.sha256` from `mds2-2514`;
+- in-situ: `DAQ_L101-L125.zip` + `.sha256` and `XYPT_L101-L125.zip` + `.sha256` from `mds2-2309`;
+- no MPM, layer-camera, additional layer groups, or full-build source.
 
-Integrity:
-- in-situ Data.gov distribution has systematic source + `.sha256` sidecars across DAQ, MPM, XYPT, User Notes, etc.;
-- XCT Data.gov distribution has systematic source + `.sha256` sidecars for Data Description, histogram workbook, each STL and TIFF;
-- authoritative in-situ User Notes PDF was retrieved and confirms 16 nominally identical parts, 250 layers, 25-layer-group source organization, and relevant missing-frame/layer-image caveats.
+Why this route is manageable:
+- XCT workbook ~193 KB;
+- selected DAQ group ~482 MB;
+- selected XYPT group ~158 MB;
+- selected compressed in-situ source remains below the frozen 1 GiB budget;
+- DAQ is actual Galvo X/Y + LTZ + laser-power reference at 100 kHz;
+- XYPT is commanded scan path/power at 10 us resolution.
 
-Source conflict:
-- NIST AMMT summary currently points X16 XCT to `mds2-2309`;
-- current Data.gov XCT dataset identity = `mds2-2514`, explicitly describing post-build XCT of the sixteen parts from in-situ `mds2-2309`;
-- downstream current XCT identity = `mds2-2514`;
-- preserve AMMT-page pointer conflict, cause unknown.
+What remains unresolved:
+1. actual workbook/checksum bytes not retrieved;
+2. selected DAQ/XYPT checksum-sidecar bytes not retrieved;
+3. local checksum/archive inventory not reproduced;
+4. workbook sheet/header and deterministic 16-part mapping not inspected;
+5. exact numeric X/Y part-boundary rule for DAQ segmentation not frozen/verified.
 
-Remaining gaps:
-- small authoritative XCT source/checksum bytes were not retrievable through current zero-cost execution paths;
-- `OverhangX16_ImageHistograms.xlsx` non-numerical sheet/column semantics remain unverified;
-- practical low-volume in-situ process representation remains unfrozen; raw MPM/DAQ are large.
+Outcome state:
+`NEW_X16_NUMERICAL_OUTCOME_BLIND = YES` remains intact. No XCT numerical cells or in-situ process values were analyzed and no process↔XCT statistic/model was computed.
 
 Durable artifacts:
-- `research/AMBENCH-F17/README.md`
-- `research/AMBENCH-F17/RESULT.md`
-- `CLM-059..062`
-- `DEC-039..040`
-- `MEM-038-AMBENCH-F17`
+- `research/AMBENCH-F18/README.md`
+- `research/AMBENCH-F18/RESULT.md`
+- `CLM-063..065`
+- `DEC-041..042`
+- `MEM-039-AMBENCH-F18`
 
 ## Exact Next Eligible Work / 정확한 다음 eligible 작업
 No experiment is active.
 
-Next: separately preregister an **X16 manageable-representation feasibility gate**. Before numerical outcome access, qualify:
-1. exact small XCT summary source (`OverhangX16_ImageHistograms.xlsx`) checksum-verifiable retrieval and non-numerical schema;
-2. a manageable zero-cost in-situ representation or frozen subset/aggregation strategy;
-3. exact selected source bytes and deterministic part pairing.
+Do not start E19 yet. Resolve only:
+1. authoritative zero-cost workbook byte/checksum/schema qualification;
+2. deterministic authoritative 16-part coordinate segmentation for frozen DAQ/XYPT L101–125.
 
-Only after that passes may a low-degree-of-freedom process-signature ↔ XCT-summary experiment be preregistered. The 16 parts are within-build technical replicates, not independent process conditions. No high-capacity ML.
+Only after both pass may a separately preregistered low-degree-of-freedom 16-part technical-replicate process-signature ↔ XCT-summary experiment begin. Do not treat the 16 parts as independent process conditions. No high-capacity ML.
 
-Any paid/potentially paid action requires prior explicit user approval.
+Any paid/potentially paid route requires prior explicit user approval.
