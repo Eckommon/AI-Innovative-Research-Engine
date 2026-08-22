@@ -1,0 +1,228 @@
+name: AMBENCH-D06 Outcome-Blind Representation Diagnostic
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'research/AMBENCH-D06/TRIGGER.md'
+      - '.github/workflows/ambench-d06-pr.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install diagnostic dependencies
+        run: python -m pip install --disable-pip-version-check h5py numpy
+
+      - name: Download and checksum-verify frozen thermography only
+        shell: bash
+        run: |
+          set -euxo pipefail
+          mkdir -p work/raw work/logs
+          URL='https://data.nist.gov/od/ds/ark:/88434/mds2-2716/_v/1.3.1/Thermography/AMB2022-03-718-AMMT-StaringCamera_Signal.h5'
+          curl -fL --retry 3 --retry-delay 2 "$URL" -o work/raw/thermography.h5
+          ACTUAL=$(sha256sum work/raw/thermography.h5 | awk '{print $1}')
+          EXPECTED='f6fe21ec911707f72e7efda2932c77eae2b75d84765848878fe5beb6b728cd43'
+          echo "bytes=$(stat -c%s work/raw/thermography.h5)" | tee work/logs/integrity.txt
+          echo "actual_sha256=$ACTUAL" | tee -a work/logs/integrity.txt
+          echo "expected_sha256=$EXPECTED" | tee -a work/logs/integrity.txt
+          test "$ACTUAL" = "$EXPECTED"
+
+      - name: Reproduce exact E05 features and execute frozen outcome-blind diagnostics
+        shell: bash
+        run: |
+          python - <<'PY' | tee work/logs/d06.txt
+          import json, math, os
+          from collections import defaultdict
+          import h5py
+          import numpy as np
+
+          CASES=['0','1.1','1.2','2.1','2.2','3.1','3.2']
+          PROCESS=['laser_power_W','scan_speed_mm_s','spot_size_um']
+          TEMPS=[1150,1260,1298,1336]
+          DL={1150:366,1260:836,1298:1081,1336:1380}
+          THERMAL=[]
+          for t in TEMPS:
+              THERMAL += [f'hot_pixel_time_integral_{t}_px_s',f'any_hot_duration_{t}_s']
+          FRAME_RATE=30000.0
+          A=0.9655; B=197.2; C=43920000.0
+
+          def scalar(v): return float(np.asarray(v).reshape(-1)[0])
+          def identity(name):
+              p=name.removeprefix('Line_').split('_')
+              if len(p)==2: return p[0],int(p[1])
+              if len(p)==3: return f'{p[0]}.{p[1]}',int(p[2])
+              raise ValueError(name)
+
+          rows=[]
+          with h5py.File('work/raw/thermography.h5','r') as f:
+              cal=f['Calibration']['ThermalCal'].attrs
+              actual={'a':scalar(cal['Coeff_a']),'b':scalar(cal['Coeff_b']),'c':scalar(cal['Coeff_c'])}
+              if abs(actual['a']-A)>1e-12 or abs(actual['b']-B)>1e-12 or abs(actual['c']-C)>1e-6:
+                  raise SystemExit(f'Calibration mismatch {actual}')
+              td=f['ThermalData']
+              if abs(scalar(td.attrs['frame_rate'])-FRAME_RATE)>1e-9:
+                  raise SystemExit('Frame-rate mismatch')
+              names=sorted(k for k in td if k.startswith('Line_'))
+              if len(names)!=21: raise SystemExit(f'Expected 21 lines, got {len(names)}')
+              for name in names:
+                  case,rep=identity(name)
+                  g=td[name]; ds=g['Signal']
+                  occ={t:0 for t in TEMPS}; active={t:0 for t in TEMPS}
+                  for start in range(0,700,25):
+                      arr=ds[start:start+25]
+                      for t in TEMPS:
+                          pf=(arr>=DL[t]).sum(axis=(1,2),dtype=np.int64)
+                          occ[t]+=int(pf.sum())
+                          active[t]+=int((pf>0).sum())
+                  r={
+                    'process_case':case,'repeat':rep,
+                    'laser_power_W':scalar(g.attrs['laser_power']),
+                    'scan_speed_mm_s':scalar(g.attrs['scan_speed']),
+                    'spot_size_um':scalar(g.attrs['spot_size']),
+                  }
+                  for t in TEMPS:
+                      r[f'hot_pixel_time_integral_{t}_px_s']=occ[t]/FRAME_RATE
+                      r[f'any_hot_duration_{t}_s']=active[t]/FRAME_RATE
+                  rows.append(r)
+
+          rows=sorted(rows,key=lambda r:(CASES.index(r['process_case']),r['repeat']))
+          if len(rows)!=21 or {r['process_case'] for r in rows}!=set(CASES):
+              raise SystemExit('21-track/7-case integrity failure')
+          if any(sum(r['process_case']==c for r in rows)!=3 for c in CASES):
+              raise SystemExit('Expected 3 repeats per case')
+
+          Xp=np.array([[r[c] for c in PROCESS] for r in rows],float)
+          Xt=np.array([[r[c] for c in THERMAL] for r in rows],float)
+          labels=np.array([r['process_case'] for r in rows],object)
+
+          # A. Within-case / total variance fractions.
+          variance={}
+          case_dominated_count=0
+          for j,name in enumerate(THERMAL):
+              x=Xt[:,j]; gm=x.mean(); ss_total=float(((x-gm)**2).sum()); ss_within=0.0
+              for c in CASES:
+                  xc=x[labels==c]; ss_within += float(((xc-xc.mean())**2).sum())
+              frac=0.0 if ss_total==0 else ss_within/ss_total
+              case_dom=frac<=0.10
+              case_dominated_count += int(case_dom)
+              variance[name]={'ss_total':ss_total,'ss_within':ss_within,'within_fraction':frac,'case_dominated':case_dom}
+
+          # B. PCA/SVD effective dimension after full-data standardization (outcome-free descriptive diagnostic).
+          t_mean=Xt.mean(axis=0); t_std=Xt.std(axis=0,ddof=0)
+          if np.any(t_std==0): raise SystemExit('Constant thermal feature')
+          Zt=(Xt-t_mean)/t_std
+          svals=np.linalg.svd(Zt,full_matrices=False,compute_uv=False)
+          ev=svals**2; ratio=ev/ev.sum(); cum=np.cumsum(ratio)
+          pca95_dim=int(np.searchsorted(cum,0.95)+1)
+          low_dimensional=pca95_dim<=3
+
+          # C. Pearson association with process descriptors.
+          corr={}; strong_process_count=0
+          for j,tname in enumerate(THERMAL):
+              rr={}
+              for k,pname in enumerate(PROCESS):
+                  val=float(np.corrcoef(Xt[:,j],Xp[:,k])[0,1])
+                  rr[pname]=val
+              m=max(abs(v) for v in rr.values())
+              strong=m>=0.90
+              strong_process_count += int(strong)
+              corr[tname]={'correlations':rr,'max_abs_r':m,'strong_process_association':strong}
+
+          # D/E. LOCO train-only scaling, nearest-neighbor distances, and design conditioning.
+          def standardize_train_test(train,test):
+              mu=train.mean(axis=0); sd=train.std(axis=0,ddof=0)
+              if np.any(sd==0):
+                  # Deterministic zero-variance dimensions carry no train-fold distance information.
+                  keep=sd>0
+                  train=train[:,keep]; test=test[:,keep]; mu=mu[keep]; sd=sd[keep]
+              return (train-mu)/sd,(test-mu)/sd
+
+          def nn_mean(train_z,test_z):
+              d=[]
+              for x in test_z:
+                  dist=np.sqrt(((train_z-x)**2).sum(axis=1))
+                  d.append(float(dist.min()))
+              return float(np.mean(d)),d
+
+          def conditioning(train):
+              mu=train.mean(axis=0); sd=train.std(axis=0,ddof=0)
+              keep=sd>0
+              z=(train[:,keep]-mu[keep])/sd[keep]
+              sv=np.linalg.svd(z,full_matrices=False,compute_uv=False)
+              tol=max(z.shape)*np.finfo(float).eps*(sv[0] if len(sv) else 0.0)
+              rank=int((sv>tol).sum())
+              ncols=z.shape[1]
+              if rank<ncols or sv[-1]<=tol:
+                  cond=None
+              else:
+                  cond=float(sv[0]/sv[-1])
+              return {'original_cols':int(train.shape[1]),'nonconstant_cols':int(ncols),'rank':rank,'condition_number':cond,'singular_values':[float(v) for v in sv]}
+
+          loco={}
+          Xc=np.concatenate([Xp,Xt],axis=1)
+          for held in CASES:
+              tr=labels!=held; te=labels==held
+              rec={}
+              for space,M in [('process',Xp),('thermal',Xt),('combined',Xc)]:
+                  tr_z,te_z=standardize_train_test(M[tr],M[te])
+                  mean_d,track_d=nn_mean(tr_z,te_z)
+                  rec[space]={'mean_nearest_neighbor_distance':mean_d,'track_distances':track_d,'conditioning':conditioning(M[tr])}
+              loco[held]=rec
+
+          # Frozen primary gate.
+          if case_dominated_count>=6 and low_dimensional:
+              gate='PROCESS_CASE_PROXY_DOMINANT'
+          elif (case_dominated_count>=6) != low_dimensional:
+              gate='PARTIAL_REPEAT_INFORMATION'
+          else:
+              gate='REPEAT_INFORMATION_PRESENT'
+
+          result={
+            'diagnostic':'AMBENCH-D06',
+            'n_tracks':21,'n_cases':7,'n_repeats_per_case':3,
+            'case_dominated_count':case_dominated_count,
+            'pca95_dim':pca95_dim,'low_dimensional':low_dimensional,
+            'strong_process_count':strong_process_count,
+            'variance':variance,
+            'pca':{'singular_values':[float(v) for v in svals],'explained_variance_ratio':[float(v) for v in ratio],'cumulative_explained_variance':[float(v) for v in cum]},
+            'process_association':corr,
+            'loco':loco,
+            'gate':gate,
+          }
+          print('CASE_DOMINATED_COUNT',case_dominated_count)
+          for k,v in variance.items(): print('VARIANCE',k,json.dumps(v,sort_keys=True))
+          print('PCA95_DIM',pca95_dim)
+          print('PCA_SINGULAR_VALUES',json.dumps([float(v) for v in svals]))
+          print('PCA_CUMULATIVE',json.dumps([float(v) for v in cum]))
+          print('STRONG_PROCESS_COUNT',strong_process_count)
+          for k,v in corr.items(): print('PROCESS_ASSOC',k,json.dumps(v,sort_keys=True))
+          for held,rec in loco.items(): print('LOCO_DIAGNOSTIC',held,json.dumps(rec,sort_keys=True))
+          print('FROZEN_DIAGNOSTIC_GATE',gate)
+          print('RESULT_JSON',json.dumps(result,sort_keys=True,separators=(',',':')))
+
+          summary=os.environ.get('GITHUB_STEP_SUMMARY')
+          if summary:
+              with open(summary,'a',encoding='utf-8') as f:
+                  f.write('# AMBENCH-D06 outcome-blind diagnostic\n\n')
+                  f.write(f'- Gate: **{gate}**\n')
+                  f.write(f'- Case-dominated features: **{case_dominated_count}/8**\n')
+                  f.write(f'- PCA95 dimension: **{pca95_dim}**\n')
+                  f.write(f'- Strong process associations: **{strong_process_count}/8**\n')
+                  f.write('\nNo optical outcome data were downloaded or used. No artifact was uploaded.\n')
+          PY
+
+      - name: Confirm COST-001 boundary
+        run: |
+          echo 'D06 used standard public-repository runner only.'
+          echo 'No optical outcome data and no actions/upload-artifact were used.'
