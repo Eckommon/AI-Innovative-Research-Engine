@@ -2,12 +2,12 @@
 id: SESSION-HANDOFF
 type: memory
 state: ACTIVE
-checkpoint_id: CHK-20260822-F10-HOLD
-active_issue: none
-active_research: none
+checkpoint_id: CHK-20260822-D11-PREREG
+active_issue: 27
+active_research: AMBENCH-D11
 last_completed_issue: 26
 last_completed_research: AMBENCH-F10
-last_decision: DEC-025
+last_decision: DEC-026
 created: 2026-08-22
 updated: 2026-08-22
 source_of_truth: github
@@ -21,82 +21,101 @@ tags:
 
 ## 1. Current State / 현재 상태
 
-- **Checkpoint:** `CHK-20260822-F10-HOLD`
-- **Active Issue:** none
-- **Active research:** none
+- **Checkpoint:** `CHK-20260822-D11-PREREG`
+- **Active Issue:** #27 `AMBENCH-D11`
+- **Active research:** `AMBENCH-D11`
 - **Last completed:** Issue #26 `AMBENCH-F10 — HOLD_PUBLICATION_NOT_VERIFIED`
-- **Last decision:** `DEC-025`
-- **Project state:** `F10_COMPLETED__HOLD_PUBLICATION_NOT_VERIFIED`
+- **Last decision:** `DEC-026`
+- **Project state:** `D11_PREREGISTERED__EXECUTION_NOT_YET_RUN`
 - **Cost:** `COST-001 — zero incremental monetary cost`
 - **Raw data:** `RAW-001 — RAW_DATA_TRANSIENT_ONLY`
 
-## 2. F10 Final / F10 최종
+## 2. Why D11 / D11 선정 이유
 
-Preregistration: `research/AMBENCH-F10/README.md`.  
-Result: `research/AMBENCH-F10/RESULT.md`.  
-Issue #26: closed completed.  
-Claims: `CLM-038`, `CLM-039`.  
-Decision: `DEC-025`.  
-Memory: `MEM-028-AMBENCH-F10`.
+D06 showed the prior thermography representation was `PROCESS_CASE_PROXY_DOMINANT`. E09 showed that coupling case medians changed magnitude but not the seven-case ordering. F10 verified same-BP4 confocal measurement provenance but could not qualify an exact current public confocal dataset, so the frozen fallback is a within-BP4 temporal-information diagnostic.
 
-### Verified measurement provenance / 검증된 측정 provenance
-- NIST AMB2022-03 Version 1.01 explicitly identifies `AMB2022-718-SH1-BP4` as the dynamic-laser-coupling single-track plate.
-- It states that coupling specimens including BP4 were measured ex situ using laser scanning confocal microscopy.
-- Complete 3D surface profiles were intended to characterize steady-state height, track-end accumulation/loss, chevron-feature shape, and related surface topology.
-- Therefore same-BP4 coupling + distinct ex-situ confocal measurement is verified at the measurement-description level.
+D11 asks only whether the 21 BP4 dynamic-coupling waveforms contain repeat-level temporal structure beyond case labels. / D11은 21개 BP4 coupling waveform이 case label을 넘어 repeat 수준 시간구조를 갖는지만 진단한다.
 
-### Public-source gap / 공개 source gap
-Current NIST Direct AM Bench Data Links list AMB2022-03 PDR publications:
-- `mds2-2716` thermography;
-- `mds2-2718` optical microscopy;
-- `mds2-2775` microstructure;
-- `mds2-3842` dynamic coupling.
+## 3. Frozen Source / 고정 source
 
-F10 targeted NIST PDR/Data.gov/web searches did not establish:
-- exact BP4 confocal/topography PDR ID;
-- version/manifest;
-- component checksums;
-- deterministic 21-track/repeat map.
+- NIST PDR `mds2-3842`
+- version `1.0.3`
+- ZIP bytes `93,566`
+- SHA-256 `8c4278eb621c1638465e13e87339fe0daba1dcae138f24b9c1d86c186cd74f66`
+- 21 authoritative tracks = 7 cases × 3 repeats
+- case `3.2` three distinct archive files previously verified
+- coupling = dimensionless `P_lc = 1 - P_rho/P_app`, 100 kHz
 
-State = **`NOT_YET_VERIFIED_PUBLICATION`**, not permanent-absence claim.
+## 4. Prior-Observation Boundary / 기존 관측 경계
 
-### Outcome integrity / outcome 무결성
-- `NEW_CONFOCAL_OUTCOME_BLIND = YES` preserved.
-- no numerical confocal values accessed.
-- no paper-figure digitization.
-- no BP1 optical substitution.
-- no inferred track pairing.
-- no paid route; no confocal raw-data download.
+- `RAW_COUPLING_PREOBSERVED = YES` from E09.
+- `E09_CASE_MEDIANS_PREOBSERVED = YES`.
+- `NEW_D11_TEMPORAL_DIAGNOSTICS_UNCOMPUTED_AT_PREREG = YES`.
+- D11 is **not** fully outcome-blind.
 
-### Frozen gate
-**`HOLD_PUBLICATION_NOT_VERIFIED`**.
+## 5. Frozen D11 Diagnostic / 고정 D11 진단
 
-The source is not scientifically rejected; the branch remains HOLD until an exact authoritative public publication becomes verifiable.
+Primary descriptors / 주 descriptor exactly eight:
+1. `median_mid`
+2. `iqr_mid`
+3. `mad_diff_mid`
+4. `ac1_mid`
+5. `early_contrast`
+6. `late_contrast`
+7. `early_shape_slope`
+8. `late_shape_slope`
 
-## 3. Exact Next Eligible Work / 정확한 다음 eligible 작업
+Normalized-time rules:
+- `tau=(t-t_min)/(t_max-t_min)`
+- primary shape domain `0.05..0.95`
+- central domain `0.20..0.80`
+- no smoothing/manual crop/peak selection.
 
-No experiment is active. / 활성 실험 없음.
+Primary diagnostics:
+- descriptor case-vs-repeat `within_fraction`;
+- normalized waveform 901-point case-vs-repeat variance;
+- descriptor PCA / `PCA95_DIM`.
 
-Preferred fallback from the frozen F10 consequence:
-**new separately preregistered within-BP4 dynamic-coupling temporal-information diagnostic**.
+Secondary only:
+- seven-case median Spearman associations with BP4 power, scan speed, beam diameter, and normalized VED;
+- secondary process association cannot change final gate.
 
-Purpose:
-- determine whether the already-qualified 21 BP4 coupling waveforms contain repeat-level information beyond process-case labels;
-- escape E09's case-median/rank compression without pretending physical-outcome validation.
+Frozen gates:
+- `COUPLING_PROCESS_CASE_PROXY_DOMINANT`
+- `REPEAT_LEVEL_TEMPORAL_INFORMATION_PRESENT`
+- `MIXED_TEMPORAL_INFORMATION`
+- `HOLD_DATA_INTEGRITY`
 
-Expected frozen diagnostic families for the next preregistration:
-1. repeat-vs-case variance decomposition;
-2. outcome-independent temporal descriptors;
-3. temporal PCA/effective dimension;
-4. process association;
-5. explicit prohibition on physical-outcome utility claims.
+Detailed thresholds and no-post-hoc rules are authoritative in `research/AMBENCH-D11/README.md`.
 
-Do not execute this fallback until a new preregistration and Work Queue are activated. / 새 사전등록·큐 활성화 전 실행 금지.
+## 6. Interpretation Boundary / 해석 경계
 
-## 4. Persistent Boundaries / 지속 경계
+D11 does not establish:
+- physical-outcome utility;
+- prediction/generalization;
+- causality;
+- same-BP4 confocal relation;
+- benefit from higher-capacity models.
 
-- same-BP4 confocal branch: `HOLD_PUBLICATION_NOT_VERIFIED`;
-- BP1↔BP4 physical track/repeat pairing: prohibited;
-- BP4 roughness conflict: unresolved;
-- AMB2025-07 predictive thermal↔geometry: HOLD pending public thermography source;
-- no model-capacity escalation merely to compensate for missing independent information.
+No FFT/wavelet/neural rescue, alternative descriptor selection, BP1 outcome substitution, or threshold tuning is authorized inside D11.
+
+## 7. Exact Next Action / 정확한 다음 행동
+
+Execute Issue #27 under the frozen preregistration:
+1. verify exact NIST source/checksum and all 21 identities;
+2. compute exactly the eight frozen descriptors;
+3. compute descriptor and waveform repeat-vs-case variance;
+4. compute `PCA95_DIM`;
+5. compute descriptive process associations;
+6. apply exactly one frozen gate;
+7. write durable result/claims/decision and close/update Issue #27;
+8. synchronize STATUS/HANDOFF;
+9. persist no raw source bytes or raw-data Actions artifact.
+
+Records:
+- `research/AMBENCH-D11/README.md`
+- `research/AMBENCH-D11/WORK_QUEUE.md`
+- Issue #27
+- `registry/DEC-026.md`
+- `registry/CLM-040.md`
+- `context/MEM-029-AMBENCH-D11.md`
