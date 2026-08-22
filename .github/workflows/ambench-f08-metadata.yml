@@ -1,0 +1,117 @@
+name: AMBENCH-F08 Outcome-Blind PDR Metadata
+
+on:
+  pull_request:
+    paths:
+      - 'research/AMBENCH-F08/RUN_TRIGGER.md'
+      - '.github/workflows/ambench-f08-metadata.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Fetch current PDR manifest only
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p work/current work/version work/small
+          curl -fL --retry 3 'https://data.nist.gov/od/id/mds2-3842' -o work/current/current.json
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          p=Path('work/current/current.json')
+          raw=p.read_bytes(); o=json.loads(raw)
+          print('CURRENT_MANIFEST_SHA256', hashlib.sha256(raw).hexdigest())
+          for k in ['@id','doi','version','modified','revised','annotated','title']:
+              print('TOP', k, repr(o.get(k)))
+          comps=o.get('components',[])
+          print('COMPONENT_COUNT', len(comps))
+          for i,c in enumerate(comps):
+              print('COMPONENT', i, json.dumps({
+                  'filepath':c.get('filepath'),
+                  'size':c.get('size'),
+                  'sha256':((c.get('checksum') or {}).get('hash')),
+                  'downloadURL':c.get('downloadURL'),
+                  'type':c.get('@type')
+              },sort_keys=True))
+          ver=o.get('version')
+          if not ver:
+              raise SystemExit('NO_CURRENT_VERSION')
+          Path('work/version.txt').write_text(str(ver),encoding='utf-8')
+          PY
+      - name: Fetch exact current version manifest
+        shell: bash
+        run: |
+          set -euo pipefail
+          VER=$(cat work/version.txt)
+          URL="https://data.nist.gov/od/id/ark:/88434/mds2-3842/pdr:v/${VER}"
+          curl -fL --retry 3 "$URL" -o work/version/exact.json
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          a=Path('work/current/current.json').read_bytes()
+          b=Path('work/version/exact.json').read_bytes()
+          oa=json.loads(a); ob=json.loads(b)
+          print('EXACT_VERSION',ob.get('version'))
+          print('EXACT_ID',ob.get('@id'))
+          print('EXACT_MANIFEST_SHA256',hashlib.sha256(b).hexdigest())
+          def mp(o):
+              return {c.get('filepath'):(c.get('size'),((c.get('checksum') or {}).get('hash'))) for c in o.get('components',[]) if c.get('filepath')}
+          ma,mb=mp(oa),mp(ob)
+          print('CURRENT_VS_EXACT_COMPONENTS_IDENTICAL',ma==mb)
+          print('CURRENT_COMPONENTS',len(ma),'EXACT_COMPONENTS',len(mb))
+          PY
+      - name: Fetch only small README and checksum companions
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY' > work/small/urls.tsv
+          import json
+          from pathlib import Path
+          o=json.loads(Path('work/version/exact.json').read_text())
+          for c in o.get('components',[]):
+              fp=(c.get('filepath') or '')
+              size=c.get('size')
+              url=c.get('downloadURL')
+              low=fp.lower()
+              safe=(('readme' in low and low.endswith(('.txt','.md'))) or low.endswith('.sha256'))
+              if safe and isinstance(size,(int,float)) and size <= 2_000_000 and url:
+                  print(fp+'\t'+str(int(size))+'\t'+url)
+          PY
+          while IFS=$'\t' read -r fp size url; do
+            [ -n "$fp" ] || continue
+            safe=$(printf '%s' "$fp" | tr '/ ' '__')
+            curl -fL --retry 3 "$url" -o "work/small/$safe"
+            printf 'SMALL_FILE %s bytes=%s actual_sha256=' "$fp" "$size"
+            sha256sum "work/small/$safe" | awk '{print $1}'
+          done < work/small/urls.tsv
+      - name: Extract outcome-blind semantics from README metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          files=[p for p in Path('work/small').iterdir() if 'readme' in p.name.lower()]
+          print('README_COUNT',len(files))
+          terms=re.compile(r'(coupl|absorp|reflect|repeat|track|case|line|power|scan|speed|diameter|spot|unit|sample|plate|hemispher|photodet|acqui|calibr|file|manifest|naming)',re.I)
+          for p in files:
+              print('README_FILE',p.name,'BYTES',p.stat().st_size)
+              text=p.read_text(encoding='utf-8',errors='replace')
+              for n,line in enumerate(text.splitlines(),1):
+                  s=' '.join(line.split())
+                  if s and terms.search(s):
+                      print(f'README_LINE {n}: {s[:1000]}')
+          PY
+      - name: Confirm COST-001 and outcome-blind boundary
+        run: |
+          echo 'COST-001: standard public-repository ubuntu-latest only.'
+          echo 'No GPU/larger runner, no artifact upload, no paid API/data.'
+          echo 'No large measurement component and no outcome/result table downloaded.'
