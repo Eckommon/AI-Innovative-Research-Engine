@@ -2,12 +2,12 @@
 id: SESSION-HANDOFF
 type: memory
 state: ACTIVE
-checkpoint_id: CHK-20260822-D12-ROBUST-CONDITION-SPECIFIC
+checkpoint_id: CHK-20260822-F13-PARTIAL-EXTERNAL-VALIDATION
 active_issue: none
 active_research: none
-last_completed_issue: 29
-last_completed_research: AMBENCH-D12
-last_decision: DEC-030
+last_completed_issue: 31
+last_completed_research: AMBENCH-F13
+last_decision: DEC-032
 created: 2026-08-22
 updated: 2026-08-22
 source_of_truth: github
@@ -15,60 +15,76 @@ source_of_truth: github
 
 # Session Handoff / 세션 인수인계
 
-## Current State / 현재 상태
-- **Checkpoint:** `CHK-20260822-D12-ROBUST-CONDITION-SPECIFIC`
+## 1. Current State / 현재 상태
+- **Checkpoint:** `CHK-20260822-F13-PARTIAL-EXTERNAL-VALIDATION`
 - **Active Issue:** none
 - **Active research:** none
-- **Last completed:** #29 `AMBENCH-D12 — ROBUST_CONDITION_SPECIFIC_REPEAT_VARIATION`
-- **Last decision:** `DEC-030`
+- **Last completed:** Issue #31 `AMBENCH-F13 — PARTIAL_SAME_EXPERIMENT_EXTERNAL_VALIDATION_READY`
+- **Last decision:** `DEC-032`
+- **Project state:** `F13_COMPLETED__PARTIAL_SAME_EXPERIMENT_EXTERNAL_VALIDATION_READY`
 
-## Cost Authority / 비용 권위
-`COST-001` clarified by `DEC-028`: any potentially billable action requires explicit user approval **before execution**. Spending first and reporting later is prohibited and not retroactive authorization. Unknown billing = `HOLD_COST_APPROVAL`. Zero-incremental-cost actions may proceed only when zero charge is established.
+## 2. Cost Authority / 비용 권위
+`COST-001` + `DEC-028`: any potentially billable action requires explicit user approval **before execution**. Spending first/reporting later is prohibited and is not retroactive authorization. Unknown billing = `HOLD_COST_APPROVAL`. Zero-cost routes may proceed only when zero incremental charge is established.
 
-## D12 Result / D12 결과
-Run `32555864796`, Job `96989749627`: success.
+## 3. D12 Context / D12 맥락
+D12 found `ROBUST_CONDITION_SPECIFIC_REPEAT_VARIATION` in five BP4 temporal descriptors: sampling-robust `5/5`, common repeat-index structured `0/5`, condition-specific residual dominant `5/5`. This did not prove physical instability; it created an external-validation bottleneck.
 
-Source/integrity:
-- NIST `mds2-3842` v1.0.3 exact manifest/ZIP checksums matched;
-- `21 = 7 cases × 3 repeats` valid;
-- all eight D11 descriptor within-fractions reproduced with maximum absolute difference `<3.2e-15` vs frozen values;
-- Actions artifacts `0`;
-- `RAW_TEARDOWN=SUCCESS`.
+## 4. F13 Triage & Result / F13 선별·결과
+Post-D12 triage selected NIST A-AMB2022-01 `mds2-2525` as the strongest current external physical-validation asset.
 
-Primary five D11 repeat-sensitive descriptors:
-- `iqr_mid`
-- `early_contrast`
-- `late_contrast`
-- `early_shape_slope`
-- `late_shape_slope`
+Why:
+- materials/conditions independent of BP4 IN718;
+- time-resolved integrating-sphere absorptance;
+- simultaneous high-speed X-ray melt-pool measurement provenance;
+- aluminum stationary-spot branch exposes time-dependent absorption and time-dependent melt-pool width result components;
+- checksum-bearing public PDR components and reproducible data-bearing `v1.3.1` snapshot.
 
-D12 primary counts:
-- representation-sensitive: `0/5`
-- sampling-robust: `5/5`
-- cross-case repeat-index structured: `0/5`
-- condition-specific residual dominant: `5/5`
-- residual PCA80 dimension: `3`
+Release note:
+- PDR release history reports `v1.3.2` on 2026-01-07 as `added to additiveman collection`;
+- F13 freezes `v1.3.1` at component level unless a future experiment independently verifies unchanged relevant `v1.3.2` component bytes/checksums.
 
-Frozen final gate: **`ROBUST_CONDITION_SPECIFIC_REPEAT_VARIATION`**.
+Repeat boundary:
+- 2024 benchmark publication reports repeated measurements, including three repeated scanned-Al measurements under identical conditions;
+- current public PDR component inventory does not establish >=3 separately identifiable repeat-level absorptance + geometry event pairs;
+- therefore direct repeat-level D12 replication is not authorized.
 
-Interpretation boundary:
-- D11 repeat-sensitive differences survive the frozen factor-2/4 sample-phase perturbation test;
-- they are not dominated by a common repeat-number effect across cases;
-- most repeat-sensitive variation is case-specific/idiosyncratic under the additive decomposition;
-- this does not prove physical instability and does not rule out sensor/process noise, local heterogeneity, or other unobserved mechanisms;
-- no predictive/generalization/causal claim is authorized.
+**Frozen F13 gate:** `PARTIAL_SAME_EXPERIMENT_EXTERNAL_VALIDATION_READY`.
 
 Durable artifacts:
-- `research/AMBENCH-D12/RESULT.md`
-- `CLM-045..047`
-- `DEC-030`
-- `MEM-031-AMBENCH-D12`
+- `research/AMBENCH-POST-D12-TRIAGE.md`
+- `research/AMBENCH-F13/README.md`
+- `research/AMBENCH-F13/AMENDMENT-01.md`
+- `research/AMBENCH-F13/RESULT.md`
+- `CLM-048..050`
+- `DEC-031..032`
+- `MEM-032`, `MEM-033`
 
-## Exact Next Eligible Work / 정확한 다음 eligible 작업
+## 5. Outcome-Blindness Integrity / outcome-blindness 무결성
+During source triage, publication-level aggregate scanned-Al geometry values were exposed before F13 preregistration. F13 `AMENDMENT-01` corrects the state to:
+
+`NEW_EXTERNAL_OUTCOME_BLIND = NO — PUBLICATION_LEVEL_AGGREGATES_PREOBSERVED`.
+
+No numerical PDR result CSV was downloaded or analyzed. Those preobserved publication aggregates were not used in the F13 source-readiness gate and must not be used to tune a future experiment.
+
+## 6. Exact Next Eligible Work / 정확한 다음 eligible 작업
 No experiment is active.
 
-Before further modeling, triage authoritative public sources for external validation:
-1. an independent-condition dynamic-coupling dataset with comparable time-resolved measurements; or
-2. a qualified same-specimen physical outcome dataset.
+Next eligible step: separately preregister a **low-degree-of-freedom A-AMB aluminum stationary-spot time-resolved absorptance ↔ time-dependent melt-pool-width morphology experiment** as external physical validation.
 
-Same-BP4 confocal remains `HOLD_PUBLICATION_NOT_VERIFIED`. Do not add more features or high-capacity models on the same 21 tracks merely because D12 found sampling-robust variation.
+Before numerical PDR access, freeze:
+1. exact source version/checksums;
+2. time-zero/alignment;
+3. resampling;
+4. absorptance normalization;
+5. minimal D11/D12-derived descriptor transfer;
+6. geometry transform/endpoints;
+7. exact statistics/null/gate;
+8. treatment of publication-level aggregates already observed.
+
+Do not call this repeat-level D12 generalization. Do not add high-capacity ML.
+
+## 7. Persistent Holds / 지속 경계
+- same-BP4 confocal: `HOLD_PUBLICATION_NOT_VERIFIED`;
+- FLaMI comparable public dynamic-coupling dataset: exact PDR not verified;
+- AMB2025-07 predictive thermal↔geometry: HOLD pending public thermography publication;
+- any paid/possibly paid source or compute route: prior explicit user approval required.
