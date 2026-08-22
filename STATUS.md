@@ -1,19 +1,19 @@
 ---
-checkpoint_id: CHK-20260822-F16-PARTIAL-PUBLIC-ENDPOINT
-active_issue: none
-active_research: none
+checkpoint_id: CHK-20260822-F17-ACTIVE-X16-SOURCE-PAIR
+active_issue: 35
+active_research: AMBENCH-F17
 last_completed_issue: 34
 last_completed_research: AMBENCH-F16
-last_decision: DEC-038
+last_decision: DEC-039
 updated: 2026-08-22
 ---
 
 # Project Status / 프로젝트 상태
 
 **Project / 프로젝트:** AI-Innovative-Research-Engine / AI 기반 혁신 탐색 연구 엔진  
-**Latest verified baseline / 최신 검증 baseline:** `v0.21-f16-partial-public-endpoint-ready`  
-**State / 상태:** `F16_COMPLETED__PARTIAL_PUBLIC_ENDPOINT_READY`  
-**Active Work Queue / 활성 작업 큐:** none.
+**Latest verified baseline / 최신 검증 baseline:** `v0.22-f17-active-x16-source-pair`  
+**State / 상태:** `F17_ACTIVE__X16_SOURCE_IDENTITY_SEMANTIC_FEASIBILITY`  
+**Active Work Queue / 활성 작업 큐:** Issue #35 `AMBENCH-F17`.
 
 ## Mandatory Governance / 필수 거버넌스
 - GitHub = persistent Source of Truth.
@@ -36,36 +36,21 @@ updated: 2026-08-22
 - #31 F13 — `PARTIAL_SAME_EXPERIMENT_EXTERNAL_VALIDATION_READY`
 - #32 E14 — `HOLD_SOURCE_INTEGRITY`
 - #33 F15 — `PARTIAL_REGISTERED_SCHEMA_READY`
-- #34 F16 — **`PARTIAL_PUBLIC_ENDPOINT_READY`**
+- #34 F16 — `PARTIAL_PUBLIC_ENDPOINT_READY`
 
-## F16 Final / F16 최종
-Result: `research/AMBENCH-F16/RESULT.md`.  
-Claims: `CLM-056..058`. Decisions: `DEC-037..038`. Memory: `MEM-037-AMBENCH-F16`.
+## Active F17 / 활성 F17
+Preregistration: `research/AMBENCH-F17/README.md`. Decision: `DEC-039`.
 
-Verified:
-- authoritative NIST identifier `ark:/88434/mds2-3761`;
-- current official Part ZIP endpoints for `part1`, `part02`, `part03`, `part04`;
-- current Data.gov issued `2025-05-09`, modified `2025-03-13`, public access;
-- NIST AMS 100-69 confirms registered numerical CSV organization by part/layer and machine-coordinate alignment;
-- F15 schema/registration qualification remains valid.
+Candidate pair:
+- in-situ `ark:/88434/mds2-2309`;
+- current Data.gov/PDR XCT identity `ark:/88434/mds2-2514`;
+- same July 3, 2019 Overhang X16 build / sixteen technical replicate parts.
 
-Not yet established:
-- exact data-bearing PDR release/version lineage;
-- authoritative immutable checksums/equivalent byte identifiers for Part ZIPs;
-- Part 1 authoritative source bytes and local checksum;
-- actual archive inventory from authoritative bytes.
+Frozen source conflict:
+- NIST AMMT datasets summary currently points X16 XCT to DOI `mds2-2309`;
+- current Data.gov XCT metadata identifies XCT DOI/identifier `mds2-2514` and explicitly links it to in-situ `mds2-2309`.
 
-Post-preregistration Part 1 retrieval through two verified zero-cost authoritative paths failed. Parts 2–4 were not attempted because the frozen order required Part 1 to pass first.
+F17 is metadata/source/semantic feasibility only; no numerical X16 process or XCT outcomes may be analyzed.
 
-Frozen final gate: **`PARTIAL_PUBLIC_ENDPOINT_READY`**.
-
-Interpretation: the dataset is a high-value registered process–structure asset with coherent current official endpoints, but is not yet immutable-source-ready under this project's numerical modeling standard. This is not a source contradiction and not proof that NIST lacks integrity metadata.
-
-## Exact Next Eligible Work / 정확한 다음 행동
-No experiment is active.
-
-Do not numerically model `mds2-3761` yet and do not repeatedly retry the same failing endpoint. Preferred next step:
-1. targeted official NIST/PDR recovery of version-pinned component metadata/checksums or an official immutable alternative distribution; then
-2. if that remains unavailable under verified zero-cost constraints, triage another authoritative external process–structure dataset.
-
-E14 remains frozen at `HOLD_SOURCE_INTEGRITY`; do not redesign it. Any paid/potentially paid source or compute route requires explicit user approval before execution.
+## Exact Active Work / 현재 작업
+Apply frozen F17 gates using official current NIST/Data.gov evidence, checksum-sidecar structure, same-build/part identity semantics, and zero-cost small-file access tests. No modeling.
