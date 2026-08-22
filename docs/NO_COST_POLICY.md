@@ -9,6 +9,13 @@
 **KO:** 프로젝트의 모든 연구·검증·개발·자동화 작업은 기본적으로 **추가 금전비용(incremental monetary cost) 0원** 조건에서 수행한다. 비용이 발생하거나 발생할 합리적 가능성이 있는 작업은 실행 전에 사용자의 명시적 승인을 받아야 한다.  
 **EN:** All project research, validation, development, and automation work defaults to **zero incremental monetary cost**. Any action that incurs, or has a reasonable possibility of incurring, monetary cost requires the user's explicit approval **before execution**.
 
+### 1.1 Pre-spend approval timing / 지출 전 승인 시점
+
+**KO:** 금전비용 승인은 반드시 **비용 발생 행동 이전**에 존재해야 한다. 비용을 먼저 사용한 뒤 보고하거나 승인을 요청하는 방식은 허용되지 않으며, 사후 보고·사후 동의는 소급 승인이 아니다. 승인 기록이 없는 비용 가능 행동은 실행하지 않고 `HOLD_COST_APPROVAL`로 둔다.  
+**EN:** Monetary-cost approval must exist **before the potentially billable action occurs**. Spending first and reporting or requesting approval afterward is prohibited; after-the-fact reporting or consent is not retroactive authorization. Any potentially billable action without a recorded prior approval must not execute and is classified `HOLD_COST_APPROVAL`.
+
+Approval must identify, when knowable, the specific action/resource, expected or maximum cost, billing unit/quota, and scope. / 승인은 가능한 범위에서 대상 행동·자원, 예상 또는 최대 비용, 과금단위·quota, 적용범위를 식별한다.
+
 ## 2. Allowed Without Additional Approval / 추가 승인 없이 허용
 
 The following are allowed only when they do not create incremental monetary charges: / 다음은 추가 금전비용을 만들지 않는 경우 허용한다.
@@ -54,6 +61,6 @@ Any active research Issue should inherit `COST-001` unless an explicitly approve
 
 ## 7. Recordkeeping / 기록
 
-Approved paid exceptions, if any, must record scope, approval, expected cost, actual known cost, and the research object that required it. / 향후 유료 예외가 승인되면 범위·승인·예상비용·확인 가능한 실제비용·관련 연구객체를 기록한다.
+Approved paid exceptions, if any, must record scope, approval **before execution**, expected cost, actual known cost, and the research object that required it. / 향후 유료 예외가 승인되면 실행 전 승인, 범위·예상비용·확인 가능한 실제비용·관련 연구객체를 기록한다.
 
 Official artifacts comply with `LANG-001` and `COST-001`. / 공식 산출물은 관련 규약을 따른다.
