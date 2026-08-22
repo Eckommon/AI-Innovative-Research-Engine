@@ -1,8 +1,8 @@
 ---
 id: AMBENCH-F04
 type: feasibility
-state: ACTIVE
-evidence_class: OBSERVED_HYPOTHESIZED
+state: COMPLETED_PARTIAL
+evidence_class: OBSERVED_DERIVED
 region: us
 domain: manufacturing
 created: 2026-08-22
@@ -12,12 +12,14 @@ related:
   - research/AMBENCH-F02/README.md
   - research/AMBENCH-E03/README.md
   - research/AMBENCH-NEXT-TRIAGE.md
+  - research/AMBENCH-F04/RESULT.md
 ---
 
 # AMBENCH-F04 — Calibrated Thermal-Dynamics Representation Feasibility / 보정 열동역학 표현 가능성 검증
 
 **Issue / 이슈:** #15  
-**State / 상태:** `ACTIVE — CALIBRATION/ALGORITHM RECOVERY`  
+**State / 상태:** `COMPLETED — PARTIAL`  
+**Gate / 게이트:** `PARTIAL — CALIBRATION_REPRODUCIBLE / HISTORICAL_SINGLE-TRACK_METRIC_REPRODUCTION_INCOMPLETE`  
 **Parent result / 상위 결과:** `AMBENCH-E03 — NO_MATERIAL_GAIN`
 
 ## 1. Research Question / 연구 질문
@@ -25,80 +27,102 @@ related:
 **KO:** frozen AMB2022-03 thermography snapshot에서 NIST의 공식 calibration·시간·상변태 기준을 이용해, optical outcome을 보지 않고도 21개 track 전체에 대해 재현 가능한 물리적 온도/냉각 동역학 표현을 만들 수 있는가?  
 **EN:** From the frozen AMB2022-03 thermography snapshot, can NIST's official calibration, timing, and phase-transition semantics support a reproducible physical temperature/cooling-dynamics representation for all 21 tracks without using optical outcomes?
 
-## 2. Frozen Sources / 고정 소스
+## 2. Final Answer / 최종 답
+
+**KO:** **부분적으로 가능하다.** 현재 v1.3.1 HDF5의 corrected DL→temperature calibration은 공식 metadata와 NIST 저자 논문으로 수학적으로 복구할 수 있다. 그러나 2022 single-track challenge의 원래 TTAM/TSCR/TLCR를 21개 repeat에서 정확히 복원하려면 per-repeat emissivity, exact 30-pixel 위치, smoothing 구현 등 공개근거에 남지 않은 선택이 필요하며, 2022 결과문서와 2024 corrected calibration 사이에도 수치계보 차이가 있다. 따라서 full `PASS`가 아니라 `PARTIAL`이다.
+
+**EN:** **Partially.** The current v1.3.1 corrected DL→temperature calibration is mathematically recoverable from official metadata and a NIST-authored publication. Exact reconstruction of the original 2022 single-track TTAM/TSCR/TLCR workflow across all 21 repeats is not fully determined by the verified public record because repeat-specific emissivity, exact 30-pixel location, smoothing implementation, and historical calibration lineage are incomplete. The correct result is `PARTIAL`, not full `PASS`.
+
+Detailed evidence / 상세 근거: `research/AMBENCH-F04/RESULT.md`.
+
+## 3. Frozen Sources / 고정 소스
 
 - NIST PDR `mds2-2716`, version `1.3.1`
 - frozen thermography HDF5 SHA-256 `f6fe21ec911707f72e7efda2932c77eae2b75d84765848878fe5beb6b728cd43`
 - NIST AMB2022-03 challenge/measurement description and measurement-result documents
 - exact track identities from `AMBENCH-F02`
 
-Optical geometry from `mds2-2718` is excluded from feature/calibration/threshold decisions in F04. / F04의 feature·calibration·threshold 결정에서 optical geometry를 제외한다.
+Optical geometry from `mds2-2718` was excluded from feature/calibration/threshold decisions in F04. / optical outcome 미사용.
 
-## 3. Already Validated Raw Semantics / 기존 검증 raw 의미
+## 4. Validated Current Raw & Calibration Semantics / 검증된 현행 raw·calibration 의미
 
-From E03 outcome-blind runs: / E03 outcome-blind run 근거
 - exactly `21` thermography `Line_*` groups;
-- each `Signal` shape `[700,640,304]`, `uint16`, 12-bit digital levels;
-- `n_frames=700`;
-- frame rate `30,000 frames/s`;
-- source metadata `threshold_level=100`, `threshold_zeros=true`;
-- group attrs preserve laser power, scan speed, D4σ spot size;
-- NIST calibration group exists and includes regression coefficients/quality metadata.
+- each `Signal` `[700,640,304]`, `uint16`, 12-bit;
+- HDF5 frame rate `30,000 frames/s`;
+- `threshold_level=100`, `threshold_zeros=true`;
+- `/Calibration/ThermalCal`:
+  - `Cal_Method=RegressionF_ArrayAvg`
+  - `A=0.9655`, `B=197.2`, `C≈4.392×10^7`
+  - `Model_input=Signal [DL]`
+  - `Model_output=Emissivity-Corrected Temperature [°C]`
+  - `R²=0.9988`, `RMSE=4.923`
+- HDF5 note records a 2024-09-12 correction to the calibration `Model` equation.
 
-## 4. Official NIST Physical Semantics / 공식 NIST 물리 의미
+The defensible current corrected mathematical form, corroborated by a NIST-authored publication with the same coefficients, is the Sakuma-Hattori relation: / 현행 corrected 식
 
-Current official NIST challenge/result documentation states: / NIST 공식 문서
-- `TSCR`: cooling rate immediately after complete solidification, below solidus, at the center of each track;
-- `TLCR`: liquid cooling rate immediately before solidification, above liquidus, at the center of each track;
-- `TTAM`: time above the midpoint between solidus and liquidus;
-- IN718 solidus `1260 °C`, liquidus `1336 °C`, midpoint/transition `1298 °C` are the benchmark assumptions used across the related thermography analysis;
-- a `110 °C` range below solidus is documented for solid cooling-rate definition in the related AMB2022 thermography methodology.
+`T(S,ε) = c2 / [A·ln(ε·C/S + 1)] − B/A`, with `c2=14,388 µm/K`.
 
-For the single-track results, NIST states TAM/cooling-rate values are determined from `30 adjacent pixels` at the track centerline at a nominally steady-state location. Apparent solidification temperature is determined and emissivity is used to convert apparent temperature to true temperature. / single-track 결과는 정상상태 위치의 중심선 인접 30 pixel 기반이며 apparent solidification temperature와 emissivity 보정을 사용한다.
+## 5. Emissivity Boundary / emissivity 경계
 
-## 5. Resolution Boundary / 해상도 경계
+- NIST later uses/defines an effective common `ε≈0.5` derived from AMB2022-03 for related AM Bench thermography work. / 후속 공통 effective 값.
+- The original 2022 **single-track** results instead identify an apparent solidification inflection and show repeat-varying emissivity for all seven cases × three repeats. / 원 single-track은 repeat별 값.
 
-The official result document explicitly states the reported single-track TAM and cooling-rate values are **averages of three individual tracks**. Table 2 therefore provides seven process-case values, not 21 repeat-level labels. / 공식 결과값은 3개 track 평균이므로 Table 2는 7개 process-case 결과이지 21개 repeat label이 아니다.
+Therefore `ε=0.5` may support a **new current-calibration representation**, but is not claimed to be the exact historical 21-repeat emissivity table. / 역사적 exact 값으로 승격 금지.
 
-Published case-level values: / 공개 case-level 값
+## 6. Original Single-Track Physical Algorithm / 원 single-track 물리 알고리즘
 
-| Case | TTAM (s) | TSCR (°C/s) | TLCR (°C/s) |
-|---|---:|---:|---:|
-| 0 | 1.22E-03 | 6.99E+05 | 4.14E+05 |
-| 1.1 | 1.30E-03 | 7.32E+05 | 4.06E+05 |
-| 1.2 | 1.04E-03 | 5.11E+05 | 3.65E+05 |
-| 2.1 | 8.96E-04 | 7.85E+05 | 5.06E+05 |
-| 2.2 | 1.59E-03 | 6.11E+05 | 3.25E+05 |
-| 3.1 | 1.38E-03 | 7.05E+05 | 3.81E+05 |
-| 3.2 | 1.03E-03 | 7.49E+05 | 4.33E+05 |
+NIST documents: / 공식 정의
+- 30 adjacent centerline pixels at a nominally steady-state location;
+- rising-edge alignment;
+- mild smoothing + averaging;
+- cubic fit around approximately `±50 °C` of apparent solidification inflection;
+- second-derivative zero as inflection;
+- true transition midpoint `1298 °C` from solidus/liquidus `1260/1336 °C`;
+- cooling-rate intervals:
+  - liquid `1400→1336 °C`;
+  - transition `1336→1260 °C`;
+  - solid `1260→1150 °C`.
 
-These values may be used only for **case-level reproduction validation**, not as 21 independent supervised outcomes. / 이 값은 case-level 재현검증에만 사용하며 21개 독립 target으로 사용하지 않는다.
+Official TTAM/TSCR/TLCR outputs are **seven process-case averages over three tracks**, not 21 repeat labels. / 결과 해상도 7개 case.
 
-## 6. Calibration Ambiguity Still Open / 아직 열린 calibration 쟁점
+## 7. Version-Lineage Constraint / 버전계보 제약
 
-The HDF5 contains calibration coefficients, but F04 does **not** infer the mathematical formula from coefficient names alone. The exact digital-level → apparent-temperature → emissivity-corrected-temperature transformation, its domain, and any per-case emissivity rule must be recovered from authoritative NIST metadata/documentation or processing code. / HDF5 coefficient 이름만으로 수식을 추정하지 않으며 exact 변환식·적용범위·case별 emissivity 규칙을 NIST 근거로 복구해야 한다.
+Version-specific PDR manifests show that 2022-era v1.1.0/v1.2.0 did not include the thermography HDF5 component, while v1.3.0 modified in September 2024 introduced the current HDF5. v1.3.0 and v1.3.1 contain the same HDF5 hash. / current raw snapshot은 후대 공개본.
 
-## 7. Frozen Feasibility Gate / 고정 feasibility 게이트
+The 2022 result document describes `100 DL≈1077 °C` and `760 DL≈1260 °C` at `ε=0.5`, whereas the current corrected coefficients give approximately `100 DL→1007.37 °C` and `760 DL→1246.62 °C`. / 수치 불일치.
 
-### `PASS`
-- exact calibration equation/units/domain recovered from authoritative source;
-- deterministic implementation succeeds on all 21 tracks;
-- timing semantics explicit;
-- compact calibrated temporal feature manifest can be frozen without optical outcomes or undocumented thresholds;
-- case-level TSCR/TLCR/TTAM can serve as a reproducible validation reference at the correct aggregation level.
+This is recorded as **calibration/version lineage divergence**, not as evidence that one source is wrong. / 오류 단정 금지.
 
-### `PARTIAL`
-Calibration itself is reproducible, but one or more cooling-rate quantities require case-specific emissivity/inflection or algorithm choices that are only partially documented, or official validation remains case-level only. / calibration은 재현되나 일부 냉각률 계산이 부분 문서화된 선택에 의존하거나 검증이 case-level로 제한된다.
+## 8. Timing Sensitivity / 시간축 민감도
 
-### `HOLD`
-Required calibration/time/transition semantics cannot be implemented without unsupported assumptions. / 필수 의미를 근거 없는 가정 없이 구현 불가.
+HDF5 metadata = `30,000 fps`. A later NIST-authored Pad-Y analysis computes `30,686 fps` from actual frames/duration for that pad experiment. Track-specific applicability is unverified, so F04 retains the HDF5 timing for single tracks and labels the later figure `UNKNOWN_TRACK_APPLICABILITY`. / 임의 교체 금지.
 
-## 8. Next Execution / 다음 실행
+## 9. Gate / 판정
 
-1. inspect all `mds2-2716` v1.3.1 PDR components for README, processing scripts, calibration records, and checksum companions;
-2. search authoritative files for calibration equation, emissivity, solidification-inflection and cooling-rate algorithm details;
-3. execute an outcome-blind calibration probe only if the formula is explicit;
-4. compare reconstructed **case averages** to official TTAM/TSCR/TLCR without using optical geometry;
-5. assign `PASS / PARTIAL / HOLD`.
+### Passed components / 통과요소
+- source/version/hash lineage;
+- current corrected calibration equation and units;
+- later authoritative effective `ε≈0.5` semantics;
+- phase-transition temperatures and cooling-rate intervals;
+- correct seven-case output aggregation boundary.
 
-Official artifacts comply with `LANG-001`, `READ-001`, `FACT-001`, `UNKNOWN-001`, and the snapshot-lineage gate. / 관련 규약 준수.
+### Full-PASS blockers / full PASS 차단요소
+- no exact machine-readable historical per-repeat emissivity table in verified source;
+- exact 30-pixel coordinates not specified;
+- `mildly smoothed` not an executable filter specification;
+- 2022 result-threshold conversion differs from current corrected HDF5 calibration;
+- later `30,686 fps` observation not proven for single tracks.
+
+**Final:** `PARTIAL`.
+
+## 10. Downstream Rule / 후속 규칙
+
+A downstream E05 is allowed only as a **new preregistered current-corrected-calibration hypothesis**. / 후속 E05는 신규 사전등록 current calibration 가설로만 허용.
+
+It may not claim exact reproduction of the 2022 single-track challenge unless the missing historical per-repeat calibration/processing semantics are independently recovered. / 누락 historical 의미 복구 전 2022 exact 재현 주장 금지.
+
+## 11. Cost Governance / 비용 거버넌스
+
+`COST-001` is mandatory. F04 disposition reused official public sources and existing artifacts rather than triggering additional metered compute. Any downstream potentially billable execution requires explicit user approval in advance; unknown billing state is `HOLD_COST_APPROVAL`. / 무비용 기본·비용가능 작업 사전승인.
+
+Official artifacts comply with `LANG-001`, `COST-001`, `READ-001`, `FACT-001`, `UNKNOWN-001`, and snapshot-lineage controls. / 관련 규약 준수.
