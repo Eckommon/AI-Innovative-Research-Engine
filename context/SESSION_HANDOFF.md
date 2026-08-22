@@ -2,119 +2,137 @@
 id: SESSION-HANDOFF
 type: memory
 state: ACTIVE
+checkpoint_id: CHK-20260822-D06-PROXY
+active_issue: none
+active_research: none
+last_completed_issue: 19
+last_completed_research: AMBENCH-D06
+last_decision: DEC-017
+created: 2026-08-22
+updated: 2026-08-22
+source_of_truth: github
 tags:
   - type/memory
   - state/candidate
   - domain/governance
-created: 2026-08-22
-updated: 2026-08-22
-source_of_truth: github
 ---
 
 # Session Handoff / 세션 인수인계
 
 > **Latest operational checkpoint only / 최신 운영 checkpoint 전용**  
-> 다음 세션은 이 파일을 읽고 작업을 재개한다. / The next session resumes from this file.
+> 다음 세션은 live GitHub 상태를 먼저 확인한 뒤 이 checkpoint와 대조하여 작업을 재개한다. / The next session first reads live GitHub state, reconciles it against this checkpoint, then resumes work.
 
 ## 1. Current State / 현재 상태
 
-- Issues #1–#4 Wave 0/1 discovery: `COMPLETED`
-- Issue #5 `KR-GRID-F01`: `COMPLETED`, `HOLD`
-- Issue #6 `EU-IEE-E01`: `COMPLETED`, empirical `VALIDATED`, novelty `LOW / NOT NOVEL`
-- Issue #7 `EU-IEE-F02`: `COMPLETED`, `PASS_SECTOR_AGGREGATE / HOLD_FACILITY_DENOMINATOR`
-- Issue #8 `EU-STEEL-R01`: `COMPLETED`, `HOLD / INCONCLUSIVE_LEGACY_VERSION_DIVERGENCE`
-- Issue #10 `METHOD-001`: `COMPLETED`, snapshot/version lineage promoted
-- Issue #11 `AMBENCH-F02`: `COMPLETED — PASS`
-- Issue #13 `AMBENCH-E03`: **`COMPLETED — NO_MATERIAL_GAIN`**
-- **Active Issue / 활성 Issue:** none / 없음
-- **Project state / 프로젝트 상태:** `READY_FOR_NEXT_PREREGISTERED_HYPOTHESIS`
+- **Checkpoint:** `CHK-20260822-D06-PROXY`
+- **Active Issue / 활성 Issue:** `none`
+- **Active research / 활성 연구:** `none`
+- **Last completed / 최근 완료:** Issue #19 `AMBENCH-D06`
+- **Project state / 프로젝트 상태:** `READY_FOR_INDEPENDENT_INFORMATION_EXPANSION`
+- **Cost boundary / 비용경계:** `COST-001 — zero incremental monetary cost`; paid/maybe-paid execution requires explicit user approval first.
 
-## 2. AMBENCH-F02 Durable Result / AMBENCH-F02 지속 결과
+Recent chain / 최근 계보:
+- #13 `AMBENCH-E03` → `NO_MATERIAL_GAIN`
+- #15 `AMBENCH-F04` → `PARTIAL`
+- #17 `AMBENCH-E05` → `MIXED`
+- #19 `AMBENCH-D06` → **`PROCESS_CASE_PROXY_DOMINANT`**
 
-**PASS — `TRACK_REPEAT_LEVEL_WITH_NESTED_OPTICAL_OUTCOMES`**
+## 2. D06 Durable Result / D06 지속 결과
 
-- exact 21 physical tracks = seven cases × three repeats
-- thermography `Line_X_Y_Z`: `Z` = repeat
-- optical naming/workbook preserves matching case + track number
-- two optical cross-sections per track are nested outcomes, not extra repeats
-- thermography SHA-256 `f6fe21ec911707f72e7efda2932c77eae2b75d84765848878fe5beb6b728cd43`
-- optical XLSX SHA-256 `2cfaac96aaca3dabb77b7029f842cdcc7e75c5a2cf3577d0734823246364a931`
-- `reproduction_risk = LOW`
+Evidence Run `32541722347` completed `success` under the preregistered outcome-blind design. / 사전등록 outcome 비사용 설계로 실행 성공.
 
-Source: `research/AMBENCH-F02/README.md`, `CLM-014..015`, `DEC-011`.
+Integrity / 무결성:
+- thermography SHA-256 actual = expected = `f6fe21ec911707f72e7efda2932c77eae2b75d84765848878fe5beb6b728cd43`;
+- exact `21 = 7 cases × 3 repeats` tracks;
+- exact same eight E05 calibrated thermal features;
+- no optical depth/width outcome downloaded or used;
+- standard public-repository `ubuntu-latest`; no larger/GPU runner or artifact upload.
 
-## 3. AMBENCH-E03 Final Result / AMBENCH-E03 최종 결과
+Primary gate / 주 게이트:
+- `case_dominated_count = 8/8`;
+- maximum observed within-case fraction among the eight features ≈ `0.004626`, far below frozen `0.10`;
+- `PCA95_DIM = 2`;
+- first two PCs explain `98.2647%` of standardized thermal variance;
+- frozen gate = **`PROCESS_CASE_PROXY_DOMINANT`**.
 
-### Frozen design / 고정 설계
-- canonical `n=21` tracks
-- targets = track-level mean depth/width
-- seven-fold leave-one-process-case-out
-- fold-local `StandardScaler` + `Ridge(alpha=1.0)` for all three model families
-- 3 process features; 10 outcome-blind raw-DL thermal features; 13 combined
-- no tuning or post-result capacity/feature expansion
+Secondary / 보조:
+- `strong_process_count = 4/8`;
+- all four `any_hot_duration_*` features correlate strongly with scan speed (`|r|≈0.981–0.985`);
+- thermal/combined fold designs are much more ill-conditioned than process-only, but rank is retained and these metrics do not change the gate.
 
-### Evidence sequence / 증거 순서
-- Run `32537038475`: exact HDF5 checksum + 21-line structure — success
-- Run `32537157650`: Signal/frame/calibration metadata, no outcomes — success
-- Run `32537282914`: frozen 10-feature extraction on 21 tracks before outcomes — success
-- Run `32537495534`: first optical-outcome combination + final preregistered LOCO experiment — success
+Records / 기록:
+- `research/AMBENCH-D06/README.md`
+- `research/AMBENCH-D06/RESULT.md`
+- `CLM-024..025`
+- `DEC-016`
+- closed Issue #19
+- closed execution-only PR #20, unmerged.
 
-### Final pooled OOF metrics / 최종 pooled OOF
+## 3. Governing Interpretation / 지배 해석
 
-| Target | Process RMSE | Combined RMSE | Combined improvement |
-|---|---:|---:|---:|
-| mean depth | `19.6406 µm` | `23.4295 µm` | `-19.2914%` |
-| mean width | `14.1639 µm` | `17.1620 µm` | `-21.1668%` |
+- E05 width improvement `+13.200372%` remains a valid recorded result inside the frozen E05 experiment. / E05 width 개선 기록은 유지.
+- D06 shows the current eight thermal features mainly re-express **process-case structure**, not substantial independent repeat-level information. / 현재 표현은 독립 repeat 정보보다 case 구조 지배.
+- Therefore the E05 width result is **not** promoted to causal/generalizable repeat-level evidence. / 인과·일반화 승격 금지.
+- Do **not** increase model capacity on the same 21 tracks/representation as the next step. / 동일 데이터·표현 고용량화 금지.
+- Do **not** post-hoc tune E03/E05/D06 features, splits, or gates. / 사후 tuning 금지.
 
-Thermo-only RMSE: depth `31.8638 µm`, width `20.4189 µm`.
+## 4. Governance Added This Session / 이번 세션 추가 거버넌스
 
-**Frozen gate: `NO_MATERIAL_GAIN`.**
+`DEC-017` strengthens hallucination/context-drift control. / 환각·상태 drift 통제 강화.
 
-Some process-case folds improved, but others degraded sharply; pooled gate remains controlling and no subgroup claim is promoted. / 일부 fold 개선이 있으나 pooled gate가 우선하며 subgroup 주장을 승격하지 않는다.
+### Mandatory before material work / 실질 작업 전 의무
+1. inspect current live open/closed Issue state;
+2. read `README → STATUS → PROJECT_MEMORY → SESSION_HANDOFF`;
+3. read relevant research + Claim/Decision records;
+4. compare live Issue state with `STATUS`/`SESSION_HANDOFF` checkpoint;
+5. if mismatch, declare `STATE_DRIFT_DETECTED` and reconcile **before** research progression.
 
-Records: `research/AMBENCH-E03/README.md`, `research/AMBENCH-E03/RESULT.md`, `CLM-016..017`, `DEC-012`. Artifact `9465900222`, SHA-256 `9a7df463fb0ca774c7caf097bcea2b0bcb600c1644d62ba8da7faf1556a9e2ce`.
+`STATUS.md` and this file now use synchronized `CHECKPOINT-001` fields. / 두 문서 checkpoint 동기화.
 
-Issue #13 and execution PR #14 are closed; PR #14 was intentionally not merged. / Issue #13·실행 PR #14 종료, PR은 실행 전용으로 미병합.
-
-## 4. Governing Interpretation / 지배 해석
-
-- E03 proves the **specific frozen ten-feature raw-DL representation** did not add robust cross-process-case predictive value.
-- Do **not** rewrite E03, tune alpha, remove constant features, change splits, add temperature conversion, or escalate to deep models to improve this result.
-- E03 does **not** prove thermography is generally useless.
-- Any temperature-domain, spatial morphology, temporal dynamics, scan-path-aware, or higher-capacity follow-up is a **new hypothesis** requiring separate preregistration.
+Project/model memory rule / 메모리 규칙:
+- `context/PROJECT_MEMORY.md` = durable decision-relevant memory;
+- this file = latest operational checkpoint;
+- ChatGPT product/model memory may assist but is never project authority;
+- dynamic state is reverified from live GitHub every session.
 
 ## 5. Exact Next Action / 정확한 다음 행동
 
-Before opening the next experiment, perform a candidate triage across these independent follow-up directions: / 다음 실험 전 후보 triage
-1. physically calibrated temperature-domain representation;
-2. explicit temporal dynamics from 30,000 fps frames;
-3. spatial morphology only after physical image-axis/pixel semantics are grounded;
-4. scan-strategy-aware thermography features;
-5. additional compatible AM Bench experiments to increase independent process-condition sample size.
+**No predictive experiment is currently authorized or active. / 현재 활성·승인된 예측실험 없음.**
 
-Rank by: / 순위 기준
-- new information relative to E03;
-- sample-size/generalization benefit;
-- authoritative semantic grounding;
-- snapshot reproducibility;
-- overfitting risk;
-- experiment cost.
+Next task: open a new **outcome-blind independent-information candidate triage** only after live-state reconciliation. / 다음은 독립정보 후보 feasibility/triage.
 
-Prefer the candidate that increases **independent process-condition information**, not merely feature/model complexity. / 단순 feature·모델 복잡도보다 독립 공정조건 정보량을 늘리는 후보를 우선한다.
+Triage order / 선별 순서:
+1. identify NIST/AM Bench candidates that genuinely add **independent process conditions/sample size**;
+2. re-evaluate the previously identified **dynamic laser coupling `mds2-3842`** as a distinct-physical-modality candidate, but require an authoritative identity/alignment gate before any join;
+3. compare candidates on new independent information, semantic grounding, exact identifier alignment, snapshot/version recoverability, no-cost access, and overfit risk;
+4. freeze candidate ranking/gate before outcome inspection;
+5. open exactly one new research Issue/object only after a defensible candidate wins.
+
+Do not assume `BP4 ↔ BP1` track identity or any cross-dataset join until directly established. / 권위 식별자 정렬 전 cross-dataset identity 추정 금지.
 
 ## 6. Persistent Holds / 지속 HOLD
+
 - KPX localized bus mapping: `HOLD`.
 - generic EU facility-level production denominator: `HOLD`.
 - EEA steel-mercury exact historical legacy reproduction: `HOLD_LEGACY_VERSION_DIVERGENCE`.
+- exact historical 2022 AMB2022-03 repeat-level TTAM/TSCR/TLCR reproduction: `PARTIAL / under-specified historical semantics`.
 
 ## 7. Mandatory Read Set Next Session / 다음 세션 의무 읽기
+
+0. current live open Issue(s) and latest relevant closed Issue / live GitHub 상태
 1. `README.md`
 2. `STATUS.md`
 3. `context/PROJECT_MEMORY.md`
 4. this file / 본 파일
-5. `research/AMBENCH-F02/README.md`
-6. `research/AMBENCH-E03/README.md`
-7. `research/AMBENCH-E03/RESULT.md`
-8. `registry/CLAIM_LEDGER.md`, `registry/DECISION_LOG.md`
+5. `research/AMBENCH-E05/RESULT.md`
+6. `research/AMBENCH-D06/README.md`
+7. `research/AMBENCH-D06/RESULT.md`
+8. `registry/CLAIM_LEDGER.md`
+9. `registry/DECISION_LOG.md`
+10. `docs/HALLUCINATION_CONTROL_PROTOCOL.md`
+11. `docs/GPT_GITHUB_SYNC_PROTOCOL.md`
+12. `docs/NO_COST_POLICY.md`
 
-Official artifacts comply with `LANG-001`, `READ-001`, `FACT-001`, `UNKNOWN-001`, `FRESH-001`, and `MEMORY-001`. / 공식 산출물은 관련 규약을 따른다.
+Then apply `STATE-001`; do not continue from conversation memory alone. / 이후 상태정합 후 진행.
+
+Official artifacts comply with `LANG-001`, `COST-001`, `READ-001`, `STATE-001`, `CHECKPOINT-001`, `FACT-001`, `UNKNOWN-001`, `FRESH-001`, `MEMORY-001`, and `WRITEBACK-001`. / 관련 규약 준수.
