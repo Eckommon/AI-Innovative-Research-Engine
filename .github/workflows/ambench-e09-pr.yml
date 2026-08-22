@@ -1,0 +1,448 @@
+name: AMBENCH-E09 Unpaired Coupling Ordering Experiment
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'research/AMBENCH-E09/TRIGGER.md'
+      - '.github/workflows/ambench-e09-pr.yml'
+      - 'research/AMBENCH-E09/AMENDMENT-01.md'
+
+permissions:
+  contents: read
+
+jobs:
+  experiment:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install frozen dependencies
+        run: python -m pip install --disable-pip-version-check numpy scipy h5py openpyxl
+
+      - name: Verify exact mds2-3842 manifest and transiently download coupling ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p work/raw work/logs
+          MANIFEST_URL='https://data.nist.gov/od/id/ark:/88434/mds2-3842/pdr:v/1.0.3'
+          ZIP_URL='https://data.nist.gov/od/ds/mds2-3842/dynamic_laser_coupling_data.zip'
+          curl -fL --retry 3 --retry-delay 2 "$MANIFEST_URL" -o work/raw/mds2-3842-v1.0.3.json
+          MANIFEST_ACTUAL=$(sha256sum work/raw/mds2-3842-v1.0.3.json | awk '{print $1}')
+          MANIFEST_EXPECTED='b3fb55e489568f90fddcbaf8a7f790e8b2a15483f312bdc403f4d08f4419c1cb'
+          test "$MANIFEST_ACTUAL" = "$MANIFEST_EXPECTED"
+          python - <<'PY' | tee work/logs/manifest.txt
+          import json
+          from pathlib import Path
+          o=json.loads(Path('work/raw/mds2-3842-v1.0.3.json').read_text())
+          assert o.get('version')=='1.0.3', o.get('version')
+          comps={c['filepath']:c for c in o.get('components',[]) if c.get('filepath')}
+          c=comps['dynamic_laser_coupling_data.zip']
+          print('PDR_VERSION',o.get('version'))
+          print('PDR_ID',o.get('@id'))
+          print('ZIP_MANIFEST_SIZE',c.get('size'))
+          print('ZIP_MANIFEST_SHA256',(c.get('checksum') or {}).get('hash'))
+          print('RAW_POLICY','RAW_DATA_TRANSIENT_ONLY')
+          assert int(c.get('size'))==93566
+          assert (c.get('checksum') or {}).get('hash')=='8c4278eb621c1638465e13e87339fe0daba1dcae138f24b9c1d86c186cd74f66'
+          PY
+          curl -fL --retry 3 --retry-delay 2 "$ZIP_URL" -o work/raw/dynamic_laser_coupling_data.zip
+          ZIP_ACTUAL=$(sha256sum work/raw/dynamic_laser_coupling_data.zip | awk '{print $1}')
+          ZIP_EXPECTED='8c4278eb621c1638465e13e87339fe0daba1dcae138f24b9c1d86c186cd74f66'
+          ZIP_BYTES=$(stat -c%s work/raw/dynamic_laser_coupling_data.zip)
+          echo "MANIFEST_SHA256=$MANIFEST_ACTUAL" | tee -a work/logs/manifest.txt
+          echo "ZIP_BYTES=$ZIP_BYTES" | tee -a work/logs/manifest.txt
+          echo "ZIP_SHA256=$ZIP_ACTUAL" | tee -a work/logs/manifest.txt
+          test "$ZIP_ACTUAL" = "$ZIP_EXPECTED"
+          test "$ZIP_BYTES" = '93566'
+
+      - name: Filename-only archive preflight BEFORE numeric coupling access
+        shell: bash
+        run: |
+          python - <<'PY' | tee work/logs/preflight.txt
+          import json,re,zipfile
+          from collections import defaultdict
+          from pathlib import PurePosixPath,Path
+
+          zp='work/raw/dynamic_laser_coupling_data.zip'
+          with zipfile.ZipFile(zp) as z:
+              infos=z.infolist()
+              rows=[]
+              bybase=defaultdict(list)
+              for i,zi in enumerate(infos):
+                  base=PurePosixPath(zi.filename).name
+                  rec={'index':i,'path':zi.filename,'base':base,'size':zi.file_size,'crc':f'{zi.CRC:08x}','compressed':zi.compress_size}
+                  rows.append(rec)
+                  if base.lower().endswith('.txt'):
+                      bybase[base].append(rec)
+
+          print('PREFLIGHT_MODE','FILENAMES_AND_ZIP_METADATA_ONLY_NO_FILE_CONTENT_READ')
+          print('ARCHIVE_ENTRY_COUNT',len(rows))
+          for r in rows:
+              print('ARCHIVE_ENTRY',json.dumps(r,sort_keys=True))
+
+          expected=[]
+          expected += [f'0_{r}sv.txt' for r in (1,2,3)]
+          for major,minor in [('1','1'),('1','2'),('2','1'),('2','2'),('3','1'),('3','2')]:
+              expected += [f'{major}_{minor}_{r}sv.txt' for r in (1,2,3)]
+
+          duplicate_conflicts=[]
+          for base,recs in sorted(bybase.items()):
+              sig={(r['size'],r['crc']) for r in recs}
+              if len(recs)>1 and len(sig)>1:
+                  duplicate_conflicts.append(base)
+
+          bases=set(bybase)
+          has_321='3_2_1sv.txt' in bases
+          has_322='3_2_2sv.txt' in bases
+          has_323='3_2_3sv.txt' in bases
+          if duplicate_conflicts:
+              status='HOLD_DUPLICATE_FILENAME_CONTENT_CONFLICT'
+          elif has_321 and has_322 and has_323:
+              status='3.2_ID_RESOLVED_BY_ARCHIVE'
+          elif has_321 and has_322:
+              status='3.2_PARTIAL_REPEAT_ID'
+          else:
+              status='HOLD_3.2_MINIMUM_IDENTITY_MISSING'
+
+          missing=sorted(set(expected)-bases)
+          extra=sorted(bases-set(expected))
+          result={
+              'preflight_status':status,
+              'unique_txt_basenames':sorted(bases),
+              'unique_txt_count':len(bases),
+              'missing_expected':missing,
+              'extra_txt':extra,
+              'duplicate_content_conflicts':duplicate_conflicts,
+              'case_3_2':{'has_1':has_321,'has_2':has_322,'has_3':has_323},
+          }
+          Path('work/preflight.json').write_text(json.dumps(result,indent=2,sort_keys=True))
+          print('PREFLIGHT_RESULT',json.dumps(result,sort_keys=True))
+          if status.startswith('HOLD_'):
+              raise SystemExit(status)
+          PY
+
+      - name: Numeric coupling extraction after preflight
+        shell: bash
+        run: |
+          python - <<'PY' | tee work/logs/coupling.txt
+          import io,json,math,re,statistics,zipfile
+          from collections import defaultdict
+          from pathlib import PurePosixPath,Path
+          import numpy as np
+
+          pf=json.loads(Path('work/preflight.json').read_text())
+          status=pf['preflight_status']
+          assert status in {'3.2_ID_RESOLVED_BY_ARCHIVE','3.2_PARTIAL_REPEAT_ID'}
+
+          def case_repeat(base):
+              m=re.fullmatch(r'0_([123])sv\.txt',base,re.I)
+              if m: return '0',int(m.group(1))
+              m=re.fullmatch(r'([123])_([12])_([123])sv\.txt',base,re.I)
+              if m: return f'{m.group(1)}.{m.group(2)}',int(m.group(3))
+              return None
+
+          def parse_numeric(raw,base):
+              text=raw.decode('utf-8-sig',errors='replace')
+              vals=[]
+              for line in text.splitlines():
+                  s=line.strip()
+                  if not s: continue
+                  parts=s.replace(',',' ').split()
+                  if len(parts)<2: continue
+                  try:
+                      t=float(parts[0]); c=float(parts[1])
+                  except ValueError:
+                      continue
+                  if math.isfinite(t) and math.isfinite(c): vals.append((t,c))
+              if len(vals)<10: raise SystemExit(f'TOO_FEW_NUMERIC_ROWS {base} {len(vals)}')
+              a=np.asarray(vals,dtype=float)
+              t=a[:,0]; c=a[:,1]
+              if np.any(np.diff(t)<0): raise SystemExit(f'NONMONOTONIC_TIME {base}')
+              if not t[-1]>t[0]: raise SystemExit(f'ZERO_TIME_SPAN {base}')
+              tau=(t-t[0])/(t[-1]-t[0])
+              mask=(tau>=0.20)&(tau<=0.80)
+              if int(mask.sum())<3: raise SystemExit(f'TOO_FEW_CENTRAL_SAMPLES {base}')
+              return {
+                  'n':int(len(c)),
+                  'n_central':int(mask.sum()),
+                  't_min_ms':float(t[0]),
+                  't_max_ms':float(t[-1]),
+                  'c_track':float(np.median(c[mask])),
+                  'c_full_track':float(np.median(c)),
+                  'outside_nominal_0_1':int(np.sum((c<0)|(c>1))),
+              }
+
+          with zipfile.ZipFile('work/raw/dynamic_laser_coupling_data.zip') as z:
+              # Unique basename only. If archive contains exact duplicate-name entries, collapse only when ZIP metadata are identical.
+              infos=defaultdict(list)
+              for zi in z.infolist():
+                  base=PurePosixPath(zi.filename).name
+                  if base.lower().endswith('.txt') and case_repeat(base): infos[base].append(zi)
+              tracks=[]
+              for base,recs in sorted(infos.items()):
+                  sig={(r.file_size,r.CRC) for r in recs}
+                  if len(sig)!=1: raise SystemExit(f'AMBIGUOUS_DUPLICATE_CONTENT {base}')
+                  zi=recs[0]
+                  cr=case_repeat(base)
+                  d=parse_numeric(z.read(zi),base)
+                  row={'file':base,'case':cr[0],'repeat':cr[1],**d}
+                  tracks.append(row)
+                  print('COUPLING_TRACK',json.dumps(row,sort_keys=True))
+
+          case_tracks=defaultdict(list)
+          for r in tracks: case_tracks[r['case']].append(r)
+          cases=['0','1.1','1.2','2.1','2.2','3.1','3.2']
+          ccase={}; cfull={}
+          for case in cases:
+              rr=case_tracks.get(case,[])
+              if not rr: continue
+              ccase[case]=float(np.median([r['c_track'] for r in rr]))
+              cfull[case]=float(np.median([r['c_full_track'] for r in rr]))
+              print('COUPLING_CASE',json.dumps({'case':case,'n_unique_files':len(rr),'c_case':ccase[case],'c_full_case':cfull[case]},sort_keys=True))
+
+          out={'preflight_status':status,'tracks':tracks,'c_case':ccase,'c_full_case':cfull}
+          Path('work/coupling_derived.json').write_text(json.dumps(out,indent=2,sort_keys=True))
+          print('NUMERIC_COUPLING_ACCESS','COMPLETED_AFTER_PREFLIGHT')
+          PY
+
+      - name: Download and verify transient frozen BP1 inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          THERMO_URL='https://data.nist.gov/od/ds/ark:/88434/mds2-2716/_v/1.3.1/Thermography/AMB2022-03-718-AMMT-StaringCamera_Signal.h5'
+          OPTICAL_URL='https://data.nist.gov/od/ds/ark:/88434/mds2-2718/_v/1.0.3/AMB2022-718-SH1-MeltPool_Cross-Section_Measurement_Results.xlsx'
+          curl -fL --retry 3 --retry-delay 2 "$THERMO_URL" -o work/raw/thermography.h5
+          curl -fL --retry 3 --retry-delay 2 "$OPTICAL_URL" -o work/raw/optical_results.xlsx
+          T=$(sha256sum work/raw/thermography.h5 | awk '{print $1}')
+          O=$(sha256sum work/raw/optical_results.xlsx | awk '{print $1}')
+          test "$T" = 'f6fe21ec911707f72e7efda2932c77eae2b75d84765848878fe5beb6b728cd43'
+          test "$O" = '2cfaac96aaca3dabb77b7029f842cdcc7e75c5a2cf3577d0734823246364a931'
+          echo "BP1_THERMO_BYTES=$(stat -c%s work/raw/thermography.h5)" | tee work/logs/bp1_integrity.txt
+          echo "BP1_THERMO_SHA256=$T" | tee -a work/logs/bp1_integrity.txt
+          echo "BP1_OPTICAL_BYTES=$(stat -c%s work/raw/optical_results.xlsx)" | tee -a work/logs/bp1_integrity.txt
+          echo "BP1_OPTICAL_SHA256=$O" | tee -a work/logs/bp1_integrity.txt
+
+      - name: Recover frozen BP1 thermal and geometry case endpoints
+        shell: bash
+        run: |
+          python - <<'PY' | tee work/logs/bp1_endpoints.txt
+          import json,math
+          from collections import defaultdict
+          from pathlib import Path
+          import h5py
+          import numpy as np
+          from openpyxl import load_workbook
+
+          CASES=['0','1.1','1.2','2.1','2.2','3.1','3.2']
+          FRAME_RATE=30000.0
+          DL=1081
+
+          def scalar(v): return float(np.asarray(v).reshape(-1)[0])
+          def thermo_identity(name):
+              p=name.removeprefix('Line_').split('_')
+              if len(p)==2:return p[0],int(p[1])
+              if len(p)==3:return f'{p[0]}.{p[1]}',int(p[2])
+              raise ValueError(name)
+          def line_id(c,r): return f'Line {c}_{r}'
+
+          thermal=[]
+          with h5py.File('work/raw/thermography.h5','r') as f:
+              cal=f['Calibration']['ThermalCal'].attrs
+              assert abs(scalar(cal['Coeff_a'])-0.9655)<1e-12
+              assert abs(scalar(cal['Coeff_b'])-197.2)<1e-12
+              assert abs(scalar(cal['Coeff_c'])-43920000.0)<1e-6
+              td=f['ThermalData']
+              assert abs(scalar(td.attrs['frame_rate'])-FRAME_RATE)<1e-9
+              names=sorted(k for k in td.keys() if k.startswith('Line_'))
+              assert len(names)==21
+              for name in names:
+                  ds=td[name]['Signal']
+                  occ=0; active=0
+                  for start in range(0,ds.shape[0],25):
+                      arr=ds[start:min(start+25,ds.shape[0])]
+                      per=(arr>=DL).sum(axis=(1,2),dtype=np.int64)
+                      occ += int(per.sum()); active += int((per>0).sum())
+                  c,r=thermo_identity(name)
+                  row={'line_id':line_id(c,r),'case':c,'repeat':r,
+                       'hot_pixel_time_integral_1298C_px_s':occ/FRAME_RATE,
+                       'any_hot_duration_1298C_s':active/FRAME_RATE}
+                  thermal.append(row)
+                  print('BP1_THERMAL_TRACK',json.dumps(row,sort_keys=True))
+
+          expected={line_id(c,r) for c in CASES for r in (1,2,3)}
+          assert {r['line_id'] for r in thermal}==expected
+
+          wb=load_workbook('work/raw/optical_results.xlsx',read_only=True,data_only=True)
+          ws=wb.active; header_row=None; headers=None
+          for ri,row in enumerate(ws.iter_rows(values_only=True),start=1):
+              vals=[str(v).strip() if v is not None else '' for v in row]
+              if 'Case and Line No.' in vals:
+                  header_row=ri; headers=vals; break
+          assert header_row is not None
+          def ucol(pred):
+              hits=[i for i,h in enumerate(headers) if pred(h)]
+              assert len(hits)==1,(hits,headers)
+              return hits[0]
+          lc=ucol(lambda h:h=='Case and Line No.')
+          dc=ucol(lambda h:h.startswith('Depth') and ('µm' in h or 'um' in h.lower()))
+          wc=ucol(lambda h:h.startswith('Width') and ('µm' in h or 'um' in h.lower()))
+          raw=defaultdict(list)
+          for row in ws.iter_rows(min_row=header_row+1,values_only=True):
+              lid=str(row[lc]).strip() if row[lc] is not None else ''
+              if lid in expected:
+                  raw[lid].append((float(row[dc]),float(row[wc])))
+          assert set(raw)==expected
+          assert all(len(v)==2 for v in raw.values())
+          geom={lid:{'depth_mean_um':float(np.mean([x[0] for x in rr])),
+                     'width_mean_um':float(np.mean([x[1] for x in rr]))} for lid,rr in raw.items()}
+
+          merged=[]
+          for t in thermal:
+              row={**t,**geom[t['line_id']]}; merged.append(row)
+              print('BP1_TRACK_ENDPOINT',json.dumps(row,sort_keys=True))
+
+          case_out={}
+          for c in CASES:
+              rr=[r for r in merged if r['case']==c]
+              assert len(rr)==3
+              case_out[c]={
+                  'Y_thermal':float(np.median([r['hot_pixel_time_integral_1298C_px_s'] for r in rr])),
+                  'Y_thermal_sensitivity':float(np.median([r['any_hot_duration_1298C_s'] for r in rr])),
+                  'Y_width':float(np.median([r['width_mean_um'] for r in rr])),
+                  'Y_depth':float(np.median([r['depth_mean_um'] for r in rr])),
+              }
+              print('BP1_CASE_ENDPOINT',json.dumps({'case':c,**case_out[c]},sort_keys=True))
+          Path('work/bp1_endpoints.json').write_text(json.dumps(case_out,indent=2,sort_keys=True))
+          PY
+
+      - name: Execute frozen E09 case-level statistics and gate
+        shell: bash
+        run: |
+          python - <<'PY' | tee work/logs/result.txt
+          import itertools,json,math
+          from pathlib import Path
+          import numpy as np
+          from scipy.stats import spearmanr
+
+          CASES=['0','1.1','1.2','2.1','2.2','3.1','3.2']
+          XPROC={'0':1.00,'1.1':2.09,'1.2':0.71,'2.1':0.80,'2.2':1.20,'3.1':1.14,'3.2':0.86}
+          coup=json.loads(Path('work/coupling_derived.json').read_text())
+          bp1=json.loads(Path('work/bp1_endpoints.json').read_text())
+          ccase=coup['c_case']; pf=coup['preflight_status']
+          analyzable=[c for c in CASES if c in ccase and c in bp1]
+          if '0' not in analyzable: raise SystemExit('HOLD_DATA_INTEGRITY baseline missing')
+          if len(analyzable)<6: raise SystemExit('HOLD_DATA_INTEGRITY fewer than 6 cases')
+          c0=ccase['0']
+          if not math.isfinite(c0) or c0==0: raise SystemExit('HOLD_DATA_INTEGRITY invalid baseline coupling')
+          xc={c:XPROC[c]*(ccase[c]/c0) for c in analyzable}
+
+          def rho(x,y):
+              v=float(spearmanr(x,y).statistic)
+              return v
+          def stats_for(key,cases):
+              yp=np.array([bp1[c][key] for c in cases],float)
+              xp=np.array([XPROC[c] for c in cases],float)
+              xx=np.array([xc[c] for c in cases],float)
+              rp=rho(xp,yp); rc=rho(xx,yp)
+              return {'rho_process':rp,'rho_coupled':rc,'delta_rho':rc-rp}
+
+          endpoint_keys=['Y_thermal','Y_thermal_sensitivity','Y_width','Y_depth']
+          stats={k:stats_for(k,analyzable) for k in endpoint_keys}
+
+          axes=[('spot','1.1','1.2'),('speed','2.2','2.1'),('power','3.1','3.2')]
+          axis=[]
+          for name,hi,lo in axes:
+              if hi not in analyzable or lo not in analyzable or (name=='power' and pf=='3.2_PARTIAL_REPEAT_ID'):
+                  axis.append({'axis':name,'state':'NOT_TESTABLE'})
+                  continue
+              dx=xc[hi]-xc[lo]; dy=bp1[hi]['Y_thermal']-bp1[lo]['Y_thermal']
+              conc=(dx!=0 and dy!=0 and math.copysign(1,dx)==math.copysign(1,dy))
+              axis.append({'axis':name,'state':'CONCORDANT' if conc else 'DISCORDANT','delta_x':dx,'delta_y':dy})
+          avail=[a for a in axis if a['state']!='NOT_TESTABLE']
+          nconc=sum(a['state']=='CONCORDANT' for a in avail)
+
+          s=stats['Y_thermal']; n=len(analyzable)
+          integrity=False
+          if n<6: integrity=True
+          if integrity:
+              candidate='HOLD_DATA_INTEGRITY'
+          elif n==7 and s['rho_coupled']>=0.70 and s['delta_rho']>=0.20 and len(avail)==3 and nconc==3:
+              candidate='CROSS_MODAL_ORDERING_SIGNAL'
+          elif ((s['rho_coupled']>=0.70 and s['delta_rho']>=0.20 and pf=='3.2_PARTIAL_REPEAT_ID' and len(avail)==2 and nconc==2)
+                or (s['rho_coupled']>=0.60 and s['delta_rho']>0 and len(avail)>0 and nconc/len(avail)>=2/3)):
+              candidate='PARTIAL_CROSS_MODAL_SIGNAL'
+          elif s['delta_rho']<=0 and s['rho_process']>=0.60:
+              candidate='PROCESS_ONLY_OR_REDUNDANT_AT_CASE_LEVEL'
+          elif s['rho_coupled']<0.60 and (len(avail)==0 or nconc/len(avail)<2/3):
+              candidate='NO_COHERENT_CROSS_MODAL_RELATIONSHIP'
+          else:
+              candidate='INCONCLUSIVE_CASE_LEVEL'
+
+          # Pre-outcome Amendment-01 exact MIXED override.
+          final_gate=candidate
+          if candidate in {'CROSS_MODAL_ORDERING_SIGNAL','PARTIAL_CROSS_MODAL_SIGNAL'}:
+              rw=stats['Y_width']['rho_coupled']; rd=stats['Y_depth']['rho_coupled']
+              strong_negative=(rw<=-0.70 or rd<=-0.70)
+              opposite_strong=(rw*rd<0 and abs(rw)>=0.70 and abs(rd)>=0.70)
+              if strong_negative or opposite_strong:
+                  final_gate='MIXED_ENDPOINT_SPECIFIC'
+
+          # Exact case-label permutation references for primary delta-rho.
+          y=np.array([bp1[c]['Y_thermal'] for c in analyzable],float)
+          xp=np.array([XPROC[c] for c in analyzable],float)
+          xx=np.array([xc[c] for c in analyzable],float)
+          obs=s['delta_rho']; vals=[]
+          for perm in itertools.permutations(y.tolist()):
+              yy=np.array(perm,float)
+              vals.append(rho(xx,yy)-rho(xp,yy))
+          vals=np.asarray(vals,float)
+          one=float(np.mean(vals>=obs-1e-15))
+          two=float(np.mean(np.abs(vals)>=abs(obs)-1e-15))
+          perm={'n_permutations':int(len(vals)),'observed_delta_rho':obs,
+                'one_sided_ge_fraction':one,'two_sided_abs_ge_fraction':two,
+                'min':float(vals.min()),'max':float(vals.max())}
+
+          sensitivity_wo_32=None
+          if pf=='3.2_PARTIAL_REPEAT_ID' and '3.2' in analyzable:
+              cs=[c for c in analyzable if c!='3.2']
+              sensitivity_wo_32={k:stats_for(k,cs) for k in endpoint_keys}
+
+          table=[]
+          for c in analyzable:
+              row={'case':c,'X_process':XPROC[c],'C_case':ccase[c],
+                   'C_ratio':ccase[c]/c0,'X_coupled':xc[c],**bp1[c]}
+              table.append(row)
+              print('E09_CASE',json.dumps(row,sort_keys=True))
+          print('E09_ENDPOINT_STATS',json.dumps(stats,sort_keys=True))
+          print('E09_AXIS',json.dumps(axis,sort_keys=True))
+          print('E09_PERMUTATION',json.dumps(perm,sort_keys=True))
+          if sensitivity_wo_32 is not None:
+              print('E09_SENSITIVITY_EXCL_3_2',json.dumps(sensitivity_wo_32,sort_keys=True))
+          print('E09_PRIMARY_CANDIDATE',candidate)
+          print('E09_FINAL_GATE',final_gate)
+
+          out={'experiment':'AMBENCH-E09','preflight_status':pf,'analyzable_cases':analyzable,
+               'case_table':table,'endpoint_stats':stats,'axes':axis,'permutation':perm,
+               'sensitivity_excluding_3_2':sensitivity_wo_32,
+               'primary_candidate':candidate,'final_gate':final_gate,
+               'raw_policy':'RAW_DATA_TRANSIENT_ONLY','raw_persisted':False}
+          Path('work/e09_result.json').write_text(json.dumps(out,indent=2,sort_keys=True))
+          PY
+
+      - name: Prove no raw-data artifact persistence
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo 'COST-001: standard public-repository ubuntu-latest only.'
+          echo 'RAW-001: raw NIST files existed only under ephemeral work/raw.'
+          echo 'No actions/upload-artifact step is used; no raw bytes are committed by this workflow.'
+          echo 'Derived results are emitted to logs for durable writeback after review.'
+          rm -rf work/raw
+          test ! -e work/raw
+          echo 'RAW_TEARDOWN=SUCCESS'
