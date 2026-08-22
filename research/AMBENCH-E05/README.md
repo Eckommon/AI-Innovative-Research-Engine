@@ -19,6 +19,11 @@ related:
 **Parent feasibility / 상위 feasibility:** `AMBENCH-F04 — PARTIAL`  
 **Historical-boundary rule / 역사경계:** E05 is a **new current-calibration hypothesis**, not an exact reproduction of the 2022 single-track TTAM/TSCR/TLCR pipeline. / 2022 challenge exact 재현이 아닌 신규가설.
 
+## 0. Pre-Execution Amendment / 실행 전 정정
+
+**KO:** E05 실행 전 무결성 검토에서 NIST 후속 논문의 rounded coefficient `C=4.391×10^7`과 frozen v1.3.1 HDF5의 exact `Coeff_c=43,920,000` 사이 차이를 발견했다. **어떠한 E05 outcome도 계산·조회하기 전**, snapshot/source-of-truth 우선 원칙에 따라 E05는 exact HDF5 coefficient `C=43,920,000`을 사용하도록 정정했다. 이로 인해 preregistered integer DL thresholds는 `366 / 836 / 1081 / 1380`으로 정정된다. Feature 정의·모델·split·metric·10% gate는 변경하지 않는다.  
+**EN:** Before any E05 outcome was computed or inspected, an integrity review found a difference between the rounded later-publication coefficient `C=4.391×10^7` and the frozen v1.3.1 HDF5 exact `Coeff_c=43,920,000`. Under the snapshot/source-of-truth rule, E05 was amended **pre-execution** to use the exact HDF5 coefficient. The preregistered integer DL thresholds therefore become `366 / 836 / 1081 / 1380`. Feature definitions, estimator, splits, metrics, and the 10% gate are unchanged.
+
 ## 1. Research Question / 연구 질문
 
 **KO:** current v1.3.1 corrected thermography calibration과 NIST 물리 온도 경계를 이용한 저차원 **thermal occupancy dynamics**가 공정변수만 사용하는 기준선보다 track-level melt-pool depth/width 예측을 실질적으로 개선하는가?  
@@ -47,9 +52,11 @@ Use the current corrected Sakuma-Hattori relation established in F04: / F04에�
 Frozen constants / 상수:
 - `A = 0.9655`
 - `B = 197.2`
-- `C = 4.391×10^7`
+- `C = 43,920,000` — **exact frozen v1.3.1 HDF5 `Coeff_c`**
 - `c2 = 14,388 µm/K`
 - `ε = 0.5` **fixed globally** as the later NIST effective/common emissivity derived from AMB2022-03.
+
+The later NIST publication reports the same coefficient family with rounded `C=4.391×10^7`; E05 uses the exact frozen HDF5 attribute instead. / 후속 논문 rounded 값보다 frozen HDF5 exact 값을 우선한다.
 
 This `ε=0.5` choice is intentionally not presented as the historical per-repeat emissivity used in the original 2022 single-track challenge. / 과거 repeat별 emissivity로 주장하지 않는다.
 
@@ -71,8 +78,8 @@ Only temperatures within the NIST documented calibrated range and directly tied 
 For integer raw DL, compute the exact threshold through the frozen inverse calibration and use the smallest integer DL satisfying `T(S,0.5) >= T_threshold`. Expected integer thresholds are preregistered as integrity checks: / 정수 DL gate
 
 - `1150 °C → 366 DL`
-- `1260 °C → 835 DL`
-- `1298 °C → 1080 DL`
+- `1260 °C → 836 DL`
+- `1298 °C → 1081 DL`
 - `1336 °C → 1380 DL`
 
 No threshold is selected using optical outcomes. / optical outcome 기반 threshold 선택 금지.
