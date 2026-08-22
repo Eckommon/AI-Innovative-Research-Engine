@@ -1,0 +1,271 @@
+name: AMBENCH-D12 Repeat-Provenance Diagnostic
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'research/AMBENCH-D12/TRIGGER.md'
+      - '.github/workflows/ambench-d12-pr.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install frozen dependency
+        run: python -m pip install --disable-pip-version-check numpy
+
+      - name: Verify exact source and transiently download coupling ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p work/raw work/logs
+          MANIFEST_URL='https://data.nist.gov/od/id/ark:/88434/mds2-3842/pdr:v/1.0.3'
+          ZIP_URL='https://data.nist.gov/od/ds/mds2-3842/dynamic_laser_coupling_data.zip'
+          curl -fL --retry 3 --retry-delay 2 "$MANIFEST_URL" -o work/raw/mds2-3842-v1.0.3.json
+          MANIFEST_ACTUAL=$(sha256sum work/raw/mds2-3842-v1.0.3.json | awk '{print $1}')
+          MANIFEST_EXPECTED='b3fb55e489568f90fddcbaf8a7f790e8b2a15483f312bdc403f4d08f4419c1cb'
+          test "$MANIFEST_ACTUAL" = "$MANIFEST_EXPECTED"
+          curl -fL --retry 3 --retry-delay 2 "$ZIP_URL" -o work/raw/dynamic_laser_coupling_data.zip
+          ZIP_ACTUAL=$(sha256sum work/raw/dynamic_laser_coupling_data.zip | awk '{print $1}')
+          ZIP_EXPECTED='8c4278eb621c1638465e13e87339fe0daba1dcae138f24b9c1d86c186cd74f66'
+          ZIP_BYTES=$(stat -c%s work/raw/dynamic_laser_coupling_data.zip)
+          test "$ZIP_ACTUAL" = "$ZIP_EXPECTED"
+          test "$ZIP_BYTES" = '93566'
+          echo "PDR_VERSION=1.0.3" | tee work/logs/integrity.txt
+          echo "MANIFEST_SHA256=$MANIFEST_ACTUAL" | tee -a work/logs/integrity.txt
+          echo "ZIP_BYTES=$ZIP_BYTES" | tee -a work/logs/integrity.txt
+          echo "ZIP_SHA256=$ZIP_ACTUAL" | tee -a work/logs/integrity.txt
+          echo "RAW_POLICY=RAW_DATA_TRANSIENT_ONLY" | tee -a work/logs/integrity.txt
+
+      - name: Execute frozen D12 provenance/stability diagnostic
+        shell: bash
+        run: |
+          python - <<'PY' | tee work/logs/d12.txt
+          import json, math, re, zipfile
+          from collections import defaultdict
+          from pathlib import PurePosixPath, Path
+          import numpy as np
+
+          CASES=['0','1.1','1.2','2.1','2.2','3.1','3.2']
+          FEATURES=['median_mid','iqr_mid','mad_diff_mid','ac1_mid','early_contrast','late_contrast','early_shape_slope','late_shape_slope']
+          PRIMARY=['iqr_mid','early_contrast','late_contrast','early_shape_slope','late_shape_slope']
+          D11_EXPECTED={
+            'median_mid':0.00035199537862381456,
+            'iqr_mid':0.5706644394895019,
+            'mad_diff_mid':3.314499240305213e-07,
+            'ac1_mid':0.1841574693789193,
+            'early_contrast':0.22358478677166296,
+            'late_contrast':0.37509929862749636,
+            'early_shape_slope':0.6611836993192992,
+            'late_shape_slope':0.7350150566064481,
+          }
+
+          def case_repeat(base):
+              m=re.fullmatch(r'0_([123])sv\.txt',base,re.I)
+              if m: return '0',int(m.group(1))
+              m=re.fullmatch(r'([123])_([12])_([123])sv\.txt',base,re.I)
+              if m: return f'{m.group(1)}.{m.group(2)}',int(m.group(3))
+              return None
+
+          def parse_numeric(raw,base):
+              text=raw.decode('utf-8-sig',errors='replace')
+              vals=[]
+              for line in text.splitlines():
+                  s=line.strip()
+                  if not s: continue
+                  parts=s.replace(',',' ').split()
+                  if len(parts)<2: continue
+                  try: t=float(parts[0]); c=float(parts[1])
+                  except ValueError: continue
+                  if math.isfinite(t) and math.isfinite(c): vals.append((t,c))
+              if len(vals)<100: raise SystemExit(f'HOLD_DATA_INTEGRITY TOO_FEW_ROWS {base}')
+              a=np.asarray(vals,float); t=a[:,0]; c=a[:,1]
+              if np.any(np.diff(t)<0) or not t[-1]>t[0]: raise SystemExit(f'HOLD_DATA_INTEGRITY TIME {base}')
+              tau=(t-t[0])/(t[-1]-t[0])
+              return c,tau
+
+          def ols_slope(x,y):
+              x=np.asarray(x,float); y=np.asarray(y,float)
+              if len(x)<3 or np.ptp(x)<=0: return float('nan')
+              xc=x-x.mean(); den=float(np.dot(xc,xc))
+              if den<=0: return float('nan')
+              return float(np.dot(xc,y-y.mean())/den)
+
+          def track_features(c,tau):
+              mid=(tau>=0.20)&(tau<=0.80)
+              early=(tau>=0.05)&(tau<0.20)
+              late=(tau>0.80)&(tau<=0.95)
+              if min(int(mid.sum()),int(early.sum()),int(late.sum()))<3:
+                  return {k:float('nan') for k in FEATURES}
+              cm=c[mid]; ce=c[early]; cl=c[late]
+              med=float(np.median(cm)); q25,q75=np.quantile(cm,[0.25,0.75]); dif=np.abs(np.diff(cm))
+              if len(cm)>=3 and np.std(cm[:-1])>0 and np.std(cm[1:])>0:
+                  ac1=float(np.corrcoef(cm[:-1],cm[1:])[0,1])
+              else: ac1=float('nan')
+              return {
+                'median_mid':med,
+                'iqr_mid':float(q75-q25),
+                'mad_diff_mid':float(np.median(dif)) if len(dif) else float('nan'),
+                'ac1_mid':ac1,
+                'early_contrast':float(np.median(ce)-med),
+                'late_contrast':float(np.median(cl)-med),
+                'early_shape_slope':ols_slope(tau[early],ce),
+                'late_shape_slope':ols_slope(tau[late],cl),
+              }
+
+          def mad(x):
+              x=np.asarray(x,float); m=np.median(x); return float(np.median(np.abs(x-m)))
+
+          expected=[f'0_{r}sv.txt' for r in (1,2,3)]
+          for major,minor in [('1','1'),('1','2'),('2','1'),('2','2'),('3','1'),('3','2')]:
+              expected += [f'{major}_{minor}_{r}sv.txt' for r in (1,2,3)]
+
+          tracks=[]
+          with zipfile.ZipFile('work/raw/dynamic_laser_coupling_data.zip') as z:
+              infos=defaultdict(list)
+              for zi in z.infolist():
+                  base=PurePosixPath(zi.filename).name
+                  if base.lower().endswith('.txt') and case_repeat(base): infos[base].append(zi)
+              if set(infos)!=set(expected): raise SystemExit('HOLD_DATA_INTEGRITY FILE_SET')
+              for base in expected:
+                  recs=infos[base]; sig={(r.file_size,r.CRC) for r in recs}
+                  if len(sig)!=1: raise SystemExit(f'HOLD_DATA_INTEGRITY DUPLICATE {base}')
+                  case,rep=case_repeat(base); c,tau=parse_numeric(z.read(recs[0]),base)
+                  feat=track_features(c,tau)
+                  if not all(np.isfinite(feat[f]) for f in FEATURES): raise SystemExit(f'HOLD_DATA_INTEGRITY DESCRIPTOR {base}')
+                  tracks.append({'file':base,'case':case,'repeat':rep,'c':c,'tau':tau,'feat':feat})
+
+          tracks=sorted(tracks,key=lambda r:(CASES.index(r['case']),r['repeat']))
+          if len(tracks)!=21 or any(sum(r['case']==c for r in tracks)!=3 for c in CASES): raise SystemExit('HOLD_DATA_INTEGRITY 7X3')
+          labels=np.array([r['case'] for r in tracks],object)
+          reps=np.array([r['repeat'] for r in tracks],int)
+          X=np.array([[r['feat'][f] for f in FEATURES] for r in tracks],float)
+
+          # 1) exact D11 reproduction gate
+          d11_repro={}
+          for j,f in enumerate(FEATURES):
+              x=X[:,j]; gm=x.mean(); ss_total=float(((x-gm)**2).sum()); ss_within=0.0
+              for c in CASES:
+                  xc=x[labels==c]; ss_within += float(((xc-xc.mean())**2).sum())
+              frac=ss_within/ss_total
+              delta=abs(frac-D11_EXPECTED[f])
+              d11_repro[f]={'within_fraction':float(frac),'expected':D11_EXPECTED[f],'abs_delta':float(delta)}
+              print('D11_REPRO',f,json.dumps(d11_repro[f],sort_keys=True))
+              if delta>1e-9: raise SystemExit(f'HOLD_DATA_INTEGRITY D11_REPRO {f} {delta}')
+
+          # 2) balanced case + repeat-index decomposition
+          decomposition={}
+          for j,f in enumerate(FEATURES):
+              y=X[:,j]; g=float(y.mean())
+              cm={c:float(y[labels==c].mean()) for c in CASES}
+              rm={r:float(y[reps==r].mean()) for r in (1,2,3)}
+              ss_case=3.0*sum((cm[c]-g)**2 for c in CASES)
+              ss_repeat=7.0*sum((rm[r]-g)**2 for r in (1,2,3))
+              ss_resid=0.0
+              for i,v in enumerate(y): ss_resid += float((v-cm[labels[i]]-rm[reps[i]]+g)**2)
+              den=ss_repeat+ss_resid
+              share=0.0 if den<=0 else float(ss_repeat/den)
+              if share>=0.50: lab='CROSS_CASE_REPEAT_INDEX_STRUCTURED'
+              elif share<=0.25: lab='CASE_SPECIFIC_RESIDUAL_DOMINANT'
+              else: lab='MIXED_REPEAT_STRUCTURE'
+              decomposition[f]={'ss_case':ss_case,'ss_repeat':ss_repeat,'ss_residual':ss_resid,'repeat_index_share':share,'label':lab,'repeat_means':rm}
+              print('REPEAT_DECOMP',f,json.dumps(decomposition[f],sort_keys=True))
+
+          # 3) sampling-phase robustness
+          sampling={}
+          for j,f in enumerate(FEATURES):
+              repeat_mads=[]
+              for c in CASES: repeat_mads.append(mad(X[labels==c,j]))
+              s_repeat=float(np.median(repeat_mads))
+              phase_mads=[]
+              for tr in tracks:
+                  vals=[]; n=len(tr['c']); idx=np.arange(n)
+                  for factor in (2,4):
+                      for phase in range(factor):
+                          sel=(idx % factor)==phase
+                          ff=track_features(tr['c'][sel],tr['tau'][sel])[f]
+                          if not np.isfinite(ff): raise SystemExit(f'HOLD_DATA_INTEGRITY DECIMATION {tr["file"]} {f}')
+                          vals.append(float(ff))
+                  phase_mads.append(mad(vals))
+              s_phase=float(np.median(phase_mads))
+              q25,q75=np.quantile(X[:,j],[0.25,0.75]); iqr=float(q75-q25)
+              eps=max(1e-12,1e-9*iqr)
+              ratio=float(s_repeat/max(s_phase,eps))
+              if ratio>=3.0: lab='ROBUST_TO_SAMPLING_PHASE'
+              elif ratio<=1.5: lab='COMPARABLE_TO_SAMPLING_PHASE'
+              else: lab='INTERMEDIATE_SAMPLING_ROBUSTNESS'
+              sampling[f]={'S_repeat':s_repeat,'S_phase':s_phase,'baseline_iqr':iqr,'eps':eps,'R_sampling':ratio,'label':lab}
+              print('SAMPLING_ROBUSTNESS',f,json.dumps(sampling[f],sort_keys=True))
+
+          # 4) secondary case-centered residual PCA on primary five
+          P=np.array([[r['feat'][f] for f in PRIMARY] for r in tracks],float)
+          R=P.copy()
+          for j in range(len(PRIMARY)):
+              for c in CASES:
+                  mask=labels==c; R[mask,j]-=R[mask,j].mean()
+              sd=float(np.sqrt(np.sum(R[:,j]**2)/(len(R)-len(CASES))))
+              if not sd>0: raise SystemExit(f'HOLD_DATA_INTEGRITY RESID_SD {PRIMARY[j]}')
+              R[:,j]/=sd
+          s=np.linalg.svd(R,full_matrices=False,compute_uv=False); ev=s*s; ratio=ev/ev.sum(); cum=np.cumsum(ratio)
+          resid_pca80_dim=int(np.searchsorted(cum,0.80)+1)
+          print('RESID_PCA80_DIM',resid_pca80_dim)
+          print('RESID_PCA_CUMULATIVE',json.dumps([float(v) for v in cum]))
+
+          primary_sampling=[sampling[f]['label'] for f in PRIMARY]
+          primary_struct=[decomposition[f]['label'] for f in PRIMARY]
+          representation_count=sum(x=='COMPARABLE_TO_SAMPLING_PHASE' for x in primary_sampling)
+          robust_count=sum(x=='ROBUST_TO_SAMPLING_PHASE' for x in primary_sampling)
+          cross_count=sum(x=='CROSS_CASE_REPEAT_INDEX_STRUCTURED' for x in primary_struct)
+          condition_count=sum(x=='CASE_SPECIFIC_RESIDUAL_DOMINANT' for x in primary_struct)
+
+          if representation_count>=3:
+              gate='REPRESENTATION_SENSITIVITY_DOMINANT'
+          elif robust_count>=3 and cross_count>=3 and representation_count<3:
+              gate='CROSS_CASE_REPEAT_INDEX_STRUCTURE'
+          elif robust_count>=3 and condition_count>=3 and representation_count<3:
+              gate='ROBUST_CONDITION_SPECIFIC_REPEAT_VARIATION'
+          else:
+              gate='MIXED_REPEAT_PROVENANCE'
+
+          result={
+            'diagnostic':'AMBENCH-D12','n_tracks':21,'n_cases':7,'n_repeats_per_case':3,
+            'd11_reproduction':d11_repro,'decomposition':decomposition,'sampling':sampling,
+            'primary':PRIMARY,'counts':{'representation_sensitive':representation_count,'sampling_robust':robust_count,'cross_case_repeat_index':cross_count,'condition_specific_residual':condition_count},
+            'residual_pca':{'pca80_dim':resid_pca80_dim,'cumulative':[float(v) for v in cum]},
+            'gate':gate,
+          }
+          print('D12_COUNTS',json.dumps(result['counts'],sort_keys=True))
+          print('FROZEN_DIAGNOSTIC_GATE',gate)
+          print('D12_RESULT_JSON',json.dumps(result,sort_keys=True,separators=(',',':')))
+
+          summary=Path(__import__('os').environ.get('GITHUB_STEP_SUMMARY',''))
+          if str(summary):
+              with summary.open('a',encoding='utf-8') as fh:
+                  fh.write('# AMBENCH-D12 provenance/stability diagnostic\n\n')
+                  fh.write(f'- Gate: **{gate}**\n')
+                  fh.write(f'- Representation-sensitive primary descriptors: **{representation_count}/5**\n')
+                  fh.write(f'- Sampling-robust primary descriptors: **{robust_count}/5**\n')
+                  fh.write(f'- Cross-case repeat-index structured: **{cross_count}/5**\n')
+                  fh.write(f'- Condition-specific residual dominant: **{condition_count}/5**\n')
+                  fh.write(f'- Residual PCA80 dimension: **{resid_pca80_dim}**\n')
+                  fh.write('\nNo physical outcome was used; causal mechanism is not identified.\n')
+          PY
+
+      - name: Confirm zero-cost raw-data teardown
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf work/raw
+          test ! -e work/raw
+          echo 'RAW_TEARDOWN=SUCCESS'
+          echo 'COST-001/DEC-028: standard public-repository runner only; no paid API, GPU, larger runner, storage artifact, SaaS, cloud, or paid data.'
