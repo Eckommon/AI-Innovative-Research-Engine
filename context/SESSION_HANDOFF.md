@@ -2,12 +2,12 @@
 id: SESSION-HANDOFF
 type: memory
 state: ACTIVE
-checkpoint_id: CHK-20260822-F15-PARTIAL-REGISTERED-SCHEMA
+checkpoint_id: CHK-20260822-F16-PARTIAL-PUBLIC-ENDPOINT
 active_issue: none
 active_research: none
-last_completed_issue: 33
-last_completed_research: AMBENCH-F15
-last_decision: DEC-036
+last_completed_issue: 34
+last_completed_research: AMBENCH-F16
+last_decision: DEC-038
 created: 2026-08-22
 updated: 2026-08-22
 source_of_truth: github
@@ -16,63 +16,61 @@ source_of_truth: github
 # Session Handoff / 세션 인수인계
 
 ## Current State / 현재 상태
-- **Checkpoint:** `CHK-20260822-F15-PARTIAL-REGISTERED-SCHEMA`
+- **Checkpoint:** `CHK-20260822-F16-PARTIAL-PUBLIC-ENDPOINT`
 - **Active Issue:** none
 - **Active research:** none
-- **Last completed:** #33 `AMBENCH-F15 — PARTIAL_REGISTERED_SCHEMA_READY`
-- **Last decision:** `DEC-036`
+- **Last completed:** #34 `AMBENCH-F16 — PARTIAL_PUBLIC_ENDPOINT_READY`
+- **Last decision:** `DEC-038`
 
 ## Cost Authority / 비용 권위
 `COST-001` + `DEC-028`: any potentially billable action requires explicit user approval **before execution**. Spending first/reporting later is prohibited. Unknown billing = `HOLD_COST_APPROVAL`.
 
-## E14 Preservation / E14 보존
-E14 remains frozen at `HOLD_SOURCE_INTEGRITY`. A short zero-cost retry again confirmed that Data.gov still lists the authoritative stationary-Al result files but NIST byte fetch remains unavailable/timeout in the current execution context. Do not redesign E14 or substitute inferred/digitized/unverified values.
+## Preserved E14 / E14 보존
+E14 remains frozen at `HOLD_SOURCE_INTEGRITY`. Do not redesign it or replace its authoritative stationary-Al source with inferred/digitized/unverified values.
 
-## Post-E14 Triage / E14 이후 선별
-Selected NIST `mds2-3761` fully registered X4 dataset as the strongest next external process–structure validation candidate.
+## F15 → F16 / F15 → F16
+F15 selected NIST `mds2-3761` as a strong registered process–structure asset and resolved to `PARTIAL_REGISTERED_SCHEMA_READY` because immutable source provenance/bytes were not established.
 
-Reasons:
-- four nominally identical LPBF parts in one build;
-- 250 layers per part;
-- registered numerical CSVs in machine coordinates;
-- commanded/real laser variables;
-- in-situ melt-pool features;
-- layerwise optical intensity;
-- ex-situ XCT voxel values;
-- explicit registration and uncertainty methodology.
+F16 separately preregistered the source-integrity/access gate before further retrieval work. A single zero-cost Part 1 availability probe immediately before F16 freeze had failed with zero bytes recovered; this chronology is disclosed in the preregistration.
 
-## F15 Result / F15 결과
-Frozen gate: **`PARTIAL_REGISTERED_SCHEMA_READY`**.
+## F16 Result / F16 결과
+**Frozen gate:** `PARTIAL_PUBLIC_ENDPOINT_READY`.
 
-Strongly verified from NIST/Data.gov and NIST AMS 100-69:
-- PDR `ark:/88434/mds2-3761`;
-- four public component archives: `part1.zip`, `part02.zip`, `part03.zip`, `part04.zip`;
-- four folders/parts, 250 layer CSVs per part;
-- 40 columns per measured point;
-- XYPT as the fundamental registration reference;
-- point-level command/real laser variables;
-- in-situ melt-pool length/width/area at thresholds 80/100/120;
-- LWI intensity features;
-- ex-situ XCT voxel values and filtered variants.
+Verified current official state:
+- identifier `ark:/88434/mds2-3761`;
+- Data.gov/NIST current Part endpoints:
+  - `part1.zip`
+  - `part02.zip`
+  - `part03.zip`
+  - `part04.zip`
+- Data.gov issued `2025-05-09`, modified `2025-03-13`;
+- NIST AMS 100-69 confirms registered numerical CSV data organized by layer/part and machine-coordinate alignment;
+- F15 registered schema/registration semantics remain qualified.
 
-Not yet established:
-- exact version-pinned release lineage;
-- authoritative component checksums/equivalent immutable integrity evidence;
-- actual archive-byte inventory through current verified zero-cost routes.
+Still `UNKNOWN / DATA_GAP`:
+- exact data-bearing PDR release/version lineage;
+- authoritative immutable checksum/equivalent byte identifier for each Part ZIP;
+- Part 1 authoritative bytes/local SHA;
+- authoritative archive inventory.
 
-Therefore numerical process–structure modeling is not authorized yet.
+Post-preregistration Part 1 retrieval attempts:
+1. Data.gov/NIST web download path — failed to return bytes;
+2. direct NIST URL through provided transient downloader — download failed.
+
+Per frozen order, Parts 2–4 were not attempted because Part 1 did not pass.
 
 Durable artifacts:
-- `research/AMBENCH-POST-E14-TRIAGE.md`
-- `research/AMBENCH-F15/README.md`
-- `research/AMBENCH-F15/RESULT.md`
-- `CLM-053..055`
-- `DEC-035..036`
-- `MEM-036-AMBENCH-F15`
+- `research/AMBENCH-F16/README.md`
+- `research/AMBENCH-F16/RESULT.md`
+- `CLM-056..058`
+- `DEC-037..038`
+- `MEM-037-AMBENCH-F16`
 
 ## Exact Next Eligible Work / 정확한 다음 eligible 작업
 No experiment is active.
 
-Next step: separately preregister a narrow **`mds2-3761` source-integrity/access gate**. Recover exact release/version lineage and checksum-verifiable bytes/inventory for at least one part, preferably all four, through a verified zero-incremental-cost route. If that passes, then design a new low-degree-of-freedom in-situ melt-pool ↔ XCT process–structure validation experiment.
+Do not start numerical process–structure modeling and do not keep blindly retrying the same failing ZIP endpoint. Next preference:
+1. targeted official NIST/PDR search for version-pinned component manifests/checksums or an official immutable alternative distribution;
+2. if not available under verified zero-cost constraints, triage another authoritative external process–structure dataset.
 
-Any paid/potentially paid retrieval route requires prior explicit user approval.
+Any paid/potentially paid retrieval, source, or compute route requires prior explicit user approval.
