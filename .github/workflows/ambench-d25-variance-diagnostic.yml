@@ -1,0 +1,268 @@
+name: AMBENCH D25 fixed-effect variance diagnostic
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ambench-d25-variance-diagnostic.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install numerical dependency
+        run: python -m pip install --quiet numpy
+
+      - name: Execute frozen D25 diagnostic
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import csv, hashlib, io, math, os, shutil, statistics, subprocess, tempfile, zipfile
+          from pathlib import Path
+          import numpy as np
+
+          ROOT=Path(os.environ['GITHUB_WORKSPACE'])
+          RESULT=ROOT/'research/AMBENCH-D25/EXECUTION_RESULT.md'
+          RESULT.parent.mkdir(parents=True, exist_ok=True)
+          specs=[
+              ('part1.zip',87041995,'0bf229f5a04d181f4c79549fa6357a1bfe3095437b26bb660de5e86b35bb2ec3','https://data.nist.gov/od/ds/mds2-3761/part1.zip',1),
+              ('part02.zip',85261726,'bf72d9e160d94094f9268fcf3f76a532c8a29fb64aff1afbec20256acaee178e','https://data.nist.gov/od/ds/mds2-3761/part02.zip',2),
+              ('part03.zip',83521608,'89e9e1afadca22b9c34177d82972272a4e73789b19388f0c83d62a9ebd53d878','https://data.nist.gov/od/ds/mds2-3761/part03.zip',3),
+              ('part04.zip',81225258,'6c3f655a1482001119c54d1f1e404a34eb401f386fffc06147628b36c7c8d7c5','https://data.nist.gov/od/ds/mds2-3761/part04.zip',4),
+          ]
+          x_idx=15
+          y_idx=39
+          tmp=Path(tempfile.mkdtemp(prefix='d25-'))
+          integrity=True
+          integrity_rows=[]
+          layer_data={}
+          eligible_layers_by_part={p:0 for p in range(1,5)}
+          try:
+              for fn,expected_size,expected_sha,url,part in specs:
+                  path=tmp/fn
+                  cp=subprocess.run(['curl','-fsSL','--retry','5','--retry-delay','2','--retry-all-errors',url,'-o',str(path)],capture_output=True,text=True)
+                  if cp.returncode!=0 or not path.exists():
+                      integrity=False; integrity_rows.append((fn,'DOWNLOAD_FAIL','NA','NA')); continue
+                  actual_size=path.stat().st_size
+                  h=hashlib.sha256()
+                  with path.open('rb') as f:
+                      for chunk in iter(lambda:f.read(1024*1024),b''): h.update(chunk)
+                  actual_sha=h.hexdigest()
+                  ok=(actual_size==expected_size and actual_sha==expected_sha)
+                  integrity=integrity and ok
+                  integrity_rows.append((fn,'PASS' if ok else 'FAIL',str(actual_size),actual_sha))
+                  if not ok:
+                      path.unlink(missing_ok=True); continue
+                  try:
+                      with zipfile.ZipFile(path) as z:
+                          if z.testzip() is not None: integrity=False
+                          names=sorted(n for n in z.namelist() if n.lower().endswith('.csv'))
+                          if len(names)!=250: integrity=False
+                          for name in names:
+                              base=Path(name).stem
+                              if not (base.startswith('L') and base[1:].isdigit()):
+                                  integrity=False; continue
+                              layer=int(base[1:])
+                              xs=[]; ys=[]
+                              with z.open(name) as raw:
+                                  text=io.TextIOWrapper(raw,encoding='utf-8-sig',newline='')
+                                  for row in csv.reader(text):
+                                      if not row: continue
+                                      if len(row)!=40:
+                                          integrity=False; continue
+                                      try:
+                                          x=float(row[x_idx].strip()); y=float(row[y_idx].strip())
+                                      except Exception:
+                                          integrity=False; continue
+                                      if math.isfinite(x) and math.isfinite(y):
+                                          xs.append(x); ys.append(y)
+                              if len(xs)>=30:
+                                  layer_data[(part,layer)]=(statistics.median(xs),statistics.median(ys),len(xs))
+                                  eligible_layers_by_part[part]+=1
+                  except Exception:
+                      integrity=False
+                  path.unlink(missing_ok=True)
+          finally:
+              shutil.rmtree(tmp,ignore_errors=True)
+
+          lines=['---','id: AMBENCH-D25-EXECUTION-RESULT','type: diagnostic-result','created: 2026-08-23','source_of_truth: github-actions','raw_artifacts_committed: false','---','','# AMBENCH-D25 Execution Result / D25 실행 결과','',
+                 '- route: public standard GitHub-hosted ubuntu-latest','- incremental monetary cost: 0 USD','- raw ZIP/CSV artifacts/cache: NONE','- inherited exposure state: NEW_REGISTERED_X4_NUMERICAL_OUTCOME_BLIND = VIOLATED_LIMITED','']
+          lines.append('## Source integrity / source 무결성')
+          for fn,status,size,sha in integrity_rows:
+              lines.append(f'- {fn}: {status}; size={size}; SHA256={sha}')
+          lines.append(f'- all_source_integrity_pass: {"YES" if integrity else "NO"}')
+          if not integrity:
+              lines += ['','## Final gate / 최종 판정','**HOLD_D25_SOURCE_OR_SCHEMA_INTEGRITY**']
+              RESULT.write_text('\n'.join(lines)+'\n',encoding='utf-8'); raise SystemExit(0)
+
+          units=[]
+          for part in range(1,5):
+              for block in range(1,11):
+                  lo=(block-1)*25+1; hi=block*25
+                  rec=[layer_data[(part,l)] for l in range(lo,hi+1) if (part,l) in layer_data]
+                  if len(rec)>=20:
+                      units.append({'part':part,'block':block,
+                                    'x':statistics.median([r[0] for r in rec]),
+                                    'y':statistics.median([r[1] for r in rec])})
+          block_counts={b:sum(1 for u in units if u['block']==b) for b in range(1,11)}
+          keep_blocks={b for b,c in block_counts.items() if c>=3}
+          units=[u for u in units if u['block'] in keep_blocks]
+          excluded=sorted(set(range(1,11))-keep_blocks)
+
+          lines += ['','## Frozen coverage reproduction / 고정 coverage 재현']
+          for p in range(1,5): lines.append(f'- part{p}_eligible_t100_layers: {eligible_layers_by_part[p]} / 250')
+          lines.append(f'- eligible_part_block_units: {len(units)} / 40')
+          lines.append(f'- included_blocks: {len(keep_blocks)} / 10')
+          lines.append(f'- excluded_blocks_lt3_parts: {excluded if excluded else "NONE"}')
+
+          def design(units, part=False, block=False, x=False, response='y', standardize_xy=False):
+              y=np.array([u[response] for u in units],float)
+              xv=np.array([u['x'] for u in units],float)
+              if standardize_xy:
+                  if np.std(y,ddof=0)==0 or np.std(xv,ddof=0)==0: return None
+                  y=(y-y.mean())/y.std(ddof=0); xv=(xv-xv.mean())/xv.std(ddof=0)
+              cols=[np.ones(len(units))]
+              if x: cols.append(xv)
+              if part:
+                  parts=sorted({u['part'] for u in units})
+                  for p in parts[1:]: cols.append(np.array([1.0 if u['part']==p else 0.0 for u in units]))
+              if block:
+                  blocks=sorted({u['block'] for u in units})
+                  for b in blocks[1:]: cols.append(np.array([1.0 if u['block']==b else 0.0 for u in units]))
+              X=np.column_stack(cols)
+              coef=np.linalg.lstsq(X,y,rcond=None)[0]
+              resid=y-X@coef
+              sse=float(resid@resid)
+              yc=y-y.mean(); sst=float(yc@yc)
+              r2=1-sse/sst if sst>0 else float('nan')
+              beta=float(coef[1]) if x else float('nan')
+              return {'sse':sse,'sst':sst,'r2':r2,'beta':beta}
+
+          # E24 reproduction using global ddof=0 standardization + part/block FEs.
+          e24=design(units,part=True,block=True,x=True,response='y',standardize_xy=True)
+          e24_red=design(units,part=True,block=True,x=False,response='y',standardize_xy=True)
+          if e24 is None or e24_red is None:
+              lines += ['','## Final gate / 최종 판정','**HOLD_D25_REPRODUCTION_INTEGRITY**','- reason: degenerate model']
+              RESULT.write_text('\n'.join(lines)+'\n',encoding='utf-8'); raise SystemExit(0)
+          e24_partial=(e24_red['sse']-e24['sse'])/e24_red['sse'] if e24_red['sse']>0 else float('nan')
+          rep_ok=(len(units)==36 and len(keep_blocks)==9 and excluded==[1] and abs(e24['beta']-0.015305)<=5e-7 and abs(e24_partial-0.019321)<=5e-7)
+          lines += [f'- reproduced_beta_part_block_adjusted: {e24["beta"]:.9f}',
+                    f'- reproduced_partial_R2_predictor: {e24_partial:.9f}',
+                    f'- E24_reproduction_integrity: {"PASS" if rep_ok else "FAIL"}']
+          if not rep_ok:
+              lines += ['','## Final gate / 최종 판정','**HOLD_D25_REPRODUCTION_INTEGRITY**']
+              RESULT.write_text('\n'.join(lines)+'\n',encoding='utf-8'); raise SystemExit(0)
+
+          # Outcome decomposition on raw-scale y (R2 invariant to linear standardization).
+          y0=design(units,response='y')
+          yp=design(units,part=True,response='y')
+          yb=design(units,block=True,response='y')
+          ypb=design(units,part=True,block=True,response='y')
+          ypblock=(yp['sse']-ypb['sse'])/yp['sse'] if yp['sse']>0 else float('nan')
+          ypart=(yb['sse']-ypb['sse'])/yb['sse'] if yb['sse']>0 else float('nan')
+          yres=ypb['sse']/y0['sst'] if y0['sst']>0 else float('nan')
+
+          # Predictor decomposition, treating x as diagnostic response.
+          x0=design(units,response='x')
+          xp=design(units,part=True,response='x')
+          xb=design(units,block=True,response='x')
+          xpb=design(units,part=True,block=True,response='x')
+          xpblock=(xp['sse']-xpb['sse'])/xp['sse'] if xp['sse']>0 else float('nan')
+          xpart=(xb['sse']-xpb['sse'])/xb['sse'] if xb['sse']>0 else float('nan')
+          xres=xpb['sse']/x0['sst'] if x0['sst']>0 else float('nan')
+
+          # Frozen slope sequence.
+          pooled=design(units,x=True,response='y',standardize_xy=True)
+          part_adj=design(units,part=True,x=True,response='y',standardize_xy=True)
+          block_adj=design(units,block=True,x=True,response='y',standardize_xy=True)
+          pb_adj=e24
+
+          def rankdata(a):
+              a=np.asarray(a,float); order=np.argsort(a,kind='mergesort'); ranks=np.empty(len(a),float); i=0
+              while i<len(a):
+                  j=i+1
+                  while j<len(a) and a[order[j]]==a[order[i]]: j+=1
+                  r=(i+j-1)/2+1
+                  for k in range(i,j): ranks[order[k]]=r
+                  i=j
+              return ranks
+          def spearman(a,b):
+              if len(a)<3: return float('nan')
+              ra=rankdata(a); rb=rankdata(b)
+              if np.std(ra)==0 or np.std(rb)==0: return float('nan')
+              return float(np.corrcoef(ra,rb)[0,1])
+
+          rxy={}; rbx={}; rby={}
+          for part in range(1,5):
+              us=sorted([u for u in units if u['part']==part],key=lambda z:z['block'])
+              rxy[part]=spearman([u['x'] for u in us],[u['y'] for u in us])
+              rbx[part]=spearman([u['block'] for u in us],[u['x'] for u in us])
+              rby[part]=spearman([u['block'] for u in us],[u['y'] for u in us])
+
+          bpa=part_adj['beta']; bpba=pb_adj['beta']; bba=block_adj['beta']
+          same_sign_part=sum(1 for v in rxy.values() if math.isfinite(v) and v!=0 and math.copysign(1,v)==math.copysign(1,bpa))
+          signrev=(bpa*bpba<0 and abs(bpa)>=0.01 and abs(bpba)>=0.01 and same_sign_part>=3)
+          blockexpl=(signrev and bba!=0 and math.copysign(1,bba)==math.copysign(1,bpba))
+
+          if ypb['r2']>=0.90 and ypblock>=0.80 and ypblock-ypart>=0.10:
+              gate='D25_BLOCK_DOMINANT_HIERARCHICAL_STRUCTURE'
+          elif ypb['r2']>=0.90 and ypart>=0.80 and ypart-ypblock>=0.10:
+              gate='D25_PART_DOMINANT_HIERARCHICAL_STRUCTURE'
+          elif ypb['r2']>=0.90:
+              gate='D25_MIXED_FIXED_EFFECT_STRUCTURE'
+          else:
+              gate='D25_RESIDUAL_DOMINANT_STRUCTURE'
+
+          lines += ['','## Outcome variance structure / Outcome 분산구조',
+                    f'- R2_y_part_only: {yp["r2"]:.6f}',
+                    f'- R2_y_block_only: {yb["r2"]:.6f}',
+                    f'- R2_y_part_block: {ypb["r2"]:.6f}',
+                    f'- partial_R2_y_block_given_part: {ypblock:.6f}',
+                    f'- partial_R2_y_part_given_block: {ypart:.6f}',
+                    f'- residual_fraction_y_after_part_block: {yres:.6f}',
+                    f'- E24_partial_R2_x_given_part_block: {e24_partial:.6f}']
+          lines += ['','## Predictor variance structure / Predictor 분산구조',
+                    f'- R2_x_part_only: {xp["r2"]:.6f}',
+                    f'- R2_x_block_only: {xb["r2"]:.6f}',
+                    f'- R2_x_part_block: {xpb["r2"]:.6f}',
+                    f'- partial_R2_x_block_given_part: {xpblock:.6f}',
+                    f'- partial_R2_x_part_given_block: {xpart:.6f}',
+                    f'- residual_fraction_x_after_part_block: {xres:.6f}']
+          lines += ['','## Frozen sign decomposition / 고정 부호 분해',
+                    f'- beta_pooled: {pooled["beta"]:.6f}',
+                    f'- beta_part_adjusted: {part_adj["beta"]:.6f}',
+                    f'- beta_block_adjusted: {block_adj["beta"]:.6f}',
+                    f'- beta_part_block_adjusted: {pb_adj["beta"]:.6f}',
+                    f'- STRUCTURAL_SIGN_REVERSAL: {"YES" if signrev else "NO"}',
+                    f'- BLOCK_REMOVAL_EXPLAINS_REVERSAL: {"YES" if blockexpl else "NO"}']
+          lines += ['','## Prespecified Spearman diagnostics / 사전고정 Spearman 진단']
+          for p in range(1,5):
+              lines.append(f'- part{p}: rho_x_y={rxy[p]:.6f}; rho_block_x={rbx[p]:.6f}; rho_block_y={rby[p]:.6f}')
+          lines += ['','## Final gate / 최종 판정',f'**{gate}**','',
+                    '- causal claim authorized: NO',
+                    '- new feature/endpoint selection performed: NO',
+                    '- raw numerical row/layer/unit table persisted: NO',
+                    '- raw transient teardown: SUCCESS']
+          RESULT.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          PY
+
+      - name: Persist sanitized D25 diagnostic result only
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/AMBENCH-D25/EXECUTION_RESULT.md
+          if git diff --cached --quiet; then
+            echo 'No result change.'
+          else
+            git commit -m 'record sanitized AMBENCH-D25 variance diagnostic result'
+            git push
+          fi
