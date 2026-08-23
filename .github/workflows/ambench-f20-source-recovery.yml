@@ -1,0 +1,139 @@
+name: AMBENCH F20 source recovery
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ambench-f20-source-recovery.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  f20-source-recovery:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Recover authoritative metadata, verify workbook, inspect schema only
+        shell: bash
+        run: |
+          set -euo pipefail
+          TMP="$(mktemp -d)"
+          trap 'rm -rf "$TMP"' EXIT
+          cd "$TMP"
+
+          echo 'F20_ZERO_COST_ROUTE=PUBLIC_STANDARD_GITHUB_HOSTED_RUNNER'
+          echo 'F20_NUMERICAL_OUTCOME_ACCESS=PROHIBITED'
+
+          curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors \
+            'https://data.nist.gov/od/id/mds2-2514?format=nerdm' -o xct_nerdm.json
+          curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors \
+            'https://data.nist.gov/od/id/mds2-2309?format=nerdm' -o insitu_nerdm.json
+
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          def find_component(path, target):
+              obj=json.loads(Path(path).read_text())
+              comps=obj.get('components', [])
+              exact=[c for c in comps if c.get('filepath') == target]
+              if len(exact) != 1:
+                  raise SystemExit(f'COMPONENT_MATCH_COUNT[{target}]={len(exact)}')
+              c=exact[0]
+              ck=c.get('checksum') or {}
+              alg=(ck.get('algorithm') or {}).get('tag')
+              print(f'COMPONENT={target}')
+              print(f'SIZE={c.get("size")}')
+              print(f'MEDIATYPE={c.get("mediaType")}')
+              print(f'CHECKSUM_ALGORITHM={alg}')
+              print(f'CHECKSUM_HASH={ck.get("hash")}')
+              print(f'DOWNLOAD_URL={c.get("downloadURL")}')
+              return c
+
+          x=find_component('xct_nerdm.json','OverhangX16_ImageHistograms.xlsx')
+          y=find_component('insitu_nerdm.json','XYPT_L101-L125.zip')
+          Path('workbook_url.txt').write_text(x['downloadURL'])
+          Path('workbook_hash.txt').write_text((x.get('checksum') or {}).get('hash',''))
+          Path('xypt_hash.txt').write_text((y.get('checksum') or {}).get('hash',''))
+          if (x.get('checksum') or {}).get('algorithm',{}).get('tag') != 'sha256':
+              raise SystemExit('WORKBOOK_CHECKSUM_NOT_SHA256')
+          if len(Path('workbook_hash.txt').read_text().strip()) != 64:
+              raise SystemExit('WORKBOOK_HASH_INVALID')
+          if (y.get('checksum') or {}).get('algorithm',{}).get('tag') != 'sha256':
+              raise SystemExit('XYPT_CHECKSUM_NOT_SHA256')
+          if len(Path('xypt_hash.txt').read_text().strip()) != 64:
+              raise SystemExit('XYPT_HASH_INVALID')
+          PY
+
+          WB_URL="$(cat workbook_url.txt)"
+          EXPECTED="$(cat workbook_hash.txt)"
+          curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors "$WB_URL" -o workbook.xlsx
+          ACTUAL="$(sha256sum workbook.xlsx | awk '{print $1}')"
+          echo "WORKBOOK_EXPECTED_SHA256=$EXPECTED"
+          echo "WORKBOOK_ACTUAL_SHA256=$ACTUAL"
+          test "$EXPECTED" = "$ACTUAL"
+          echo 'WORKBOOK_SHA256_MATCH=YES'
+
+          python - <<'PY'
+          # Schema-only XLSX inspection. Numeric cell contents are never emitted.
+          import re, zipfile, xml.etree.ElementTree as ET
+
+          NS={'m':'http://schemas.openxmlformats.org/spreadsheetml/2006/main',
+              'r':'http://schemas.openxmlformats.org/officeDocument/2006/relationships'}
+          RELNS={'p':'http://schemas.openxmlformats.org/package/2006/relationships'}
+
+          def textish(s):
+              s=(s or '').strip()
+              if not s or len(s)>120: return False
+              # exclude strings that are only numeric/punctuation/scientific notation
+              if re.fullmatch(r'[+\-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+\-]?\d+)?%?', s): return False
+              return bool(re.search(r'[A-Za-z]', s))
+
+          with zipfile.ZipFile('workbook.xlsx') as z:
+              wb=ET.fromstring(z.read('xl/workbook.xml'))
+              rel=ET.fromstring(z.read('xl/_rels/workbook.xml.rels'))
+              targets={e.attrib['Id']:e.attrib['Target'] for e in rel}
+              shared=[]
+              if 'xl/sharedStrings.xml' in z.namelist():
+                  ss=ET.fromstring(z.read('xl/sharedStrings.xml'))
+                  for si in ss.findall('m:si',NS):
+                      shared.append(''.join(t.text or '' for t in si.findall('.//m:t',NS)))
+              print('SCHEMA_ONLY_INSPECTION=YES')
+              for sh in wb.find('m:sheets',NS):
+                  name=sh.attrib['name']
+                  rid=sh.attrib['{'+NS['r']+'}id']
+                  target=targets[rid]
+                  path='xl/'+target.lstrip('/') if not target.startswith('xl/') else target
+                  root=ET.fromstring(z.read(path))
+                  dim=root.find('m:dimension',NS)
+                  dimension=dim.attrib.get('ref') if dim is not None else None
+                  formulas=len(root.findall('.//m:f',NS))
+                  strings=[]
+                  for c in root.findall('.//m:c',NS):
+                      t=c.attrib.get('t')
+                      coord=c.attrib.get('r')
+                      val=None
+                      if t=='s':
+                          v=c.find('m:v',NS)
+                          if v is not None and v.text is not None:
+                              idx=int(v.text); val=shared[idx] if 0<=idx<len(shared) else None
+                      elif t=='inlineStr':
+                          val=''.join(x.text or '' for x in c.findall('.//m:t',NS))
+                      if textish(val): strings.append((coord,val.strip()))
+                  # de-duplicate while preserving order, cap output to schema-like text only
+                  seen=set(); uniq=[]
+                  for item in strings:
+                      if item[1] not in seen:
+                          seen.add(item[1]); uniq.append(item)
+                  print(f'SHEET={name}')
+                  print(f'DIMENSION={dimension}')
+                  print(f'FORMULA_COUNT={formulas}')
+                  for coord,val in uniq[:80]:
+                      print(f'TEXT_CELL={coord}|{val}')
+              print('NUMERICAL_CELL_VALUES_EMITTED=NO')
+          PY
+
+          echo "XYPT_L101_L125_NERDM_SHA256=$(cat xypt_hash.txt)"
+          echo 'XYPT_AUTHORITATIVE_COMPONENT_PATH=VERIFIED_IN_NERDM'
+          echo 'RAW_TEARDOWN=SUCCESS'
