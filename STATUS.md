@@ -1,18 +1,18 @@
 ---
-checkpoint_id: CHK-20260823-F23-PASS-HEADERLESS-40-COLUMN-MAPPING
+checkpoint_id: CHK-20260823-E24-NO-MATERIAL-REGISTERED-ASSOCIATION
 active_issue: none
 active_research: none
-last_completed_issue: 41
-last_completed_research: AMBENCH-F23
-last_decision: DEC-050
+last_completed_issue: 42
+last_completed_research: AMBENCH-E24
+last_decision: DEC-051
 updated: 2026-08-23
 ---
 
 # Project Status / 프로젝트 상태
 
 **Project / 프로젝트:** AI-Innovative-Research-Engine / AI 기반 혁신 탐색 연구 엔진  
-**Latest verified baseline / 최신 검증 baseline:** `v0.29-f23-pass-headerless-40-column-mapping`  
-**State / 상태:** `F23_COMPLETED__PASS_F23_HEADERLESS_40_COLUMN_MAPPING_READY`  
+**Latest verified baseline / 최신 검증 baseline:** `v0.30-e24-no-material-registered-association`  
+**State / 상태:** `E24_COMPLETED__NO_MATERIAL_E24_ASSOCIATION`  
 **Active Work Queue / 활성 작업 큐:** none.
 
 ## Mandatory Governance / 필수 거버넌스
@@ -43,56 +43,60 @@ updated: 2026-08-23
 - #38 F20 — `PASS_F20_WORKBOOK_IMMUTABLE_SCHEMA_READY`
 - #39 F21 — `REJECT_F21_ENDPOINT_ROUTE`
 - #40 F22 — `PARTIAL_F22_ALL_FOUR_IMMUTABLE_BYTES_READY__SCHEMA_HEADER_HOLD`
-- #41 F23 — **`PASS_F23_HEADERLESS_40_COLUMN_MAPPING_READY`**
+- #41 F23 — `PASS_F23_HEADERLESS_40_COLUMN_MAPPING_READY`
+- #42 E24 — **`NO_MATERIAL_E24_ASSOCIATION`**
 
-## F23 Final / F23 최종
-Result: `research/AMBENCH-F23/RESULT.md`.  
-Structural execution: `research/AMBENCH-F23/STRUCTURE_RESULT.md`.  
-Claims: `CLM-080..082`. Decision: `DEC-050`. Memory: `MEM-045-AMBENCH-F23`.
+## E24 Final / E24 최종
+Preregistration: `research/AMBENCH-E24/README.md`.  
+Execution: `research/AMBENCH-E24/EXECUTION_RESULT.md`.  
+Result: `research/AMBENCH-E24/RESULT.md`.  
+Claims: `CLM-083..085`. Decision: `DEC-051`. Memory: `MEM-046-AMBENCH-E24`.
 
-### Headerless positional schema solved / headerless 위치 schema 해결
-NIST AMS 100-69 Section 3.2 and Tables 1–3 define the registered CSV as 40 columns with each row representing one measured point. F23 froze the exact positions 1..40 in `research/AMBENCH-F23/README.md` before structural execution.
+### First registered controlled experiment / 첫 registered 통제 실험
+Frozen primary:
+- predictor: col16 `melt_pool_area_t100_mm2`;
+- outcome: col40 `xct_voxel_mean5`;
+- hierarchy: row → part×layer median → fixed 25-layer part×block medians;
+- model: standardized predictor/outcome + part/block fixed effects.
 
-The mapping covers:
-- positions 1–10: part/time + commanded/real process variables;
-- 11–19: melt-pool geometry at thresholds 80/100/120;
-- 20–37: LWI powder/exposure, LEDs A/B/C and original/mean-filtered features;
-- 38–40: XCT voxel original/3×3×3/5×5×5 values.
+Coverage:
+- Part1 232/250 eligible layers;
+- Part2 231/250;
+- Part3 230/250;
+- Part4 230/250;
+- 36/40 eligible part×block units;
+- 9/10 blocks included; Block 1 excluded by frozen rule.
 
-### Full-published-dataset structural verification / 전체 published dataset 구조 검증
-All four F22/NIST NERDm ZIP identities were revalidated by exact size and SHA-256, then all rows were inspected structurally with no field-value emission:
-- 4 parts × 250 layers = 1000 CSVs;
-- total non-empty rows = `4,748,352`;
-- observed field-count set = `{40}` only;
-- rows not 40 fields = `0`;
-- numeric/NaN parse failure fields = `0`;
-- empty rows = `0`;
-- first non-empty row numeric/NaN in `1000/1000` CSVs.
+Primary result:
+- beta `0.015305`;
+- full R² `0.999432`;
+- predictor partial R² `0.019321`;
+- block-preserving permutation p `0.007900`.
 
-Thus downstream parsing is frozen as **headerless** with raw positions 1..40 mapped exactly to the AMS 100-69 semantic contract.
+Frozen materiality threshold `partial_R2 >= 0.05` was not met. Therefore statistical detectability is not promoted to a material association.
 
-### Exposure boundary / 사전노출 경계
-Inherited state remains:
-**`NEW_REGISTERED_X4_NUMERICAL_OUTCOME_BLIND = VIOLATED_LIMITED`**.
+Threshold sensitivity:
+- t80 beta `0.016772`, partial R² `0.025308`;
+- t120 beta `0.017831`, partial R² `0.021048`;
+- material sign disagreement: NO.
 
-F23 added no numerical-value exposure and computed no associations, rankings, feature selection or models.
+Registration control:
+- +25-layer shift beta `0.011634`;
+- shift partial R² `0.009379`;
+- locality criterion PASS, but both registered and shifted effects remain small.
+
+Part-specific block Spearman rhos are all negative (`-0.460255`, `-0.268917`, `-0.483333`, `-0.694567`) while the fixed-effect beta is weakly positive. These are different estimands and indicate strong block/layer structure; naive pooled interpretation is prohibited.
+
+Exposure remains `NEW_REGISTERED_X4_NUMERICAL_OUTCOME_BLIND = VIOLATED_LIMITED` from F22. E24 had no post-hoc feature selection, endpoint switching, or high-capacity modeling.
 
 ## Exact Next Eligible Work / 정확한 다음 행동
-No numerical experiment is active yet.
+No experiment is active.
 
-The registered X4 source-byte and serialization/schema blockers are now sufficiently resolved to permit a **separately preregistered low-degree-of-freedom process/melt-pool ↔ XCT controlled experiment design**.
+Do **not** feature-fish or escalate model capacity on the same registered representation. Next highest-leverage work is a separately preregistered diagnostic, tentatively **AMBENCH-D25 — Registered X4 Fixed-Effect Dominance / Variance-Structure Diagnostic**, to quantify without adding new predictors/endpoints:
+1. between-block/layer-geometry contribution;
+2. persistent between-part/location contribution;
+3. residual within-block between-part contribution;
+4. why within-part rank trajectories and fixed-effect slope have opposite signs;
+5. whether the E24 weak registered-locality signal merits a genuinely new independent experiment.
 
-Before any association result is computed, freeze:
-1. scientific question / estimand;
-2. exact predictor columns;
-3. exact XCT outcome column/transform;
-4. row/layer/part aggregation policy;
-5. missingness handling;
-6. validation/holdout structure;
-7. primary statistic/model and null controls;
-8. NIST uncertainty interpretation;
-9. explicit `VIOLATED_LIMITED` disclosure.
-
-Do not treat millions of rows, 250 layers or four parts as independent replicates by default. Do not use high-capacity ML without later independent-condition justification.
-
-E14 and the X16 branch remain frozen/unchanged. Any paid/potentially paid route requires explicit prior user approval.
+E14 and X16 branches remain frozen/unchanged. Any paid/potentially paid route requires explicit prior user approval.
