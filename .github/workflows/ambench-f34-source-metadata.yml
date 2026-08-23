@@ -1,0 +1,165 @@
+name: AMBENCH F34 metadata-only source qualification
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ambench-f34-source-metadata.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Inspect NIST PDR metadata and Metadata.zip only
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import csv, hashlib, io, json, os, re, urllib.parse, urllib.request, zipfile
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+
+          LEGACY='mds1103vzr'
+          EXPECTED_META_SHA='cf788593b45675dfbf380782b9141ebafd85bf6653f8ca57f0cf69d578c60ee6'
+          root=Path(os.environ['GITHUB_WORKSPACE'])
+          out=root/'research/AMBENCH-F34/SOURCE_METADATA_PREFLIGHT.md'
+          out.parent.mkdir(parents=True,exist_ok=True)
+
+          def fetch(url):
+              req=urllib.request.Request(url,headers={'User-Agent':'AI-Innovative-Research-Engine/F34-source-metadata'})
+              with urllib.request.urlopen(req,timeout=45) as r: return r.read()
+
+          meta=None; endpoint=None; errors=[]
+          candidates=[
+              f'https://data.nist.gov/od/id/{LEGACY}?format=nerdm',
+              f'https://data.nist.gov/od/id/ark:/88434/{LEGACY}?format=nerdm',
+              f'https://data.nist.gov/od/id/ark%3A%2F88434%2F{LEGACY}?format=nerdm',
+          ]
+          for u in candidates:
+              try:
+                  obj=json.loads(fetch(u).decode('utf-8'))
+                  if isinstance(obj,dict) and obj.get('components') is not None:
+                      meta=obj; endpoint=u; break
+              except Exception as e:
+                  errors.append(f'{u} -> {type(e).__name__}: {e}')
+          if meta is None:
+              lines=['---','id: AMBENCH-F34-SOURCE-METADATA-PREFLIGHT','type: source-design-preflight','created: 2026-08-23','candidate_outcomes_inspected: false','incremental_monetary_cost_usd: 0','---','', '# AMBENCH-F34 Source/Metadata Preflight / Source·Metadata 사전점검','', '## Diagnostic / 진단','- NERDm endpoint resolution failed.','- attempts:']+[f'  - `{x}`' for x in errors]+['', '**HOLD_F34_SOURCE_OR_IDENTITY_GAP**','']
+              out.write_text('\n'.join(lines),encoding='utf-8'); raise SystemExit(0)
+
+          comps={c.get('filepath'):c for c in meta.get('components',[]) if c.get('filepath')}
+          def chash(c):
+              x=c.get('checksum') or {}; return x.get('hash') if isinstance(x,dict) else None
+
+          lines=['---','id: AMBENCH-F34-SOURCE-METADATA-PREFLIGHT','type: source-design-preflight','created: 2026-08-23','candidate_outcomes_inspected: false','large_archives_downloaded: false','incremental_monetary_cost_usd: 0','---','',
+                 '# AMBENCH-F34 Source/Metadata Preflight / Source·Metadata 사전점검','',
+                 '## Boundary / 경계','- Current official NIST NERDm/PDR metadata + checksum-verified `Metadata.zip` only.','- `Build Command Data.zip`, `In-situ Meas Data.zip`, and `Movies.zip` are NOT downloaded/opened.','- No candidate melt-pool/quality numerical outcome is inspected or emitted.','',
+                 '## Current NERDm identity / 현재 NERDm identity',f'- endpoint: `{endpoint}`',f'- title: {meta.get("title","UNKNOWN")}',f'- version: `{meta.get("version","UNKNOWN")}`',f'- edition/version id: `{meta.get("@id", meta.get("ediid","UNKNOWN"))}`',f'- component_count: `{len(meta.get("components",[]))}`','- top-level components:']
+          for name,c in comps.items():
+              lines.append(f'  - `{name}` | size=`{c.get("size","UNKNOWN")}` | sha256=`{chash(c)}` | downloadURL=`{c.get("downloadURL","UNKNOWN")}`')
+
+          mc=comps.get('Metadata.zip')
+          if mc is None:
+              lines += ['', '## Metadata.zip qualification / Metadata.zip 적격성','- component_present: `False`','', '**HOLD_F34_SOURCE_OR_IDENTITY_GAP**','']
+              out.write_text('\n'.join(lines),encoding='utf-8'); raise SystemExit(0)
+          raw=fetch(mc['downloadURL']); got=hashlib.sha256(raw).hexdigest(); exp=chash(mc)
+          hash_ok=(got==exp==EXPECTED_META_SHA)
+          lines += ['', '## Metadata.zip qualification / Metadata.zip 적격성',f'- size_nerdm: `{mc.get("size")}`',f'- size_local: `{len(raw)}`',f'- sha256_nerdm: `{exp}`',f'- sha256_preregistered: `{EXPECTED_META_SHA}`',f'- sha256_local: `{got}`',f'- checksum_match_all: `{hash_ok}`','']
+
+          z=zipfile.ZipFile(io.BytesIO(raw)); names=z.namelist()
+          lines += ['## Archive inventory / archive inventory',f'- member_count: `{len(names)}`','- members:']
+          for n in names:
+              info=z.getinfo(n); lines.append(f'  - `{n}` | size=`{info.file_size}`')
+
+          # Schema/string-only summaries. No measurement archive is accessed.
+          text_ext={'.txt','.md','.csv','.json','.xml','.yaml','.yml','.ini','.cfg'}
+          lines += ['', '## Schema/string summaries / schema·문자열 요약']
+          for n in names:
+              if n.endswith('/'): continue
+              ext=Path(n).suffix.lower(); info=z.getinfo(n)
+              if info.file_size>2_000_000: continue
+              if ext in text_ext:
+                  data=z.read(n)
+                  txt=data.decode('utf-8-sig',errors='replace')
+                  lines.append(f'### `{n}`')
+                  if ext=='.csv':
+                      reader=csv.reader(io.StringIO(txt)); rows=[]
+                      for i,row in enumerate(reader):
+                          rows.append(row)
+                          if i>=4: break
+                      if rows:
+                          lines.append(f'- header: `{rows[0]}`')
+                          lines.append(f'- preview_rows_count_suppressed_values: `{max(0,len(rows)-1)}`')
+                          # emit only nonnumeric categorical tokens from first few rows
+                          cats=[]
+                          for row in rows[1:]:
+                              for v in row:
+                                  s=v.strip()
+                                  if s and not re.fullmatch(r'[-+]?\d+(?:\.\d+)?(?:[eE][-+]?\d+)?',s): cats.append(s)
+                          lines.append(f'- early_categorical_tokens: `{sorted(set(cats))[:80]}`')
+                  elif ext=='.json':
+                      try:
+                          obj=json.loads(txt)
+                          def keys(x,p=''):
+                              out=[]
+                              if isinstance(x,dict):
+                                  for k,v in x.items():
+                                      q=f'{p}.{k}' if p else str(k); out.append(q); out.extend(keys(v,q))
+                              elif isinstance(x,list) and x: out.extend(keys(x[0],p+'[]'))
+                              return out
+                          lines.append(f'- json_key_paths: `{keys(obj)[:150]}`')
+                      except Exception as e: lines.append(f'- json_parse: `FAIL {type(e).__name__}`')
+                  elif ext=='.xml':
+                      try:
+                          rt=ET.fromstring(txt); tags=[]
+                          for el in rt.iter(): tags.append(el.tag.split('}')[-1])
+                          lines.append(f'- xml_tags: `{sorted(set(tags))[:150]}`')
+                      except Exception as e: lines.append(f'- xml_parse: `FAIL {type(e).__name__}`')
+                  else:
+                      keep=[]
+                      kws=('part','layer','scan','strategy','stripe','island','sensor','camera','monitor','melt','build','specimen','sample','rotate','rotation','hatch')
+                      forbidden=('mean intensity','average intensity','melt pool area','result value','temperature result')
+                      for i,line in enumerate(txt.splitlines(),1):
+                          lo=line.lower()
+                          if any(k in lo for k in kws) and not any(f in lo for f in forbidden):
+                              keep.append((i,line.strip()))
+                          if len(keep)>=120: break
+                      lines.append('- bounded_design_lines:')
+                      for i,s in keep: lines.append(f'  - L{i}: {s}')
+                  lines.append('')
+              elif ext=='.xlsx':
+                  # OOXML schema/strings only; numeric cells are intentionally not emitted.
+                  data=z.read(n)
+                  try:
+                      xz=zipfile.ZipFile(io.BytesIO(data)); NS='http://schemas.openxmlformats.org/spreadsheetml/2006/main'; ns={'m':NS,'r':'http://schemas.openxmlformats.org/officeDocument/2006/relationships'}; relns={'p':'http://schemas.openxmlformats.org/package/2006/relationships'}
+                      shared=[]
+                      if 'xl/sharedStrings.xml' in xz.namelist():
+                          ss=ET.fromstring(xz.read('xl/sharedStrings.xml'))
+                          for si in ss.findall('m:si',ns): shared.append(''.join((t.text or '') for t in si.iter('{'+NS+'}t')))
+                      wb=ET.fromstring(xz.read('xl/workbook.xml')); sheet_names=[s.attrib.get('name') for s in wb.find('m:sheets',ns)]
+                      lines += [f'### `{n}`',f'- workbook_sheets: `{sheet_names}`',f'- shared_string_count: `{len(shared)}`',f'- shared_strings: `{shared[:200]}`','']
+                  except Exception as e:
+                      lines += [f'### `{n}`',f'- xlsx_schema_parse: `FAIL {type(e).__name__}: {e}`','']
+
+          lines += ['## Pre-outcome status / outcome 전 상태',f'- metadata_zip_checksum_gate: `{hash_ok}`','- Candidate numerical outcomes inspected: `NO`','- Large archives downloaded: `NO`','- Full seven-dimension F34 gate remains pending interpretation of this metadata-only evidence.','']
+          out.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          PY
+
+      - name: Persist sanitized F34 source preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/AMBENCH-F34/SOURCE_METADATA_PREFLIGHT.md
+          if git diff --cached --quiet; then
+            echo 'No F34 source-preflight change.'
+          else
+            git commit -m 'record AMBENCH-F34 metadata-only source preflight'
+            git push
+          fi
