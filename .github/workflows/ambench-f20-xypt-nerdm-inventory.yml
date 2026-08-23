@@ -1,0 +1,51 @@
+name: AMBENCH F20 XYPT NERDm inventory
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ambench-f20-xypt-nerdm-inventory.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect NERDm component paths only
+        shell: bash
+        run: |
+          set -euo pipefail
+          TMP="$(mktemp -d)"; trap 'rm -rf "$TMP"' EXIT
+          RESULT="$GITHUB_WORKSPACE/research/AMBENCH-F20/XYPT_NERDM_INVENTORY.md"
+          curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors 'https://data.nist.gov/od/id/mds2-2309?format=nerdm' -o "$TMP/nerdm.json"
+          python - "$TMP/nerdm.json" "$RESULT" <<'PY'
+          import json,sys
+          from pathlib import Path
+          src,out=sys.argv[1:]
+          obj=json.loads(Path(src).read_text())
+          comps=obj.get('components',[])
+          rows=[]
+          for c in comps:
+              p=c.get('filepath') or ''
+              u=c.get('downloadURL') or ''
+              if 'XYPT' in p.upper() or 'XYPT' in u.upper() or '101-125' in p or '101-125' in u:
+                  ck=c.get('checksum') or {}; alg=(ck.get('algorithm') or {}).get('tag'); h=ck.get('hash') or ''
+                  rows.append((p,u,alg,h,c.get('size')))
+          lines=['---','id: AMBENCH-F20-XYPT-NERDM-INVENTORY','type: sanitized-metadata-inventory','created: 2026-08-23','source_of_truth: github-actions','---','','# F20 XYPT NERDm Metadata Inventory / XYPT NERDm 메타데이터 인벤토리','',f'- total NERDm components: {len(comps)}',f'- XYPT/101-125 matching components: {len(rows)}','- numerical source values read: NO','']
+          for i,(p,u,a,h,s) in enumerate(rows[:120],1):
+              lines += [f'## Match {i}',f'- filepath: `{p}`',f'- downloadURL: `{u}`',f'- checksum_algorithm: `{a}`',f'- checksum_hash: `{h}`',f'- size: `{s}`','']
+          Path(out).write_text('\n'.join(lines))
+          PY
+      - name: Persist metadata-only inventory
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/AMBENCH-F20/XYPT_NERDM_INVENTORY.md
+          git commit -m 'record F20 XYPT NERDm metadata inventory'
+          git push
