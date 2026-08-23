@@ -73,6 +73,8 @@ Repeat the identical pipeline separately for:
 - col 19, `melt_pool_area_t120_mm2`.
 These are threshold-sensitivity checks only. They cannot replace the primary result.
 
+`material sign disagreement` is frozen before numerical execution as follows: at least one sensitivity beta has the opposite sign to `beta_primary` **and** has `|beta_sensitivity| >= 0.10`, while `|beta_primary| >= 0.10`. Smaller opposite-sign coefficients are recorded but are not treated as material sign disagreement.
+
 ## Registration negative control / registration 음성 대조
 Construct one frozen misregistration control using the primary predictor and the primary outcome shifted forward by exactly 25 layers (one block) within the same part, dropping the terminal block rather than wrapping.
 Apply the same aggregation/fixed-effect model to the resulting aligned block pairs.
@@ -105,8 +107,8 @@ Carry NIST AMS 100-69 uncertainty into interpretation:
 - `HOLD_E24_SOURCE_OR_SCHEMA_INTEGRITY`
 
 Gate semantics:
-- PASS: primary association is nontrivial (`partial_R2 >= 0.05`), permutation p <= 0.05, and locality criterion `|beta_primary| > |beta_shift25|` holds;
-- MIXED: some but not all PASS criteria hold, or threshold sensitivities materially disagree in sign;
+- PASS: primary association is nontrivial (`partial_R2 >= 0.05`), permutation p <= 0.05, locality criterion `|beta_primary| > |beta_shift25|` holds, and there is no material threshold-sensitivity sign disagreement;
+- MIXED: some but not all PASS criteria hold, or material threshold-sensitivity sign disagreement occurs;
 - NO_MATERIAL: `partial_R2 < 0.05` and no other integrity HOLD applies;
 - HOLD gates supersede effect gates when triggered.
 
