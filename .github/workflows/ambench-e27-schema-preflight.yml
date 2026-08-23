@@ -21,7 +21,7 @@ jobs:
         run: |
           set -euo pipefail
           python - <<'PY'
-          import csv, hashlib, io, json, os, shutil, string, subprocess, tempfile, urllib.request
+          import csv, hashlib, io, json, os, shutil, subprocess, tempfile, urllib.request
           from pathlib import Path
 
           root=Path(os.environ['GITHUB_WORKSPACE'])
@@ -37,12 +37,11 @@ jobs:
           lines=['---','id: AMBENCH-E27-SCHEMA-PREFLIGHT','type: schema-preflight','created: 2026-08-23','source_of_truth: github-actions','raw_artifacts_committed: false','numerical_outcome_values_emitted: false','exposure_state: VIOLATED_SCHEMA_PREFLIGHT_GIBBERISH_EMISSION','---','','# AMBENCH-E27 Corrected Schema Preflight / E27 보정 schema 사전검증','', '- route: official NIST NERDm + frozen summary components','- incremental monetary cost: 0 USD','- amendment: AMENDMENT-02 bounded encoding/schema parser','- raw data rows emitted: NO','- numerical outcome cells emitted by this corrected run: NO','']
           overall_primary=False
           sensitivity_available=False
-
           expected_schema_tokens=('turnaround','pad','location','powder','layer','avg','average')
 
           def printable_ratio(s):
               if not s: return 0.0
-              good=sum((ch in string.printable) or ch in '\t\r\n' for ch in s)
+              good=sum(ch.isprintable() or ch in '\t\r\n' for ch in s)
               return good/len(s)
 
           def parse_header(text):
@@ -80,68 +79,50 @@ jobs:
               h=checksum.get('hash')
               if isinstance(h,str) and len(h)==64: return h.lower()
               for v in checksum.values():
-                  if isinstance(v,str) and len(v)==64 and all(ch in '0123456789abcdefABCDEF' for ch in v):
-                      return v.lower()
+                  if isinstance(v,str) and len(v)==64 and all(ch in '0123456789abcdefABCDEF' for ch in v): return v.lower()
               return None
 
           try:
-              with urllib.request.urlopen(nerdm_url,timeout=60) as r:
-                  meta=json.load(r)
-              comps=meta.get('components',[])
-              by_path={c.get('filepath'):c for c in comps if c.get('filepath')}
+              with urllib.request.urlopen(nerdm_url,timeout=60) as r: meta=json.load(r)
+              comps=meta.get('components',[]); by_path={c.get('filepath'):c for c in comps if c.get('filepath')}
               lines += ['## NERDm identity / NERDm identity',f"- version: {meta.get('version','UNKNOWN')}",f'- component_count: {len(comps)}','']
-
               for role,target in targets.items():
                   lines.append(f'## {role} / {role}')
                   c=by_path.get(target)
                   if not c:
-                      lines += [f'- exact_component: NOT_FOUND (`{target}`)','']
-                      continue
+                      lines += [f'- exact_component: NOT_FOUND (`{target}`)','']; continue
                   expected_sha=checksum_hash(c); size=c.get('size'); url=c.get('downloadURL')
                   lines += ['- exact_component: FOUND',f'- filepath: `{target}`',f'- NERDm_size: {size}',f'- NERDm_SHA256: {expected_sha or "UNKNOWN"}',f'- downloadURL_present: {"YES" if url else "NO"}']
                   if not url or not expected_sha:
-                      lines += ['- local_integrity: HOLD_METADATA_INCOMPLETE','']
-                      continue
+                      lines += ['- local_integrity: HOLD_METADATA_INCOMPLETE','']; continue
                   path=tmp/Path(target).name
                   cp=subprocess.run(['curl','-fsSL','--retry','5','--retry-delay','2','--retry-all-errors',url,'-o',str(path)],capture_output=True,text=True)
                   if cp.returncode!=0 or not path.exists():
-                      lines += ['- local_integrity: DOWNLOAD_FAIL','']
-                      continue
+                      lines += ['- local_integrity: DOWNLOAD_FAIL','']; continue
                   data=path.read_bytes(); actual_size=len(data); actual_sha=hashlib.sha256(data).hexdigest()
                   integrity=(actual_size==size and actual_sha.lower()==expected_sha.lower())
                   lines += [f'- local_size_match: {"YES" if actual_size==size else "NO"}',f'- local_SHA256_match: {"YES" if actual_sha.lower()==expected_sha.lower() else "NO"}']
                   if not integrity:
-                      lines += ['- local_integrity: FAIL','']
-                      path.unlink(missing_ok=True); continue
-
-                  enc,text,header=choose_encoding(data)
-                  lines.append(f'- selected_encoding: {enc or "UNRESOLVED"}')
+                      lines += ['- local_integrity: FAIL','']; path.unlink(missing_ok=True); continue
+                  enc,text,header=choose_encoding(data); lines.append(f'- selected_encoding: {enc or "UNRESOLVED"}')
                   if not enc:
-                      lines += ['- schema_parse: HOLD_ENCODING_OR_HEADER_UNRESOLVED','']
-                      path.unlink(missing_ok=True); continue
-
-                  # Emit bounded schema labels only. Never emit data rows.
+                      lines += ['- schema_parse: HOLD_ENCODING_OR_HEADER_UNRESOLVED','']; path.unlink(missing_ok=True); continue
                   safe_header=[]
                   for cell in header[:80]:
-                      s=' '.join(str(cell).replace('\r',' ').replace('\n',' ').split())
-                      safe_header.append(s[:120])
+                      s=' '.join(str(cell).replace('\r',' ').replace('\n',' ').split()); safe_header.append(s[:120])
                   lines += [f'- header_field_count: {len(header)}',f'- bounded_header_fields: {safe_header}']
-
                   reader=csv.reader(io.StringIO(text,newline=''))
                   try: next(reader)
                   except StopIteration: pass
                   plate_counts={p:0 for p in plates}; plate_p1_counts={p:0 for p in plates}; row_count=0
                   for row in reader:
                       if not row: continue
-                      row_count+=1
-                      textual='|'.join(str(x) for x in row)
+                      row_count+=1; textual='|'.join(str(x) for x in row)
                       for p in plates:
                           if p in textual:
                               plate_counts[p]+=1
-                              if 'P1' in textual or f'{p}_P1' in textual or f'{p}P1' in textual:
-                                  plate_p1_counts[p]+=1
-                  all_plate=all(plate_counts[p]>0 for p in plates)
-                  all_p1=all(plate_p1_counts[p]>0 for p in plates)
+                              if 'P1' in textual or f'{p}_P1' in textual or f'{p}P1' in textual: plate_p1_counts[p]+=1
+                  all_plate=all(plate_counts[p]>0 for p in plates); all_p1=all(plate_p1_counts[p]>0 for p in plates)
                   lines += [f'- data_row_count: {row_count}',f'- six_plate_identifier_presence: '+str({p:(plate_counts[p]>0) for p in plates}),f'- six_plate_P1_identifier_presence: '+str({p:(plate_p1_counts[p]>0) for p in plates}),f'- all_six_plate_identifiers_present: {"YES" if all_plate else "NO"}',f'- all_six_P1_identifiers_present: {"YES" if all_p1 else "NO"}','']
                   if role=='primary': overall_primary=integrity and all_plate and all_p1
                   if role=='sensitivity': sensitivity_available=integrity and all_plate and all_p1
@@ -150,12 +131,8 @@ jobs:
               lines += ['## Preflight execution error / preflight 실행 오류',f'- error_type: {type(e).__name__}','- raw data rows emitted: NO','']
           finally:
               shutil.rmtree(tmp,ignore_errors=True)
-
           lines += ['## Frozen preflight gate / 고정 preflight 판정']
-          if overall_primary:
-              lines.append('**PASS_E27_PRIMARY_SOURCE_SCHEMA_PREFLIGHT**')
-          else:
-              lines.append('**HOLD_E27_SOURCE_OR_SCHEMA_INTEGRITY**')
+          lines.append('**PASS_E27_PRIMARY_SOURCE_SCHEMA_PREFLIGHT**' if overall_primary else '**HOLD_E27_SOURCE_OR_SCHEMA_INTEGRITY**')
           lines += [f'- sensitivity_schema_ready: {"YES" if sensitivity_available else "NO"}','- numerical outcome analysis performed: NO','- raw transient teardown: SUCCESS']
           out.write_text('\n'.join(lines)+'\n',encoding='utf-8')
           PY
