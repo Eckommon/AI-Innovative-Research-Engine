@@ -2,12 +2,12 @@
 id: SESSION-HANDOFF
 type: memory
 state: ACTIVE
-checkpoint_id: CHK-20260823-F20-PASS-WORKBOOK-IMMUTABLE-SCHEMA-READY
+checkpoint_id: CHK-20260823-F21-REJECT-ENDPOINT-ROUTE
 active_issue: none
 active_research: none
-last_completed_issue: 38
-last_completed_research: AMBENCH-F20
-last_decision: DEC-046
+last_completed_issue: 39
+last_completed_research: AMBENCH-F21
+last_decision: DEC-048
 created: 2026-08-22
 updated: 2026-08-23
 source_of_truth: github
@@ -16,76 +16,68 @@ source_of_truth: github
 # Session Handoff / 세션 인수인계
 
 ## Current State / 현재 상태
-- Checkpoint: `CHK-20260823-F20-PASS-WORKBOOK-IMMUTABLE-SCHEMA-READY`
+- Checkpoint: `CHK-20260823-F21-REJECT-ENDPOINT-ROUTE`
 - Active Issue: none
 - Active research: none
-- Last completed: #38 `AMBENCH-F20 — PASS_F20_WORKBOOK_IMMUTABLE_SCHEMA_READY`
-- Last decision: `DEC-046`
+- Last completed: #39 `AMBENCH-F21 — REJECT_F21_ENDPOINT_ROUTE`
+- Last decision: `DEC-048`
 
 ## Cost Authority / 비용 권위
-`COST-001` + `DEC-028`: any potentially billable action requires explicit user approval before execution. Spending first/reporting later is prohibited. Unknown billing = `HOLD_COST_APPROVAL`.
+`COST-001` + `DEC-028`: any potentially billable action requires explicit user approval before execution. Unknown billing = `HOLD_COST_APPROVAL`.
 
 ## Preserved branches / 보존 branch
-- E14 remains frozen `HOLD_SOURCE_INTEGRITY`; no redesign.
-- F16 remains `PARTIAL_PUBLIC_ENDPOINT_READY`; no numerical `mds2-3761` modeling.
-- F17/F18 preserve X16 source pairing and bounded representation.
-- F19 segmentation methodology remains frozen and unchanged; numeric segmentation has not yet been executed.
+- E14 remains `HOLD_SOURCE_INTEGRITY`; no redesign.
+- F16 remains `PARTIAL_PUBLIC_ENDPOINT_READY` for `mds2-3761`; no numerical modeling yet.
+- F19 segmentation method remains frozen.
+- F20 X16 workbook immutable identity/schema remains PASS.
 
-## F20 Result / F20 결과
-Frozen final gate: **`PASS_F20_WORKBOOK_IMMUTABLE_SCHEMA_READY`**.
+## F21 Result / F21 결과
+Frozen final gate: **`REJECT_F21_ENDPOINT_ROUTE`**.
 
-### Immutable workbook / immutable workbook
-NIST NERDm `mds2-2514`:
-- `OverhangX16_ImageHistograms.xlsx`;
-- size `193261` bytes;
-- SHA-256 `7cc48fc8aa7a86af4e00c24bfcf91373ef15a8bc1e10d404e61ba8f4d29c422f`.
+Authoritative X16 Data Description was recovered and verified:
+- size `533260` bytes;
+- SHA-256 `d078ae297f909cad0c959aae9dae7df1accd2e1b237ec452f23674da84f5bb3d`;
+- transient local SHA matched;
+- render-first/text extraction PASS;
+- raw PDF/renders not committed.
 
-A public standard GitHub-hosted `ubuntu-latest` runner transiently downloaded the authoritative workbook. Local SHA-256 exactly matched NERDm. Raw workbook was deleted after use; no raw artifact/cache/commit.
+X16 workbook semantics:
+- first column = histogram bin edges;
+- second column = voxel counts within each bin;
+- X = 16-bit Digital Level;
+- Y = Number of Voxels;
+- histograms derived in ImageJ from 16-bit grayscale XCT TIFF stacks;
+- nominally bimodal empty/solid distributions;
+- NIST explicitly states threshold must be chosen uniquely for each part because peak means/variances differ.
 
-Schema-only XML inspection, without numerical cell outcome emission:
-- one `Plots` sheet;
-- exactly sixteen `Part1_1`…`Part4_4` sheets;
-- each part sheet dimension `A1:B256`;
-- formula count 0.
+Why workbook-only endpoint is rejected:
+- spatial information is absent;
+- exterior empty voxels cannot be separated from internal voids/pores using histogram alone;
+- Part 1-1 has a larger XY crop;
+- beam hardening, residual contrast, and EDM-derived artifacts are documented;
+- common threshold is unsupported.
 
-Thus workbook immutable byte identity and sixteen-part sheet mapping are qualified. Column A/B physical semantics remain unknown until authoritative documentation is inspected.
+Do not compute common-threshold pore fraction and do not reinterpret histogram centroid/IQR as physical defect quality without additional spatial evidence.
 
-### XYPT authoritative validation path / XYPT 권위 검증 경로
-Current NIST NERDm `mds2-2309` metadata-only inventory establishes:
-- exact component `XYPT_L101-L125.zip`;
-- size `157616390` bytes;
-- SHA-256 `b5f6c58540799f57c64b59ab4c0770f1aad8ac32b6bfb3161babdf244e32ff31`;
-- official NIST downloadURL;
-- separate `.sha256` component also present.
+This rejection does not invalidate the X16 XCT source, F20 workbook-integrity PASS, or F19 segmentation method.
 
-Direct sidecar/ZIP retrieval currently failed. Therefore local XYPT checksum, archive inventory and numerical F19 segmentation remain pending. Future retrieved XYPT bytes must match the NERDm SHA before numerical use.
+Outcome state remains `NEW_X16_NUMERICAL_OUTCOME_BLIND = YES`. No numerical workbook outcomes, XYPT/DAQ process summaries, associations, or models were computed.
 
-## Outcome state / outcome 상태
-`NEW_X16_NUMERICAL_OUTCOME_BLIND = YES` remains intact.
-
-No XCT numerical outcome cells, XYPT/DAQ numerical process summaries, process signatures, process↔XCT statistics, or models have been computed.
-
-Durable F20 artifacts:
-- `research/AMBENCH-F20/README.md`
-- `research/AMBENCH-F20/RESULT.md`
-- `research/AMBENCH-F20/RUN_RESULT.md`
-- `research/AMBENCH-F20/XYPT_NERDM_INVENTORY.md`
-- `research/AMBENCH-F20/XYPT_RUN_RESULT.md`
-- `CLM-070..073`
-- `DEC-045..046`
-- `MEM-041..042`
+Durable artifacts:
+- `research/AMBENCH-F21/README.md`
+- `research/AMBENCH-F21/RESULT.md`
+- `research/AMBENCH-F21/SEMANTIC_SOURCE_RESULT.md`
+- `CLM-074..076`
+- `DEC-047..048`
+- `MEM-043-AMBENCH-F21`
 
 ## Exact Next Eligible Work / 정확한 다음 eligible 작업
-No numerical experiment is active. Do not start E19 yet.
+No experiment is active.
 
-Next: separately preregister a narrow **X16 XCT semantics feasibility gate** using authoritative NIST documentation only. Freeze, without reading numerical workbook outcomes:
-1. physical meaning/units of workbook columns A/B;
-2. histogram bin/count semantics;
-3. exact part-level XCT endpoint/transform eligible for E19;
-4. uncertainty, threshold, crop, reconstruction or normalization semantics required to interpret that endpoint.
+Return to NIST fully registered X4 dataset `mds2-3761` and re-run source-integrity recovery using the F20 pattern:
+1. NERDm machine-readable component identity/checksum discovery;
+2. public standard GitHub-hosted transient retrieval at zero incremental cost;
+3. checksum verification and archive inventory;
+4. no numerical modeling before source integrity PASS.
 
-If authoritative documentation does not support a semantic claim, leave it UNKNOWN/HOLD rather than infer from numerical workbook values.
-
-Only after semantics qualification may an E19 preregistration be prepared. E19 must still require authoritative XYPT bytes to match NERDm SHA-256 `b5f6c58540799f57c64b59ab4c0770f1aad8ac32b6bfb3161babdf244e32ff31` before executing the frozen F19 segmentation, and must treat 16 parts as within-build technical replicates. No high-capacity ML.
-
-Any paid/potentially paid action requires prior explicit user approval.
+If byte-verifiable, separately preregister registered in-situ process/melt-pool ↔ ex-situ XCT validation. Any paid/potentially paid route requires prior explicit user approval.
