@@ -179,226 +179,65 @@ incremental_monetary_cost_usd: 0
 - sha256_local: `ad3efdd8757d19f435bb234483ed6ebdaea3e3ee5149aee77113d0d7bdff9e8c`
 - checksum_match: `True`
 - header: `['Sample ID', 'Laser Power (W)', 'Laser Spot Diameter (µm)', 'Laser Scan Speed (mm/s)', 'Hatch Spacing (mm)', 'Powder_Layer_Thickness (µm)', 'Turnaround_Time (ms)', 'Pad_Width (mm)', 'Location (mm)']`
-- emitted_design_columns: `['Sample ID', 'Laser Power (W)', 'Laser Spot Diameter (µm)', 'Laser Scan Speed (mm/s)', 'Powder_Layer_Thickness (µm)', 'Turnaround_Time (ms)']`
+- expected_design_only_schema_match: `True`
+- emitted_design_columns: `['Sample ID', 'Laser Power (W)', 'Laser Spot Diameter (µm)', 'Laser Scan Speed (mm/s)', 'Hatch Spacing (mm)', 'Powder_Layer_Thickness (µm)', 'Turnaround_Time (ms)', 'Pad_Width (mm)', 'Location (mm)']`
 - row_count: `36`
 - design_rows:
-  - {"Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Powder_Layer_Thickness (µm)": "80", "Sample ID": "20241010_AMB_T12_P1", "Turnaround_Time (ms)": "0.75"}
-  - {"Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Powder_Layer_Thickness (µm)": "80", "Sample ID": "20241010_AMB_T12_P2", "Turnaround_Time (ms)": "0.75"}
-  - {"Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Powder_Layer_Thickness (µm)": "80", "Sample ID": "20241010_AMB_T12_P3", "Turnaround_Time (ms)": "0.75"}
-  - {"Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Powder_Layer_Thickness (µm)": "160", "Sample ID": "20241010_AMB_T42_P1", "Turnaround_Time (ms)": "0.75"}
-  - {"Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Powder_Layer_Thickness (µm)": "160", "Sample ID": "20241010_AMB_T42_P2", "Turnaround_Time (ms)": "0.75"}
-  - {"Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Powder_Layer_Thickness (µm)": "160", "Sample ID": "20241010_AMB_T42_P3", "Turnaround_Time (ms)": "0.75"}
-  - {"Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Powder_Layer_Thickness (µm)": "0", "Sample ID": "20241010_AMB_T72_P1", "Turnaround_Time (ms)": "0.75"}
-  - {"Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Powder_Layer_Thickness (µm)": "0", "Sample ID": "20241010_AMB_T72_P2", "Turnaround_Time (ms)": "0.75"}
-  - {"Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Powder_Layer_Thickness (µm)": "0", "Sample ID": "20241010_AMB_T72_P3", "Turnaround_Time (ms)": "0.75"}
-  - {"Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Powder_Layer_Thickness (µm)": "0", "Sample ID": "20241010_AMB_T102_P1", "Turnaround_Time (ms)": "5.00"}
-  - {"Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Powder_Layer_Thickness (µm)": "0", "Sample ID": "20241010_AMB_T102_P2", "Turnaround_Time (ms)": "5.00"}
-  - {"Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Powder_Layer_Thickness (µm)": "0", "Sample ID": "20241010_AMB_T102_P3", "Turnaround_Time (ms)": "5.00"}
-  - {"Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Powder_Layer_Thickness (µm)": "80", "Sample ID": "20241015_AMB_T22_P1", "Turnaround_Time (ms)": "0.75"}
-  - {"Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Powder_Layer_Thickness (µm)": "80", "Sample ID": "20241015_AMB_T22_P2", "Turnaround_Time (ms)": "0.75"}
-  - {"Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Powder_Layer_Thickness (µm)": "80", "Sample ID": "20241015_AMB_T22_P3", "Turnaround_Time (ms)": "0.75"}
-  - {"Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Powder_Layer_Thickness (µm)": "80", "Sample ID": "20241015_AMB_T32_P1", "Turnaround_Time (ms)": "0.75"}
-  - {"Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Powder_Layer_Thickness (µm)": "80", "Sample ID": "20241015_AMB_T32_P2", "Turnaround_Time (ms)": "0.75"}
-  - {"Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Powder_Layer_Thickness (µm)": "80", "Sample ID": "20241015_AMB_T32_P3", "Turnaround_Time (ms)": "0.75"}
-  - {"Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Powder_Layer_Thickness (µm)": "160", "Sample ID": "20241015_AMB_T52_P1", "Turnaround_Time (ms)": "0.75"}
-  - {"Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Powder_Layer_Thickness (µm)": "160", "Sample ID": "20241015_AMB_T52_P2", "Turnaround_Time (ms)": "0.75"}
-  - {"Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Powder_Layer_Thickness (µm)": "160", "Sample ID": "20241015_AMB_T52_P3", "Turnaround_Time (ms)": "0.75"}
-  - {"Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Powder_Layer_Thickness (µm)": "160", "Sample ID": "20241015_AMB_T62_P1", "Turnaround_Time (ms)": "0.75"}
-  - {"Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Powder_Layer_Thickness (µm)": "160", "Sample ID": "20241015_AMB_T62_P2", "Turnaround_Time (ms)": "0.75"}
-  - {"Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Powder_Layer_Thickness (µm)": "160", "Sample ID": "20241015_AMB_T62_P3", "Turnaround_Time (ms)": "0.75"}
-  - {"Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Powder_Layer_Thickness (µm)": "0", "Sample ID": "20241015_AMB_T82_P1", "Turnaround_Time (ms)": "0.75"}
-  - {"Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Powder_Layer_Thickness (µm)": "0", "Sample ID": "20241015_AMB_T82_P2", "Turnaround_Time (ms)": "0.75"}
-  - {"Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Powder_Layer_Thickness (µm)": "0", "Sample ID": "20241015_AMB_T82_P3", "Turnaround_Time (ms)": "0.75"}
-  - {"Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Powder_Layer_Thickness (µm)": "0", "Sample ID": "20241015_AMB_T92_P1", "Turnaround_Time (ms)": "0.75"}
-  - {"Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Powder_Layer_Thickness (µm)": "0", "Sample ID": "20241015_AMB_T92_P2", "Turnaround_Time (ms)": "0.75"}
-  - {"Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Powder_Layer_Thickness (µm)": "0", "Sample ID": "20241015_AMB_T92_P3", "Turnaround_Time (ms)": "0.75"}
-  - {"Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Powder_Layer_Thickness (µm)": "0", "Sample ID": "20241015_AMB_T112_P1", "Turnaround_Time (ms)": "5.00"}
-  - {"Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Powder_Layer_Thickness (µm)": "0", "Sample ID": "20241015_AMB_T112_P2", "Turnaround_Time (ms)": "5.00"}
-  - {"Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Powder_Layer_Thickness (µm)": "0", "Sample ID": "20241015_AMB_T112_P3", "Turnaround_Time (ms)": "5.00"}
-  - {"Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Powder_Layer_Thickness (µm)": "0", "Sample ID": "20241015_AMB_T122_P1", "Turnaround_Time (ms)": "5.00"}
-  - {"Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Powder_Layer_Thickness (µm)": "0", "Sample ID": "20241015_AMB_T122_P2", "Turnaround_Time (ms)": "5.00"}
-  - {"Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Powder_Layer_Thickness (µm)": "0", "Sample ID": "20241015_AMB_T122_P3", "Turnaround_Time (ms)": "5.00"}
+  - {"Hatch Spacing (mm)": "0.11", "Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Location (mm)": "0.460", "Pad_Width (mm)": "5", "Powder_Layer_Thickness (µm)": "80", "Sample ID": "20241010_AMB_T12_P1", "Turnaround_Time (ms)": "0.75"}
+  - {"Hatch Spacing (mm)": "0.11", "Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Location (mm)": "2.546", "Pad_Width (mm)": "5", "Powder_Layer_Thickness (µm)": "80", "Sample ID": "20241010_AMB_T12_P2", "Turnaround_Time (ms)": "0.75"}
+  - {"Hatch Spacing (mm)": "0.11", "Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Location (mm)": "0.556", "Pad_Width (mm)": "1", "Powder_Layer_Thickness (µm)": "80", "Sample ID": "20241010_AMB_T12_P3", "Turnaround_Time (ms)": "0.75"}
+  - {"Hatch Spacing (mm)": "0.11", "Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Location (mm)": "0.460", "Pad_Width (mm)": "5", "Powder_Layer_Thickness (µm)": "160", "Sample ID": "20241010_AMB_T42_P1", "Turnaround_Time (ms)": "0.75"}
+  - {"Hatch Spacing (mm)": "0.11", "Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Location (mm)": "2.546", "Pad_Width (mm)": "5", "Powder_Layer_Thickness (µm)": "160", "Sample ID": "20241010_AMB_T42_P2", "Turnaround_Time (ms)": "0.75"}
+  - {"Hatch Spacing (mm)": "0.11", "Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Location (mm)": "0.556", "Pad_Width (mm)": "1", "Powder_Layer_Thickness (µm)": "160", "Sample ID": "20241010_AMB_T42_P3", "Turnaround_Time (ms)": "0.75"}
+  - {"Hatch Spacing (mm)": "0.11", "Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Location (mm)": "0.460", "Pad_Width (mm)": "5", "Powder_Layer_Thickness (µm)": "0", "Sample ID": "20241010_AMB_T72_P1", "Turnaround_Time (ms)": "0.75"}
+  - {"Hatch Spacing (mm)": "0.11", "Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Location (mm)": "2.546", "Pad_Width (mm)": "5", "Powder_Layer_Thickness (µm)": "0", "Sample ID": "20241010_AMB_T72_P2", "Turnaround_Time (ms)": "0.75"}
+  - {"Hatch Spacing (mm)": "0.11", "Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Location (mm)": "0.556", "Pad_Width (mm)": "1", "Powder_Layer_Thickness (µm)": "0", "Sample ID": "20241010_AMB_T72_P3", "Turnaround_Time (ms)": "0.75"}
+  - {"Hatch Spacing (mm)": "0.11", "Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Location (mm)": "0.460", "Pad_Width (mm)": "5", "Powder_Layer_Thickness (µm)": "0", "Sample ID": "20241010_AMB_T102_P1", "Turnaround_Time (ms)": "5.00"}
+  - {"Hatch Spacing (mm)": "0.11", "Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Location (mm)": "2.546", "Pad_Width (mm)": "5", "Powder_Layer_Thickness (µm)": "0", "Sample ID": "20241010_AMB_T102_P2", "Turnaround_Time (ms)": "5.00"}
+  - {"Hatch Spacing (mm)": "0.11", "Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Location (mm)": "0.556", "Pad_Width (mm)": "1", "Powder_Layer_Thickness (µm)": "0", "Sample ID": "20241010_AMB_T102_P3", "Turnaround_Time (ms)": "5.00"}
+  - {"Hatch Spacing (mm)": "0.11", "Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Location (mm)": "0.460", "Pad_Width (mm)": "5", "Powder_Layer_Thickness (µm)": "80", "Sample ID": "20241015_AMB_T22_P1", "Turnaround_Time (ms)": "0.75"}
+  - {"Hatch Spacing (mm)": "0.11", "Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Location (mm)": "2.546", "Pad_Width (mm)": "5", "Powder_Layer_Thickness (µm)": "80", "Sample ID": "20241015_AMB_T22_P2", "Turnaround_Time (ms)": "0.75"}
+  - {"Hatch Spacing (mm)": "0.11", "Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Location (mm)": "0.556", "Pad_Width (mm)": "1", "Powder_Layer_Thickness (µm)": "80", "Sample ID": "20241015_AMB_T22_P3", "Turnaround_Time (ms)": "0.75"}
+  - {"Hatch Spacing (mm)": "0.11", "Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Location (mm)": "0.460", "Pad_Width (mm)": "5", "Powder_Layer_Thickness (µm)": "80", "Sample ID": "20241015_AMB_T32_P1", "Turnaround_Time (ms)": "0.75"}
+  - {"Hatch Spacing (mm)": "0.11", "Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Location (mm)": "2.546", "Pad_Width (mm)": "5", "Powder_Layer_Thickness (µm)": "80", "Sample ID": "20241015_AMB_T32_P2", "Turnaround_Time (ms)": "0.75"}
+  - {"Hatch Spacing (mm)": "0.11", "Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Location (mm)": "0.556", "Pad_Width (mm)": "1", "Powder_Layer_Thickness (µm)": "80", "Sample ID": "20241015_AMB_T32_P3", "Turnaround_Time (ms)": "0.75"}
+  - {"Hatch Spacing (mm)": "0.11", "Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Location (mm)": "0.460", "Pad_Width (mm)": "5", "Powder_Layer_Thickness (µm)": "160", "Sample ID": "20241015_AMB_T52_P1", "Turnaround_Time (ms)": "0.75"}
+  - {"Hatch Spacing (mm)": "0.11", "Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Location (mm)": "2.546", "Pad_Width (mm)": "5", "Powder_Layer_Thickness (µm)": "160", "Sample ID": "20241015_AMB_T52_P2", "Turnaround_Time (ms)": "0.75"}
+  - {"Hatch Spacing (mm)": "0.11", "Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Location (mm)": "0.556", "Pad_Width (mm)": "1", "Powder_Layer_Thickness (µm)": "160", "Sample ID": "20241015_AMB_T52_P3", "Turnaround_Time (ms)": "0.75"}
+  - {"Hatch Spacing (mm)": "0.11", "Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Location (mm)": "0.460", "Pad_Width (mm)": "5", "Powder_Layer_Thickness (µm)": "160", "Sample ID": "20241015_AMB_T62_P1", "Turnaround_Time (ms)": "0.75"}
+  - {"Hatch Spacing (mm)": "0.11", "Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Location (mm)": "2.546", "Pad_Width (mm)": "5", "Powder_Layer_Thickness (µm)": "160", "Sample ID": "20241015_AMB_T62_P2", "Turnaround_Time (ms)": "0.75"}
+  - {"Hatch Spacing (mm)": "0.11", "Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Location (mm)": "0.556", "Pad_Width (mm)": "1", "Powder_Layer_Thickness (µm)": "160", "Sample ID": "20241015_AMB_T62_P3", "Turnaround_Time (ms)": "0.75"}
+  - {"Hatch Spacing (mm)": "0.11", "Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Location (mm)": "0.460", "Pad_Width (mm)": "5", "Powder_Layer_Thickness (µm)": "0", "Sample ID": "20241015_AMB_T82_P1", "Turnaround_Time (ms)": "0.75"}
+  - {"Hatch Spacing (mm)": "0.11", "Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Location (mm)": "2.546", "Pad_Width (mm)": "5", "Powder_Layer_Thickness (µm)": "0", "Sample ID": "20241015_AMB_T82_P2", "Turnaround_Time (ms)": "0.75"}
+  - {"Hatch Spacing (mm)": "0.11", "Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Location (mm)": "0.556", "Pad_Width (mm)": "1", "Powder_Layer_Thickness (µm)": "0", "Sample ID": "20241015_AMB_T82_P3", "Turnaround_Time (ms)": "0.75"}
+  - {"Hatch Spacing (mm)": "0.11", "Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Location (mm)": "0.460", "Pad_Width (mm)": "5", "Powder_Layer_Thickness (µm)": "0", "Sample ID": "20241015_AMB_T92_P1", "Turnaround_Time (ms)": "0.75"}
+  - {"Hatch Spacing (mm)": "0.11", "Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Location (mm)": "2.546", "Pad_Width (mm)": "5", "Powder_Layer_Thickness (µm)": "0", "Sample ID": "20241015_AMB_T92_P2", "Turnaround_Time (ms)": "0.75"}
+  - {"Hatch Spacing (mm)": "0.11", "Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Location (mm)": "0.556", "Pad_Width (mm)": "1", "Powder_Layer_Thickness (µm)": "0", "Sample ID": "20241015_AMB_T92_P3", "Turnaround_Time (ms)": "0.75"}
+  - {"Hatch Spacing (mm)": "0.11", "Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Location (mm)": "0.460", "Pad_Width (mm)": "5", "Powder_Layer_Thickness (µm)": "0", "Sample ID": "20241015_AMB_T112_P1", "Turnaround_Time (ms)": "5.00"}
+  - {"Hatch Spacing (mm)": "0.11", "Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Location (mm)": "2.546", "Pad_Width (mm)": "5", "Powder_Layer_Thickness (µm)": "0", "Sample ID": "20241015_AMB_T112_P2", "Turnaround_Time (ms)": "5.00"}
+  - {"Hatch Spacing (mm)": "0.11", "Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Location (mm)": "0.556", "Pad_Width (mm)": "1", "Powder_Layer_Thickness (µm)": "0", "Sample ID": "20241015_AMB_T112_P3", "Turnaround_Time (ms)": "5.00"}
+  - {"Hatch Spacing (mm)": "0.11", "Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Location (mm)": "0.460", "Pad_Width (mm)": "5", "Powder_Layer_Thickness (µm)": "0", "Sample ID": "20241015_AMB_T122_P1", "Turnaround_Time (ms)": "5.00"}
+  - {"Hatch Spacing (mm)": "0.11", "Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Location (mm)": "2.546", "Pad_Width (mm)": "5", "Powder_Layer_Thickness (µm)": "0", "Sample ID": "20241015_AMB_T122_P2", "Turnaround_Time (ms)": "5.00"}
+  - {"Hatch Spacing (mm)": "0.11", "Laser Power (W)": "285", "Laser Scan Speed (mm/s)": "960", "Laser Spot Diameter (µm)": "72", "Location (mm)": "0.556", "Pad_Width (mm)": "1", "Powder_Layer_Thickness (µm)": "0", "Sample ID": "20241015_AMB_T122_P3", "Turnaround_Time (ms)": "5.00"}
 
-## Metadata-only alternate-geometry route clues / 대체 geometry route 단서
-- File paths only; candidate outcome files below were **not opened**. / 아래 후보 outcome 파일은 **열지 않았으며**, 파일 경로만 사용.
-- `Cross_Sections` | size=UNKNOWN | sha256=UNKNOWN
-- `Cross_Sections/Layers_Results` | size=UNKNOWN | sha256=UNKNOWN
-- `Cross_Sections/Layers_Results/20241010_AMB_T102_P1s_rot_LayerAnalysis_mask.tif` | size=3225566 | sha256=6938714403549815a6623754acb2890de3093edb240b95a4c21fffc94031a66e
-- `Cross_Sections/Layers_Results/20241010_AMB_T102_P1s_rot_LayerAnalysis_mask.tif.sha256` | size=64 | sha256=ebf1506ea2d55d055a79f8223d96cc653ce4b3f9bdbfc3d2e592a561f966ef49
-- `Cross_Sections/Layers_Results/20241010_AMB_T102_P2s_rot_LayerAnalysis_mask.tif` | size=3226236 | sha256=9c00eea887f9f52c1d533634b4165af2e144af34a1fdd70189e67292a5b1210c
-- `Cross_Sections/Layers_Results/20241010_AMB_T102_P2s_rot_LayerAnalysis_mask.tif.sha256` | size=64 | sha256=9739b8056e8db588d8dd9a5732138b4f00a28703416875572c4beac0bca5bc6a
-- `Cross_Sections/Layers_Results/20241010_AMB_T102_P3s_rot_LayerAnalysis_mask.tif` | size=3402226 | sha256=ab633ee22410d73658219cc21d2998c71520c617c82f5518766ac479721adf0f
-- `Cross_Sections/Layers_Results/20241010_AMB_T102_P3s_rot_LayerAnalysis_mask.tif.sha256` | size=64 | sha256=0f701fef342001e944f472c3eb09f1be073fa708ea5072fed86ade77afd372da
-- `Cross_Sections/Layers_Results/20241010_AMB_T12_P1s_rot_LayerAnalysis_mask.tif` | size=3242338 | sha256=1ea2a6d152db8cfdef16b2b2ae86a74fa8798173ffa6f4f018a96ff12eb971cc
-- `Cross_Sections/Layers_Results/20241010_AMB_T12_P1s_rot_LayerAnalysis_mask.tif.sha256` | size=64 | sha256=9ee092db2887768615e67b51afdd0c4f9ab105c00723137d85126382305b3b64
-- `Cross_Sections/Layers_Results/20241010_AMB_T12_P2s_rot_LayerAnalysis_mask.tif` | size=3238730 | sha256=bd4d2ea19fdcfd25bd6217a5934e1d6f77637de648fbcafbaaf62f61a01ba97d
-- `Cross_Sections/Layers_Results/20241010_AMB_T12_P2s_rot_LayerAnalysis_mask.tif.sha256` | size=64 | sha256=32ff808ab99b8c1f0b79df1a5bd3a450261b28e7660167b6c0cd67890ff1a72c
-- `Cross_Sections/Layers_Results/20241010_AMB_T12_P3s_rot_LayerAnalysis_mask.tif` | size=3249536 | sha256=dc7d33b66554c8fb1684947a8b5dd14af46b3c4f41b1390422847c91c785d0ea
-- `Cross_Sections/Layers_Results/20241010_AMB_T12_P3s_rot_LayerAnalysis_mask.tif.sha256` | size=64 | sha256=de38e04cee3c14ab5c1965b1d5633e4b7d2a0b9c45137b117b2ca3d0261cb153
-- `Cross_Sections/Layers_Results/20241010_AMB_T42_P1s_rot_LayerAnalysis_mask.tif` | size=3201482 | sha256=bd87e271885ae5381a0eeb1af8f1fb35eaca7acba4b87c1aabf4c73c46000893
-- `Cross_Sections/Layers_Results/20241010_AMB_T42_P1s_rot_LayerAnalysis_mask.tif.sha256` | size=64 | sha256=acc9e0d6cbfcce5877cb435d742722ae8a3c8621606a29293c9d567827ccfa4d
-- `Cross_Sections/Layers_Results/20241010_AMB_T42_P2s_rot_LayerAnalysis_mask.tif` | size=3199412 | sha256=feccd685d52f72cfaa3261f0ffe1a7ac068a40cc80380ed9a414d475ef73d4f8
-- `Cross_Sections/Layers_Results/20241010_AMB_T42_P2s_rot_LayerAnalysis_mask.tif.sha256` | size=64 | sha256=9743f41809ea649a4c4d87fb45bf00b2b8199a882b60abe340c62c93c8459e77
-- `Cross_Sections/Layers_Results/20241010_AMB_T42_P3s_rot_LayerAnalysis_mask.tif` | size=178506 | sha256=47746654c520ff85e62ab788259f29dcb046ffd956c1950f44f579ba31c533fd
-- `Cross_Sections/Layers_Results/20241010_AMB_T42_P3s_rot_LayerAnalysis_mask.tif.sha256` | size=64 | sha256=e73a6476669aaebb6aaf6b2dd0f2cbdd95203ef6a47fcea90eb809b09d7da2e6
-- `Cross_Sections/Layers_Results/20241010_AMB_T72_P1s_rot_LayerAnalysis_mask.tif` | size=3204914 | sha256=75905ac8f17bcfcdcbbbc60c12c80e25a94c526b6b15fd0b43145609e4e3d14d
-- `Cross_Sections/Layers_Results/20241010_AMB_T72_P1s_rot_LayerAnalysis_mask.tif.sha256` | size=64 | sha256=c02a5102964d5d72149580c58e6f7458ee45b6f742f2b4d900f1b2e6ea16e84b
-- `Cross_Sections/Layers_Results/20241010_AMB_T72_P2s_rot_LayerAnalysis_mask.tif` | size=3397402 | sha256=60156e7ac2c449445257545e08a5af6d6c6309e921c29bbfe83e67554a92ac0d
-- `Cross_Sections/Layers_Results/20241010_AMB_T72_P2s_rot_LayerAnalysis_mask.tif.sha256` | size=64 | sha256=688f320a88237761df82a5405e7212d9f72eb0d930555c5d369fa43bb8ece913
-- `Cross_Sections/Layers_Results/20241010_AMB_T72_P3s_rot_LayerAnalysis_mask.tif` | size=3190362 | sha256=d33f9ad80458f7e94a8c7cf7cfaad7ec6997ff075c8df5906d7964c05c4324ba
-- `Cross_Sections/Layers_Results/20241010_AMB_T72_P3s_rot_LayerAnalysis_mask.tif.sha256` | size=64 | sha256=e8fa06b8754f34532cc6763df6de148fa967aa3c9f7602f2be4a39564b357cfe
-- `Cross_Sections/Layers_Results/20241015_AMB_T112_P1s_rot_LayerAnalysis_mask.tif` | size=213646 | sha256=01b189971f6e3c68daeb0399a70b5c16054cbc87a8d2d48c72b1bce27700553c
-- `Cross_Sections/Layers_Results/20241015_AMB_T112_P1s_rot_LayerAnalysis_mask.tif.sha256` | size=64 | sha256=cd1511a2042e9f19d37e631617e0be698ecef8a295a59dc6713f49e3567401ad
-- `Cross_Sections/Layers_Results/20241015_AMB_T112_P2s_rot_LayerAnalysis_mask.tif` | size=196776 | sha256=1167c03c9eba8d3e1c75de9e779405c8009ed2c60144d577e6e4c3884b88c7ec
-- `Cross_Sections/Layers_Results/20241015_AMB_T112_P2s_rot_LayerAnalysis_mask.tif.sha256` | size=64 | sha256=dedb6badc195ca1f1f360680b180a8e2f710396600f438f045938c78244848da
-- `Cross_Sections/Layers_Results/20241015_AMB_T112_P3s_rot_LayerAnalysis_mask.tif` | size=3204292 | sha256=c6e2911302a5f3065ac4c49f579a8bcc1f0dd798b3375ce4162450fec4716e6c
-- `Cross_Sections/Layers_Results/20241015_AMB_T112_P3s_rot_LayerAnalysis_mask.tif.sha256` | size=64 | sha256=25525fd8044b91561efced5ab1bbd5b3a4889e54ff34d6eb026f6d5b8bfdc915
-- `Cross_Sections/Layers_Results/20241015_AMB_T122_P1s_rot_LayerAnalysis_mask.tif` | size=3220742 | sha256=4b8c9afaad1eca6991d3b30c8db683dfb363cc321972bcb4a707369d863b9162
-- `Cross_Sections/Layers_Results/20241015_AMB_T122_P1s_rot_LayerAnalysis_mask.tif.sha256` | size=64 | sha256=327a736d719cc05f91c08562fff1d3200c6d8701b6ed7433242c702b245bda37
-- `Cross_Sections/Layers_Results/20241015_AMB_T122_P2s_rot_LayerAnalysis_mask.tif` | size=3200482 | sha256=9a08bebdda7911956973e4aa16d7a269d30a8b4e9b3581d54b1acfbfc1fb0432
-- `Cross_Sections/Layers_Results/20241015_AMB_T122_P2s_rot_LayerAnalysis_mask.tif.sha256` | size=64 | sha256=98cf4d462534358c5730837484cba2b17c982e99798429958cc3dfd95d29314d
-- `Cross_Sections/Layers_Results/20241015_AMB_T122_P3s_rot_LayerAnalysis_mask.tif` | size=3204594 | sha256=6b04e2d37a9a1a29189f4995f93ae16edca78b197f5984f431f7b716a35f8f88
-- `Cross_Sections/Layers_Results/20241015_AMB_T122_P3s_rot_LayerAnalysis_mask.tif.sha256` | size=64 | sha256=5d90ca204b697fcafc22dd91dec983e81651a542d8a3e5ae6121ba3bc397c9e7
-- `Cross_Sections/Layers_Results/20241015_AMB_T22_P1s_rot_LayerAnalysis_mask.tif` | size=3220024 | sha256=02a3ab19e7c4239b8a1e4fca304b12aa067b85ea02a0c19420c8ae7f8d6850a4
-- `Cross_Sections/Layers_Results/20241015_AMB_T22_P1s_rot_LayerAnalysis_mask.tif.sha256` | size=64 | sha256=cf53313ab974f28e923312c1256686fc220e6f5c5d96d8a553ff5d11c24af495
-- `Cross_Sections/Layers_Results/20241015_AMB_T22_P2s_rot_LayerAnalysis_mask.tif` | size=3200406 | sha256=c0b1ae0c51290432706a07858b02bd210b9d4c48469b29a5a12f96c41580c637
-- `Cross_Sections/Layers_Results/20241015_AMB_T22_P2s_rot_LayerAnalysis_mask.tif.sha256` | size=64 | sha256=bf508b3827415f23fcd769de891aa83af6d229cad7e1b95a68400e206a0ffc3a
-- `Cross_Sections/Layers_Results/20241015_AMB_T22_P3s_rot_LayerAnalysis_mask.tif` | size=3193430 | sha256=2acbe79f3eab39b0bb2fea2d0d55a970ee141f1f1b63a68919fa7db06b826ab9
-- `Cross_Sections/Layers_Results/20241015_AMB_T22_P3s_rot_LayerAnalysis_mask.tif.sha256` | size=64 | sha256=0c201855823ab539868a82fe8166389d7dbfcc1caeaa8265984f349b5c9bce19
-- `Cross_Sections/Layers_Results/20241015_AMB_T32_P1s_rot_LayerAnalysis_mask.tif` | size=3198628 | sha256=2545cd9272476c9a664841d72ab5a3c0fb0b9fbead3fc3c1aeca68763895c565
-- `Cross_Sections/Layers_Results/20241015_AMB_T32_P1s_rot_LayerAnalysis_mask.tif.sha256` | size=64 | sha256=c9497dc7b1577615b81b99d005d1a4c386a49de67de6b55dabf388fb609fe5b2
-- `Cross_Sections/Layers_Results/20241015_AMB_T32_P2s_rot_LayerAnalysis_mask.tif` | size=3213580 | sha256=af8bc277e716af8f120fd638527dae9830d76de602e7003250e4cd9d637032dc
-- `Cross_Sections/Layers_Results/20241015_AMB_T32_P2s_rot_LayerAnalysis_mask.tif.sha256` | size=64 | sha256=b5872fc4d2b11ababaa47b0f959499f630a39072c31da5c1651b7bfbd8a7084c
-- `Cross_Sections/Layers_Results/20241015_AMB_T32_P3s_rot_LayerAnalysis_mask.tif` | size=3204050 | sha256=911ac1e12bf13eb2493ddcc9159662dfa4925f8af6016993534419a573bc62d9
-- `Cross_Sections/Layers_Results/20241015_AMB_T32_P3s_rot_LayerAnalysis_mask.tif.sha256` | size=64 | sha256=9848b599c4a2613fb1d4253d0448f67d7718148bf2ee890fcba205be5ff66951
-- `Cross_Sections/Layers_Results/20241015_AMB_T52_P1s_rot_LayerAnalysis_mask.tif` | size=3199404 | sha256=27cbede546840d33fb977886b1e333f77499abdda618889a7c37de7561105e0f
-- `Cross_Sections/Layers_Results/20241015_AMB_T52_P1s_rot_LayerAnalysis_mask.tif.sha256` | size=64 | sha256=fbc19321c0c674050b1b1e0ac4ce3ceb5c2ce30d17fd3a22fa42d15ee446fae0
-- `Cross_Sections/Layers_Results/20241015_AMB_T52_P2s_rot_LayerAnalysis_mask.tif` | size=3797512 | sha256=cedc7e186ae1813d838f5f6ed6662b4cccf12b0436e9d2acb20d0871c66cfd9d
-- `Cross_Sections/Layers_Results/20241015_AMB_T52_P2s_rot_LayerAnalysis_mask.tif.sha256` | size=64 | sha256=c55dfc4dc92bee1e548dd0196c343aa98d2e62592f905c43ff90a7854f85ddb7
-- `Cross_Sections/Layers_Results/20241015_AMB_T52_P3s_rot_LayerAnalysis_mask.tif` | size=182518 | sha256=4abbfdc081546a6b78f5819edc31277703cd5f3a25e75a0db2302361adfd56db
-- `Cross_Sections/Layers_Results/20241015_AMB_T52_P3s_rot_LayerAnalysis_mask.tif.sha256` | size=64 | sha256=ca281ffc37bc8bc0fb5622679e7737e89d5d1c2f3a5917900ca9c566a624b2db
-- `Cross_Sections/Layers_Results/20241015_AMB_T62_P1s_rot_LayerAnalysis_mask.tif` | size=3201474 | sha256=0b8f94305af149c29d37ebfba2d19d0814d6ef9ff8a5a312e445bb96357134b8
-- `Cross_Sections/Layers_Results/20241015_AMB_T62_P1s_rot_LayerAnalysis_mask.tif.sha256` | size=64 | sha256=4abfbf9cd727683c83276f43bd4cfcbd3bf21119af026fd7303a3331fa04d8fa
-- `Cross_Sections/Layers_Results/20241015_AMB_T62_P2s_rot_LayerAnalysis_mask.tif` | size=191142 | sha256=aa5613668d3e443579385276cea2478493b60251afcca9b5596e9a43760d618f
-- `Cross_Sections/Layers_Results/20241015_AMB_T62_P2s_rot_LayerAnalysis_mask.tif.sha256` | size=64 | sha256=cad0eadba71eb58f13be6dba0545a181ca43ef36ccc0b0579ddae35b8a456d55
-- `Cross_Sections/Layers_Results/20241015_AMB_T62_P3s_rot_LayerAnalysis_mask.tif` | size=3196568 | sha256=4fa50ad9935eed5d69ae65486edb0a17978f334fb86b08fd1759142513578fd0
-- `Cross_Sections/Layers_Results/20241015_AMB_T62_P3s_rot_LayerAnalysis_mask.tif.sha256` | size=64 | sha256=7aaedf53898012f9158e138e6454960ce37e5da5cd730f5ba7190ad803f8cecb
-- `Cross_Sections/Layers_Results/20241015_AMB_T82_P1s_rot_LayerAnalysis_mask.tif` | size=3194936 | sha256=7f4c8bd94f5e4960536e49d2c6ae29a900eb224b91403925f59f1780720b0106
-- `Cross_Sections/Layers_Results/20241015_AMB_T82_P1s_rot_LayerAnalysis_mask.tif.sha256` | size=64 | sha256=4fc1c79f2dbb20c92195e124572048d0d823405652ef7797770a8cdd1107fd18
-- `Cross_Sections/Layers_Results/20241015_AMB_T82_P2s_rot_LayerAnalysis_mask.tif` | size=3397308 | sha256=4c78b2e8ba8eb8460575aff53ff6a38fa719999f8893e0d4dffef17f648f3915
-- `Cross_Sections/Layers_Results/20241015_AMB_T82_P2s_rot_LayerAnalysis_mask.tif.sha256` | size=64 | sha256=eb1ac1af4c39d3eab68127a5fe3c71f5be7eeb4eeda9ba97dafebc76700c389d
-- `Cross_Sections/Layers_Results/20241015_AMB_T82_P3s_rot_LayerAnalysis_mask.tif` | size=179388 | sha256=14c4e951513caab5579f7bfd29a3f4c144cd885dd3015168c6cc89451a4f64d1
-- `Cross_Sections/Layers_Results/20241015_AMB_T82_P3s_rot_LayerAnalysis_mask.tif.sha256` | size=64 | sha256=ece1086bd4e61f9a3f1c536668d63f8eda779d62d866d2ec31fe9bccb017fe2a
-- `Cross_Sections/Layers_Results/20241015_AMB_T92_P1s_rot_LayerAnalysis_mask.tif` | size=3210098 | sha256=10ffbf10a0cdf6518d945e4a8b05dd4365180897b59d80e99ec533f7a0ff4a21
-- `Cross_Sections/Layers_Results/20241015_AMB_T92_P1s_rot_LayerAnalysis_mask.tif.sha256` | size=64 | sha256=8a44a395cafc60301442b53c741481ccb68873b3242bfdd802b98fd1a419de62
-- `Cross_Sections/Layers_Results/20241015_AMB_T92_P2s_rot_LayerAnalysis_mask.tif` | size=3198112 | sha256=f343f6d32db36dc7df9d7e410545670b8577b7c8a669f233509e8be839a89fc7
-- `Cross_Sections/Layers_Results/20241015_AMB_T92_P2s_rot_LayerAnalysis_mask.tif.sha256` | size=64 | sha256=176012eb7cd42ea2ed99a4da19a4ef2ab608ceac49c0221f9f568e09ca88542d
-- `Cross_Sections/Layers_Results/20241015_AMB_T92_P3s_rot_LayerAnalysis_mask.tif` | size=3190168 | sha256=bba468d049d5f733638a3412183bbe826e7f949064c43327ecbd7e88fd06439a
-- `Cross_Sections/Layers_Results/20241015_AMB_T92_P3s_rot_LayerAnalysis_mask.tif.sha256` | size=64 | sha256=78ba57303a0c65cd6c04c61b8638d7ada8f1c0196a254946d5fbb2a50a6d1b18
-- `Cross_Sections/Layers_Results/LayerAreas.csv` | size=2136 | sha256=cf5000723f178571d7044002ca468128171f16af1bfda110de9a3eb649943899
-- `Cross_Sections/Layers_Results/LayerAreas.csv.sha256` | size=64 | sha256=1782ad95574ae1b548d99e3fe870b10d745aea5c00a5f2fb0003f5602c0eeab5
-- `Cross_Sections/Layers_Results/LayerAreas_Avg.csv` | size=3017 | sha256=995ca80f5767b1cd6a68674e2c38df6ecd0c2f34a926070472752e01140a203f
-- `Cross_Sections/Layers_Results/LayerAreas_Avg.csv.sha256` | size=64 | sha256=3b1f36d3e037ed87d9bbdf1b9c1e8923cdf4c05bef76ad29819b6277b619a616
-- `Cross_Sections/Layers_Results/SurfaceReference_and_Orientation_Layers.csv` | size=2373 | sha256=cc2a41dc922ed0bf25716ba9ce0f3d85cadc7cfce76bb34717dda08adf2eefc2
-- `Cross_Sections/Layers_Results/SurfaceReference_and_Orientation_Layers.csv.sha256` | size=64 | sha256=e2e0e7126a9f572ad7605d0da1f9bb7687fc13266694f909d940826fa5e25422
-- `Cross_Sections/Micrographs` | size=UNKNOWN | sha256=UNKNOWN
-- `Cross_Sections/Micrographs/20241010_AMB_T102_P1s.tif` | size=378305268 | sha256=af17da9a633ef7989924e6c65f057c91bdf3e46e9e841dc47ebdd70eabe6b619
-- `Cross_Sections/Micrographs/20241010_AMB_T102_P1s.tif.sha256` | size=64 | sha256=103af7542de4b78b39e093c4ebac13bf569d9e2a8c7ed24f59eed6527d7221bd
-- `Cross_Sections/Micrographs/20241010_AMB_T102_P1s_rot.tif` | size=610982357 | sha256=fab0a166d4ea5632f85e60005dcf0873a7a2b677158dfe2cb3a6429e65bec9cd
-- `Cross_Sections/Micrographs/20241010_AMB_T102_P1s_rot.tif.sha256` | size=64 | sha256=b92f62ad869f8ea1a8add30d4e00841751af0b4f8611f2d5e0a59ec6c51699d5
-- `Cross_Sections/Micrographs/20241010_AMB_T102_P2s.tif` | size=395440438 | sha256=3038d93a8b58bc14ac39a947d57e822d5c47ae60b49857d4b531ec47b19de0e8
-- `Cross_Sections/Micrographs/20241010_AMB_T102_P2s.tif.sha256` | size=64 | sha256=68d1c780e909cc3bd9425e3c4474c7c61c27bf797803f3263e27391ae59aa772
-- `Cross_Sections/Micrographs/20241010_AMB_T102_P2s_rot.tif` | size=612189770 | sha256=f80eea19d39aa286c659f48431db32341cc01eb6b5a32aa0452d47553974ab23
-- `Cross_Sections/Micrographs/20241010_AMB_T102_P2s_rot.tif.sha256` | size=64 | sha256=440591578fd3119df65b30e21aa620c71df9458e04dd266f67fb486eb0bbe544
-- `Cross_Sections/Micrographs/20241010_AMB_T102_P3s.tif` | size=403729250 | sha256=983b3af40c9228211818696da47ffddc04d65a75bac0052bedbeba8b233a5756
-- `Cross_Sections/Micrographs/20241010_AMB_T102_P3s.tif.sha256` | size=64 | sha256=c9e89dde71a626474d6637bd792c31774a2f8ca1581d9520433b1eb13df5562f
-- `Cross_Sections/Micrographs/20241010_AMB_T102_P3s_rot.tif` | size=646033022 | sha256=e585c130744283b80bd630a758e2b0f65e08616b61cfa155fa56dc702722fd1c
-- `Cross_Sections/Micrographs/20241010_AMB_T102_P3s_rot.tif.sha256` | size=64 | sha256=277a521cfbe8e1f5be179e52365bea90465ac8da419f1ebba1083ed726e8249b
-- `Cross_Sections/Micrographs/20241010_AMB_T12_P1s.tif` | size=401565114 | sha256=15498493a45bbb705bc7d3ce0b0aa53d32d73b313836e3b86b7bf5b7c7e3e7fa
-- `Cross_Sections/Micrographs/20241010_AMB_T12_P1s.tif.sha256` | size=64 | sha256=8e7e725367a26a85b49ddb64a9ae35b7d2f933a5e3248b910a79c7b65950c19c
-- `Cross_Sections/Micrographs/20241010_AMB_T12_P1s_rot.tif` | size=615081468 | sha256=46fc2c8af124491cdcc64c7e349f8dc2161904d5898a1842127350ef3de98d9b
-- `Cross_Sections/Micrographs/20241010_AMB_T12_P1s_rot.tif.sha256` | size=64 | sha256=bd78ac84b50ea041234dfea2bb579335a43b89fb8e348518f117e16cb716cb51
-- `Cross_Sections/Micrographs/20241010_AMB_T12_P2s.tif` | size=382811346 | sha256=7c854c4febccc684200d48943b204e0b4ec6f8a7bbae0ffbc46ac1ca716f5070
-- `Cross_Sections/Micrographs/20241010_AMB_T12_P2s.tif.sha256` | size=64 | sha256=fe3d6be62715985168361d4f554fa26645e081a84bd3eb601603e13b770928b4
-- `Cross_Sections/Micrographs/20241010_AMB_T12_P2s_rot.tif` | size=615311583 | sha256=e25cba6cbe533bf26cce1fb4c510db1299e4454048e0fab3cd652bad0d409ad4
-- `Cross_Sections/Micrographs/20241010_AMB_T12_P2s_rot.tif.sha256` | size=64 | sha256=4df730602a9be645c37ed61e2f2350e45dabf3b38c3c3b71d92177b160a1a47f
-- `Cross_Sections/Micrographs/20241010_AMB_T12_P3s.tif` | size=399751892 | sha256=3e99311ffcb7edaf48c63c66e651361889333efcb303fe25ab35b7a99cc78ff9
-- `Cross_Sections/Micrographs/20241010_AMB_T12_P3s.tif.sha256` | size=64 | sha256=68afd10a0973ae647fb43ba7a0e53af58305f7d9d8876ec4a96525526f450588
-- `Cross_Sections/Micrographs/20241010_AMB_T12_P3s_rot.tif` | size=618223380 | sha256=a98f57fc3db2a2c599219a2d84d0404e34e876d3ec359fcb40148661a12b0879
-- `Cross_Sections/Micrographs/20241010_AMB_T12_P3s_rot.tif.sha256` | size=64 | sha256=d8444ff24cb41f3a2cb3c21b47aa500aca129214786a60ce1a93838800a4b63d
-- `Cross_Sections/Micrographs/20241010_AMB_T42_P1s.tif` | size=410718420 | sha256=bed4e46080e09850c2b9ebf22bf94623f43be7ad59a6309c4c1f28d459e9bbab
-- `Cross_Sections/Micrographs/20241010_AMB_T42_P1s.tif.sha256` | size=64 | sha256=9bb2a7e0eaf285d083e9ecb0e196a0d61e6da8d091c78482c5b8e6caee15bf5d
-- `Cross_Sections/Micrographs/20241010_AMB_T42_P1s_rot.tif` | size=607546212 | sha256=7dbcc1fdbab1b32e1c134ee18ea4b63d27f890fdb746879329c6704d682e16c6
-- `Cross_Sections/Micrographs/20241010_AMB_T42_P1s_rot.tif.sha256` | size=64 | sha256=4864579355ecf103698a68b5a5a7b1cf693de167ec4d2f9dd386b3ea8a89fe07
-- `Cross_Sections/Micrographs/20241010_AMB_T42_P2s.tif` | size=372461978 | sha256=ab070c92b815af5747edc839ab5e283589e9238959b1721c77eb92f6a6c9ef1a
-- `Cross_Sections/Micrographs/20241010_AMB_T42_P2s.tif.sha256` | size=64 | sha256=fc0ee28ad383a798871c413ed8bd38107428d3a94f8b8e59df94a28933090293
-- `Cross_Sections/Micrographs/20241010_AMB_T42_P2s_rot.tif` | size=607736865 | sha256=a7b8c1dd48e1dc1366b33994eb2ea29149b6fefbe6900fd37e05021a4bc7e083
-- `Cross_Sections/Micrographs/20241010_AMB_T42_P2s_rot.tif.sha256` | size=64 | sha256=d87168303c45a62d25f21462f80515674ee83d5d41c42074171d8c1de6bc45a6
-- `Cross_Sections/Micrographs/20241010_AMB_T42_P3s.tif` | size=441562918 | sha256=34ed0ec0963458ed212647cfab7c00a7e2f0f094da6ef77ac02bd5b0b3dc0c2e
-- `Cross_Sections/Micrographs/20241010_AMB_T42_P3s.tif.sha256` | size=64 | sha256=f027473e005212fc6849735d984d2f3f8ef880b302ee8d065867832e505cd5b6
-- `Cross_Sections/Micrographs/20241010_AMB_T42_P3s_rot.tif` | size=611239914 | sha256=aeb29661c997b2f02430c934f1d4be98f51a45771502e0b998b8b5e469ca3711
-- `Cross_Sections/Micrographs/20241010_AMB_T42_P3s_rot.tif.sha256` | size=64 | sha256=ac5fbbb3d2d66838fd98ab75673cf00046bb1ea6253d08566b52224d36c4096e
-- `Cross_Sections/Micrographs/20241010_AMB_T72_P1s.tif` | size=359577900 | sha256=51583a4ad2a64c230933b807243f3c0bbd6148b32c7c0dfcf43e617812cd48f2
-- `Cross_Sections/Micrographs/20241010_AMB_T72_P1s.tif.sha256` | size=64 | sha256=b6d940c8e2052d59865598ab72beb90c12672c9c340ca4b2c54ff962e5337368
-- `Cross_Sections/Micrographs/20241010_AMB_T72_P1s_rot.tif` | size=607890060 | sha256=495c66967e0b222fa2b93bd765ae333f930457986211419e7b2313990580cca0
-- `Cross_Sections/Micrographs/20241010_AMB_T72_P1s_rot.tif.sha256` | size=64 | sha256=c6c32bbf421c78838dcf01e87a1c744c0cb8b2af72f4c633287fee1eb0de232b
-- `Cross_Sections/Micrographs/20241010_AMB_T72_P2s.tif` | size=371751518 | sha256=523762796e141af3a4871f94b8a42680edde3b22a4ea2533be3d0a5c7deb8d0a
-- `Cross_Sections/Micrographs/20241010_AMB_T72_P2s.tif.sha256` | size=64 | sha256=a2cdd66c4bb8a2cecc006dc866ce532946b4ed4c429757f7c0447c08882f90a3
-- `Cross_Sections/Micrographs/20241010_AMB_T72_P2s_rot.tif` | size=645613278 | sha256=ac0080ceb35e3587d4cf8ad14f0385ec252057b1b4942374f12259bdb4065500
-- `Cross_Sections/Micrographs/20241010_AMB_T72_P2s_rot.tif.sha256` | size=64 | sha256=f0ad9222f818238891fc9eeb27390a3749ae2d854a8d35592921060fca2a6ca5
-- `Cross_Sections/Micrographs/20241010_AMB_T72_P3s.tif` | size=350088938 | sha256=d42bfea6c40c46c9242aacf7861ef5d5d9d74b93aeecf25cc10263812da99d3d
-- `Cross_Sections/Micrographs/20241010_AMB_T72_P3s.tif.sha256` | size=64 | sha256=f4b2c1879ec7904f9ae14c34a85d1bd038223097e7a7d7e1e2ec5bae7c03a4e3
-- `Cross_Sections/Micrographs/20241010_AMB_T72_P3s_rot.tif` | size=606963624 | sha256=1513c3cbb37f19b61c8dfaec57a603c062134b1e8e18ac551b34954d7703a30f
-- `Cross_Sections/Micrographs/20241010_AMB_T72_P3s_rot.tif.sha256` | size=64 | sha256=5473538e4c4c49b406515cc751720f27a7ead4804848b80290a180a9142636fc
-- `Cross_Sections/Micrographs/20241015_AMB_T112_P1s.tif` | size=437561692 | sha256=64656ec22c9c779313d2eaf8c6273d224e7432607b2603ae623effa682f1c1a2
-- `Cross_Sections/Micrographs/20241015_AMB_T112_P1s.tif.sha256` | size=64 | sha256=f9a2e71fde816f1227f8c313bdb072886a99bcb24b8d2751f92a605bbd5bb183
-- `Cross_Sections/Micrographs/20241015_AMB_T112_P1s_rot.tif` | size=609020680 | sha256=d066a664c7faf8f24446d1bb176ac2ae71c0b23d297a64e9a659ad5dc25ed7d6
-- `Cross_Sections/Micrographs/20241015_AMB_T112_P1s_rot.tif.sha256` | size=64 | sha256=4c2760b0c3d4d4d5255d56a7b6e71c9bccffbdac86fdf6a479568dfab98f623b
-- `Cross_Sections/Micrographs/20241015_AMB_T112_P2s.tif` | size=422157518 | sha256=d4024c50762aecc28e79bb11c1a25294a6eaed9d56bd78828e708ecfd93c7755
-- `Cross_Sections/Micrographs/20241015_AMB_T112_P2s.tif.sha256` | size=64 | sha256=70c5cb616d878a3dcfb5039fd0b78d95e9d27feae256b8d9571a079f1bfde311
-- `Cross_Sections/Micrographs/20241015_AMB_T112_P2s_rot.tif` | size=610032712 | sha256=44a74cfd1174e09b97a231c545104d144a26ebf064b1e9f01fe28a04e362678c
-- `Cross_Sections/Micrographs/20241015_AMB_T112_P2s_rot.tif.sha256` | size=64 | sha256=3429654613aea721f019480b3628316184177b88bf97507a0f59233d532f1402
-- `Cross_Sections/Micrographs/20241015_AMB_T112_P3s.tif` | size=404916200 | sha256=fa9952d78f107759c177fe6a7935dda656dc078b08f6e2577896555c99ce178d
-- `Cross_Sections/Micrographs/20241015_AMB_T112_P3s.tif.sha256` | size=64 | sha256=50f07a4f00654c23f5c041224465413338bd970b26209b64680c51a3770ceb39
-- `Cross_Sections/Micrographs/20241015_AMB_T112_P3s_rot.tif` | size=608021128 | sha256=fe59b339d5eb4f657a55608bced72578f7f79ddd552911a5ffcd7b2e3cd339a9
-- `Cross_Sections/Micrographs/20241015_AMB_T112_P3s_rot.tif.sha256` | size=64 | sha256=a2b41b3420dff93f0887355e29d32d994329e1a03fdba11bc0af8cd4d59ad8a7
-- `Cross_Sections/Micrographs/20241015_AMB_T122_P1s.tif` | size=370828404 | sha256=1aaefb8b640ec4f8bbca7d2d59aa7354048b968d0c074b1d78d5cf141f7d3b09
-- `Cross_Sections/Micrographs/20241015_AMB_T122_P1s.tif.sha256` | size=64 | sha256=72a0c580b5a953d9f20653f4d2cb026cd43bbe5411497cf2baf5fde84da1efad
-- `Cross_Sections/Micrographs/20241015_AMB_T122_P1s_rot.tif` | size=608982088 | sha256=b2ac206902eb184aea248bdede4b468a300542a0baef1f354022f375135390b0
-- `Cross_Sections/Micrographs/20241015_AMB_T122_P1s_rot.tif.sha256` | size=64 | sha256=bb4964cc0ec5c20340ac6f7bb5a8eef0e28cd3c94d5f18825d040ae3f78a5acd
-- `Cross_Sections/Micrographs/20241015_AMB_T122_P2s.tif` | size=394576196 | sha256=672f9a6493f87099ffaa9536bb5f60e12146d416ed66cbc53e20d272db7c97c1
-- `Cross_Sections/Micrographs/20241015_AMB_T122_P2s.tif.sha256` | size=64 | sha256=5b13370ad810b79c1333f52237dec22b5f67397d140edba74fc5b2dcfdda1dbb
-- `Cross_Sections/Micrographs/20241015_AMB_T122_P2s_rot.tif` | size=606986148 | sha256=1a552b205656b63d10c7a43d541991a3adff4e733fcb62c43a56634754525d6b
-- `Cross_Sections/Micrographs/20241015_AMB_T122_P2s_rot.tif.sha256` | size=64 | sha256=aec479e999b998fdc8086a2abe39f4b06aa8073d65f8c8a6edd68c24e2352145
-- `Cross_Sections/Micrographs/20241015_AMB_T122_P3s.tif` | size=370506448 | sha256=584135695bef91dabfb587a1717beed6e0650f6bc272b10538b56d308df3fbb1
-- `Cross_Sections/Micrographs/20241015_AMB_T122_P3s.tif.sha256` | size=64 | sha256=1b7787f41f24513075d2d34fe4e9d9c3bc9807d4edd0805d9117d336272872cd
-- `Cross_Sections/Micrographs/20241015_AMB_T122_P3s_rot.tif` | size=608242963 | sha256=8d0cd52675e1f89587747cbddd0ad4c758b64b90de45a26847782b879b7c00ef
-- `Cross_Sections/Micrographs/20241015_AMB_T122_P3s_rot.tif.sha256` | size=64 | sha256=757b1d3bbf0f18551568f4f2b5dbe362d016b255584c9aacc6b81d3ca644d52f
-- `Cross_Sections/Micrographs/20241015_AMB_T22_P1s.tif` | size=414947298 | sha256=bf2fcc61ff227e90d8e6c64571ade19ac54d31fb7098a5a88138bc91857eb345
-- `Cross_Sections/Micrographs/20241015_AMB_T22_P1s.tif.sha256` | size=64 | sha256=1c2ad11e546fbae1e52aa7661bb30f29815afd7330e9c2521e2c9a024e8880e3
-- `Cross_Sections/Micrographs/20241015_AMB_T22_P1s_rot.tif` | size=610617014 | sha256=d87ac4e9cc6e4c88510648097f8b6f9b59ff0596a35c2cb6b877b7b9951eb073
-- `Cross_Sections/Micrographs/20241015_AMB_T22_P1s_rot.tif.sha256` | size=64 | sha256=3403507e564e94b6a3acc4c097ea7eb1deb50d2e18751e367c52627fa5988344
-- `Cross_Sections/Micrographs/20241015_AMB_T22_P2s.tif` | size=387957572 | sha256=9f9b4e9d380ee8457cc593779186e53672c453c1b645e6f97d55accbfcdd6483
-- `Cross_Sections/Micrographs/20241015_AMB_T22_P2s.tif.sha256` | size=64 | sha256=1c3db1c4da63586ae486b474c9c599f76aa251f006e71738efe71258bf74c463
-- `Cross_Sections/Micrographs/20241015_AMB_T22_P2s_rot.tif` | size=608003018 | sha256=181220222d735eb4aeea2a2f2e11d8eda144734b0f564b81528219137062db21
-- `Cross_Sections/Micrographs/20241015_AMB_T22_P2s_rot.tif.sha256` | size=64 | sha256=0444322b83610ca881e464adc4ad975900d06f40f0ff5fb6b5e85a5556c92c43
-- `Cross_Sections/Micrographs/20241015_AMB_T22_P3s.tif` | size=411261006 | sha256=18d361b982ac939e8b46113b2e59e8cf6e6636b5d2c5f016346a49b084df03a9
-- `Cross_Sections/Micrographs/20241015_AMB_T22_P3s.tif.sha256` | size=64 | sha256=732ae6842e5dd23ce22227def48d043b92a89ff47f3e0d25b3a6ee189190672f
-- `Cross_Sections/Micrographs/20241015_AMB_T22_P3s_rot.tif` | size=607518506 | sha256=34fc820c26172de78d10c170e8089c1a908de668f4ea8550afb41f5cb743da94
-- `Cross_Sections/Micrographs/20241015_AMB_T22_P3s_rot.tif.sha256` | size=64 | sha256=7e29cc2be3b70d23732547c8bb220dff15985f24c0ab4ef8921a6cca31b5a4af
-- `Cross_Sections/Micrographs/20241015_AMB_T32_P1s.tif` | size=396172502 | sha256=4b077e146283de7025e4fb9ac73350b0dc5d29f70d70965bb2c9fed517654acb
-- `Cross_Sections/Micrographs/20241015_AMB_T32_P1s.tif.sha256` | size=64 | sha256=97d5381e4f159f9379e089b1eecc8cbf5332311881676993a57dc8b57f288090
-- `Cross_Sections/Micrographs/20241015_AMB_T32_P1s_rot.tif` | size=606838418 | sha256=1884afd0a1610b85dd40285fae9d4a0c680dfc4277480d4abd8e57a08bb40c68
-- `Cross_Sections/Micrographs/20241015_AMB_T32_P1s_rot.tif.sha256` | size=64 | sha256=055e77f4707b89154d9e0547fb3b80b2645e5e97185381ebf6f850a43c8f2b08
-- `Cross_Sections/Micrographs/20241015_AMB_T32_P2s.tif` | size=376600102 | sha256=b2feb700a1f733c61e23f473d53eb8baca829ebe86923f3937174384b50ec015
-- `Cross_Sections/Micrographs/20241015_AMB_T32_P2s.tif.sha256` | size=64 | sha256=9254ff9ea76709f8376460039e746bd2edd381e43f0b6732baf22d4ddf5d3b12
-- `Cross_Sections/Micrographs/20241015_AMB_T32_P2s_rot.tif` | size=609832256 | sha256=e35ef119e9ba1c5ed5f489cd5dab6741a91141bd2dc6d1897ed9144cf4690a65
-- `Cross_Sections/Micrographs/20241015_AMB_T32_P2s_rot.tif.sha256` | size=64 | sha256=1f1d6948c4d89e8d8d204655ed263f0b2e0ad665ec16b3aa429d0b2b31b269e9
-- `Cross_Sections/Micrographs/20241015_AMB_T32_P3s.tif` | size=362571482 | sha256=776d0fc4d911cb8eb84b71c35a94ec77ca37b05cb8966619d8e969997fc8f3be
-- `Cross_Sections/Micrographs/20241015_AMB_T32_P3s.tif.sha256` | size=64 | sha256=b5b63ab5ddec9919075ab97b8e21c239ee674d3785509dcb5845e373b1311cea
-- `Cross_Sections/Micrographs/20241015_AMB_T32_P3s_rot.tif` | size=609706637 | sha256=a042c226c7c7256bab3c4f26da1a17edfe828119c1562936baf34915af6ea265
-- `Cross_Sections/Micrographs/20241015_AMB_T32_P3s_rot.tif.sha256` | size=64 | sha256=e55bc3678aa8dafa5bc9e09b85864e208b01a149f7803aaa0aef2c5d27f45ab8
-- `Cross_Sections/Micrographs/20241015_AMB_T52_P1s.tif` | size=437586924 | sha256=d0fd65709efc1c31f4edd6bdaecfa5cec115ee4ca4b8d9c8ae76d32a01907048
-- `Cross_Sections/Micrographs/20241015_AMB_T52_P1s.tif.sha256` | size=64 | sha256=288698688db864516d37515f352d1075309577d605614e9bc1952ca25bdf0eb5
-- `Cross_Sections/Micrographs/20241015_AMB_T52_P1s_rot.tif` | size=606835280 | sha256=8e8a5a79d02233b8864a97f69da9e32689070ef7997f64e36dfef92dc92ed7b0
+## Six-plate P1/P2/P3 immutable route inventory / 6개 plate P1/P2/P3 불변 route inventory
+- Component metadata only; these measurement files were not opened. / component metadata만 사용; 측정 파일 내용은 열지 않음.
+- `T72_P1`: path=`Cross_Sections/Tracks_Results/20241010_AMB_T72_P1s_pixel_points.csv` | size=1980 | sha256=0c5e26ff992c3ac9d01d884c7e508ba6f24bb121194a7149328caf287e8fc128 | unique=YES
+- `T72_P2`: path=`Cross_Sections/Tracks_Results/20241010_AMB_T72_P2s_pixel_points.csv` | size=2046 | sha256=ee138b31f952908d881afae45d943a1ea849fb3ca19a780c11e4f0c886054832 | unique=YES
+- `T72_P3`: path=`Cross_Sections/Tracks_Results/20241010_AMB_T72_P3s_pixel_points.csv` | size=2031 | sha256=ae3e0ebd3fa5e10eeadc77e2634caf4c4b750fda5ec945ab2a57836635426b57 | unique=YES
+- `T82_P1`: path=`Cross_Sections/Tracks_Results/20241015_AMB_T82_P1s_pixel_points.csv` | size=2035 | sha256=9d922564f41364fac991a879803031bf290c336a13dd71273f1cca60ca42b577 | unique=YES
+- `T82_P2`: path=`Cross_Sections/Tracks_Results/20241015_AMB_T82_P2s_pixel_points.csv` | size=2064 | sha256=a0f44a9fd922f0c7d554c8efebff04d93f4c3f96f7b1043398d80656defc69b4 | unique=YES
+- `T82_P3`: path=`Cross_Sections/Tracks_Results/20241015_AMB_T82_P3s_pixel_points.csv` | size=1976 | sha256=19dbfea207911a04a070a08cf4ee6567576a3143d1484fcd844b0e283275b946 | unique=YES
+- `T92_P1`: path=`Cross_Sections/Tracks_Results/20241015_AMB_T92_P1s_pixel_points.csv` | size=2062 | sha256=2b4c07ac59a00097c5eb15863191a5c9622d1fb8355718d72cafbf9893215dde | unique=YES
+- `T92_P2`: path=`Cross_Sections/Tracks_Results/20241015_AMB_T92_P2s_pixel_points.csv` | size=2076 | sha256=bfd4122cdca96691b11df91946f792b221ebc5457f8781986b0b410567cf8849 | unique=YES
+- `T92_P3`: path=`Cross_Sections/Tracks_Results/20241015_AMB_T92_P3s_pixel_points.csv` | size=2040 | sha256=3ad9df3268df8e5a32fdc88da25d12170afe49b51b1308f349bb45d0d5cc3f3f | unique=YES
+- `T102_P1`: path=`Cross_Sections/Tracks_Results/20241010_AMB_T102_P1s_pixel_points.csv` | size=2051 | sha256=6e433d9ae1792bad7638d902e2356c75ed168b253f2e71dc032ffbedac526505 | unique=YES
+- `T102_P2`: path=`Cross_Sections/Tracks_Results/20241010_AMB_T102_P2s_pixel_points.csv` | size=2067 | sha256=ca88f56c90441d92669b25403f458711d5ec4408cdbf558279bdfd3a1f776a1e | unique=YES
+- `T102_P3`: path=`Cross_Sections/Tracks_Results/20241010_AMB_T102_P3s_pixel_points.csv` | size=2046 | sha256=0f7368c61a4f63de255d94aa77bfae4ac07f16729ccc2792e681951a788549f2 | unique=YES
+- `T112_P1`: path=`Cross_Sections/Tracks_Results/20241015_AMB_T112_P1s_pixel_points.csv` | size=1996 | sha256=2bc01ed74e770eb052638b996bc642dbf3a8d75cb06fcf5a0bbd6dd9be8493d1 | unique=YES
+- `T112_P2`: path=`Cross_Sections/Tracks_Results/20241015_AMB_T112_P2s_pixel_points.csv` | size=2025 | sha256=edc85602aa595af6947e3a839adc2a22f5f026160478b6fd0cbf7b04dbd4844d | unique=YES
+- `T112_P3`: path=`Cross_Sections/Tracks_Results/20241015_AMB_T112_P3s_pixel_points.csv` | size=2033 | sha256=a4a3bea42a22aeee163115eb562ce95d14e95e126351e8489f47456977d5b3dc | unique=YES
+- `T122_P1`: path=`Cross_Sections/Tracks_Results/20241015_AMB_T122_P1s_pixel_points.csv` | size=2048 | sha256=84d9055ec3b6d5970fddf20e8e112947c8b28e88490bb4b8d2d541cf63bddeed | unique=YES
+- `T122_P2`: path=`Cross_Sections/Tracks_Results/20241015_AMB_T122_P2s_pixel_points.csv` | size=2002 | sha256=d8c514f0deb255a54bfb2c8d8f2d4e192b9713c415854ec1a508651c7d13902b | unique=YES
+- `T122_P3`: path=`Cross_Sections/Tracks_Results/20241015_AMB_T122_P3s_pixel_points.csv` | size=2047 | sha256=08a95f03484ffe0b88e0facbb4b9e1a1e11f95bff8b209b1756d61e7f4b5446c | unique=YES
 
