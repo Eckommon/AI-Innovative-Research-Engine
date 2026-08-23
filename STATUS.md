@@ -1,18 +1,18 @@
 ---
-checkpoint_id: CHK-20260822-F18-PARTIAL-MANAGEABLE-X16-ROUTE
+checkpoint_id: CHK-20260823-F19-PARTIAL-SEGMENTATION-RULE-READY
 active_issue: none
 active_research: none
-last_completed_issue: 36
-last_completed_research: AMBENCH-F18
-last_decision: DEC-042
-updated: 2026-08-22
+last_completed_issue: 37
+last_completed_research: AMBENCH-F19
+last_decision: DEC-044
+updated: 2026-08-23
 ---
 
 # Project Status / 프로젝트 상태
 
 **Project / 프로젝트:** AI-Innovative-Research-Engine / AI 기반 혁신 탐색 연구 엔진  
-**Latest verified baseline / 최신 검증 baseline:** `v0.24-f18-partial-manageable-x16-route`  
-**State / 상태:** `F18_COMPLETED__PARTIAL_MANAGEABLE_X16_ROUTE_READY`  
+**Latest verified baseline / 최신 검증 baseline:** `v0.25-f19-partial-segmentation-rule-ready`  
+**State / 상태:** `F19_COMPLETED__PARTIAL_F19_SEGMENTATION_RULE_READY`  
 **Active Work Queue / 활성 작업 큐:** none.
 
 ## Mandatory Governance / 필수 거버넌스
@@ -38,45 +38,47 @@ updated: 2026-08-22
 - #33 F15 — `PARTIAL_REGISTERED_SCHEMA_READY`
 - #34 F16 — `PARTIAL_PUBLIC_ENDPOINT_READY`
 - #35 F17 — `PARTIAL_X16_SOURCE_READY`
-- #36 F18 — **`PARTIAL_MANAGEABLE_X16_ROUTE_READY`**
+- #36 F18 — `PARTIAL_MANAGEABLE_X16_ROUTE_READY`
+- #37 F19 — **`PARTIAL_F19_SEGMENTATION_RULE_READY`**
 
-## F18 Final / F18 최종
-Result: `research/AMBENCH-F18/RESULT.md`.  
-Claims: `CLM-063..065`. Decisions: `DEC-041..042`. Memory: `MEM-039-AMBENCH-F18`.
+## F19 Final / F19 최종
+Result: `research/AMBENCH-F19/RESULT.md`.  
+Claims: `CLM-066..069`. Decisions: `DEC-043..044`. Memory: `MEM-040-AMBENCH-F19`.
 
-Frozen bounded representation:
-- XCT: `mds2-2514` `OverhangX16_ImageHistograms.xlsx` + `.sha256` only;
-- in-situ: `mds2-2309` `DAQ_L101-L125.zip` + `.sha256` and `XYPT_L101-L125.zip` + `.sha256` only;
-- no MPM, layer-camera, other layer groups, or full-build download.
+### Resolved / 해결
+The X16 sixteen-part segmentation method is now frozen before numerical outcome access:
+- source topology: NIST X16 layer-125 Figure 1, `1-1`…`4-4`;
+- command-space source: authoritative XYPT layer 125 laser-on XY;
+- deterministic `k=16`, physical-mm coordinates, no standardization;
+- frozen initialization/update/tie-breaking rules;
+- official topology-based label assignment;
+- frozen-centroid Voronoi partition for later DAQ actual-XY assignment;
+- no numeric boundary digitization or manual relabeling.
 
-Verified route properties:
-- XCT workbook is a small public summary asset (~193 KB);
-- selected DAQ group ~482 MB and XYPT group ~158 MB, keeping compressed selected in-situ source below 1 GiB;
-- authoritative X16 User Notes establish 16 nominally identical parts, 250 layers, and 10 us XYPT/DAQ organization;
-- inherited NIST X4 data description establishes DAQ actual Galvo X/Y, LTZ, and laser-power-reference channels at 100 kHz, while XYPT contains commanded path/power.
+This rule is methodologically frozen but still requires actual validation on authoritative XYPT bytes.
 
-Remaining blockers:
-1. workbook + workbook `.sha256` actual bytes not retrieved;
-2. selected DAQ/XYPT `.sha256` actual bytes not retrieved;
-3. local checksums and archive inventories not reproduced;
-4. workbook sheet/header/16-part mapping semantics not inspected;
-5. exact authoritative numeric X/Y boundary rule for assigning DAQ samples to the sixteen parts not frozen/verified.
+### Remaining dominant blocker / 잔여 지배 blocker
+Current authoritative metadata continues to expose:
+- `mds2-2514` `OverhangX16_ImageHistograms.xlsx`;
+- corresponding `.sha256` sidecar.
 
-Outcome boundary:
-- `NEW_X16_NUMERICAL_OUTCOME_BLIND = YES` remains intact;
-- no XCT numerical cells, DAQ/XYPT process values, process↔XCT statistics, or models were computed.
+However current verified zero-cost execution routes did not retrieve usable workbook/checksum bytes. Therefore:
+- local workbook checksum: `NOT_COMPUTED`;
+- workbook sheet/header/part schema: `NOT_INSPECTED`;
+- XCT numerical cells: `NOT_ACCESSED`.
 
-Frozen final gate: **`PARTIAL_MANAGEABLE_X16_ROUTE_READY`**.
+Outcome state remains:
+`NEW_X16_NUMERICAL_OUTCOME_BLIND = YES`.
+
+Frozen final gate: **`PARTIAL_F19_SEGMENTATION_RULE_READY`**.
 
 ## Exact Next Eligible Work / 정확한 다음 행동
-No experiment is active.
+No experiment is active. Do **not** start E19 yet.
 
-Do **not** start E19 yet.
+The dominant remaining task is narrowly scoped authoritative retrieval/checksum/non-numerical-schema qualification of `OverhangX16_ImageHistograms.xlsx`, plus later execution of the already-frozen segmentation validation on authoritative XYPT bytes.
 
-The next work should resolve only two blockers without expanding data volume:
-1. authoritative zero-cost retrieval/checksum/schema qualification of `OverhangX16_ImageHistograms.xlsx`;
-2. authoritative deterministic X16 part-coordinate segmentation for the already-frozen DAQ/XYPT `L101-L125` representation.
+Do not change layer group, reopen MPM, use TIFF/STL as a rescue, digitize Figure 1 boundaries, or tune segmentation from XCT outcomes.
 
-If both pass, separately preregister a low-degree-of-freedom 16-part technical-replicate process-signature ↔ XCT-summary experiment. Do not treat the sixteen parts as independent process conditions and do not add high-capacity ML.
+Only after workbook qualification and frozen segmentation numeric validation both pass may a separately preregistered low-degree-of-freedom 16-part technical-replicate process-signature ↔ XCT-summary experiment begin.
 
 E14/F16 remain unchanged. Any paid/potentially paid route requires explicit user approval before execution.
