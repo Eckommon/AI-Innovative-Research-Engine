@@ -1,0 +1,77 @@
+name: AMBENCH F22 NERDm metadata
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ambench-f22-metadata.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  metadata:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Recover exact immutable component metadata only
+        shell: bash
+        run: |
+          set -euo pipefail
+          TMP="$(mktemp -d)"
+          trap 'rm -rf "$TMP"' EXIT
+          RESULT="$GITHUB_WORKSPACE/research/AMBENCH-F22/METADATA_RESULT.md"
+          mkdir -p "$(dirname "$RESULT")"
+          cd "$TMP"
+          curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors \
+            'https://data.nist.gov/od/id/mds2-3761?format=nerdm' -o nerdm.json
+          python - <<'PY' > body.md
+          import json
+          from pathlib import Path
+          obj=json.loads(Path('nerdm.json').read_text())
+          targets=['part1.zip','part02.zip','part03.zip','part04.zip']
+          comps=obj.get('components',[])
+          print(f'- total NERDm components: `{len(comps)}`')
+          ok=True
+          for t in targets:
+              exact=[c for c in comps if c.get('filepath')==t]
+              print(f'\n## `{t}`')
+              print(f'- exact_match_count: `{len(exact)}`')
+              if len(exact)!=1:
+                  ok=False; continue
+              c=exact[0]; ck=c.get('checksum') or {}; alg=(ck.get('algorithm') or {}).get('tag'); h=ck.get('hash') or ''
+              print(f'- size_bytes: `{c.get("size")}`')
+              print(f'- mediaType: `{c.get("mediaType")}`')
+              print(f'- checksum_algorithm: `{alg}`')
+              print(f'- checksum_hash: `{h}`')
+              print(f'- downloadURL: `{c.get("downloadURL")}`')
+              if alg!='sha256' or len(h)!=64 or not c.get('downloadURL'): ok=False
+          print(f'\n- ALL_FOUR_IMMUTABLE_METADATA_READY: `{"YES" if ok else "NO"}`')
+          print('- numerical registered values read: `NO`')
+          PY
+          cat > "$RESULT" <<'EOF'
+          ---
+          id: AMBENCH-F22-METADATA-RESULT
+          type: sanitized-metadata-result
+          created: 2026-08-23
+          source_of_truth: github-actions
+          numerical_outcomes_emitted: false
+          ---
+
+          # AMBENCH-F22 NERDm Metadata Result / F22 NERDm 메타데이터 결과
+
+          - route: public standard GitHub-hosted `ubuntu-latest`
+          - incremental monetary cost: `0 USD`
+          - raw artifacts/cache: `NONE`
+          EOF
+          cat body.md >> "$RESULT"
+      - name: Persist sanitized metadata result only
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/AMBENCH-F22/METADATA_RESULT.md
+          git commit -m 'record sanitized AMBENCH-F22 NERDm metadata result'
+          git push
