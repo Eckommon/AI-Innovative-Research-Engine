@@ -1,0 +1,64 @@
+name: AMBENCH F26 candidate B metadata qualification
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ambench-f26-candidate-b-metadata.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  qualify-b:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify repeat-plate component identity from NERDm only
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, re, urllib.request
+          from pathlib import Path
+          root=Path(os.environ['GITHUB_WORKSPACE'])
+          out=root/'research/AMBENCH-F26/CANDIDATE_B_METADATA_QUALIFICATION.md'
+          url='https://data.nist.gov/od/id/mds2-4103?format=nerdm'
+          with urllib.request.urlopen(url,timeout=30) as r:
+              data=json.load(r)
+          comps=data.get('components',[]) or []
+          plates=['T72','T82','T92','T102','T112','T122']
+          lines=['---','id: AMBENCH-F26-CANDIDATE-B-METADATA-QUALIFICATION','type: sanitized-source-qualification','created: 2026-08-23','source_of_truth: github-actions','raw_artifacts_committed: false','numerical_outcome_values_emitted: false','---','','# F26 Candidate B — AMB2025-07 optical repeat metadata qualification','',f'- dataset_title: {data.get("title","UNKNOWN")}',f'- version: {data.get("version","UNKNOWN")}',f'- total_components: {len(comps)}','- route: official NIST NERDm metadata only','- incremental monetary cost: `0 USD`','']
+          paths=[c.get('filepath','') for c in comps]
+          for plate in plates:
+              matches=[p for p in paths if plate in p and not p.endswith('.sha256')]
+              csvs=[p for p in matches if p.lower().endswith('.csv')]
+              lines.append(f'## {plate}')
+              lines.append(f'- non_sidecar_component_count: {len(matches)}')
+              lines.append(f'- csv_component_count: {len(csvs)}')
+              # Names only; no file contents.
+              for p in sorted(csvs)[:20]:
+                  lines.append(f'  - `{p}`')
+              lines.append('')
+          # Exact repeat group readiness from metadata only.
+          ready_075=all(any(pl in p and not p.endswith('.sha256') for p in paths) for pl in plates[:3])
+          ready_5=all(any(pl in p and not p.endswith('.sha256') for p in paths) for pl in plates[3:])
+          lines += ['## Frozen repeat-group metadata gate / 고정 repeat-group metadata 판정',f'- 0.75ms plates T72/T82/T92 represented: {"YES" if ready_075 else "NO"}',f'- 5ms plates T102/T112/T122 represented: {"YES" if ready_5 else "NO"}','- numerical outcome values emitted: `NO`']
+          out.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          PY
+
+      - name: Persist sanitized metadata qualification only
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/AMBENCH-F26/CANDIDATE_B_METADATA_QUALIFICATION.md
+          if git diff --cached --quiet; then
+            echo 'No qualification change.'
+          else
+            git commit -m 'record sanitized F26 candidate B metadata qualification'
+            git push
+          fi
