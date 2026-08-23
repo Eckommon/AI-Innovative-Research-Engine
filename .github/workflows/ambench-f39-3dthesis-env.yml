@@ -1,0 +1,116 @@
+name: AMBENCH F39 pinned 3DThesis environment qualification
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ambench-f39-3dthesis-env.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build and run pinned upstream example
+        shell: bash
+        run: |
+          set -euo pipefail
+          UPSTREAM='https://github.com/ORNL-MDF/3DThesis.git'
+          PIN='2de7fc6d8cfa5de78b111df97b1a4d9156a8cf60'
+          WORK="$RUNNER_TEMP/3DThesis"
+          rm -rf "$WORK"
+          git clone --filter=blob:none "$UPSTREAM" "$WORK"
+          git -C "$WORK" checkout --detach "$PIN"
+
+          cmake -S "$WORK" -B "$WORK/build" -D CMAKE_INSTALL_PREFIX="$WORK/install"
+          cmake --build "$WORK/build" --parallel 2
+          cmake --install "$WORK/build"
+
+          cd "$WORK/examples/solidification_mpstats"
+          rm -rf Data test.log
+          "$WORK/install/bin/3DThesis" ./ParamInput.txt > test.log 2>&1
+
+          file_count="$(find Data -type f -name 'solidification_mpstats*.csv' | wc -l | tr -d ' ')"
+          if [ "$file_count" -lt 1 ]; then
+            echo 'No expected CSV output from pinned upstream example.' >&2
+            cat test.log >&2 || true
+            exit 1
+          fi
+
+          mpstats_declared="$(grep -R -n -E 'MP_Stats|mpstats' Output.txt ParamInput.txt 2>/dev/null | wc -l | tr -d ' ')"
+          path_preview="$(head -n 8 Path.txt | sed 's/`/\x27/g')"
+          license_head="$(head -n 3 "$WORK/LICENSE" | tr '\n' ' ' | sed 's/`/\x27/g')"
+
+          cd "$GITHUB_WORKSPACE"
+          mkdir -p research/AMBENCH-F39
+          cat > research/AMBENCH-F39/ENV_PREFLIGHT.md <<EOF
+          ---
+          id: AMBENCH-F39-ENV-PREFLIGHT
+          type: external-execution-environment-preflight
+          created: 2026-08-23
+          candidate_controller_performance_executed: false
+          incremental_monetary_cost_usd: 0
+          ---
+
+          # AMBENCH-F39 3DThesis Execution Environment Preflight / 3DThesis 실행환경 사전점검
+
+          ## Boundary / 경계
+          - Upstream build + bundled example execution only.
+          - No C0–C4 controller performance comparison is executed here.
+          - Upstream source is transient checkout; no third-party source code is vendored into this repository.
+
+          ## Immutable upstream identity / 고정 upstream identity
+          - repository: `ORNL-MDF/3DThesis`
+          - pinned_commit: `$PIN`
+          - default upstream branch observed separately: `master`
+          - license: upstream README declares open-source 3-clause BSD; local license head: `$license_head`
+
+          ## Build/runtime verification / 빌드·실행 검증
+          - runner: GitHub hosted standard Ubuntu runner
+          - cmake_configure: `PASS`
+          - cmake_build: `PASS`
+          - cmake_install: `PASS`
+          - bundled_example: `solidification_mpstats`
+          - example_execution: `PASS`
+          - expected_csv_output_count: `$file_count`
+          - MP_Stats_declaration_hits_in_example_inputs: `$mpstats_declared`
+
+          ## Actuator encoding surface / actuator 표현 surface
+          Upstream README/documented path syntax provides `Mode X Y Z Pmod Vel/Time`:
+          - path/order: encoded by path-line ordering and XYZ target sequence;
+          - power: encoded by beam power × per-segment `Pmod`, including variable-power strategies;
+          - timing: encoded by line velocity or spot duration, with zero-power path/positioning segments available for laser-off travel/delay representation.
+
+          Pinned example `Path.txt` preview is intentionally reported only as input-format evidence, not as a candidate controller result:
+
+          ```text
+          $path_preview
+          ```
+
+          ## Output surface / output surface
+          Upstream README documents temperature/temperature-history and solidification outputs including melt-pool `MP_Stats` maximum width/length. The bundled `solidification_mpstats` example executed successfully in this pinned environment.
+
+          ## F39 consequence / F39 결과
+          **PASS_F39_RUNTIME_ENVIRONMENT_EXECUTES**
+
+          This establishes that one open, pinned, zero-cost thermal simulation runtime can encode all three actuator classes and emit physical/thermal endpoints. It does **not yet** establish the full `PASS_F39_EXECUTABLE_ADDED_VALUE_TEST_READY`, because the common history-state generator and matched C0–C4 controller contracts must still be frozen and verified before performance execution.
+          EOF
+
+      - name: Persist F39 environment preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/AMBENCH-F39/ENV_PREFLIGHT.md
+          if git diff --cached --quiet; then
+            echo 'No F39 environment-preflight change.'
+          else
+            git commit -m 'record AMBENCH-F39 pinned 3DThesis environment preflight'
+            git push
+          fi
