@@ -138,14 +138,12 @@ This repository is the project's **official persistent system of record and sour
 프로젝트의 향후 **사람이 읽는 모든 주요 연구·거버넌스·상태·Issue 산출물은 한국어와 영어를 병기**한다. 원천 데이터의 컬럼명, 코드, API 필드, 표준명, 고유명사는 정확성을 위해 원문을 보존한다.  
 All future **human-readable major research, governance, status, and Issue artifacts shall be maintained bilingually in Korean and English**. Native dataset fields, code, API keys, standards, and proper names remain in their authoritative original form for precision.
 
-## Current Baseline / 현재 베이스라인
+## Current State Authority / 현재 상태 권위
 
-**Latest verified baseline label / 최신 검증 baseline label:** `v0.7-thermal-dynamics-feasibility`  
-**Checkpoint / 운영 checkpoint:** `CHK-20260822-F08-PARTIAL`  
-**Active Work Queue / 활성 작업 큐:** `none`  
-**Last completed / 최근 완료:** Issue #22 `AMBENCH-F08` — **`PARTIAL_CASE_LEVEL_READY`**  
-**Current direction / 현재 방향:** `mds2-3842` is retained as a reproducible distinct physical modality, but BP1↔BP4 track/repeat pairing is prohibited. Any continuation requires a new outcome-blind preregistration for an **unpaired nominal-case-family/aggregate relationship** with explicit process parameters and unresolved source conflicts preserved. / `mds2-3842`를 distinct modality로 보존하되 BP1↔BP4 track/repeat pairing은 금지하며, 후속은 실제 공정변수·미해결 출처충돌을 명시한 unpaired case-family/aggregate 관계의 별도 사전등록부터 시작한다.
+**KO:** README는 프로젝트의 미션·구조·진입점을 설명하는 안정적 문서이며, 동적으로 변하는 최신 checkpoint·active work·last completed·next action을 중복 보유하지 않는다. 최신 운영 상태는 항상 [`STATUS.md`](STATUS.md)와 [`context/SESSION_HANDOFF.md`](context/SESSION_HANDOFF.md), 그리고 live GitHub Issue 상태를 함께 읽어 복구한다. 이 규칙은 stale README가 오래된 checkpoint를 “현재 상태”로 오인시키는 drift를 방지한다.
 
-See [`STATUS.md`](STATUS.md), [`context/SESSION_HANDOFF.md`](context/SESSION_HANDOFF.md), and [`research/AMBENCH-F08/RESULT.md`](research/AMBENCH-F08/RESULT.md) for the current synchronized operational state. / 최신 동기 운영상태는 해당 문서 참조.
+**EN:** README is the stable mission/architecture/entry-point document and does not duplicate dynamic checkpoint, active-work, last-completed, or next-action values. Recover current operational state by reading [`STATUS.md`](STATUS.md), [`context/SESSION_HANDOFF.md`](context/SESSION_HANDOFF.md), and live GitHub Issue state together. This prevents a stale README from being mistaken for the current checkpoint.
+
+The v2.1 continuity-overlay adoption and this single-source correction are recorded in [`registry/DEC-055.md`](registry/DEC-055.md). / v2.1 지속운영 overlay 채택과 단일 상태권위 보정은 `DEC-055`에 기록한다.
 
 Official artifacts comply with `LANG-001`, `COST-001`, `READ-001`, `STATE-001`, `CHECKPOINT-001`, `FACT-001`, `CONFLICT-001`, and `MEMORY-001`. / 공식 산출물은 관련 규약을 따른다.
