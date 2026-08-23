@@ -21,11 +21,10 @@ jobs:
         run: |
           set -euo pipefail
           python - <<'PY'
-          import csv, hashlib, io, json, os, urllib.request, zipfile
+          import csv, hashlib, io, json, math, os, statistics, urllib.request, zipfile
           from pathlib import Path
 
           DSID='mds2-3662'
-          meta_url=f'https://data.nist.gov/od/id/{DSID}?format=nerdm'
           root=Path(os.environ['GITHUB_WORKSPACE'])
           out=root/'research/AMBENCH-E33/DESIGN_MAP_PREFLIGHT.md'
           out.parent.mkdir(parents=True,exist_ok=True)
@@ -34,21 +33,87 @@ jobs:
               req=urllib.request.Request(url,headers={'User-Agent':'AI-Innovative-Research-Engine/E33-design-map'})
               with urllib.request.urlopen(req,timeout=30) as r: return r.read()
 
-          meta=json.loads(fetch(meta_url).decode('utf-8'))
+          meta=json.loads(fetch(f'https://data.nist.gov/od/id/{DSID}?format=nerdm').decode('utf-8'))
           comp=next(c for c in meta['components'] if c.get('filepath')=='Scan Strategy Data.zip')
-          raw=fetch(comp['downloadURL'])
-          got=hashlib.sha256(raw).hexdigest(); exp=(comp.get('checksum') or {}).get('hash')
+          raw=fetch(comp['downloadURL']); got=hashlib.sha256(raw).hexdigest(); exp=(comp.get('checksum') or {}).get('hash')
           z=zipfile.ZipFile(io.BytesIO(raw))
+
           lines=['---','id: AMBENCH-E33-DESIGN-MAP-PREFLIGHT','type: process-input-preflight','created: 2026-08-23','numerical_outcome_values_emitted: false','process_input_values_only: true','incremental_monetary_cost_usd: 0','---','',
                  '# AMBENCH-E33 Scan-Strategy Design Map Preflight / Scan-Strategy 설계 map 사전점검','',
                  '## Boundary / 경계','- Scan-strategy process-input CSV only; no `Measurements.xlsx` numerical values, images, or outcomes. / scan-strategy 공정입력 CSV만 사용; `Measurements.xlsx` 숫자값·이미지·outcome 미사용.','',
                  '## Source integrity / source 무결성',f'- dataset: `{DSID}`',f'- version: `{meta.get("version")}`',f'- archive_size: `{len(raw)}`',f'- sha256_nerdm: `{exp}`',f'- sha256_local: `{got}`',f'- checksum_match: `{exp==got}`','']
+
+          parsed={}
           for name in sorted(n for n in z.namelist() if n.lower().endswith('.csv')):
               data=z.read(name).decode('utf-8-sig',errors='replace')
-              rows=data.splitlines()
-              lines += [f'## `{name}`',f'- line_count: `{len(rows)}`','- first_lines_process_input_only:']
-              for line in rows[:5]: lines.append('  - `'+line.replace('`','')+'`')
+              reader=csv.DictReader(io.StringIO(data)); rows=list(reader); fields=reader.fieldnames or []
+              parsed[name]=(fields,rows)
+              powers=[]; times=[]
+              for r in rows:
+                  try: powers.append(float(r[fields[2]])); times.append(float(r[fields[3]]))
+                  except Exception: pass
+              lines += [f'## `{name}`',f'- row_count: `{len(rows)}`',f'- header: `{fields}`',f'- unique_laser_power_values: `{sorted(set(powers))}`']
+              if len(times)>2:
+                  dts=[b-a for a,b in zip(times,times[1:]) if b>=a]
+                  lines.append(f'- median_dt_seconds: `{statistics.median(dts):.12g}`')
+                  lines.append(f'- max_dt_seconds: `{max(dts):.12g}`')
               lines.append('')
+
+          def segments(name):
+              fields,rows=parsed[name]
+              xk,yk,pk,tk=fields[:4]
+              pts=[]
+              for r in rows:
+                  pts.append((float(r[xk]),float(r[yk]),float(r[pk]),float(r[tk])))
+              # Segment by time gaps substantially larger than the 100 kHz in-track interval.
+              dts=[b[3]-a[3] for a,b in zip(pts,pts[1:]) if b[3]>=a[3]]
+              base=statistics.median([d for d in dts if d>0])
+              cut=base*5
+              groups=[]; start=0
+              for i,(a,b) in enumerate(zip(pts,pts[1:])):
+                  if b[3]-a[3] > cut:
+                      groups.append(pts[start:i+1]); start=i+1
+              groups.append(pts[start:])
+              # retain nontrivial laser-on scan segments
+              groups=[g for g in groups if len(g)>=2 and max(p[2] for p in g)>0]
+              out=[]
+              for idx,g in enumerate(groups,1):
+                  a,b=g[0],g[-1]
+                  out.append({'idx':idx,'n':len(g),'start':(a[0],a[1]),'end':(b[0],b[1]),'duration':b[3]-a[3],
+                              'chord':math.hypot(b[0]-a[0],b[1]-a[1])})
+              return base,cut,out
+
+          cn='Scan Strategy Data/scanStrategyConverging.csv'; dn='Scan Strategy Data/scanStrategyDiverging.csv'
+          cb,cc,cseg=segments(cn); db,dc,dseg=segments(dn)
+          lines += ['## Time-gap segmentation / time-gap track 분할',f'- converging_base_dt: `{cb}`',f'- converging_gap_threshold: `{cc}`',f'- converging_segment_count: `{len(cseg)}`',f'- diverging_base_dt: `{db}`',f'- diverging_gap_threshold: `{dc}`',f'- diverging_segment_count: `{len(dseg)}`','']
+          for label,segs in [('C',cseg),('D',dseg)]:
+              lines.append(f'### {label} segments / {label} track segments')
+              for s in segs:
+                  lines.append(f'- {label}{s["idx"]}: n={s["n"]}; start={s["start"]}; end={s["end"]}; duration_s={s["duration"]:.8g}; chord_um={s["chord"]:.6g}')
+              lines.append('')
+
+          # Match tracks by unordered endpoints (orientation independent). This uses process coordinates only.
+          def dist(a,b): return math.hypot(a[0]-b[0],a[1]-b[1])
+          matches=[]
+          for c in cseg:
+              cand=[]
+              for d in dseg:
+                  e1=dist(c['start'],d['start'])+dist(c['end'],d['end'])
+                  e2=dist(c['start'],d['end'])+dist(c['end'],d['start'])
+                  cand.append((min(e1,e2),d['idx']))
+              cand.sort(); matches.append((c['idx'],cand[0][1],cand[0][0],cand[1][0] if len(cand)>1 else None))
+          reverse_ok=(len(cseg)==18 and len(dseg)==18 and all(di==19-ci for ci,di,_,_ in matches))
+          unique_ok=(len({di for _,di,_,_ in matches})==len(matches))
+          lines += ['## Geometry-location matching / geometry 위치 매칭','- Method: minimum unordered endpoint-distance using process-input coordinates only. / 공정입력 좌표의 unordered endpoint distance 최소값으로 매칭.',f'- unique_one_to_one: `{unique_ok}`',f'- exact_reverse_index_mapping_Ct_to_D19minusT: `{reverse_ok}`','- matches:']
+          for ci,di,err,next_err in matches:
+              lines.append(f'  - C{ci} -> D{di}: endpoint_error_sum_um={err:.6g}; next_best_error_sum_um={next_err:.6g}')
+          lines.append('')
+
+          if reverse_ok:
+              lines += ['## Pre-outcome design conclusion / outcome 전 설계 결론','- **PASS_GEOMETRY_REVERSE_MAPPING**: C(t) and D(19−t) are the deterministic same-track-location mapping under the process-input endpoint geometry. / 공정입력 endpoint geometry 기준 C(t)와 D(19−t)가 동일 track 위치의 결정론적 역매칭이다.','- This mapping may be frozen before any measurement outcome access. / 측정 outcome 접근 전에 이 매핑을 동결할 수 있다.','']
+          else:
+              lines += ['## Pre-outcome design conclusion / outcome 전 설계 결론','- **HOLD_GEOMETRY_REVERSE_MAPPING_NOT_VERIFIED**. Do not open measurement outcomes for E33 until mapping is resolved. / 매핑 해소 전 E33 outcome 접근 금지.','']
+
           out.write_text('\n'.join(lines)+'\n',encoding='utf-8')
           PY
 
@@ -62,6 +127,6 @@ jobs:
           if git diff --cached --quiet; then
             echo 'No design-map change.'
           else
-            git commit -m 'record AMBENCH-E33 scan-strategy design preflight'
+            git commit -m 'record AMBENCH-E33 reverse track mapping preflight'
             git push
           fi
