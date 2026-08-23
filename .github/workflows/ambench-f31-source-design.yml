@@ -21,8 +21,8 @@ jobs:
         run: |
           set -euo pipefail
           python - <<'PY'
-          import csv, hashlib, io, json, os, re, urllib.parse, urllib.request
-          from collections import Counter, defaultdict
+          import csv, hashlib, io, json, os, re, urllib.request
+          from collections import defaultdict
           from pathlib import Path
 
           DSID='mds2-4103'
@@ -62,15 +62,13 @@ jobs:
                  f'- component_count: `{len(comps)}`',
                  f'- components_with_checksum: `{sum(1 for c in comps if c.get("checksum"))}`','']
 
-          # Metadata-only plate-family inventory. Paths are allowed; file contents are not opened.
           plate_re=re.compile(r'(?<![A-Za-z0-9])(T\d{1,3})(?!\d)', re.I)
           plate_paths=defaultdict(list)
           for c in comps:
               fp=c.get('filepath','')
               for p in set(m.upper() for m in plate_re.findall(fp)):
                   plate_paths[p].append(fp)
-          def plate_key(p):
-              return int(p[1:])
+          def plate_key(p): return int(p[1:])
           lines += ['## Metadata-only physical plate inventory / 메타데이터 기반 physical plate inventory',
                     '- Derived only from component path names; no component content was opened. / component path 이름에서만 도출; component 내용은 열지 않음.']
           for p in sorted(plate_paths,key=plate_key):
@@ -78,7 +76,6 @@ jobs:
               lines.append(f'- `{p}`: components={len(plate_paths[p])}; directories={"; ".join(dirs[:8])}')
           lines.append('')
 
-          # List bounded design/document candidates from metadata only.
           design_terms=('readme','parameter','design','sample','condition','scan')
           forbidden_path_terms=('pixel_points','tracks_results','overlap_depth','overlap_width','depths_avg','widths_avg','image','mask')
           candidates=[]
@@ -92,32 +89,28 @@ jobs:
               lines.append(f'- `{c.get("filepath")}` | size={c.get("size","UNKNOWN")} | sha256={csum_hash(c) or "UNKNOWN"}')
           lines.append('')
 
-          # Exact root README: allowed by preregistration. Emit only lines containing source/design mapping terms.
           readme=bypath.get('4103_ReadMe.txt')
           if readme:
               raw=fetch(readme['downloadURL'])
               exp,got,ok=verify(readme,raw)
               text=raw.decode('utf-8-sig',errors='replace')
               lines += ['## Exact root README qualification / root README 적격성',
-                        f'- path: `4103_ReadMe.txt`',f'- size_nerdm: `{readme.get("size","UNKNOWN")}`',
+                        '- path: `4103_ReadMe.txt`',f'- size_nerdm: `{readme.get("size","UNKNOWN")}`',
                         f'- sha256_nerdm: `{exp or "UNKNOWN"}`',f'- sha256_local: `{got}`',f'- checksum_match: `{ok}`']
-              kws=('1 mm','5 mm','pad','turnaround','plate','sample','repeat','p1','p2','p3','p4','a1','a2','a3','a4')
+              kws=('1 mm','5 mm','pad','turnaround','plate','sample','repeat','p1','p2','p3')
               safe=[]
               for i,line in enumerate(text.splitlines(),1):
                   lo=line.lower()
                   if any(k in lo for k in kws):
-                      # Avoid accidental output tables/results while retaining design prose.
                       if any(b in lo for b in ('measurement result','average depth','average width','overlap depth','overlap width','pixel')):
                           continue
                       safe.append((i,line.strip()))
               lines.append('- bounded_design_lines:')
-              for i,line in safe[:120]:
-                  lines.append(f'  - L{i}: {line}')
+              for i,line in safe[:120]: lines.append(f'  - L{i}: {line}')
               lines.append('')
           else:
               lines += ['## Exact root README qualification / root README 적격성','- `4103_ReadMe.txt`: NOT_EXPOSED_IN_CURRENT_NERDM','']
 
-          # Authoritative SampleIParameters.csv, if exposed. Read only design/identity columns.
           sip=[c for c in comps if c.get('filepath','').lower().endswith('sampleiparameters.csv')]
           lines += ['## SampleIParameters design mapping / SampleIParameters 설계 매핑']
           if not sip:
@@ -129,29 +122,33 @@ jobs:
                   text=raw.decode('utf-8-sig',errors='replace')
                   reader=csv.DictReader(io.StringIO(text))
                   fields=reader.fieldnames or []
-                  allow_terms=('sample','plate','specimen','pad','geometry','turnaround','repeat','condition','track','section','position','thickness','laser','power','speed','velocity','time','duration')
-                  deny_terms=('depth','width','area','height','result','measurement','pixel','image','mask','sq','fused','dilution','overlap')
-                  allowed=[f for f in fields if any(a in f.lower() for a in allow_terms) and not any(d in f.lower() for d in deny_terms)]
+                  # This file is explicitly documented by the authoritative README as a table of sample names
+                  # and experiment parameters. All nine current columns are design/identity fields; none are
+                  # measurement outcomes. Preserve Pad_Width and Location because they are the F31 mapping keys.
+                  expected={'Sample ID','Laser Power (W)','Laser Spot Diameter (µm)','Laser Scan Speed (mm/s)',
+                            'Hatch Spacing (mm)','Powder_Layer_Thickness (µm)','Turnaround_Time (ms)','Pad_Width (mm)','Location (mm)'}
+                  schema_is_design_only=(set(fields)==expected)
+                  allowed=fields if schema_is_design_only else [f for f in fields if f in expected]
                   rows=list(reader)
                   lines += [f'- path: `{comp.get("filepath")}`',f'- size_nerdm: `{comp.get("size","UNKNOWN")}`',f'- sha256_nerdm: `{exp or "UNKNOWN"}`',f'- sha256_local: `{got}`',f'- checksum_match: `{ok}`',
-                            f'- header: `{fields}`',f'- emitted_design_columns: `{allowed}`',f'- row_count: `{len(rows)}`', '- design_rows:']
+                            f'- header: `{fields}`',f'- expected_design_only_schema_match: `{schema_is_design_only}`',f'- emitted_design_columns: `{allowed}`',f'- row_count: `{len(rows)}`','- design_rows:']
                   for row in rows[:200]:
                       item={k:row.get(k,'') for k in allowed}
                       lines.append('  - '+json.dumps(item,ensure_ascii=False,sort_keys=True))
                   lines.append('')
 
-          # Metadata-only route clues by directory and selected filenames; never open these files.
-          route_terms=('surface','topograph','cross_section','cross sections','cross_sections','p4','a4')
-          route=[]
-          for c in comps:
-              fp=c.get('filepath','')
-              lo=fp.lower()
-              if any(t in lo for t in route_terms):
-                  route.append(c)
-          lines += ['## Metadata-only alternate-geometry route clues / 대체 geometry route 단서',
-                    '- File paths only; candidate outcome files below were **not opened**. / 아래 후보 outcome 파일은 **열지 않았으며**, 파일 경로만 사용.']
-          for c in sorted(route,key=lambda x:x.get('filepath',''))[:180]:
-              lines.append(f'- `{c.get("filepath")}` | size={c.get("size","UNKNOWN")} | sha256={csum_hash(c) or "UNKNOWN"}')
+          # Metadata only: confirm exact P1/P2/P3 route component identities for the six bare target plates.
+          target=('T72','T82','T92','T102','T112','T122')
+          lines += ['## Six-plate P1/P2/P3 immutable route inventory / 6개 plate P1/P2/P3 불변 route inventory',
+                    '- Component metadata only; these measurement files were not opened. / component metadata만 사용; 측정 파일 내용은 열지 않음.']
+          for plate in target:
+              for pos in ('P1','P2','P3'):
+                  matches=[c for c in comps if re.search(fr'_{plate}_{pos}s_pixel_points\.csv$',c.get('filepath',''))]
+                  if len(matches)==1:
+                      c=matches[0]
+                      lines.append(f'- `{plate}_{pos}`: path=`{c.get("filepath")}` | size={c.get("size","UNKNOWN")} | sha256={csum_hash(c) or "UNKNOWN"} | unique=YES')
+                  else:
+                      lines.append(f'- `{plate}_{pos}`: unique=NO | match_count={len(matches)}')
           lines.append('')
 
           out.write_text('\n'.join(lines)+'\n',encoding='utf-8')
@@ -167,6 +164,6 @@ jobs:
           if git diff --cached --quiet; then
             echo 'No source/design result change.'
           else
-            git commit -m 'record sanitized AMBENCH-F31 source-design qualification'
+            git commit -m 'record corrected AMBENCH-F31 design mapping qualification'
             git push
           fi
