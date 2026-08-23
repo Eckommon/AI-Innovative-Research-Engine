@@ -1,0 +1,225 @@
+name: AMBENCH E40 pre-performance input identifiability gate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ambench-e40-input-identifiability.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate frozen common state and controller inputs without simulation
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, math, statistics
+          from pathlib import Path
+
+          # Frozen F39 contract constants.
+          NH = 21
+          NSEG = 300
+          DT = 10e-6
+          D0 = 0.75e-3
+          R_MM = 0.29
+          T_S = 6e-3
+          LENGTH_MM = 3.0
+          HATCH_MM = 0.1
+
+          # Nominal C0 command points: segment endpoints with analytical timestamps.
+          points = []
+          for j in range(1, NH + 1):
+              y = (j - 1) * HATCH_MM
+              hatch_start = (j - 1) * (NSEG * DT + D0)
+              x0, x1 = (0.0, LENGTH_MM) if j % 2 == 1 else (LENGTH_MM, 0.0)
+              for k in range(1, NSEG + 1):
+                  frac = k / NSEG
+                  x = x0 + (x1 - x0) * frac
+                  t = hatch_start + k * DT
+                  points.append((j, k, t, x, y))
+
+          # Published RHF form with constant nominal L_k=1; absolute constant power cancels under normalization.
+          H = []
+          r2 = R_MM * R_MM
+          for idx, (j, k, ti, xi, yi) in enumerate(points):
+              terms = []
+              p = idx - 1
+              while p >= 0:
+                  jp, kp, tp, xp, yp = points[p]
+                  elapsed = ti - tp
+                  if elapsed > T_S + 1e-15:
+                      break
+                  dx, dy = xi - xp, yi - yp
+                  d2 = dx * dx + dy * dy
+                  if d2 <= r2:
+                      d = math.sqrt(d2)
+                      terms.append(((R_MM - d) / R_MM) ** 2 * ((T_S - elapsed) / T_S))
+                  p -= 1
+              H.append(math.fsum(terms))
+
+          H_mean = statistics.mean(H)
+          H_std = statistics.pstdev(H)
+          denom = H_mean + H_std
+          HN = [min(v / denom, 1.0) for v in H]
+
+          risks = {}
+          profiles = {}
+          for j in range(1, NH + 1):
+              vals = HN[(j - 1) * NSEG : j * NSEG]
+              profiles[j] = vals
+              risks[j] = statistics.mean(vals)
+
+          steady = [risks[j] for j in range(2, NH + 1)]
+          steady_min, steady_max = min(steady), max(steady)
+          steady_spread = steady_max - steady_min
+          ulp_scale = math.ulp(max(abs(v) for v in steady))
+          # Numerical equality guard only: 64 ULP is used to prevent IEEE-754 roundoff from inventing a path intervention.
+          tie_tol = 64.0 * ulp_scale
+          steady_tied = steady_spread <= tie_tol
+
+          # Contract says ties use ascending original hatch index.
+          if steady_tied and risks[1] < steady_min - tie_tol:
+              stabilized_order = list(range(1, NH + 1))
+          else:
+              stabilized_order = sorted(range(1, NH + 1), key=lambda j: (risks[j], j))
+
+          # Frozen power policy and prospective energy neutralization.
+          q = [1.0 - 0.25 * v for v in HN]
+          qmean = statistics.mean(q)
+          pmods = [v / qmean for v in q]
+          pmod_profiles = {
+              j: pmods[(j - 1) * NSEG : j * NSEG]
+              for j in range(1, NH + 1)
+          }
+
+          mean_r_2_21 = statistics.mean(risks[j] for j in range(2, NH + 1))
+          dwell = {j: D0 * (1.0 + (risks[j] - mean_r_2_21)) for j in range(2, NH + 1)}
+
+          def path_text(order, power_mode, timing_mode):
+              lines = ['Mode\tX(mm)\tY(mm)\tZ(mm)\tPmod\tVel(m/s)/Time(s)']
+              for pos, j in enumerate(order):
+                  y = (j - 1) * HATCH_MM
+                  x0, x1 = (0.0, LENGTH_MM) if j % 2 == 1 else (LENGTH_MM, 0.0)
+                  if pos == 0:
+                      d = 0.0
+                  else:
+                      d = D0 if timing_mode == 'uniform' else dwell[j]
+                  lines.append(f'1\t{x0:.12g}\t{y:.12g}\t0\t0\t{d:.15g}')
+                  pp = [1.0] * NSEG if power_mode == 'fixed' else pmod_profiles[j]
+                  for k in range(1, NSEG + 1):
+                      frac = k / NSEG
+                      x = x0 + (x1 - x0) * frac
+                      lines.append(f'0\t{x:.12g}\t{y:.12g}\t0\t{pp[k-1]:.15g}\t1')
+              return '\n'.join(lines) + '\n'
+
+          c0 = path_text(list(range(1, NH + 1)), 'fixed', 'uniform')
+          c1 = path_text(list(range(1, NH + 1)), 'ramp', 'uniform')
+          c2 = path_text(list(range(1, NH + 1)), 'ramp', 'risk')
+          c3 = path_text(stabilized_order, 'fixed', 'uniform')
+          c4 = path_text(stabilized_order, 'ramp', 'risk')
+
+          paths = {'C0': c0, 'C1': c1, 'C2': c2, 'C3': c3, 'C4': c4}
+          hashes = {k: hashlib.sha256(v.encode('utf-8')).hexdigest() for k, v in paths.items()}
+
+          # Input-budget invariants only; no simulator output is read.
+          energy_means = {
+              'C0': 1.0,
+              'C1': statistics.mean(pmods),
+              'C2': statistics.mean(pmods),
+              'C3': 1.0,
+              'C4': statistics.mean(pmods),
+          }
+          dwell_uniform = 20 * D0
+          dwell_risk = math.fsum(dwell.values())
+          energy_ok = all(abs(v - 1.0) <= 1e-12 for v in energy_means.values())
+          dwell_ok = abs(dwell_uniform - 0.015) <= 1e-12 and abs(dwell_risk - 0.015) <= 1e-12
+          c3_eq_c0 = hashes['C3'] == hashes['C0']
+          c4_eq_c2 = hashes['C4'] == hashes['C2']
+          intervention_degenerate = steady_tied and stabilized_order == list(range(1, NH + 1)) and c3_eq_c0 and c4_eq_c2
+
+          out = Path('research/AMBENCH-E40/INPUT_IDENTIFIABILITY_PREFLIGHT.md')
+          out.parent.mkdir(parents=True, exist_ok=True)
+          lines = [
+              '---',
+              'id: AMBENCH-E40-INPUT-IDENTIFIABILITY-PREFLIGHT',
+              'type: pre-performance-generated-input-falsification',
+              'created: 2026-08-24',
+              'custom_controller_performance_executed: false',
+              'simulator_performance_output_read: false',
+              'incremental_monetary_cost_usd: 0',
+              '---',
+              '',
+              '# AMBENCH-E40 Input Identifiability Preflight / 입력 식별성 사전점검',
+              '',
+              '## Boundary / 경계',
+              '- Frozen F39 common-state and controller-input generation only.',
+              '- No 3DThesis custom C0–C4 performance simulation is executed and no simulator performance output is read.',
+              '- Purpose: verify that C3 and C4 actually encode a distinct path/order intervention before spending execution budget.',
+              '',
+              '## Frozen-state construction / 고정 state 구성',
+              f'- nominal_laser_command_points: `{len(points)}`',
+              '- command discretization: `21 hatches x 300 segments x 10 us`, analytical nominal timestamps',
+              '- RHF: frozen `R=0.29 mm`, `T=6 ms`, constant nominal `L_k=1`',
+              '- normalization: `H_N=min(H/(mean(H)+population_SD(H)),1)`',
+              f'- hatch_1_risk: `{risks[1]:.15g}`',
+              f'- hatch_2_to_21_risk_min: `{steady_min:.15g}`',
+              f'- hatch_2_to_21_risk_max: `{steady_max:.15g}`',
+              f'- hatch_2_to_21_risk_spread: `{steady_spread:.15g}`',
+              f'- risk_ULP_at_scale: `{ulp_scale:.15g}`',
+              f'- numerical_tie_guard_64ULP: `{tie_tol:.15g}`',
+              f'- hatches_2_to_21_numerically_tied: `{steady_tied}`',
+              f'- stabilized_tie_rule_order: `{stabilized_order}`',
+              '',
+              '## Generated-input invariants / 생성 입력 불변조건',
+              f'- energy_neutralization_ok: `{energy_ok}`',
+              f'- uniform_total_transition_dwell_s: `{dwell_uniform:.15g}`',
+              f'- risk_redistributed_total_transition_dwell_s: `{dwell_risk:.15g}`',
+              f'- dwell_budget_ok: `{dwell_ok}`',
+              '- path_sha256:',
+          ]
+          for k in ('C0','C1','C2','C3','C4'):
+              lines.append(f'  - {k}: `{hashes[k]}`')
+          lines += [
+              f'- C3_path_byte_identical_to_C0: `{c3_eq_c0}`',
+              f'- C4_path_byte_identical_to_C2: `{c4_eq_c2}`',
+              '',
+              '## Falsification / 반증',
+          ]
+          if intervention_degenerate:
+              lines += [
+                  '**REJECT_F39_INCREMENTAL_TEST_NOT_IDENTIFIABLE**',
+                  '- Under the frozen state and tie rule, the path/order controller collapses to the canonical C0 hatch order.',
+                  '- Therefore C3 encodes no path intervention beyond C0, and C4 is generated byte-identically to C2.',
+                  '- A C4-vs-C2 performance run cannot test incremental value of a third actuator class; executing it would only compare identical inputs.',
+                  '- Stop E40 before custom performance. Do not retune the state, path score, tie rule, R/T/C parameters, or add a new optimizer to rescue the hypothesis.',
+              ]
+          else:
+              lines += [
+                  '**PASS_E40_DISTINCT_CONTROLLER_INPUTS_READY**',
+                  '- C3/C4 preserve a distinct path/order intervention; custom performance execution may continue under the frozen contract.',
+              ]
+
+          out.write_text('\n'.join(lines) + '\n', encoding='utf-8')
+          PY
+
+      - name: Persist E40 input-identifiability preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/AMBENCH-E40/INPUT_IDENTIFIABILITY_PREFLIGHT.md
+          if git diff --cached --quiet; then
+            echo 'No E40 input-identifiability change.'
+          else
+            git commit -m 'record AMBENCH-E40 pre-performance input identifiability gate'
+            git push
+          fi
