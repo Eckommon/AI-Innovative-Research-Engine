@@ -1,0 +1,71 @@
+name: AMBENCH F28 surface reference
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ambench-f28-surface-reference.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify surface reference component without values
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import csv,hashlib,io,json,os,subprocess,tempfile,urllib.request,shutil
+          from pathlib import Path
+          root=Path(os.environ['GITHUB_WORKSPACE']); out=root/'research/AMBENCH-F28/SURFACE_REFERENCE_RESULT.md'
+          tmp=Path(tempfile.mkdtemp(prefix='f28-surface-')); plates=['T72','T82','T92','T102','T112','T122']
+          lines=['# AMBENCH-F28 Surface Reference Source Verification / F28 surface reference source 검증','', '- raw reference values emitted: NO','- incremental monetary cost: 0 USD','']
+          try:
+            with urllib.request.urlopen('https://data.nist.gov/od/id/mds2-4103?format=nerdm',timeout=60) as r: meta=json.load(r)
+            comps=meta.get('components',[])
+            matches=[c for c in comps if (c.get('filepath') or '').endswith('SurfaceReference_and_Orientation_Layers.csv')]
+            lines.append(f'- exact_filename_match_count: {len(matches)}')
+            if len(matches)!=1: raise RuntimeError('SURFACE_REFERENCE_NOT_UNIQUE')
+            c=matches[0]; cs=c.get('checksum') or {}; sha=cs.get('hash')
+            if not sha:
+              for v in cs.values():
+                if isinstance(v,str) and len(v)==64: sha=v; break
+            lines += [f"- filepath: `{c.get('filepath')}`",f"- NERDm_size: {c.get('size')}",f'- NERDm_SHA256: {sha or "UNKNOWN"}']
+            p=tmp/'surface.csv'; cp=subprocess.run(['curl','-fsSL','--retry','5','--retry-delay','2','--retry-all-errors',c['downloadURL'],'-o',str(p)],capture_output=True,text=True)
+            if cp.returncode!=0: raise RuntimeError('DOWNLOAD_FAIL')
+            b=p.read_bytes(); ok=(len(b)==c.get('size') and hashlib.sha256(b).hexdigest().lower()==sha.lower())
+            text=None; enc=None
+            for e in ('utf-8-sig','cp1252','latin-1'):
+              try: text=b.decode(e); enc=e; break
+              except Exception: pass
+            if text is None: raise RuntimeError('DECODE_FAIL')
+            reader=csv.reader(io.StringIO(text,newline='')); header=next(reader,[])
+            safe=[' '.join(str(x).split())[:120] for x in header]
+            counts={p:False for p in plates}; row_count=0
+            for row in reader:
+              if not row: continue
+              row_count+=1; joined='|'.join(str(x) for x in row)
+              for plate in plates:
+                if plate in joined: counts[plate]=True
+            lower='|'.join(safe).lower()
+            lines += [f'- local_integrity_pass: {"YES" if ok else "NO"}',f'- selected_encoding: {enc}',f'- header_field_count: {len(header)}',f'- bounded_header_fields: {safe}',f'- data_row_count: {row_count}',f'- six_plate_identifier_presence: {counts}',f'- all_six_plate_identifiers_present: {"YES" if all(counts.values()) else "NO"}',f'- y_reference_schema_present: {"YES" if ("reference" in lower and ("y" in lower or "surface" in lower)) else "NO"}','- raw values emitted: NO']
+          except Exception as e:
+            lines += [f'- verification_error: {type(e).__name__}','- raw values emitted: NO']
+          finally: shutil.rmtree(tmp,ignore_errors=True)
+          out.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          PY
+      - name: Commit sanitized result
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/AMBENCH-F28/SURFACE_REFERENCE_RESULT.md
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'record AMBENCH-F28 surface-reference source verification'
+          git push
