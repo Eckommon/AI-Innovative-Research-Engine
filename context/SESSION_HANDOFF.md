@@ -2,12 +2,12 @@
 id: SESSION-HANDOFF
 type: memory
 state: ACTIVE
-checkpoint_id: CHK-20260823-F28-PASS-GEOMETRY-SOURCE-READY
-active_issue: none
-active_research: none
+checkpoint_id: CHK-20260823-E29-PREREGISTERED-EXECUTION-ACTIVE
+active_issue: 47
+active_research: AMBENCH-E29
 last_completed_issue: 46
 last_completed_research: AMBENCH-F28
-last_decision: DEC-059
+last_decision: DEC-060
 created: 2026-08-22
 updated: 2026-08-23
 source_of_truth: github
@@ -16,60 +16,49 @@ source_of_truth: github
 # Session Handoff / 세션 인수인계
 
 ## Current State / 현재 상태
-- Active Issue: none.
+- Active Issue: #47 `AMBENCH-E29`.
 - Last completed: #46 `AMBENCH-F28 — PASS_F28_PLATE_SPECIFIC_GEOMETRY_SOURCE_READY`.
 - `DEC-055`: v2.1 + compact Shared Capability/Portfolio Continuity Overlay active; no mission reset.
-- `DEC-059`: F28 source-readiness PASS; E29 preregistration is the next eligible mission action.
+- `DEC-060`: E29 preregistration active; numerical execution is authorized only under the frozen design and zero-cost gate.
 
-## F28 completion / F28 완료
-Verified source/schema/provenance route for deterministic plate-specific P1 physical geometry reconstruction:
-- target plates T72/T82/T92/T102/T112/T122;
-- exactly one P1 `*_pixel_points.csv` per plate;
-- all six local source bytes matched current NIST NERDm size/SHA-256;
-- common schema: `Row`, `depth_x (px)`, `depth_y (px)`, `width_x (px)`, `bead_height_y (px)`, `overlap_depth_x (px)`, `overlap_depth_y (px)`;
-- 45 rows per P1 component;
-- NIST README provides authoritative coordinate/geometry calculation semantics and physical micrograph scaling;
-- exact current reference component `Cross_Sections/Micrographs/SurfaceReference_and_Orientation_Layers.csv`;
-- reference size 1653 bytes;
-- SHA-256 `98c898fd78be88c5f0a318575ad6468dc03a3cdeaa31dc19d03605a2df9f7c22`;
-- schema `Image Name`, `Y reference pixel number`, `Step over direction`;
-- exactly one P1 reference row for each target plate.
+## E29 frozen experiment / E29 고정 실험
+- groups: T72/T82/T92 at 0.75 ms vs T102/T112/T122 at 5.0 ms;
+- independent replicate: physical plate;
+- P1 only;
+- source: F28-verified current NIST `mds2-4103` immutable P1 components + authoritative README + exact Micrographs surface-reference component;
+- reconstruction: `(overlap_depth_y - surface_y_reference) * authoritative pixel_scale_um_per_px`;
+- no sign flip, alternate scale, source substitution, P2/P3 rescue or imputation;
+- >=41/45 valid overlap-depth tracks required per plate;
+- primary plate endpoint: arithmetic mean of valid reconstructed P1 track overlap depths;
+- direction: `0.75 ms > 5.0 ms`, inherited from E27 before its parser incident;
+- exact one-sided 20-allocation permutation on six plate endpoints;
+- plate-level rank-biserial `r_rb`; strong threshold >=7/9;
+- common-valid track sensitivity requires >=36/45 common tracks and positive `Delta_common` for strong PASS.
 
-F28 emitted no raw coordinate/reference values and performed no geometry outcome calculation or condition comparison.
+Frozen gates:
+- `PASS_E29_STRONG_DIRECTIONAL_EFFECT`
+- `MIXED_E29_DIRECTIONAL_SIGNAL`
+- `NO_MATERIAL_GAIN_E29`
+- `HOLD_E29_INTEGRITY_OR_COVERAGE`
 
-Permanent inherited disclosure:
-`NEW_E27_NUMERICAL_OUTCOME_BLIND = VIOLATED_SCHEMA_PREFLIGHT_GIBBERISH_EMISSION`.
+Exposure disclosure:
+`NEW_E29_NUMERICAL_OUTCOME_BLIND = NO__INHERITED_E27_SCHEMA_PREFLIGHT_GIBBERISH_EMISSION`.
 
 ## Minimum Operability / 최소 운영
-Current seven-function classification:
-- Mission/Scope = PRESENT
-- Authority/Agent Rule = EQUIVALENT
-- Current State/Active Work = PRESENT
-- Human/Cost/Security Gate = PRESENT
-- Decision/Evidence Authority = PRESENT
-- Verification Method = PRESENT
-- Write-back/Continuation = PRESENT
+All seven required functions remain PRESENT/EQUIVALENT; no `MISSING-BLOCKING` state and no new duplicate control file required.
 
-No `MISSING-BLOCKING` function exists. No duplicate AGENTS/control file is required.
-
-## Capability / Portfolio overlay
-- recurring research/evidence workflow remains `SHARED-INTERNAL-CANDIDATE`;
-- existing Central Capability Repository must be checked before extraction, but reconciliation is nonblocking;
-- shared content/infrastructure is centralized only after real reuse/ownership is verified;
-- shared API credit/cloud quota/paid SaaS/GitHub quota/budget must never be assumed without canonical resource-ledger evidence.
+## Capability / Portfolio
+Recurring NERDm/source-integrity/reconstruction/evidence workflow remains `SHARED-INTERNAL-CANDIDATE`. Central Capability Repository/shared-content/shared-infrastructure/shared-resource reconciliation is nonblocking. Never assume shared paid quota/budget without canonical ledger evidence.
 
 ## Exact Next Action / 정확한 다음 행동
-Separately preregister **AMBENCH-E29 — six-plate P1 reconstructed overlap-depth turnaround-time controlled experiment** before any numerical coordinate/reference inspection.
+Execute E29 only after this synchronized preregistration state:
+1. re-query current NERDm identities/hashes;
+2. transiently retrieve six P1 components, Micrographs surface-reference table, and authoritative README;
+3. parse the one documented physical pixel scale;
+4. reconstruct plate track depths with the frozen formula;
+5. enforce source, unique-binding, nonnegative reconstruction and >=41/45 coverage gates;
+6. compute six plate endpoints, exact permutation p, plate-level rank-biserial, common-track sensitivity;
+7. commit only sanitized aggregate results;
+8. apply frozen gate, persist decision/claims/memory, close/HOLD #47, synchronize STATUS/HANDOFF and re-read.
 
-Freeze before execution:
-1. T72/T82/T92 vs T102/T112/T122 and P1 only;
-2. authoritative reconstruction formula and physical-scale source;
-3. primary plate-level overlap-depth endpoint;
-4. track missingness/coverage rule;
-5. plate aggregation rule;
-6. directional exact 3-vs-3 permutation statistic;
-7. effect-size and PASS/MIXED/NO_MATERIAL_GAIN/HOLD gates;
-8. nested dependence limit: 45 tracks are within-plate measurements, not independent replicates;
-9. inherited E27 exposure disclosure.
-
-Only after preregistration may numerical coordinate/reference values be read. Any potentially billable action requires explicit prior user approval.
+Any potentially billable action requires explicit prior user approval.
