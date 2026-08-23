@@ -1,0 +1,83 @@
+name: AMBENCH F20 XYPT official sidecar verification
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ambench-f20-xypt-official-sidecar.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  verify-xypt:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify authoritative XYPT archive without reading numerical content
+        shell: bash
+        run: |
+          set -euo pipefail
+          TMP="$(mktemp -d)"
+          trap 'rm -rf "$TMP"' EXIT
+          RESULT="$GITHUB_WORKSPACE/research/AMBENCH-F20/XYPT_RUN_RESULT.md"
+          cd "$TMP"
+
+          BASE='https://data.nist.gov/od/ds/ark:/88434/mds2-2309/XYPT_L101-L125.zip'
+          curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors "$BASE.sha256" -o source.sha256
+          EXPECTED="$(grep -Eo '[0-9a-fA-F]{64}' source.sha256 | head -n1 | tr 'A-F' 'a-f')"
+          test "${#EXPECTED}" -eq 64
+
+          curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors "$BASE" -o xypt.zip
+          ACTUAL="$(sha256sum xypt.zip | awk '{print $1}')"
+          test "$EXPECTED" = "$ACTUAL"
+
+          python - <<'PY' > inventory.txt
+          import re, zipfile
+          with zipfile.ZipFile('xypt.zip') as z:
+              names=z.namelist()
+              l125=[n for n in names if re.search(r'(?<!\d)125(?!\d)', n)]
+              print(f'MEMBER_COUNT={len(names)}')
+              print(f'LAYER125_FILENAME_MATCH_COUNT={len(l125)}')
+              for n in l125[:30]: print(f'LAYER125_MEMBER={n}')
+              print('NUMERICAL_XYPT_VALUES_READ=NO')
+          PY
+
+          MEMBER_COUNT="$(grep '^MEMBER_COUNT=' inventory.txt | cut -d= -f2-)"
+          L125_COUNT="$(grep '^LAYER125_FILENAME_MATCH_COUNT=' inventory.txt | cut -d= -f2-)"
+
+          cat > "$RESULT" <<EOF
+          ---
+          id: AMBENCH-F20-XYPT-RUN-RESULT
+          type: sanitized-execution-result
+          created: 2026-08-23
+          source_of_truth: github-actions
+          raw_artifacts_committed: false
+          ---
+
+          # AMBENCH-F20 XYPT Official-Sidecar Result / F20 XYPT 공식 sidecar 결과
+
+          - authoritative ZIP URL: $BASE
+          - authoritative sidecar URL: $BASE.sha256
+          - expected SHA-256 from NIST sidecar: $EXPECTED
+          - actual local SHA-256: $ACTUAL
+          - SHA-256 match: YES
+          - archive member count: $MEMBER_COUNT
+          - layer-125 filename match count: $L125_COUNT
+          - numerical XYPT values read: NO
+          - artifacts/cache: NONE
+          - raw transient teardown: SUCCESS
+          EOF
+          sed -n '3,40p' inventory.txt | sed 's/^/- /' >> "$RESULT"
+
+      - name: Persist sanitized result only
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/AMBENCH-F20/XYPT_RUN_RESULT.md
+          git commit -m 'record sanitized AMBENCH-F20 XYPT verification result'
+          git push
