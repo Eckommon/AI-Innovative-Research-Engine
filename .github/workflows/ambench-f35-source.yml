@@ -1,0 +1,72 @@
+name: AMBENCH F35 RHF source qualification
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ambench-f35-source.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Qualify current RHF PDR identity without outcomes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, json, os, urllib.request
+          from pathlib import Path
+
+          DSID='mds2-2507'
+          root=Path(os.environ['GITHUB_WORKSPACE'])
+          out=root/'research/AMBENCH-F35/SOURCE_PREFLIGHT.md'
+          out.parent.mkdir(parents=True,exist_ok=True)
+
+          def fetch(url):
+              req=urllib.request.Request(url,headers={'User-Agent':'AI-Innovative-Research-Engine/F35-source'})
+              with urllib.request.urlopen(req,timeout=45) as r: return r.read()
+
+          meta=json.loads(fetch(f'https://data.nist.gov/od/id/{DSID}?format=nerdm').decode('utf-8'))
+          comps=[c for c in meta.get('components',[]) if c.get('filepath')]
+          def chash(c):
+              x=c.get('checksum') or {}; return x.get('hash') if isinstance(x,dict) else None
+
+          lines=['---','id: AMBENCH-F35-SOURCE-PREFLIGHT','type: source-design-preflight','created: 2026-08-23','raw_candidate_numerical_outcomes_inspected: false','incremental_monetary_cost_usd: 0','---','',
+                 '# AMBENCH-F35 RHF Source Preflight / RHF Source 사전점검','',
+                 '## Boundary / 경계','- Current official NIST NERDm/PDR component metadata only, plus exact-byte verification of the small data-description PDF if present.','- No RHF command, encoder, MPM video, analysis-result, microscopy or synchronized-movie content is opened.','- No candidate numerical treatment/monitoring/quality outcome is inspected.','',
+                 '## Current identity / 현재 identity',f'- dataset: `{DSID}`',f'- title: {meta.get("title","UNKNOWN")}',f'- version: `{meta.get("version","UNKNOWN")}`',f'- edition_id: `{meta.get("@id",meta.get("ediid","UNKNOWN"))}`',f'- component_count: `{len(comps)}`',f'- components_with_checksum: `{sum(1 for c in comps if chash(c))}`','',
+                 '## Component inventory / component inventory']
+          for c in comps:
+              lines.append(f'- `{c.get("filepath")}` | size=`{c.get("size","UNKNOWN")}` | sha256=`{chash(c)}` | downloadURL=`{c.get("downloadURL","UNKNOWN")}`')
+
+          docs=[c for c in comps if str(c.get('filepath','')).lower().endswith('.pdf') and 'description' in str(c.get('filepath','')).lower()]
+          lines += ['', '## Data-description exact-byte check / data-description exact-byte 검증']
+          if docs:
+              for c in docs:
+                  raw=fetch(c['downloadURL']); got=hashlib.sha256(raw).hexdigest(); exp=chash(c)
+                  lines += [f'- path: `{c.get("filepath")}`',f'  - size_nerdm: `{c.get("size")}`',f'  - size_local: `{len(raw)}`',f'  - sha256_nerdm: `{exp}`',f'  - sha256_local: `{got}`',f'  - checksum_match: `{bool(exp and exp==got)}`']
+          else:
+              lines.append('- description_pdf_component: `NOT_FOUND_AS_SEPARATE_COMPONENT`')
+
+          lines += ['', '## Source-only status / source-only 상태','- Raw dataset numerical outcome exposure: `NO`.','- RHF treatment effect recomputation: `NO`.','- Large/raw archives downloaded: `NO` except an eligible small data-description PDF if present.','- Apply F35 frozen dimensions only after combining this immutable inventory with the official data-description semantics.','']
+          out.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          PY
+      - name: Persist sanitized RHF source preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/AMBENCH-F35/SOURCE_PREFLIGHT.md
+          if git diff --cached --quiet; then
+            echo 'No F35 source-preflight change.'
+          else
+            git commit -m 'record AMBENCH-F35 RHF source preflight'
+            git push
+          fi
