@@ -2,12 +2,12 @@
 id: SESSION-HANDOFF
 type: memory
 state: ACTIVE
-checkpoint_id: CHK-20260823-F21-REJECT-ENDPOINT-ROUTE
+checkpoint_id: CHK-20260823-F22-PARTIAL-ALL-FOUR-BYTES-SCHEMA-HOLD
 active_issue: none
 active_research: none
-last_completed_issue: 39
-last_completed_research: AMBENCH-F21
-last_decision: DEC-048
+last_completed_issue: 40
+last_completed_research: AMBENCH-F22
+last_decision: DEC-049
 created: 2026-08-22
 updated: 2026-08-23
 source_of_truth: github
@@ -16,68 +16,69 @@ source_of_truth: github
 # Session Handoff / 세션 인수인계
 
 ## Current State / 현재 상태
-- Checkpoint: `CHK-20260823-F21-REJECT-ENDPOINT-ROUTE`
+- Checkpoint: `CHK-20260823-F22-PARTIAL-ALL-FOUR-BYTES-SCHEMA-HOLD`
 - Active Issue: none
 - Active research: none
-- Last completed: #39 `AMBENCH-F21 — REJECT_F21_ENDPOINT_ROUTE`
-- Last decision: `DEC-048`
+- Last completed: #40 `AMBENCH-F22 — PARTIAL_F22_ALL_FOUR_IMMUTABLE_BYTES_READY__SCHEMA_HEADER_HOLD`
+- Last decision: `DEC-049`
 
 ## Cost Authority / 비용 권위
 `COST-001` + `DEC-028`: any potentially billable action requires explicit user approval before execution. Unknown billing = `HOLD_COST_APPROVAL`.
 
 ## Preserved branches / 보존 branch
 - E14 remains `HOLD_SOURCE_INTEGRITY`; no redesign.
-- F16 remains `PARTIAL_PUBLIC_ENDPOINT_READY` for `mds2-3761`; no numerical modeling yet.
-- F19 segmentation method remains frozen.
+- F19 X16 segmentation method remains frozen.
 - F20 X16 workbook immutable identity/schema remains PASS.
+- F21 rejects only the X16 histogram-workbook-only structural-quality endpoint route.
 
-## F21 Result / F21 결과
-Frozen final gate: **`REJECT_F21_ENDPOINT_ROUTE`**.
+## F22 Result / F22 결과
+Frozen descriptive final gate: **`PARTIAL_F22_ALL_FOUR_IMMUTABLE_BYTES_READY__SCHEMA_HEADER_HOLD`**.
 
-Authoritative X16 Data Description was recovered and verified:
-- size `533260` bytes;
-- SHA-256 `d078ae297f909cad0c959aae9dae7df1accd2e1b237ec452f23674da84f5bb3d`;
-- transient local SHA matched;
-- render-first/text extraction PASS;
-- raw PDF/renders not committed.
+### All-four immutable source bytes / 4개 전체 불변 source bytes
+Current NIST NERDm plus zero-cost transient retrieval verified exact SHA-256 for all four registered X4 archives:
+- `part1.zip`: `0bf229f5a04d181f4c79549fa6357a1bfe3095437b26bb660de5e86b35bb2ec3`
+- `part02.zip`: `bf72d9e160d94094f9268fcf3f76a532c8a29fb64aff1afbec20256acaee178e`
+- `part03.zip`: `89e9e1afadca22b9c34177d82972272a4e73789b19388f0c83d62a9ebd53d878`
+- `part04.zip`: `6c3f655a1482001119c54d1f1e404a34eb401f386fffc06147628b36c7c8d7c5`
 
-X16 workbook semantics:
-- first column = histogram bin edges;
-- second column = voxel counts within each bin;
-- X = 16-bit Digital Level;
-- Y = Number of Voxels;
-- histograms derived in ImageJ from 16-bit grayscale XCT TIFF stacks;
-- nominally bimodal empty/solid distributions;
-- NIST explicitly states threshold must be chosen uniquely for each part because peak means/variances differ.
+Every local SHA matched NERDm exactly. Every ZIP is valid and contains exactly 250 CSV members with deterministic `L0001.csv`–`L0250.csv` layer coverage. Raw archives were transient-only, with no artifacts/cache.
 
-Why workbook-only endpoint is rejected:
-- spatial information is absent;
-- exterior empty voxels cannot be separated from internal voids/pores using histogram alone;
-- Part 1-1 has a larger XY crop;
-- beam hardening, residual contrast, and EDM-derived artifacts are documented;
-- common threshold is unsupported.
+This resolves the prior F15/F16 source-byte access/integrity blocker.
 
-Do not compute common-threshold pore fraction and do not reinterpret histogram centroid/IQR as physical defect quality without additional spatial evidence.
+### Headerless serialization discovery / headerless serialization 발견
+The F22 preregistration assumed textual CSV headers. Actual registered CSVs are headerless.
 
-This rejection does not invalidate the X16 XCT source, F20 workbook-integrity PASS, or F19 segmentation method.
+During the Part 1 attempted header check, first numerical lines were read and the initial result persisted the first CSV row as if it were a header. Current-facing values were redacted; `research/AMBENCH-F22/AMENDMENT-01.md` preserves the event and consequence.
 
-Outcome state remains `NEW_X16_NUMERICAL_OUTCOME_BLIND = YES`. No numerical workbook outcomes, XYPT/DAQ process summaries, associations, or models were computed.
+Current exposure state:
+**`NEW_REGISTERED_X4_NUMERICAL_OUTCOME_BLIND = VIOLATED_LIMITED`**.
+
+No correlation, aggregation, ranking, feature selection, process↔XCT statistic, or model was computed. Parts 2–4 verification read no CSV content lines.
+
+Because original F22 full PASS required a textual 40-column header/schema check, do not claim `PASS_F22_REGISTERED_X4_IMMUTABLE_SOURCE_READY`. `AMENDMENT-02` creates the descriptive PARTIAL gate without weakening the original full PASS.
 
 Durable artifacts:
-- `research/AMBENCH-F21/README.md`
-- `research/AMBENCH-F21/RESULT.md`
-- `research/AMBENCH-F21/SEMANTIC_SOURCE_RESULT.md`
-- `CLM-074..076`
-- `DEC-047..048`
-- `MEM-043-AMBENCH-F21`
+- `research/AMBENCH-F22/README.md`
+- `research/AMBENCH-F22/AMENDMENT-01.md`
+- `research/AMBENCH-F22/AMENDMENT-02.md`
+- `research/AMBENCH-F22/METADATA_RESULT.md`
+- `research/AMBENCH-F22/PART1_RESULT.md`
+- `research/AMBENCH-F22/PARTS234_RESULT.md`
+- `research/AMBENCH-F22/RESULT.md`
+- `CLM-077..079`
+- `DEC-049`
+- `MEM-044-AMBENCH-F22`
 
 ## Exact Next Eligible Work / 정확한 다음 eligible 작업
-No experiment is active.
+No numerical experiment is active. Do not model yet.
 
-Return to NIST fully registered X4 dataset `mds2-3761` and re-run source-integrity recovery using the F20 pattern:
-1. NERDm machine-readable component identity/checksum discovery;
-2. public standard GitHub-hosted transient retrieval at zero incremental cost;
-3. checksum verification and archive inventory;
-4. no numerical modeling before source integrity PASS.
+Next: separately preregister a **headerless serialization/schema mapping gate**:
+1. freeze exact positional column order 1..40 from authoritative NIST AMS 100-69;
+2. validate structural field count while suppressing numerical values;
+3. verify deterministic raw position → documented semantic mapping across all four archives;
+4. preserve rows nested in layers nested in parts;
+5. carry `VIOLATED_LIMITED` pre-exposure disclosure into all later numerical work.
 
-If byte-verifiable, separately preregister registered in-situ process/melt-pool ↔ ex-situ XCT validation. Any paid/potentially paid route requires prior explicit user approval.
+Only after this gate passes may a low-degree-of-freedom registered process/melt-pool ↔ XCT experiment be separately preregistered.
+
+Any paid/potentially paid route requires prior explicit user approval.
