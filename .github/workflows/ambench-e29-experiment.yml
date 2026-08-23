@@ -48,7 +48,7 @@ jobs:
             '- incremental monetary cost: 0 USD',
             '- raw P1 coordinate rows committed/emitted: NO',
             '- raw surface-reference rows committed/emitted: NO',
-            '- amendment: AMENDMENT-01 symbolic hold diagnostics only','',
+            '- amendments: AMENDMENT-01 symbolic hold diagnostics; AMENDMENT-02 exact root README selector','',
           ]
 
           def checksum_hash(c):
@@ -98,7 +98,7 @@ jobs:
             comps=meta.get('components',[])
             lines += ['## Source identity / source identity',f"- NERDm_version: {meta.get('version','UNKNOWN')}",f'- component_count: {len(comps)}','']
 
-            readmes=[c for c in comps if (c.get('filepath') or '').lower().endswith('4103_readme.txt')]
+            readmes=[c for c in comps if (c.get('filepath') or '')=='4103_ReadMe.txt']
             if len(readmes)!=1: raise RuntimeError('README_NOT_UNIQUE')
             readme_b,_,_=download_verified(readmes[0],tmp/'readme.txt')
             readme_text=None
@@ -112,7 +112,7 @@ jobs:
             unique_scales=sorted(set(float(x) for x in matches if float(x)>0))
             if len(unique_scales)!=1: raise RuntimeError('PIXEL_SCALE_NOT_UNIQUE')
             scale=unique_scales[0]
-            lines += ['- README_integrity_pass: YES','- authoritative_pixel_scale_parse: PASS',f'- pixel_scale_um_per_px: {scale:.12g}','']
+            lines += ['- README_exact_root_path: `4103_ReadMe.txt`','- README_integrity_pass: YES','- authoritative_pixel_scale_parse: PASS',f'- pixel_scale_um_per_px: {scale:.12g}','']
 
             surf=[c for c in comps if (c.get('filepath') or '')==surface_target]
             if len(surf)!=1: raise RuntimeError('SURFACE_COMPONENT_NOT_UNIQUE')
