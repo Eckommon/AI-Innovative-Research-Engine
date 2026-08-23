@@ -21,8 +21,9 @@ jobs:
         run: |
           set -euo pipefail
           python - <<'PY'
-          import hashlib, html, json, os, re, urllib.request, zipfile
+          import hashlib, json, os, re, urllib.request, zipfile
           import xml.etree.ElementTree as ET
+          from collections import Counter
           from pathlib import Path
 
           DSID='mds2-3662'
@@ -48,13 +49,12 @@ jobs:
           lines=['---','id: AMBENCH-E33-SCHEMA-PREFLIGHT','type: schema-design-preflight','created: 2026-08-23','source_of_truth: nist-current-nerdm','numerical_outcome_values_emitted: false','raw_artifacts_committed: false','incremental_monetary_cost_usd: 0','---','',
                  '# AMBENCH-E33 Schema/Design Preflight / Schema·Design 사전점검','',
                  '## Boundary / 경계',
-                 '- Current NIST metadata, README design text, XLSX structure and **string-valued cells only**. / 현재 NIST metadata, README 설계 문구, XLSX 구조 및 **문자열 cell만** 사용.',
+                 '- Current NIST metadata, README design text, XLSX structure, string-valued cells, and **style/type coordinates without numeric cell values**. / 현재 NIST metadata, README 설계 문구, XLSX 구조, 문자열 cell 및 **숫자값 없는 style/type 좌표**만 사용.',
                  '- Numeric XLSX cell values are never emitted or inspected by this workflow. / XLSX 숫자 cell 값은 이 workflow에서 출력·검토하지 않음.',
                  '- No condition effect, outcome statistic, ranking, model, or image archive access. / 조건 effect, outcome statistic, ranking, model, image archive 접근 없음.','',
                  '## Current source identity / 현재 source identity',
                  f'- dataset: `{DSID}`',f'- version: `{meta.get("version","UNKNOWN")}`',f'- component_count: `{len(meta.get("components",[]))}`',f'- components_with_checksum: `{sum(1 for c in meta.get("components",[]) if c.get("checksum"))}`','']
 
-          # README design-only bounded lines
           rc=comps['README.txt']; rr=fetch(rc['downloadURL']); rexp,rgot,rok=verify(rc,rr)
           lines += ['## README integrity and bounded design strings / README 무결성·설계 문구',
                     f'- size: `{len(rr)}`',f'- sha256_nerdm: `{rexp}`',f'- sha256_local: `{rgot}`',f'- checksum_match: `{rok}`','- bounded_lines:']
@@ -67,7 +67,6 @@ jobs:
                   lines.append(f'  - L{i}: {line.strip()}')
           lines.append('')
 
-          # XLSX integrity and string-only extraction via OOXML; do not read numeric cell <v> as values.
           xc=comps['Measurements.xlsx']; xr=fetch(xc['downloadURL']); xexp,xgot,xok=verify(xc,xr)
           tmp=root/'_e33_measurements.xlsx'; tmp.write_bytes(xr)
           ns={'m':'http://schemas.openxmlformats.org/spreadsheetml/2006/main','r':'http://schemas.openxmlformats.org/officeDocument/2006/relationships'}
@@ -77,10 +76,7 @@ jobs:
               if 'xl/sharedStrings.xml' in z.namelist():
                   ss=ET.fromstring(z.read('xl/sharedStrings.xml'))
                   for si in ss.findall('m:si',ns):
-                      pieces=[]
-                      for t in si.iter('{http://schemas.openxmlformats.org/spreadsheetml/2006/main}t'):
-                          pieces.append(t.text or '')
-                      shared.append(''.join(pieces))
+                      shared.append(''.join((t.text or '') for t in si.iter('{http://schemas.openxmlformats.org/spreadsheetml/2006/main}t')))
               wb=ET.fromstring(z.read('xl/workbook.xml'))
               rel=ET.fromstring(z.read('xl/_rels/workbook.xml.rels'))
               relmap={x.attrib['Id']:x.attrib['Target'] for x in rel.findall('p:Relationship',relns)}
@@ -88,10 +84,7 @@ jobs:
               for s in wb.find('m:sheets',ns):
                   name=s.attrib.get('name'); rid=s.attrib.get('{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id')
                   target=relmap[rid]
-                  if target.startswith('/'):
-                      path=target.lstrip('/')
-                  else:
-                      path='xl/'+target.lstrip('/')
+                  path=target.lstrip('/') if target.startswith('/') else 'xl/'+target.lstrip('/')
                   sheets.append((name,path))
 
               lines += ['## Measurements.xlsx integrity / Measurements.xlsx 무결성',
@@ -102,8 +95,9 @@ jobs:
                   merges=sh.find('m:mergeCells',ns)
                   mrefs=[m.attrib['ref'] for m in merges] if merges is not None else []
                   lines += [f'### Sheet `{name}`',f'- dimension: `{dimref}`',f'- merged_ranges: `{mrefs}`','- string_cells:']
-                  count=0
+                  allcells=[]; count=0
                   for c in sh.findall('.//m:c',ns):
+                      allcells.append(c)
                       typ=c.attrib.get('t'); ref=c.attrib.get('r','?'); val=None
                       if typ=='s':
                           v=c.find('m:v',ns)
@@ -115,12 +109,29 @@ jobs:
                               val=''.join((t.text or '') for t in isel.iter('{http://schemas.openxmlformats.org/spreadsheetml/2006/main}t'))
                       elif typ=='str':
                           v=c.find('m:v',ns); val=v.text if v is not None else ''
-                      # Numeric/default cells intentionally ignored.
                       if val is not None:
-                          clean=val.replace('\n','\\n').replace('\r','')
-                          lines.append(f'  - `{ref}`: {clean}')
-                          count+=1
+                          lines.append(f'  - `{ref}`: {val.replace(chr(10),"\\n").replace(chr(13),"")}'); count+=1
                   lines.append(f'- string_cell_count: `{count}`')
+                  lines.append('')
+
+                  # Set-2 outcome-grid style map only. Coordinates/types/styles are emitted, never numeric values.
+                  # Operator 1 numeric grid rows 6:23, Operator 2 rows 27:44; outcome columns I:T.
+                  style_counter=Counter(); coords=[]
+                  for c in allcells:
+                      ref=c.attrib.get('r','')
+                      m=re.fullmatch(r'([A-Z]+)(\d+)',ref)
+                      if not m: continue
+                      col,row=m.group(1),int(m.group(2))
+                      if col not in tuple('IJKLMNOPQRST') or not (6 <= row <= 23 or 27 <= row <= 44): continue
+                      style=c.attrib.get('s','0'); typ=c.attrib.get('t','n')
+                      v=c.find('m:v',ns); has_value=(v is not None and v.text is not None)
+                      style_counter[style]+=1
+                      coords.append((ref,style,typ,has_value))
+                  lines += ['## Set-2 outcome-grid style/type map — values suppressed / Set-2 outcome grid style·type map — 값 비공개',
+                            '- Purpose: identify source-authored formatting/outlier markers before numerical access. / 수치 접근 전 source-authored formatting/outlier marker 식별.',
+                            f'- style_frequency: `{dict(sorted(style_counter.items()))}`', '- cells:']
+                  for ref,style,typ,has_value in coords:
+                      lines.append(f'  - `{ref}`: style=`{style}` type=`{typ}` has_value=`{has_value}`')
                   lines.append('')
           tmp.unlink(missing_ok=True)
           out.write_text('\n'.join(lines)+'\n',encoding='utf-8')
@@ -136,6 +147,6 @@ jobs:
           if git diff --cached --quiet; then
             echo 'No schema-preflight change.'
           else
-            git commit -m 'record AMBENCH-E33 schema-only preflight'
+            git commit -m 'record AMBENCH-E33 style-map preflight'
             git push
           fi
