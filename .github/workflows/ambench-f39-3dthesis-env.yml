@@ -43,8 +43,8 @@ jobs:
           fi
 
           mpstats_declared="$(grep -R -n -E 'MP_Stats|mpstats' Output.txt ParamInput.txt 2>/dev/null | wc -l | tr -d ' ')"
-          path_preview="$(head -n 8 Path.txt | sed 's/`/\x27/g')"
-          license_head="$(head -n 3 "$WORK/LICENSE" | tr '\n' ' ' | sed 's/`/\x27/g')"
+          path_preview="$(head -n 8 Path.txt | sed "s/'//g")"
+          license_head="$(head -n 3 "$WORK/LICENSE" | tr '\n' ' ' | sed "s/'//g")"
 
           cd "$GITHUB_WORKSPACE"
           mkdir -p research/AMBENCH-F39
@@ -53,6 +53,7 @@ jobs:
           id: AMBENCH-F39-ENV-PREFLIGHT
           type: external-execution-environment-preflight
           created: 2026-08-23
+          report_version: v2_safe_writeback
           candidate_controller_performance_executed: false
           incremental_monetary_cost_usd: 0
           ---
@@ -65,40 +66,38 @@ jobs:
           - Upstream source is transient checkout; no third-party source code is vendored into this repository.
 
           ## Immutable upstream identity / 고정 upstream identity
-          - repository: `ORNL-MDF/3DThesis`
-          - pinned_commit: `$PIN`
-          - default upstream branch observed separately: `master`
-          - license: upstream README declares open-source 3-clause BSD; local license head: `$license_head`
+          - repository: ORNL-MDF/3DThesis
+          - pinned_commit: $PIN
+          - default upstream branch observed separately: master
+          - license: upstream README declares open-source 3-clause BSD; local license head: $license_head
 
           ## Build/runtime verification / 빌드·실행 검증
           - runner: GitHub hosted standard Ubuntu runner
-          - cmake_configure: `PASS`
-          - cmake_build: `PASS`
-          - cmake_install: `PASS`
-          - bundled_example: `solidification_mpstats`
-          - example_execution: `PASS`
-          - expected_csv_output_count: `$file_count`
-          - MP_Stats_declaration_hits_in_example_inputs: `$mpstats_declared`
+          - cmake_configure: PASS
+          - cmake_build: PASS
+          - cmake_install: PASS
+          - bundled_example: solidification_mpstats
+          - example_execution: PASS
+          - expected_csv_output_count: $file_count
+          - MP_Stats_declaration_hits_in_example_inputs: $mpstats_declared
 
           ## Actuator encoding surface / actuator 표현 surface
-          Upstream README/documented path syntax provides `Mode X Y Z Pmod Vel/Time`:
+          Upstream README/documented path syntax provides: Mode X Y Z Pmod Vel/Time
           - path/order: encoded by path-line ordering and XYZ target sequence;
-          - power: encoded by beam power × per-segment `Pmod`, including variable-power strategies;
+          - power: encoded by beam power multiplied by per-segment Pmod, including variable-power strategies;
           - timing: encoded by line velocity or spot duration, with zero-power path/positioning segments available for laser-off travel/delay representation.
 
-          Pinned example `Path.txt` preview is intentionally reported only as input-format evidence, not as a candidate controller result:
+          Pinned example Path.txt preview is input-format evidence only, not a candidate controller result:
 
-          ```text
-          $path_preview
-          ```
+              $path_preview
 
           ## Output surface / output surface
-          Upstream README documents temperature/temperature-history and solidification outputs including melt-pool `MP_Stats` maximum width/length. The bundled `solidification_mpstats` example executed successfully in this pinned environment.
+          Upstream README documents temperature/temperature-history and solidification outputs including melt-pool MP_Stats maximum width/length. The bundled solidification_mpstats example executed successfully in this pinned environment.
 
           ## F39 consequence / F39 결과
           **PASS_F39_RUNTIME_ENVIRONMENT_EXECUTES**
 
-          This establishes that one open, pinned, zero-cost thermal simulation runtime can encode all three actuator classes and emit physical/thermal endpoints. It does **not yet** establish the full `PASS_F39_EXECUTABLE_ADDED_VALUE_TEST_READY`, because the common history-state generator and matched C0–C4 controller contracts must still be frozen and verified before performance execution.
+          This establishes that one open, pinned, zero-cost thermal simulation runtime can encode all three actuator classes and emit physical/thermal endpoints. It does not yet establish the full PASS_F39_EXECUTABLE_ADDED_VALUE_TEST_READY, because the common history-state generator and matched C0–C4 controller contracts must still be frozen and verified before performance execution.
           EOF
 
       - name: Persist F39 environment preflight
@@ -111,6 +110,6 @@ jobs:
           if git diff --cached --quiet; then
             echo 'No F39 environment-preflight change.'
           else
-            git commit -m 'record AMBENCH-F39 pinned 3DThesis environment preflight'
+            git commit -m 'record AMBENCH-F39 corrected 3DThesis environment preflight'
             git push
           fi
