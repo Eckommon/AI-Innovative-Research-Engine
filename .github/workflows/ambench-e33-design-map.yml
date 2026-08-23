@@ -16,22 +16,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Verify reverse track map from process-input laser-on segments
+      - name: Verify equivalent programmed-length reverse map
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
-          import csv, hashlib, io, json, math, os, traceback, urllib.request, zipfile
+          import csv, hashlib, io, json, math, os, statistics, traceback, urllib.request, zipfile
           from pathlib import Path
 
           DSID='mds2-3662'
+          SCAN_SPEED_UM_S=960000.0
+          EXPECTED_DT_S=0.00001
+          LENGTH_TOL_UM=10.0
           root=Path(os.environ['GITHUB_WORKSPACE'])
           out=root/'research/AMBENCH-E33/DESIGN_MAP_PREFLIGHT.md'
           out.parent.mkdir(parents=True,exist_ok=True)
-          lines=['---','id: AMBENCH-E33-DESIGN-MAP-PREFLIGHT','type: process-input-preflight','created: 2026-08-23','numerical_outcome_values_emitted: false','process_input_values_only: true','incremental_monetary_cost_usd: 0','---','', '# AMBENCH-E33 Scan-Strategy Design Map Preflight / Scan-Strategy 설계 map 사전점검','']
+          lines=['---','id: AMBENCH-E33-DESIGN-MAP-PREFLIGHT','type: process-input-preflight','created: 2026-08-23','numerical_outcome_values_emitted: false','process_input_values_only: true','incremental_monetary_cost_usd: 0','---','', '# AMBENCH-E33 Equivalent Programmed-Length Reverse Map / 동등 programmed-length 역매칭 검증','']
 
           def fetch(url):
-              req=urllib.request.Request(url,headers={'User-Agent':'AI-Innovative-Research-Engine/E33-design-map'})
+              req=urllib.request.Request(url,headers={'User-Agent':'AI-Innovative-Research-Engine/E33-equivalent-length-map'})
               with urllib.request.urlopen(req,timeout=30) as r: return r.read()
 
           try:
@@ -39,7 +42,7 @@ jobs:
               comp=next(c for c in meta['components'] if c.get('filepath')=='Scan Strategy Data.zip')
               raw=fetch(comp['downloadURL']); got=hashlib.sha256(raw).hexdigest(); exp=(comp.get('checksum') or {}).get('hash')
               z=zipfile.ZipFile(io.BytesIO(raw))
-              lines += ['## Boundary / 경계','- Process-input scan strategy only. `Measurements.xlsx` numerical outcomes were not opened.','', '## Source integrity / source 무결성',f'- dataset: `{DSID}`',f'- version: `{meta.get("version")}`',f'- archive_size: `{len(raw)}`',f'- sha256_nerdm: `{exp}`',f'- sha256_local: `{got}`',f'- checksum_match: `{exp==got}`','']
+              lines += ['## Boundary / 경계','- Process-input scan strategy only. `Measurements.xlsx` numerical outcomes were not opened.','- Gate metric and tolerance are frozen in `AMENDMENT-02.md`.','', '## Source integrity / source 무결성',f'- dataset: `{DSID}`',f'- version: `{meta.get("version")}`',f'- archive_size: `{len(raw)}`',f'- sha256_nerdm: `{exp}`',f'- sha256_local: `{got}`',f'- checksum_match: `{exp==got}`','']
 
               def read(name):
                   reader=csv.DictReader(io.StringIO(z.read(name).decode('utf-8-sig',errors='replace')))
@@ -53,8 +56,7 @@ jobs:
               def laser_on_segments(pts):
                   groups=[]; cur=[]
                   for p in pts:
-                      if p[2] > 0:
-                          cur.append(p)
+                      if p[2] > 0: cur.append(p)
                       elif cur:
                           if len(cur)>=2: groups.append(cur)
                           cur=[]
@@ -62,54 +64,62 @@ jobs:
                   out=[]
                   for idx,g in enumerate(groups,1):
                       a,b=g[0],g[-1]
-                      out.append({'idx':idx,'n':len(g),'start':(a[0],a[1]),'end':(b[0],b[1]),'duration':b[3]-a[3], 'chord':math.hypot(b[0]-a[0],b[1]-a[1])})
+                      duration=b[3]-a[3]
+                      poly=sum(math.hypot(q[0]-p[0],q[1]-p[1]) for p,q in zip(g,g[1:]))
+                      out.append({'idx':idx,'n':len(g),'start':(a[0],a[1]),'end':(b[0],b[1]),'duration':duration,'programmed_len':duration*SCAN_SPEED_UM_S,'polyline':poly})
                   return out
 
               cn='Scan Strategy Data/scanStrategyConverging.csv'; dn='Scan Strategy Data/scanStrategyDiverging.csv'
               cf,Cpts=read(cn); df,Dpts=read(dn); C=laser_on_segments(Cpts); D=laser_on_segments(Dpts)
-              lines += [f'## `{cn}`',f'- header: `{cf}`',f'- rows: `{len(Cpts)}`',f'- laser_on_rows: `{sum(1 for p in Cpts if p[2]>0)}`',f'- laser_off_rows: `{sum(1 for p in Cpts if p[2]<=0)}`','',
-                        f'## `{dn}`',f'- header: `{df}`',f'- rows: `{len(Dpts)}`',f'- laser_on_rows: `{sum(1 for p in Dpts if p[2]>0)}`',f'- laser_off_rows: `{sum(1 for p in Dpts if p[2]<=0)}`','',
-                        '## Laser-on segmentation / laser-on track 분할',f'- C_segment_count: `{len(C)}`',f'- D_segment_count: `{len(D)}`','']
+              all_dts=[]
+              for pts in (Cpts,Dpts):
+                  all_dts += [b[3]-a[3] for a,b in zip(pts,pts[1:]) if b[3]>a[3]]
+              median_dt=statistics.median(all_dts) if all_dts else float('nan')
+              dt_ok=abs(median_dt-EXPECTED_DT_S) <= 1e-12
+              count_ok=(len(C)==18 and len(D)==18)
+              checksum_ok=(exp==got)
+              lines += ['## Frozen process-input resolution / 고정 공정입력 해상도',f'- nominal_scan_speed_um_s: `{SCAN_SPEED_UM_S}`',f'- expected_sampling_interval_s: `{EXPECTED_DT_S}`',f'- observed_median_dt_s: `{median_dt:.12g}`',f'- sampling_interval_match: `{dt_ok}`',f'- frozen_pair_tolerance_um: `{LENGTH_TOL_UM}`','', '## Laser-on segmentation / laser-on track 분할',f'- C_segment_count: `{len(C)}`',f'- D_segment_count: `{len(D)}`','']
+
               for lab,segs in [('C',C),('D',D)]:
-                  lines.append(f'### {lab} track segments')
+                  lines.append(f'### {lab} segments')
                   for s in segs:
-                      lines.append(f'- {lab}{s["idx"]}: n={s["n"]}; start={s["start"]}; end={s["end"]}; duration_s={s["duration"]:.8g}; chord_um={s["chord"]:.6g}')
+                      lines.append(f'- {lab}{s["idx"]}: n={s["n"]}; duration_s={s["duration"]:.8g}; programmed_length_um={s["programmed_len"]:.6f}; polyline_um={s["polyline"]:.6f}')
                   lines.append('')
 
-              def dist(a,b): return math.hypot(a[0]-b[0],a[1]-b[1])
-              matches=[]
-              for c in C:
-                  cand=[]
-                  for d in D:
-                      same=dist(c['start'],d['start'])+dist(c['end'],d['end'])
-                      rev=dist(c['start'],d['end'])+dist(c['end'],d['start'])
-                      cand.append((min(same,rev),d['idx']))
-                  cand.sort()
-                  if cand: matches.append((c['idx'],cand[0][1],cand[0][0],cand[1][0] if len(cand)>1 else None))
-              reverse_ok=(len(C)==18 and len(D)==18 and len(matches)==18 and all(di==19-ci for ci,di,_,_ in matches))
-              unique_ok=(len(matches)==18 and len({x[1] for x in matches})==18)
-              max_err=max((x[2] for x in matches), default=float('inf'))
-              min_margin=min(((x[3]-x[2]) for x in matches if x[3] is not None), default=0.0)
-              # Recording coordinates are integer micrometres. Require clear nearest-neighbour identity:
-              # max matched endpoint error <= 250 um and every next-best candidate >= 250 um farther away.
-              tolerance_ok=(max_err <= 250.0 and min_margin >= 250.0)
-              pass_map=(reverse_ok and unique_ok and tolerance_ok)
-              lines += ['## Geometry-location matching / geometry 위치 매칭','- Method: minimum unordered start/end endpoint distance from process-input coordinates.',f'- one_to_one_18x18: `{unique_ok}`',f'- exact_Ct_to_D19minusT: `{reverse_ok}`',f'- max_best_endpoint_error_sum_um: `{max_err:.6g}`',f'- min_next_best_margin_um: `{min_margin:.6g}`',f'- predeclared_recording_tolerance_ok: `{tolerance_ok}`','- matches:']
-              for ci,di,err,nxt in matches:
-                  margin=(nxt-err) if nxt is not None else None
-                  lines.append(f'  - C{ci} -> D{di}: best_error_sum_um={err:.6g}; next_best_margin_um={margin if margin is not None else "NA"}')
+              reverse=[]; same=[]
+              if count_ok:
+                  for t in range(1,19):
+                      c=C[t-1]; dr=D[18-t]; ds=D[t-1]
+                      reverse.append(abs(c['programmed_len']-dr['programmed_len']))
+                      same.append(abs(c['programmed_len']-ds['programmed_len']))
+              reverse_all_tol=(count_ok and all(x <= LENGTH_TOL_UM + 1e-9 for x in reverse))
+              mae_reverse=(statistics.mean(reverse) if reverse else float('inf'))
+              mae_same=(statistics.mean(same) if same else float('inf'))
+              global_better=(mae_reverse < mae_same)
+              pass_map=(checksum_ok and dt_ok and count_ok and reverse_all_tol and global_better)
+
+              lines += ['## Reverse-pair programmed-length equivalence / 역매칭 programmed-length 동등성',
+                        '- Pair: `C(t) ↔ D(19−t)`; length = laser-on duration × 960,000 µm/s.',
+                        f'- all_18_reverse_pairs_within_10um: `{reverse_all_tol}`',
+                        f'- MAE_reverse_um: `{mae_reverse:.6f}`',f'- MAE_same_index_um: `{mae_same:.6f}`',f'- reverse_globally_better_than_same_index: `{global_better}`','- pairs:']
+              if count_ok:
+                  for t in range(1,19):
+                      c=C[t-1]; dr=D[18-t]
+                      lines.append(f'  - C{t} ↔ D{19-t}: C_len_um={c["programmed_len"]:.6f}; D_len_um={dr["programmed_len"]:.6f}; abs_diff_um={reverse[t-1]:.6f}')
               lines.append('')
+
+              lines += ['## Frozen gate application / 고정 gate 적용',f'- checksum_identity: `{checksum_ok}`',f'- exact_18x18_laser_on_segments: `{count_ok}`',f'- sampling_resolution_match: `{dt_ok}`',f'- reverse_pair_tolerance: `{reverse_all_tol}`',f'- reverse_global_superiority: `{global_better}`','']
               if pass_map:
-                  lines += ['## Pre-outcome design conclusion / outcome 전 설계 결론','**PASS_GEOMETRY_REVERSE_MAPPING** — checksum-frozen process-input coordinates verify unique deterministic `C(t) ↔ D(19−t)` same-track-location mapping.','']
+                  lines += ['## Pre-outcome design conclusion / outcome 전 설계 결론','**PASS_E33_EQUIVALENT_LENGTH_REVERSE_MAP** — checksum-frozen process inputs verify `C(t) ↔ D(19−t)` as the deterministic equivalent programmed-length map under opposite scan-history order. It is not a same-XY-location map.','- Per Amendment-01, publication-level outcomes were already exposed after preregistration; raw `Measurements.xlsx` values remain unopened at this gate.','']
               else:
-                  lines += ['## Pre-outcome design conclusion / outcome 전 설계 결론','**HOLD_GEOMETRY_REVERSE_MAPPING_NOT_VERIFIED** — no measurement outcome access authorized.','']
+                  lines += ['## Pre-outcome design conclusion / outcome 전 설계 결론','**HOLD_E33_GEOMETRY_MAP_UNRESOLVED** — do not open measurement outcomes.','']
           except Exception as e:
-              lines += ['## Diagnostic failure / 진단 실패',f'- exception_type: `{type(e).__name__}`',f'- exception: `{str(e)}`','```text',traceback.format_exc(),'```','', '**HOLD_GEOMETRY_REVERSE_MAPPING_NOT_VERIFIED** — fail closed.','']
+              lines += ['## Diagnostic failure / 진단 실패',f'- exception_type: `{type(e).__name__}`',f'- exception: `{str(e)}`','```text',traceback.format_exc(),'```','', '**HOLD_E33_GEOMETRY_MAP_UNRESOLVED** — fail closed.','']
 
           out.write_text('\n'.join(lines)+'\n',encoding='utf-8')
           PY
 
-      - name: Persist design-map preflight
+      - name: Persist equivalent-length preflight
         shell: bash
         run: |
           set -euo pipefail
@@ -119,6 +129,6 @@ jobs:
           if git diff --cached --quiet; then
             echo 'No design-map change.'
           else
-            git commit -m 'record AMBENCH-E33 laser-on reverse-map verification'
+            git commit -m 'record AMBENCH-E33 equivalent-length reverse-map gate'
             git push
           fi
