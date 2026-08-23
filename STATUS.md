@@ -1,18 +1,18 @@
 ---
-checkpoint_id: CHK-20260823-F21-REJECT-ENDPOINT-ROUTE
+checkpoint_id: CHK-20260823-F22-PARTIAL-ALL-FOUR-BYTES-SCHEMA-HOLD
 active_issue: none
 active_research: none
-last_completed_issue: 39
-last_completed_research: AMBENCH-F21
-last_decision: DEC-048
+last_completed_issue: 40
+last_completed_research: AMBENCH-F22
+last_decision: DEC-049
 updated: 2026-08-23
 ---
 
 # Project Status / 프로젝트 상태
 
 **Project / 프로젝트:** AI-Innovative-Research-Engine / AI 기반 혁신 탐색 연구 엔진  
-**Latest verified baseline / 최신 검증 baseline:** `v0.27-f21-reject-endpoint-route`  
-**State / 상태:** `F21_COMPLETED__REJECT_F21_ENDPOINT_ROUTE`  
+**Latest verified baseline / 최신 검증 baseline:** `v0.28-f22-all-four-immutable-bytes-schema-hold`  
+**State / 상태:** `F22_COMPLETED__PARTIAL_ALL_FOUR_IMMUTABLE_BYTES_READY__SCHEMA_HEADER_HOLD`  
 **Active Work Queue / 활성 작업 큐:** none.
 
 ## Mandatory Governance / 필수 거버넌스
@@ -41,53 +41,45 @@ updated: 2026-08-23
 - #36 F18 — `PARTIAL_MANAGEABLE_X16_ROUTE_READY`
 - #37 F19 — `PARTIAL_F19_SEGMENTATION_RULE_READY`
 - #38 F20 — `PASS_F20_WORKBOOK_IMMUTABLE_SCHEMA_READY`
-- #39 F21 — **`REJECT_F21_ENDPOINT_ROUTE`**
+- #39 F21 — `REJECT_F21_ENDPOINT_ROUTE`
+- #40 F22 — **`PARTIAL_F22_ALL_FOUR_IMMUTABLE_BYTES_READY__SCHEMA_HEADER_HOLD`**
 
-## F21 Final / F21 최종
-Result: `research/AMBENCH-F21/RESULT.md`.  
-Semantic execution: `research/AMBENCH-F21/SEMANTIC_SOURCE_RESULT.md`.  
-Claims: `CLM-074..076`. Decisions: `DEC-047..048`. Memory: `MEM-043-AMBENCH-F21`.
+## F22 Final / F22 최종
+Result: `research/AMBENCH-F22/RESULT.md`.  
+Amendments: `AMENDMENT-01.md`, `AMENDMENT-02.md`.  
+Execution records: `METADATA_RESULT.md`, `PART1_RESULT.md`, `PARTS234_RESULT.md`.  
+Claims: `CLM-077..079`. Decision: `DEC-049`. Memory: `MEM-044-AMBENCH-F22`.
 
-### Authoritative semantics / 권위 의미론
-Verified X16 Data Description:
-- component `DataDescription_OverhangPartX16_XCT.pdf`;
-- size `533260` bytes;
-- SHA-256 `d078ae297f909cad0c959aae9dae7df1accd2e1b237ec452f23674da84f5bb3d`;
-- transient local SHA matched;
-- render-first/text extraction PASS; raw PDF/renders not committed.
+### Source-byte integrity solved / source-byte 무결성 해결
+Current NIST NERDm exact components and locally verified SHA-256:
+- `part1.zip` — `0bf229f5a04d181f4c79549fa6357a1bfe3095437b26bb660de5e86b35bb2ec3`;
+- `part02.zip` — `bf72d9e160d94094f9268fcf3f76a532c8a29fb64aff1afbec20256acaee178e`;
+- `part03.zip` — `89e9e1afadca22b9c34177d82972272a4e73789b19388f0c83d62a9ebd53d878`;
+- `part04.zip` — `6c3f655a1482001119c54d1f1e404a34eb401f386fffc06147628b36c7c8d7c5`.
 
-Workbook semantics:
-- first column = histogram bin edges;
-- second column = voxel counts within each bin;
-- X = 16-bit Digital Level;
-- Y = Number of Voxels;
-- histograms calculated in ImageJ from 16-bit grayscale XCT TIFF stacks;
-- histograms nominally bimodal empty/solid;
-- NIST explicitly requires empty/solid threshold to be chosen uniquely for each part because peak means/variances differ.
+All local hashes exactly matched NERDm. Each archive is a valid ZIP with exactly 250 CSV members and exact `L0001.csv`–`L0250.csv` coverage. Raw ZIPs were transient-only. Thus the F15/F16 source-byte access/integrity blocker is no longer dominant.
 
-### Endpoint disposition / endpoint 판정
-The small histogram workbook alone is **not qualified as a structural-quality endpoint** because:
-- it has no spatial localization, so exterior empty voxels cannot be separated from internal voids/pores;
-- crop geometry differs for at least Part 1-1;
-- beam hardening, residual contrast and EDM-derived artifacts are documented;
-- a common threshold is explicitly unsupported.
+### Headerless serialization + limited pre-exposure / headerless serialization + 제한적 사전노출
+The F22 preregistration assumed textual 40-column CSV headers. Actual registered CSVs are headerless.
 
-Therefore:
-- no common-threshold pore fraction;
-- no silent reinterpretation of histogram centroid/IQR as physical defect quality;
-- do not start the planned histogram-summary E19.
+During Part 1 attempted header checking, first numerical lines were read and the initial result persisted the first CSV row as a purported header. The current-facing result was redacted; the event and scope are preserved in `AMENDMENT-01`.
 
-This rejection is narrow. X16 XCT itself, F20 workbook-integrity PASS and the frozen F19 segmentation rule remain valid.
+Current exposure state:
+**`NEW_REGISTERED_X4_NUMERICAL_OUTCOME_BLIND = VIOLATED_LIMITED`**.
 
-Outcome state remains `NEW_X16_NUMERICAL_OUTCOME_BLIND = YES`.
+No correlations, aggregation, ranking, feature selection, or models were computed. Parts 2–4 verification read zero CSV content lines.
+
+Because the original full PASS required textual header/schema verification, `PASS_F22_REGISTERED_X4_IMMUTABLE_SOURCE_READY` is **not** claimed. Amendment 02 therefore uses the descriptive gate:
+**`PARTIAL_F22_ALL_FOUR_IMMUTABLE_BYTES_READY__SCHEMA_HEADER_HOLD`**.
 
 ## Exact Next Eligible Work / 정확한 다음 행동
-No experiment is active.
+No numerical experiment is active. Do **not** model yet.
 
-Next highest-leverage work: re-attempt source integrity for NIST fully registered X4 dataset `mds2-3761` using the successful F20 recovery pattern:
-1. NIST NERDm machine-readable component identity/checksum discovery;
-2. zero-cost public standard GitHub-hosted transient retrieval;
-3. checksum verification and archive inventory;
-4. no numerical modeling until source integrity passes.
+Next highest-leverage work is a separately preregistered **headerless serialization/schema mapping gate**:
+1. freeze the exact positional column order 1..40 from authoritative NIST AMS 100-69;
+2. validate headerless row field-count structure with numerical values suppressed;
+3. establish deterministic raw position → documented semantic mapping across all four part archives;
+4. preserve rows ⊂ layers ⊂ parts hierarchy;
+5. explicitly carry `VIOLATED_LIMITED` pre-exposure into any later experiment.
 
-If source integrity passes, separately preregister a low-degree-of-freedom registered in-situ process/melt-pool ↔ ex-situ XCT validation experiment. Any paid/potentially paid route requires explicit user approval before execution.
+Only after this mapping gate passes may a low-degree-of-freedom registered process/melt-pool ↔ XCT experiment be separately preregistered. Any paid/potentially paid route requires explicit prior user approval.
