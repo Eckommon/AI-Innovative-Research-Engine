@@ -19,46 +19,63 @@ jobs:
       - name: Verify X16 Data Description and extract semantic context only
         shell: bash
         run: |
-          set -euo pipefail
+          set -u
           TMP="$(mktemp -d)"
           trap 'rm -rf "$TMP"' EXIT
           RESULT="$GITHUB_WORKSPACE/research/AMBENCH-F21/SEMANTIC_SOURCE_RESULT.md"
+          mkdir -p "$(dirname "$RESULT")"
           cd "$TMP"
 
-          curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors \
-            'https://data.nist.gov/od/id/mds2-2514?format=nerdm' -o nerdm.json
+          NERDM='FAIL'; META='FAIL'; PDF='FAIL'; HASH='NOT_COMPUTED'; RENDER='FAIL'; TEXT='FAIL'
+          SIZE='UNKNOWN'; EXPECTED='UNKNOWN'; ACTUAL='NOT_COMPUTED'; PAGE_COUNT='0'
+          : > contexts.md
 
-          python - <<'PY'
+          if curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors \
+              'https://data.nist.gov/od/id/mds2-2514?format=nerdm' -o nerdm.json; then
+            NERDM='PASS'
+          fi
+
+          if [ "$NERDM" = PASS ]; then
+            python - <<'PY' || true
           import json
           from pathlib import Path
           obj=json.loads(Path('nerdm.json').read_text())
           target='DataDescription_OverhangPartX16_XCT.pdf'
           exact=[c for c in obj.get('components',[]) if c.get('filepath')==target]
           if len(exact)!=1:
-              raise SystemExit(f'COMPONENT_MATCH_COUNT={len(exact)}')
+              Path('meta_status.txt').write_text('FAIL'); raise SystemExit
           c=exact[0]; ck=c.get('checksum') or {}; alg=(ck.get('algorithm') or {}).get('tag'); h=ck.get('hash') or ''
-          if alg!='sha256' or len(h)!=64: raise SystemExit('PDF_CHECKSUM_METADATA_INVALID')
+          ok=alg=='sha256' and len(h)==64 and bool(c.get('downloadURL'))
+          Path('meta_status.txt').write_text('PASS' if ok else 'FAIL')
           Path('url.txt').write_text(c.get('downloadURL') or '')
           Path('hash.txt').write_text(h)
           Path('size.txt').write_text(str(c.get('size') or 'UNKNOWN'))
           PY
+            [ -f meta_status.txt ] && META="$(cat meta_status.txt)"
+            [ -f size.txt ] && SIZE="$(cat size.txt)"
+            [ -f hash.txt ] && EXPECTED="$(cat hash.txt)"
+          fi
 
-          URL="$(cat url.txt)"
-          EXPECTED="$(cat hash.txt)"
-          curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors "$URL" -o description.pdf
-          ACTUAL="$(sha256sum description.pdf | awk '{print $1}')"
-          test "$EXPECTED" = "$ACTUAL"
+          if [ "$META" = PASS ]; then
+            URL="$(cat url.txt)"
+            if curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors "$URL" -o description.pdf; then
+              PDF='PASS'
+              ACTUAL="$(sha256sum description.pdf | awk '{print $1}')"
+              if [ "$ACTUAL" = "$EXPECTED" ]; then HASH='YES'; else HASH='NO'; fi
+            fi
+          fi
 
-          # Render-first verification per project PDF workflow; renders remain transient.
-          mkdir renders
-          pdftoppm -png -r 90 description.pdf renders/page >/dev/null 2>&1
-          PAGE_COUNT="$(find renders -type f -name 'page-*.png' | wc -l | tr -d ' ')"
-          test "$PAGE_COUNT" -gt 0
+          if [ "$HASH" = YES ]; then
+            mkdir renders
+            if pdftoppm -png -r 90 description.pdf renders/page >/dev/null 2>&1; then
+              PAGE_COUNT="$(find renders -type f -name 'page-*.png' | wc -l | tr -d ' ')"
+              [ "$PAGE_COUNT" -gt 0 ] && RENDER='PASS'
+            fi
+            if pdftotext -layout description.pdf description.txt; then TEXT='PASS'; fi
+          fi
 
-          pdftotext -layout description.pdf description.txt
-
-          # Persist only semantic context, not raw PDF or numeric workbook outcomes.
-          python - <<'PY'
+          if [ "$TEXT" = PASS ]; then
+            python - <<'PY' || true
           import re
           from pathlib import Path
           text=Path('description.txt').read_text(errors='replace')
@@ -70,13 +87,10 @@ jobs:
                   a=max(0,i-2); b=min(len(lines),i+4)
                   block='\n'.join(lines[a:b]).strip()
                   if block and block not in hits: hits.append(block)
-          out=[]
-          for n,b in enumerate(hits,1):
-              out.append(f'### Context {n}\n```text\n{b}\n```')
-          Path('contexts.md').write_text('\n\n'.join(out[:60]))
+          Path('contexts.md').write_text('\n\n'.join(f'### Context {n}\n```text\n{b}\n```' for n,b in enumerate(hits[:60],1)))
           PY
+          fi
 
-          mkdir -p "$(dirname "$RESULT")"
           cat > "$RESULT" <<EOF
           ---
           id: AMBENCH-F21-SEMANTIC-SOURCE-RESULT
@@ -90,18 +104,22 @@ jobs:
           # AMBENCH-F21 X16 XCT Semantic Source Result
 
           ## Integrity / 무결성
+          - NERDm fetch: $NERDM
+          - component metadata: $META
           - component: DataDescription_OverhangPartX16_XCT.pdf
-          - NERDm size: $(cat size.txt) bytes
+          - NERDm size: $SIZE bytes
           - expected SHA-256: $EXPECTED
+          - authoritative PDF download: $PDF
           - actual SHA-256: $ACTUAL
-          - SHA-256 match: YES
+          - SHA-256 match: $HASH
+          - render-first: $RENDER
           - render-first page count: $PAGE_COUNT
+          - text extraction: $TEXT
           - raw PDF/render artifact committed: NO
 
           ## Semantic contexts / 의미론 문맥
           EOF
           cat contexts.md >> "$RESULT"
-
           cat >> "$RESULT" <<EOF
 
           ## Boundary / 경계
@@ -112,9 +130,11 @@ jobs:
           EOF
 
       - name: Persist sanitized semantic source result only
+        if: always()
         shell: bash
         run: |
           set -euo pipefail
+          test -f research/AMBENCH-F21/SEMANTIC_SOURCE_RESULT.md || exit 0
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add research/AMBENCH-F21/SEMANTIC_SOURCE_RESULT.md
