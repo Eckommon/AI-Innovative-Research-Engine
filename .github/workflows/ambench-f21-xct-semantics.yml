@@ -26,7 +26,7 @@ jobs:
           mkdir -p "$(dirname "$RESULT")"
           cd "$TMP"
 
-          NERDM='FAIL'; META='FAIL'; PDF='FAIL'; HASH='NOT_COMPUTED'; RENDER='FAIL'; TEXT='FAIL'
+          NERDM='FAIL'; META='FAIL'; PDF='FAIL'; HASH='NOT_COMPUTED'; TOOLING='FAIL'; RENDER='FAIL'; TEXT='FAIL'
           SIZE='UNKNOWN'; EXPECTED='UNKNOWN'; ACTUAL='NOT_COMPUTED'; PAGE_COUNT='0'
           : > contexts.md
 
@@ -66,30 +66,20 @@ jobs:
           fi
 
           if [ "$HASH" = YES ]; then
-            python -m pip install --quiet pypdf pypdfium2 >/dev/null 2>&1 || true
-            python - <<'PY' || true
-          from pathlib import Path
-          try:
-              import pypdfium2 as pdfium
-              from pypdf import PdfReader
-              doc=pdfium.PdfDocument('description.pdf')
-              Path('renders').mkdir(exist_ok=True)
-              for i in range(len(doc)):
-                  page=doc[i]
-                  bitmap=page.render(scale=0.6)
-                  bitmap.to_pil().save(Path('renders')/f'page-{i+1}.png')
-              Path('render_status.txt').write_text('PASS')
-              Path('page_count.txt').write_text(str(len(doc)))
-              reader=PdfReader('description.pdf')
-              text='\n\f\n'.join((p.extract_text() or '') for p in reader.pages)
-              Path('description.txt').write_text(text)
-              Path('text_status.txt').write_text('PASS' if text.strip() else 'FAIL')
-          except Exception as e:
-              Path('python_pdf_error.txt').write_text(type(e).__name__+': '+str(e))
-          PY
-            [ -f render_status.txt ] && RENDER="$(cat render_status.txt)"
-            [ -f page_count.txt ] && PAGE_COUNT="$(cat page_count.txt)"
-            [ -f text_status.txt ] && TEXT="$(cat text_status.txt)"
+            if sudo apt-get update -qq >/dev/null 2>&1 && sudo apt-get install -y -qq poppler-utils >/dev/null 2>&1; then
+              TOOLING='PASS'
+            fi
+          fi
+
+          if [ "$TOOLING" = PASS ]; then
+            mkdir renders
+            if pdftoppm -png -r 90 description.pdf renders/page >/dev/null 2>&1; then
+              PAGE_COUNT="$(find renders -type f -name 'page-*.png' | wc -l | tr -d ' ')"
+              [ "$PAGE_COUNT" -gt 0 ] && RENDER='PASS'
+            fi
+            if pdftotext -layout description.pdf description.txt >/dev/null 2>&1; then
+              [ -s description.txt ] && TEXT='PASS'
+            fi
           fi
 
           if [ "$TEXT" = PASS ]; then
@@ -130,6 +120,7 @@ jobs:
           - authoritative PDF download: $PDF
           - actual SHA-256: $ACTUAL
           - SHA-256 match: $HASH
+          - PDF tooling: $TOOLING
           - render-first: $RENDER
           - render-first page count: $PAGE_COUNT
           - text extraction: $TEXT
