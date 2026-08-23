@@ -1,75 +1,69 @@
 ---
-checkpoint_id: CHK-20260823-F38-PRIOR-ART-ACTIVE
-active_issue: 56
-active_research: AMBENCH-F38
-last_completed_issue: 55
-last_completed_research: AMBENCH-F37
-last_decision: DEC-078
+checkpoint_id: CHK-20260823-F39-ADDED-VALUE-DESIGN-ACTIVE
+active_issue: 57
+active_research: AMBENCH-F39
+last_completed_issue: 56
+last_completed_research: AMBENCH-F38
+last_decision: DEC-079
 updated: 2026-08-23
 ---
 
 # Project Status / 프로젝트 상태
 
 **Project / 프로젝트:** AI-Innovative-Research-Engine / AI 기반 혁신 탐색 연구 엔진  
-**Latest verified baseline / 최신 검증 baseline:** `v0.47-f37-pass-f38-prior-art-active`  
-**State / 상태:** `E36_COMPLETED_PASS__F37_COMPLETED_PASS__F38_PRIOR_ART_SEPARATION_ACTIVE`  
-**Active Work Queue / 활성 작업 큐:** Issue #56 `AMBENCH-F38`.
+**Latest verified baseline / 최신 검증 baseline:** `v0.48-f38-partial-gap-f39-design-active`  
+**State / 상태:** `F38_COMPLETED_PARTIAL_GAP__F39_ADDED_VALUE_DESIGN_QUALIFICATION_ACTIVE`  
+**Active Work Queue / 활성 작업 큐:** Issue #57 `AMBENCH-F39`.
 
 ## Governance / 거버넌스
-GitHub remains Source of Truth. `DEC-055` Continuity Overlay remains active. No known `MISSING-BLOCKING`. `COST-001` zero-incremental-cost default remains active; potentially billable work requires explicit user approval. Reusable research/source-integrity workflow remains `SHARED-INTERNAL-CANDIDATE`; no duplicate Skill/MCP/Plugin or assumed shared paid quota.
+GitHub remains Source of Truth. `DEC-055` Continuity Overlay remains active. No known `MISSING-BLOCKING`. `COST-001` zero-incremental-cost default remains active; potentially billable work requires explicit user approval. Reusable source-integrity/preregistration workflow remains `SHARED-INTERNAL-CANDIDATE`; no duplicate Skill/MCP/Plugin or assumed shared paid quota.
 
 ## Recently completed / 최근 완료
 
 ### Issue #54 — AMBENCH-E36
-**`PASS_E36_EXTERNAL_RHF_VARIABILITY_REDUCTION`**.
+`PASS_E36_EXTERNAL_RHF_VARIABILITY_REDUCTION`.
 
-- NIST `mds2-2507` v1.0.1;
-- checksum-frozen `RHF_Analysis_Results.zip`;
-- physical part as independent unit, 55 parts × 1,498 nested rows;
-- five process-input-verified constant-power baseline parts vs 50 RHF variable-power parts;
-- one-sided 100,000 label-permutation `p = 0.0124798752012`;
-- frozen block stability 5/5 positive;
-- unit-semantic correction active: analysis endpoints are area/length/width but stored numerical unit remains conservatively `source numeric unit`.
-
-Durable: `research/AMBENCH-E36/RESULT.md`, `AMENDMENT-02.md`, `registry/CLM-111.md`, `DEC-077.md`.
+Physical-part-level non-selective RHF comparison reproduced lower source-scale melt-pool-area variability than constant-power baseline (`p=0.0124798752012`, frozen 5/5 block direction positive). Unit semantics remain conservatively `source numeric unit` per `AMENDMENT-02`.
 
 ### Issue #55 — AMBENCH-F37
-**`PASS_F37_BOUNDED_MECHANISM_CLASS_CONVERGENCE`**.
+`PASS_F37_BOUNDED_MECHANISM_CLASS_CONVERGENCE`.
 
-Frozen evidence set:
-- E29 IN718 turnaround-time intervention;
-- E33 IN625 opposite prior-scan-history equivalent-length experiment;
-- E36 IN625 RHF residual-history-informed power-control experiment.
+E29 turnaround timing, E33 prior scan-order/history and E36 RHF power-control evidence triangulate a bounded path-dependent recent-scan thermal-history mechanism class. Material/context breadth and causal isolation remain PARTIAL. `HYP-F37-01` is `NOVELTY_UNVERIFIED`.
 
-Audit PASS: experiment independence, mechanism relevance, intervention triangulation, directional coherence, measurand triangulation, exposure/verification integrity.  
-PARTIAL: material/context breadth, causal isolation.
+### Issue #56 — AMBENCH-F38
+**`NOVELTY_PARTIAL_GAP_F38`**.
 
-Resulting research hypothesis:
-`HYP-F37-01 — Multi-Actuator Recent-Scan-History Control` = **`NOVELTY_UNVERIFIED`**.
+Bounded public prior-art separation found:
+- history-state estimation = KNOWN;
+- history-informed power = KNOWN;
+- thermal-history-informed path/order = KNOWN;
+- adaptive timing/dwell/skywriting = KNOWN;
+- shared thermal state controlling >=2 actuator classes = KNOWN, including power+dwell;
+- exact shared-state `{power + timing + local path/order}` joint policy = not identified in bounded search.
 
-No same-construct replication, universal causality, novelty or patentability claim is authorized.
+This is a narrow research-gap candidate only. Permanent: `LEGAL_NOVELTY_UNVERIFIED / PATENTABILITY_UNVERIFIED / OBVIOUSNESS_UNVERIFIED / FTO_UNVERIFIED`. Adjacent prior art is dense.
 
-## Active F38 / 활성 F38
-Preregistration: `research/AMBENCH-F38/README.md`; decision `DEC-078`; Issue #56.
+Durable records:
+- `research/AMBENCH-F38/RESULT.md`;
+- `registry/DEC-079.md`.
 
-Candidate combination:
-`recent scan events → shared history/thermal state → coordinated actuator policy {laser power, turnaround/skywriting timing, local scan order/path} → melt-pool stability objective`.
+## Active F39 / 활성 F39
+Preregistration: `research/AMBENCH-F39/README.md`; Issue #57.
 
-Frozen decomposition:
-A. history-state estimation;
-B. history-informed power modulation;
-C. thermal-history-informed scan path/order;
-D. adaptive turnaround/skywriting/inter-track timing;
-E. shared-state coordination of >=2 actuator classes;
-F. exact shared-state three-actuator coordination.
+F39 tests **added-value identifiability**, not novelty. Frozen comparator ladder:
+- C0 fixed parameters;
+- C1 history-state power-only;
+- C2 history-state power + timing/dwell — primary strong comparator;
+- C3 thermal-history-informed path/order-only;
+- C4 joint shared-state power + timing + local path/order.
+
+A valid execution environment must use one common frozen state representation for C1–C4, matched geometry/material/process envelope, productivity/time and energy constraints, and physical/thermal stability endpoints. C4 must show incremental value over C2, not merely over C0.
 
 Frozen gates:
-- `NOVELTY_REJECTED_F38`;
-- `NOVELTY_PARTIAL_GAP_F38`;
-- `NOVELTY_SEARCH_INCONCLUSIVE_F38`;
-- `HOLD_F38_SOURCE_CONFLICT`.
-
-Even a partial gap remains `LEGAL_NOVELTY_UNVERIFIED / PATENTABILITY_UNVERIFIED / OBVIOUSNESS_UNVERIFIED`.
+- `PASS_F39_EXECUTABLE_ADDED_VALUE_TEST_READY`;
+- `PARTIAL_F39_TWO_ACTUATOR_OR_PATH_ONLY_ENVIRONMENT`;
+- `HOLD_F39_NO_COMPARABLE_EXECUTION_ENVIRONMENT`;
+- `REJECT_F39_INCREMENTAL_TEST_NOT_IDENTIFIABLE`.
 
 ## Exact Next Action / 정확한 다음 행동
-Run zero-cost public prior-art separation using patent publications and primary literature. Classify A–F separately; do not infer legal novelty from absence in a bounded search. Persist source table, gate and exact next validation action; re-read GitHub state.
+Search zero-cost/open NIST/public thermal models, open-source simulators and existing repository capabilities for one environment capable of C0–C4 without inventing a toy simulator or changing source semantics. Verify actuator controllability, common state, endpoint availability and matched constraints; persist one frozen F39 gate and re-read GitHub.
