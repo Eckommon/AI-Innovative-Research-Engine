@@ -32,6 +32,14 @@ jobs:
           short=set(['T72','T82','T92'])
           long=set(['T102','T112','T122'])
           surface_target='Cross_Sections/Micrographs/SurfaceReference_and_Orientation_Layers.csv'
+          safe_codes={
+            'IMMUTABLE_METADATA_INCOMPLETE','DOWNLOAD_FAIL','HASH_OR_SIZE_MISMATCH','CSV_DECODE_OR_SCHEMA_FAIL',
+            'README_NOT_UNIQUE','README_SCALE_TEXT_UNRESOLVED','PIXEL_SCALE_NOT_UNIQUE','SURFACE_COMPONENT_NOT_UNIQUE',
+            'SURFACE_SCHEMA_UNRESOLVED','P1_SURFACE_BINDING_NOT_UNIQUE','P1_SURFACE_REFERENCE_NONNUMERIC',
+            'P1_COMPONENT_NOT_UNIQUE','P1_REQUIRED_COLUMNS_MISSING','TRACK_ID_NONNUMERIC','TRACK_ID_DUPLICATE',
+            'NEGATIVE_RECONSTRUCTED_OVERLAP_DEPTH','P1_ROW_COUNT_NOT_45','PLATE_VALID_COVERAGE_LT_41',
+            'COMMON_TRACK_BECAME_INVALID','NEGATIVE_COMMON_RECONSTRUCTION','COMMON_TRACK_COUNT_MISMATCH'
+          }
           lines=[
             '---','id: AMBENCH-E29-RESULT','type: controlled-experiment-result','created: 2026-08-23',
             'source_of_truth: github-actions','raw_artifacts_committed: false',
@@ -39,7 +47,8 @@ jobs:
             '# AMBENCH-E29 Result / E29 결과','',
             '- incremental monetary cost: 0 USD',
             '- raw P1 coordinate rows committed/emitted: NO',
-            '- raw surface-reference rows committed/emitted: NO','',
+            '- raw surface-reference rows committed/emitted: NO',
+            '- amendment: AMENDMENT-01 symbolic hold diagnostics only','',
           ]
 
           def checksum_hash(c):
@@ -82,7 +91,6 @@ jobs:
             except Exception:
               return None
 
-          integrity=True; hold_reason=None
           endpoints={}; valid_counts={}; valid_tracks={}; scale=None
           try:
             with urllib.request.urlopen('https://data.nist.gov/od/id/mds2-4103?format=nerdm',timeout=60) as r:
@@ -90,7 +98,6 @@ jobs:
             comps=meta.get('components',[])
             lines += ['## Source identity / source identity',f"- NERDm_version: {meta.get('version','UNKNOWN')}",f'- component_count: {len(comps)}','']
 
-            # README: require one current authoritative dataset readme and parse one physical scale.
             readmes=[c for c in comps if (c.get('filepath') or '').lower().endswith('4103_readme.txt')]
             if len(readmes)!=1: raise RuntimeError('README_NOT_UNIQUE')
             readme_b,_,_=download_verified(readmes[0],tmp/'readme.txt')
@@ -107,7 +114,6 @@ jobs:
             scale=unique_scales[0]
             lines += ['- README_integrity_pass: YES','- authoritative_pixel_scale_parse: PASS',f'- pixel_scale_um_per_px: {scale:.12g}','']
 
-            # Surface reference exact path and six unique P1 bindings.
             surf=[c for c in comps if (c.get('filepath') or '')==surface_target]
             if len(surf)!=1: raise RuntimeError('SURFACE_COMPONENT_NOT_UNIQUE')
             surf_b,_,_=download_verified(surf[0],tmp/'surface.csv')
@@ -132,7 +138,6 @@ jobs:
               yrefs[p]=y
             lines += ['- surface_reference_integrity_pass: YES','- exactly_one_P1_surface_reference_per_plate: YES','']
 
-            # Six plate-specific P1 annotations.
             plate_components={}
             for p in plates:
               pat=re.compile(r'.*_AMB_'+re.escape(p)+r'_P1s_pixel_points\.csv$',re.I)
@@ -168,17 +173,14 @@ jobs:
               if valid_counts[p] < 41: raise RuntimeError('PLATE_VALID_COVERAGE_LT_41')
               endpoints[p]=statistics.fmean(vals.values())
 
-            lines += ['## Plate reconstruction / plate 재구성', '- six_P1_component_integrity_pass: YES',f'- valid_track_counts: {valid_counts}', '- all_plates_valid_track_count_gte_41: YES']
-            for p in plates:
-              lines.append(f'- {p}_plate_mean_overlap_depth_um: {endpoints[p]:.9f}')
+            lines += ['## Plate reconstruction / plate 재구성','- six_P1_component_integrity_pass: YES',f'- valid_track_counts: {valid_counts}','- all_plates_valid_track_count_gte_41: YES']
+            for p in plates: lines.append(f'- {p}_plate_mean_overlap_depth_um: {endpoints[p]:.9f}')
             lines.append('')
 
             short_vals=[endpoints[p] for p in plates if p in short]
             long_vals=[endpoints[p] for p in plates if p in long]
             delta=statistics.fmean(short_vals)-statistics.fmean(long_vals)
-
             vals=[endpoints[p] for p in plates]
-            obs_idx={0,1,2}
             perm_deltas=[]
             for combo in itertools.combinations(range(6),3):
               s=set(combo); a=[vals[i] for i in s]; b=[vals[i] for i in range(6) if i not in s]
@@ -197,7 +199,6 @@ jobs:
             common_n=len(common); delta_common=None
             if common_n>=36:
               common_ep={}
-              # Re-read transient files deterministically; no raw rows emitted.
               for p in plates:
                 b=(tmp/f'{p}.csv').read_bytes()
                 _,text,header=decode_csv_bytes(b,('overlap_depth_y',))
@@ -230,8 +231,8 @@ jobs:
             lines += ['## Frozen statistical result / 고정 통계 결과',f'- Delta_primary_um: {delta:.9f}',f'- exact_one_sided_permutation_p: {p_exact:.9f}',f'- plate_rank_biserial: {rrb:.9f}',f'- rank_pair_wins_losses_ties: {wins}/{losses}/{ties}',f'- common_valid_track_count: {common_n}',f'- Delta_common_um: {delta_common:.9f}' if delta_common is not None else '- Delta_common_um: NOT_COMPUTED_LOW_COMMON_COVERAGE','', '## Frozen E29 gate / 고정 E29 판정',f'**{gate}**','', '## Interpretation boundary / 해석 경계','- independent replicate: physical plate (n=3 vs n=3)','- 45 tracks are nested within-plate measurements, not independent replicates','- no P2/P3 rescue, imputation, sign flip, endpoint switch, feature search, or model escalation performed','- inherited exposure disclosure remains active']
 
           except Exception as e:
-            integrity=False; hold_reason=type(e).__name__
-            lines += ['## Execution hold / 실행 HOLD',f'- hold_error_type: {hold_reason}','- no adaptive redesign performed: YES','', '## Frozen E29 gate / 고정 E29 판정','**HOLD_E29_INTEGRITY_OR_COVERAGE**']
+            msg=str(e) if isinstance(e,RuntimeError) and str(e) in safe_codes else 'UNCLASSIFIED_SAFE_HOLD'
+            lines += ['## Execution hold / 실행 HOLD',f'- hold_error_type: {type(e).__name__}',f'- hold_symbolic_reason: {msg}','- no adaptive redesign performed: YES','', '## Frozen E29 gate / 고정 E29 판정','**HOLD_E29_INTEGRITY_OR_COVERAGE**']
           finally:
             shutil.rmtree(tmp,ignore_errors=True)
 
