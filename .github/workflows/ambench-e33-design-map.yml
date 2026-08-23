@@ -16,12 +16,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Inspect process-input scan strategy only
+      - name: Verify reverse track map from process-input laser-on segments
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
-          import csv, hashlib, io, json, math, os, statistics, traceback, urllib.request, zipfile
+          import csv, hashlib, io, json, math, os, traceback, urllib.request, zipfile
           from pathlib import Path
 
           DSID='mds2-3662'
@@ -41,70 +41,70 @@ jobs:
               z=zipfile.ZipFile(io.BytesIO(raw))
               lines += ['## Boundary / 경계','- Process-input scan strategy only. `Measurements.xlsx` numerical outcomes were not opened.','', '## Source integrity / source 무결성',f'- dataset: `{DSID}`',f'- version: `{meta.get("version")}`',f'- archive_size: `{len(raw)}`',f'- sha256_nerdm: `{exp}`',f'- sha256_local: `{got}`',f'- checksum_match: `{exp==got}`','']
 
-              parsed={}
-              for name in ('Scan Strategy Data/scanStrategyConverging.csv','Scan Strategy Data/scanStrategyDiverging.csv'):
+              def read(name):
                   reader=csv.DictReader(io.StringIO(z.read(name).decode('utf-8-sig',errors='replace')))
                   fields=reader.fieldnames or []
-                  pts=[]; skipped=0
+                  pts=[]
                   for r in reader:
-                      try:
-                          pts.append(tuple(float(r[k]) for k in fields[:4]))
-                      except Exception:
-                          skipped += 1
-                  parsed[name]=pts
-                  powers=sorted(set(p[2] for p in pts))
-                  dts=[b[3]-a[3] for a,b in zip(pts,pts[1:])]
-                  positives=[d for d in dts if d>0]
-                  lines += [f'## `{name}`',f'- parsed_rows: `{len(pts)}`',f'- skipped_rows: `{skipped}`',f'- header: `{fields}`',f'- laser_power_values: `{powers}`',f'- positive_dt_median_s: `{statistics.median(positives) if positives else None}`',f'- nonpositive_dt_count: `{sum(1 for d in dts if d<=0)}`',f'- dt_gt_50us_count: `{sum(1 for d in dts if d>0.00005)}`','']
+                      try: pts.append(tuple(float(r[k]) for k in fields[:4]))
+                      except Exception: pass
+                  return fields,pts
 
-              def segment(pts):
-                  positives=[b[3]-a[3] for a,b in zip(pts,pts[1:]) if b[3]-a[3]>0]
-                  base=statistics.median(positives)
-                  threshold=max(5*base,0.00005)
-                  groups=[]; start=0
-                  for i,(a,b) in enumerate(zip(pts,pts[1:])):
-                      dt=b[3]-a[3]
-                      if dt<=0 or dt>threshold:
-                          if i+1-start>=2: groups.append(pts[start:i+1])
-                          start=i+1
-                  if len(pts)-start>=2: groups.append(pts[start:])
-                  segs=[]
+              def laser_on_segments(pts):
+                  groups=[]; cur=[]
+                  for p in pts:
+                      if p[2] > 0:
+                          cur.append(p)
+                      elif cur:
+                          if len(cur)>=2: groups.append(cur)
+                          cur=[]
+                  if cur and len(cur)>=2: groups.append(cur)
+                  out=[]
                   for idx,g in enumerate(groups,1):
                       a,b=g[0],g[-1]
-                      segs.append({'idx':idx,'n':len(g),'start':(a[0],a[1]),'end':(b[0],b[1]),'dt':b[3]-a[3]})
-                  return base,threshold,segs
+                      out.append({'idx':idx,'n':len(g),'start':(a[0],a[1]),'end':(b[0],b[1]),'duration':b[3]-a[3], 'chord':math.hypot(b[0]-a[0],b[1]-a[1])})
+                  return out
 
               cn='Scan Strategy Data/scanStrategyConverging.csv'; dn='Scan Strategy Data/scanStrategyDiverging.csv'
-              cb,ct,C=segment(parsed[cn]); db,dt,D=segment(parsed[dn])
-              lines += ['## Segmentation / track 분할',f'- C_segment_count: `{len(C)}`',f'- D_segment_count: `{len(D)}`',f'- C_base_dt: `{cb}`',f'- D_base_dt: `{db}`',f'- threshold_s: `{max(ct,dt)}`','']
+              cf,Cpts=read(cn); df,Dpts=read(dn); C=laser_on_segments(Cpts); D=laser_on_segments(Dpts)
+              lines += [f'## `{cn}`',f'- header: `{cf}`',f'- rows: `{len(Cpts)}`',f'- laser_on_rows: `{sum(1 for p in Cpts if p[2]>0)}`',f'- laser_off_rows: `{sum(1 for p in Cpts if p[2]<=0)}`','',
+                        f'## `{dn}`',f'- header: `{df}`',f'- rows: `{len(Dpts)}`',f'- laser_on_rows: `{sum(1 for p in Dpts if p[2]>0)}`',f'- laser_off_rows: `{sum(1 for p in Dpts if p[2]<=0)}`','',
+                        '## Laser-on segmentation / laser-on track 분할',f'- C_segment_count: `{len(C)}`',f'- D_segment_count: `{len(D)}`','']
               for lab,segs in [('C',C),('D',D)]:
-                  lines.append(f'### {lab} process-input segments')
+                  lines.append(f'### {lab} track segments')
                   for s in segs:
-                      lines.append(f'- {lab}{s["idx"]}: n={s["n"]}; start={s["start"]}; end={s["end"]}; segment_time_s={s["dt"]:.8g}')
+                      lines.append(f'- {lab}{s["idx"]}: n={s["n"]}; start={s["start"]}; end={s["end"]}; duration_s={s["duration"]:.8g}; chord_um={s["chord"]:.6g}')
                   lines.append('')
 
               def dist(a,b): return math.hypot(a[0]-b[0],a[1]-b[1])
               matches=[]
-              if C and D:
-                  for c in C:
-                      cand=[]
-                      for d in D:
-                          same=dist(c['start'],d['start'])+dist(c['end'],d['end'])
-                          rev=dist(c['start'],d['end'])+dist(c['end'],d['start'])
-                          cand.append((min(same,rev),d['idx']))
-                      cand.sort(); matches.append((c['idx'],cand[0][1],cand[0][0],cand[1][0] if len(cand)>1 else None))
+              for c in C:
+                  cand=[]
+                  for d in D:
+                      same=dist(c['start'],d['start'])+dist(c['end'],d['end'])
+                      rev=dist(c['start'],d['end'])+dist(c['end'],d['start'])
+                      cand.append((min(same,rev),d['idx']))
+                  cand.sort()
+                  if cand: matches.append((c['idx'],cand[0][1],cand[0][0],cand[1][0] if len(cand)>1 else None))
               reverse_ok=(len(C)==18 and len(D)==18 and len(matches)==18 and all(di==19-ci for ci,di,_,_ in matches))
               unique_ok=(len(matches)==18 and len({x[1] for x in matches})==18)
-              lines += ['## Geometry-location matching / geometry 위치 매칭',f'- one_to_one_18x18: `{unique_ok}`',f'- exact_Ct_to_D19minusT: `{reverse_ok}`','- matches:']
+              max_err=max((x[2] for x in matches), default=float('inf'))
+              min_margin=min(((x[3]-x[2]) for x in matches if x[3] is not None), default=0.0)
+              # Recording coordinates are integer micrometres. Require clear nearest-neighbour identity:
+              # max matched endpoint error <= 250 um and every next-best candidate >= 250 um farther away.
+              tolerance_ok=(max_err <= 250.0 and min_margin >= 250.0)
+              pass_map=(reverse_ok and unique_ok and tolerance_ok)
+              lines += ['## Geometry-location matching / geometry 위치 매칭','- Method: minimum unordered start/end endpoint distance from process-input coordinates.',f'- one_to_one_18x18: `{unique_ok}`',f'- exact_Ct_to_D19minusT: `{reverse_ok}`',f'- max_best_endpoint_error_sum_um: `{max_err:.6g}`',f'- min_next_best_margin_um: `{min_margin:.6g}`',f'- predeclared_recording_tolerance_ok: `{tolerance_ok}`','- matches:']
               for ci,di,err,nxt in matches:
-                  lines.append(f'  - C{ci} -> D{di}: endpoint_error_sum_um={err:.6g}; next_best_error_sum_um={nxt if nxt is not None else "NA"}')
+                  margin=(nxt-err) if nxt is not None else None
+                  lines.append(f'  - C{ci} -> D{di}: best_error_sum_um={err:.6g}; next_best_margin_um={margin if margin is not None else "NA"}')
               lines.append('')
-              if reverse_ok:
-                  lines += ['## Pre-outcome design conclusion / outcome 전 설계 결론','**PASS_GEOMETRY_REVERSE_MAPPING** — process-input coordinates establish deterministic `C(t) ↔ D(19−t)` same-track-location mapping.','']
+              if pass_map:
+                  lines += ['## Pre-outcome design conclusion / outcome 전 설계 결론','**PASS_GEOMETRY_REVERSE_MAPPING** — checksum-frozen process-input coordinates verify unique deterministic `C(t) ↔ D(19−t)` same-track-location mapping.','']
               else:
-                  lines += ['## Pre-outcome design conclusion / outcome 전 설계 결론','**HOLD_GEOMETRY_REVERSE_MAPPING_NOT_VERIFIED** — do not open measurement outcomes.','']
+                  lines += ['## Pre-outcome design conclusion / outcome 전 설계 결론','**HOLD_GEOMETRY_REVERSE_MAPPING_NOT_VERIFIED** — no measurement outcome access authorized.','']
           except Exception as e:
-              lines += ['## Diagnostic failure / 진단 실패',f'- exception_type: `{type(e).__name__}`',f'- exception: `{str(e)}`','- traceback:','```text',traceback.format_exc(),'```','', '**HOLD_GEOMETRY_REVERSE_MAPPING_NOT_VERIFIED** — fail closed; no measurement outcome access authorized.','']
+              lines += ['## Diagnostic failure / 진단 실패',f'- exception_type: `{type(e).__name__}`',f'- exception: `{str(e)}`','```text',traceback.format_exc(),'```','', '**HOLD_GEOMETRY_REVERSE_MAPPING_NOT_VERIFIED** — fail closed.','']
 
           out.write_text('\n'.join(lines)+'\n',encoding='utf-8')
           PY
@@ -119,6 +119,6 @@ jobs:
           if git diff --cached --quiet; then
             echo 'No design-map change.'
           else
-            git commit -m 'record AMBENCH-E33 fail-closed reverse-map diagnostic'
+            git commit -m 'record AMBENCH-E33 laser-on reverse-map verification'
             git push
           fi
