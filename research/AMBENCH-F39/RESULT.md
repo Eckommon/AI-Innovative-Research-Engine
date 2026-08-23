@@ -1,57 +1,65 @@
 ---
 id: AMBENCH-F39-RESULT
 type: added-value-falsification-design-result
-state: COMPLETED
+state: CORRECTED_AFTER_DESCENDANT_INPUT_PREFLIGHT
 created: 2026-08-23
+corrected: 2026-08-24
 source_of_truth: github
 candidate_controller_performance_executed: false
+supersedes_gate: PASS_F39_EXECUTABLE_ADDED_VALUE_TEST_READY
 incremental_monetary_cost_usd: 0
 ---
 
-# AMBENCH-F39 Result — Executable Multi-Actuator Added-Value Test Ready
-# AMBENCH-F39 결과 — 실행 가능한 Multi-Actuator Added-Value Test 준비 완료
+# AMBENCH-F39 Result — Corrected by E40 Pre-Performance Input Falsification
+# AMBENCH-F39 결과 — E40 성능실행 전 입력 반증으로 정정
 
-## Frozen gate / 고정 판정
+## Corrected frozen gate / 정정 판정
 
-**`PASS_F39_EXECUTABLE_ADDED_VALUE_TEST_READY`**
+**`REJECT_F39_INCREMENTAL_TEST_NOT_IDENTIFIABLE`**
 
-## Gate evidence / 판정 근거
+The earlier `PASS_F39_EXECUTABLE_ADDED_VALUE_TEST_READY` is superseded. The runtime and output-schema qualifications remain valid, but the actual frozen common-state generation showed that the third actuator class does not produce a distinct generated input in this benchmark.
 
-1. **Zero-cost executable environment — PASS**  
-   Pinned `ORNL-MDF/3DThesis@2de7fc6d8cfa5de78b111df97b1a4d9156a8cf60` built, installed and executed the upstream `solidification_mpstats` example on a standard GitHub Ubuntu runner. Corrected durable environment report: `ENV_PREFLIGHT.md`.
+## What remained valid / 유효하게 남는 항목
 
-2. **Same case for C0–C4 — PASS**  
-   All controllers are path-file transformations of one frozen 21-hatch thermal benchmark using one material/beam/domain/runtime configuration.
+- pinned `ORNL-MDF/3DThesis@2de7fc6d8cfa5de78b111df97b1a4d9156a8cf60` build/install/runtime qualification: PASS;
+- open BSD-3-Clause zero-cost execution route: PASS;
+- deterministic `MP_width` output schema: PASS;
+- common RHF-state formula and matched energy/time constraints were executable;
+- no custom C0–C4 simulator performance was observed before correction.
 
-3. **One common history state — PASS**  
-   `DESIGN_CONTRACT.md` freezes the published RHF form with `R=0.29 mm`, `T=6 ms`, computed once from nominal C0 and reused unchanged as feedforward state for C1–C4.
+## Descendant falsification evidence / 후속 반증 근거
 
-4. **All three actuator classes controllable — PASS**  
-   Pinned upstream path syntax supports per-segment `Pmod`, line velocity/spot duration and arbitrary path-line ordering/XYZ targets. The design uses power, fixed-budget timing redistribution and hatch-order control.
+E40 generated the frozen nominal common state and controller path files **without running custom performance**.
 
-5. **Matched productivity/energy constraints — PASS BY CONSTRUCTION**  
-   C1/C2/C4 power schedules are time-weighted energy-neutralized to C0; all controllers preserve identical laser-on duration; all preserve exactly `15 ms` total transition dwell. Path reordering uses fixed-duration zero-power positioning abstraction, so added-value cannot come from unconstrained cooling time.
+Verified in `research/AMBENCH-E40/INPUT_IDENTIFIABILITY_PREFLIGHT.md`:
+- 6,300 nominal command points from 21 hatches × 300 segments × 10 us;
+- hatch 1 risk differs from the steady regime;
+- hatch 2–21 risk spread is only `9.99200722162641e-16`, within the explicit 64-ULP numerical equality guard;
+- the frozen tie rule therefore yields canonical hatch order `[1..21]`;
+- generated C3 path SHA-256 equals C0 exactly;
+- generated C4 path SHA-256 equals C2 exactly;
+- energy-neutralization and total 15 ms transition-dwell invariants still pass.
 
-6. **Physical/thermal endpoint available — PASS**  
-   Pinned upstream documents and executes `MP_Stats` melt-pool maximum width/length plus thermal outputs. Primary future endpoint is frozen as the deterministic `CV_width` trajectory metric; no row-level inference is permitted.
+Therefore the path/order actuator is **not an identifiable intervention** under the frozen benchmark. C4-vs-C2 would compare byte-identical generated path/controller inputs, so no simulator run can test incremental value of the third actuator class.
 
-7. **Strong comparator identified — PASS**  
-   C2 history-state power+timing/dwell is primary comparator. C4 must improve C2 width CV by at least 10% while preserving mean width within ±5%; C0 is not the decisive comparator.
+## Why performance was not executed / 성능 미실행 이유
 
-## Critical abstraction boundary / 핵심 추상화 경계
+Running C0–C4 after this preflight would create a misleading “performance test” from identical C2/C4 inputs. The correct falsification action is to stop before simulation rather than retune the RHF state, path score, tie rule, `R/T/C`, raster geometry or optimizer after seeing the degeneracy.
 
-This design is a **semi-analytic thermal added-value benchmark**. It is not a scanner-kinematics model and not a quantitative physical replication of NIST RHF/E29/E33. In particular, path-order changes use fixed-duration zero-power repositioning so productivity/time is controlled independently of geometric jump distance.
+## Source-semantic correction / source 의미 보정
 
-## Performance exposure / 성능 노출
+E40 `AMENDMENT-01` also corrected `MP_Stats` interpretation before performance: `MP_width` is a **per-grid-point maximum melt-pool-width spatial field**, not a temporal trajectory. The numerical field/formula was not changed.
 
-No C0–C4 custom benchmark performance has been executed before this gate. Controller formulas, state, energy/time constraints, endpoint and PASS/PARTIAL/NO/HOLD thresholds are frozen in `DESIGN_CONTRACT.md` before performance access.
+## Final interpretation / 최종 해석
+
+F39 successfully identified a usable open runtime, but **failed to establish an identifiable three-actuator added-value comparison for the frozen uniform raster**.
+
+This does not reject multi-actuator recent-history control in general. It rejects this specific F39 benchmark as a valid test of path/order incremental value.
 
 ## Exact next action / 정확한 다음 행동
 
-**AMBENCH-E40 — Pinned 3DThesis Multi-Actuator Added-Value Execution.**
-
-Generate C0–C4 inputs deterministically from the frozen design contract, verify energy/time/path invariants before simulation, run the exact pinned runtime, parse only the frozen `MP_Stats` width endpoint, apply the frozen gate, persist input hashes + aggregate metrics, and do not retune after outcome.
+Do not rescue F39/E40 by parameter or geometry retuning. Open a separate source/design gate to identify an **independently motivated non-degenerate path/order intervention environment** where the unchanged published RHF state produces materially distinct reorderable-unit risks before any controller performance is defined.
 
 ## Cost / capability / 비용
 
-Incremental monetary cost `0 USD`. Runtime/evaluation harness remains `SHARED-INTERNAL-CANDIDATE`; this one-project use does not justify Skill/MCP/Plugin promotion.
+Incremental monetary cost `0 USD`. Runtime/evaluation logic remains `SHARED-INTERNAL-CANDIDATE`; no Skill/MCP/Plugin promotion.
