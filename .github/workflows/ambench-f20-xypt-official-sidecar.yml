@@ -19,34 +19,49 @@ jobs:
       - name: Verify authoritative XYPT archive without reading numerical content
         shell: bash
         run: |
-          set -euo pipefail
+          set -u
           TMP="$(mktemp -d)"
           trap 'rm -rf "$TMP"' EXIT
           RESULT="$GITHUB_WORKSPACE/research/AMBENCH-F20/XYPT_RUN_RESULT.md"
           cd "$TMP"
 
           BASE='https://data.nist.gov/od/ds/ark:/88434/mds2-2309/XYPT_L101-L125.zip'
-          curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors "$BASE.sha256" -o source.sha256
-          EXPECTED="$(grep -Eo '[0-9a-fA-F]{64}' source.sha256 | head -n1 | tr 'A-F' 'a-f')"
-          test "${#EXPECTED}" -eq 64
+          SIDE='FAIL'; ZIP='FAIL'; EXPECTED='UNKNOWN'; ACTUAL='NOT_COMPUTED'; MATCH='NOT_COMPUTED'; INVENTORY='NOT_INSPECTED'; MEMBER_COUNT='NOT_COMPUTED'; L125_COUNT='NOT_COMPUTED'
+          : > inventory.txt
 
-          curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors "$BASE" -o xypt.zip
-          ACTUAL="$(sha256sum xypt.zip | awk '{print $1}')"
-          test "$EXPECTED" = "$ACTUAL"
+          if curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors "$BASE.sha256" -o source.sha256; then
+            SIDE='PASS'
+            CANDIDATE="$(grep -Eo '[0-9a-fA-F]{64}' source.sha256 | head -n1 | tr 'A-F' 'a-f')"
+            if [ "${#CANDIDATE}" -eq 64 ]; then EXPECTED="$CANDIDATE"; else SIDE='FAIL_INVALID_HASH'; fi
+          fi
 
-          python - <<'PY' > inventory.txt
+          if [ "$SIDE" = PASS ]; then
+            if curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors "$BASE" -o xypt.zip; then
+              ZIP='PASS'; ACTUAL="$(sha256sum xypt.zip | awk '{print $1}')"
+              if [ "$EXPECTED" = "$ACTUAL" ]; then
+                MATCH='YES'
+                if python - <<'PY' > inventory.txt
           import re, zipfile
           with zipfile.ZipFile('xypt.zip') as z:
               names=z.namelist()
-              l125=[n for n in names if re.search(r'(?<!\d)125(?!\d)', n)]
+              l125=[n for n in names if re.search(r'(?<!\d)125(?!\d)',n)]
               print(f'MEMBER_COUNT={len(names)}')
               print(f'LAYER125_FILENAME_MATCH_COUNT={len(l125)}')
               for n in l125[:30]: print(f'LAYER125_MEMBER={n}')
               print('NUMERICAL_XYPT_VALUES_READ=NO')
           PY
-
-          MEMBER_COUNT="$(grep '^MEMBER_COUNT=' inventory.txt | cut -d= -f2-)"
-          L125_COUNT="$(grep '^LAYER125_FILENAME_MATCH_COUNT=' inventory.txt | cut -d= -f2-)"
+                then
+                  INVENTORY='PASS'
+                  MEMBER_COUNT="$(grep '^MEMBER_COUNT=' inventory.txt | cut -d= -f2-)"
+                  L125_COUNT="$(grep '^LAYER125_FILENAME_MATCH_COUNT=' inventory.txt | cut -d= -f2-)"
+                else
+                  INVENTORY='FAIL'
+                fi
+              else
+                MATCH='NO'
+              fi
+            fi
+          fi
 
           cat > "$RESULT" <<EOF
           ---
@@ -61,16 +76,19 @@ jobs:
 
           - authoritative ZIP URL: $BASE
           - authoritative sidecar URL: $BASE.sha256
+          - sidecar retrieval: $SIDE
           - expected SHA-256 from NIST sidecar: $EXPECTED
+          - authoritative ZIP retrieval: $ZIP
           - actual local SHA-256: $ACTUAL
-          - SHA-256 match: YES
+          - SHA-256 match: $MATCH
+          - archive-inventory-only inspection: $INVENTORY
           - archive member count: $MEMBER_COUNT
           - layer-125 filename match count: $L125_COUNT
           - numerical XYPT values read: NO
           - artifacts/cache: NONE
           - raw transient teardown: SUCCESS
           EOF
-          sed -n '3,40p' inventory.txt | sed 's/^/- /' >> "$RESULT"
+          if [ -s inventory.txt ]; then sed -n '3,40p' inventory.txt | sed 's/^/- /' >> "$RESULT"; fi
 
       - name: Persist sanitized result only
         shell: bash
@@ -79,5 +97,9 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add research/AMBENCH-F20/XYPT_RUN_RESULT.md
-          git commit -m 'record sanitized AMBENCH-F20 XYPT verification result'
-          git push
+          if git diff --cached --quiet; then
+            echo 'No sanitized result change to commit.'
+          else
+            git commit -m 'record sanitized AMBENCH-F20 XYPT verification result'
+            git push
+          fi
