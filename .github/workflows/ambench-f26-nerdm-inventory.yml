@@ -1,0 +1,83 @@
+name: AMBENCH F26 NERDm candidate inventory
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ambench-f26-nerdm-inventory.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  inventory:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Query current official NIST NERDm metadata only
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, urllib.request
+          from pathlib import Path
+
+          root=Path(os.environ['GITHUB_WORKSPACE'])
+          out=root/'research/AMBENCH-F26/NERDM_INVENTORY.md'
+          out.parent.mkdir(parents=True,exist_ok=True)
+          ids=['mds2-3662','mds2-4103','mds2-2525','mds2-3842']
+          lines=['---','id: AMBENCH-F26-NERDM-INVENTORY','type: sanitized-source-inventory','created: 2026-08-23','source_of_truth: github-actions','raw_artifacts_committed: false','---','','# AMBENCH-F26 Current NIST NERDm Inventory / F26 현재 NIST NERDm inventory','', '- route: official `data.nist.gov` NERDm metadata only','- incremental monetary cost: `0 USD`','- measurement bytes downloaded: `NO`','']
+          for dsid in ids:
+              url=f'https://data.nist.gov/od/id/{dsid}?format=nerdm'
+              lines.append(f'## {dsid}')
+              try:
+                  with urllib.request.urlopen(url,timeout=30) as r:
+                      data=json.load(r)
+                  comps=data.get('components',[]) or []
+                  lines.append('- nerdm_fetch: PASS')
+                  lines.append(f'- title: {data.get("title","UNKNOWN")}')
+                  lines.append(f'- version: {data.get("version","UNKNOWN")}')
+                  lines.append(f'- component_count: {len(comps)}')
+                  checksum_count=sum(1 for c in comps if c.get('checksum'))
+                  lines.append(f'- components_with_checksum: {checksum_count}')
+                  # Emit all component names for new A; only bounded likely-relevant names for existing B/C/D.
+                  if dsid=='mds2-3662':
+                      chosen=comps
+                  elif dsid=='mds2-4103':
+                      chosen=[c for c in comps if any(k in (c.get('filepath','')+' '+c.get('description','')).lower() for k in ['readme','csv','xlsx','zip','pdf'])][:40]
+                  elif dsid=='mds2-2525':
+                      chosen=[c for c in comps if any(k in (c.get('filepath','')+' '+c.get('description','')).lower() for k in ['al_spot','al_scan','readme','csv'])][:30]
+                  else:
+                      chosen=[c for c in comps if any(k in (c.get('filepath','')+' '+c.get('description','')).lower() for k in ['readme','csv','zip','coupling','bp4'])][:30]
+                  for c in chosen:
+                      fp=c.get('filepath','UNKNOWN')
+                      size=c.get('size','UNKNOWN')
+                      csum=c.get('checksum')
+                      if isinstance(csum,dict):
+                          alg=csum.get('algorithm','UNKNOWN'); val=csum.get('hash','UNKNOWN')
+                      else:
+                          alg='UNKNOWN'; val=str(csum) if csum else 'UNKNOWN'
+                      dl=c.get('downloadURL','UNKNOWN')
+                      lines.append(f'  - component: `{fp}` | size={size} | checksum={alg}:{val} | downloadURL={dl}')
+              except Exception as e:
+                  lines.append('- nerdm_fetch: FAIL')
+                  lines.append(f'- error_type: {type(e).__name__}')
+              lines.append('')
+          out.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          PY
+
+      - name: Persist sanitized metadata inventory only
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/AMBENCH-F26/NERDM_INVENTORY.md
+          if git diff --cached --quiet; then
+            echo 'No inventory change.'
+          else
+            git commit -m 'record sanitized AMBENCH-F26 NERDm inventory'
+            git push
+          fi
