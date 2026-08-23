@@ -1,45 +1,38 @@
 ---
-checkpoint_id: CHK-20260823-E30-PASS-SPATIAL-ROBUSTNESS
-active_issue: none
-active_research: none
+checkpoint_id: CHK-20260823-F31-PREREGISTERED-SOURCE-DESIGN-ACTIVE
+active_issue: 49
+active_research: AMBENCH-F31
 last_completed_issue: 48
 last_completed_research: AMBENCH-E30
-last_decision: DEC-063
+last_decision: DEC-064
 updated: 2026-08-23
 ---
 
 # Project Status / 프로젝트 상태
 
 **Project / 프로젝트:** AI-Innovative-Research-Engine / AI 기반 혁신 탐색 연구 엔진  
-**Latest verified baseline / 최신 검증 baseline:** `v0.40-e30-spatial-robustness-pass`  
-**State / 상태:** `E30_COMPLETED__PASS_E30_SPATIALLY_ROBUST_DIRECTIONAL_EFFECT`  
-**Active Work Queue / 활성 작업 큐:** none.
+**Latest verified baseline / 최신 검증 baseline:** `v0.41-f31-source-design-active`  
+**State / 상태:** `F31_PREREGISTERED__SOURCE_DESIGN_QUALIFICATION_ACTIVE`  
+**Active Work Queue / 활성 작업 큐:** Issue #49 `AMBENCH-F31`.
 
 ## Governance / 거버넌스
-GitHub remains Source of Truth. `DEC-055` compact Continuity Overlay remains active. Seven Minimum Operability functions remain PRESENT/EQUIVALENT with no `MISSING-BLOCKING`. Zero-cost only; raw external bytes transient; shared paid quota/budget not assumed; reusable workflow remains `SHARED-INTERNAL-CANDIDATE`.
+GitHub remains Source of Truth. `DEC-055` compact Continuity Overlay active. Seven Minimum Operability functions remain PRESENT/EQUIVALENT with no `MISSING-BLOCKING`. Zero-cost only; raw source bytes transient; no shared paid quota assumed; reusable workflow remains `SHARED-INTERNAL-CANDIDATE`.
 
 ## Last completed / 최근 완료
-Issue #48 `AMBENCH-E30` — **`PASS_E30_SPATIALLY_ROBUST_DIRECTIONAL_EFFECT`**.
+Issue #48 `AMBENCH-E30` — `PASS_E30_SPATIALLY_ROBUST_DIRECTIONAL_EFFECT`. E29 direction remained positive at both P2 and P3 and combined strong gate passed; independent n remains 3 vs 3.
 
-Frozen result:
-- same six physical plates, n=3 vs n=3;
-- P2/P3 nested spatial repeats;
-- all 12 P2/P3 components current NERDm/local size/SHA-256 PASS;
-- all 12 cells 44/45 valid tracks;
-- `Delta_P2 = +24.287722773 µm`;
-- `Delta_P3 = +35.907503409 µm`;
-- equal-weight P2/P3 `Delta_combined = +30.097613091 µm`;
-- exact one-sided combined permutation `p=0.05`;
-- combined plate rank-biserial `1.0` (9/0/0);
-- global common-valid tracks 44;
-- `Delta_common_combined = +30.097613091 µm`.
+## Active F31 / 활성 F31
+Preregistration: `research/AMBENCH-F31/README.md`; decision `DEC-064`.
 
-Interpretation: E29 direction is robust across P1/P2/P3 within these plates, but independent n remains 3 vs 3. No independent-build replication or broad causal proof.
+F31 is source/design only. It may inspect NERDm metadata/component paths, exact root README and authoritative sample/design parameter files. It must not inspect or emit numerical measurement outcomes, pixel coordinate rows, outcome summary rows, images or masks, and must not calculate a turnaround effect.
 
-Permanent disclosure:
-`NEW_E30_NUMERICAL_OUTCOME_BLIND = NO__INHERITED_E27_SCHEMA_PREFLIGHT_GIBBERISH_EMISSION`.
+Question: whether AMB2025-07 `1 mm × 5 mm` geometry has a distinct deterministic plate-resolved outcome route for T72/T82/T92/T102/T112/T122, with authoritative measurand/unit/nesting semantics and immutable source identities.
+
+Frozen gates:
+- `PASS_F31_ALTERNATE_PAD_GEOMETRY_ROUTE_READY`
+- `PARTIAL_F31_ALTERNATE_GEOMETRY_DESIGN_READY`
+- `HOLD_F31_SOURCE_OR_IDENTITY`
+- `REJECT_F31_ALTERNATE_GEOMETRY_ROUTE`
 
 ## Exact Next Action / 정확한 다음 행동
-Per `DEC-063`, preregister and execute a **source/design-only `AMBENCH-F31 — alternate pad-geometry turnaround replication source/identity qualification gate`** before any alternate-geometry numerical outcome inspection.
-
-F31 must determine whether the AMB2025-07 `1 mm × 5 mm` pad geometry has a distinct deterministic plate-resolved outcome route for the same six physical plates, with authoritative measurands/units and immutable NERDm identities. F31 must not compute a turnaround effect. If no distinct route exists, HOLD/REJECT rather than inventing a mapping.
+After synchronized active state, run zero-cost metadata/documentation qualification. Use exact root `4103_ReadMe.txt`, `SampleIParameters.csv` if current NERDm exposes it, and component-path inventory. Do not open outcome files. Persist the route/no-route decision, close/HOLD #49, synchronize and re-read.
