@@ -1,0 +1,87 @@
+name: AMBENCH F28 README semantics
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ambench-f28-readme-semantics.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  semantics:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check authoritative README reconstruction semantics
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,json,os,re,subprocess,tempfile,urllib.request,shutil
+          from pathlib import Path
+          root=Path(os.environ['GITHUB_WORKSPACE'])
+          out=root/'research/AMBENCH-F28/DOC_SEMANTICS.md'
+          tmp=Path(tempfile.mkdtemp(prefix='f28-doc-'))
+          lines=['---','id: AMBENCH-F28-DOC-SEMANTICS','type: documentation-semantics-check','created: 2026-08-23','source_of_truth: github-actions','numerical_outcome_values_emitted: false','---','','# AMBENCH-F28 Authoritative Documentation Semantics / F28 권위 문서 semantics','', '- incremental monetary cost: 0 USD','- raw coordinate/outcome values emitted: NO','']
+          try:
+            with urllib.request.urlopen('https://data.nist.gov/od/id/mds2-4103?format=nerdm',timeout=60) as r: meta=json.load(r)
+            comps=meta.get('components',[])
+            rs=[c for c in comps if (c.get('filepath') or '')=='4103_ReadMe.txt']
+            if len(rs)!=1: raise RuntimeError('README_NOT_UNIQUE')
+            c=rs[0]; cs=c.get('checksum') or {}; sha=cs.get('hash')
+            if not sha:
+              for v in cs.values():
+                if isinstance(v,str) and len(v)==64: sha=v; break
+            p=tmp/'README.txt'
+            cp=subprocess.run(['curl','-fsSL','--retry','5','--retry-delay','2','--retry-all-errors',c['downloadURL'],'-o',str(p)],capture_output=True,text=True)
+            if cp.returncode!=0: raise RuntimeError('DOWNLOAD_FAIL')
+            b=p.read_bytes(); ok=(len(b)==c.get('size') and hashlib.sha256(b).hexdigest().lower()==sha.lower())
+            text=None; enc=None
+            for e in ('utf-8-sig','cp1252','latin-1'):
+              try: text=b.decode(e); enc=e; break
+              except Exception: pass
+            if text is None: raise RuntimeError('DECODE_FAIL')
+            lines += [f'- README_integrity_pass: {"YES" if ok else "NO"}',f'- selected_encoding: {enc}']
+            pats=('pixel','coordinate','imagej','scale','overlap depth','depth','width','point','conversion','micron','µm')
+            matched=[]
+            for i,line in enumerate(text.splitlines(),1):
+              low=line.lower()
+              if any(p in low for p in pats):
+                s=' '.join(line.split())
+                # Numerical literals are redacted in this semantic-only check.
+                s=re.sub(r'(?<![A-Za-z])[-+]?\d+(?:\.\d+)?(?:[eE][-+]?\d+)?','<NUM>',s)
+                s=s[:500]
+                matched.append((i,s))
+            lines += [f'- relevant_line_count: {len(matched)}','', '## Redacted method/documentation lines / 숫자 redacted 방법 문서 lines']
+            for i,s in matched[:80]: lines.append(f'- L{i}: {s}')
+            low=text.lower()
+            flags={
+              'mentions_pixel_coordinates': ('pixel' in low and 'coordinate' in low),
+              'mentions_imagej': 'imagej' in low,
+              'mentions_scale': 'scale' in low,
+              'mentions_overlap_depth': 'overlap depth' in low,
+              'mentions_explicit_conversion_word': 'conversion' in low or 'convert' in low,
+              'mentions_micrometer_unit': ('micron' in low or 'µm' in low or 'micrometer' in low),
+            }
+            lines += ['',f'- semantic_flags: {flags}']
+          except Exception as e:
+            lines += ['',f'- documentation_check_error: {type(e).__name__}']
+          finally:
+            shutil.rmtree(tmp,ignore_errors=True)
+          out.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          PY
+
+      - name: Commit sanitized documentation semantics
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/AMBENCH-F28/DOC_SEMANTICS.md
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'record sanitized AMBENCH-F28 documentation semantics'
+          git push
