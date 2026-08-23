@@ -1,0 +1,146 @@
+name: AMBENCH E40 pinned 3DThesis MP_Stats schema gate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ambench-e40-mpstats-schema.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  schema:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build pinned runtime and inspect bundled MP_Stats schema only
+        shell: bash
+        run: |
+          set -euo pipefail
+          UPSTREAM='https://github.com/ORNL-MDF/3DThesis.git'
+          PIN='2de7fc6d8cfa5de78b111df97b1a4d9156a8cf60'
+          WORK="$RUNNER_TEMP/3DThesis"
+          rm -rf "$WORK"
+          git clone --filter=blob:none "$UPSTREAM" "$WORK"
+          git -C "$WORK" checkout --detach "$PIN"
+
+          cmake -S "$WORK" -B "$WORK/build" -D CMAKE_INSTALL_PREFIX="$WORK/install"
+          cmake --build "$WORK/build" --parallel 2
+          cmake --install "$WORK/build"
+
+          CASE="$WORK/examples/solidification_mpstats"
+          cd "$CASE"
+          rm -rf Data test.log
+          "$WORK/install/bin/3DThesis" ./ParamInput.txt > test.log 2>&1
+
+          CSV="$(find Data -type f -name 'solidification_mpstats*.csv' | sort | head -n 1)"
+          if [ -z "$CSV" ] || [ ! -f "$CSV" ]; then
+            echo 'Expected bundled MP_Stats CSV not found.' >&2
+            cat test.log >&2 || true
+            exit 1
+          fi
+
+          export E40_CSV="$CASE/$CSV"
+          export E40_PIN="$PIN"
+          export E40_REPO='ORNL-MDF/3DThesis'
+          export E40_OUT="$GITHUB_WORKSPACE/research/AMBENCH-E40/SCHEMA_PREFLIGHT.md"
+          cd "$GITHUB_WORKSPACE"
+
+          python - <<'PY'
+          import csv, os
+          from pathlib import Path
+
+          csv_path = Path(os.environ['E40_CSV'])
+          out = Path(os.environ['E40_OUT'])
+          pin = os.environ['E40_PIN']
+          repo = os.environ['E40_REPO']
+
+          with csv_path.open('r', encoding='utf-8-sig', newline='') as f:
+              reader = csv.reader(f)
+              try:
+                  header = next(reader)
+              except StopIteration:
+                  header = []
+                  rows = 0
+              else:
+                  rows = sum(1 for _ in reader)
+
+          width_hits = [i for i, h in enumerate(header) if h.strip() == 'MP_width']
+          length_hits = [i for i, h in enumerate(header) if h.strip() == 'MP_length']
+          depth_hits = [i for i, h in enumerate(header) if h.strip() == 'MP_depth']
+          schema_pass = (
+              rows > 0
+              and len(width_hits) == 1
+              and len(length_hits) == 1
+              and len(depth_hits) == 1
+          )
+
+          out.parent.mkdir(parents=True, exist_ok=True)
+          lines = [
+              '---',
+              'id: AMBENCH-E40-SCHEMA-PREFLIGHT',
+              'type: pinned-mpstats-output-schema-preflight',
+              'created: 2026-08-24',
+              'bundled_numerical_values_persisted: false',
+              'bundled_numerical_statistics_computed: false',
+              'custom_controller_performance_executed: false',
+              'incremental_monetary_cost_usd: 0',
+              '---',
+              '',
+              '# AMBENCH-E40 MP_Stats Schema Preflight / MP_Stats Schema 사전점검',
+              '',
+              '## Boundary / 경계',
+              '- Exact pinned upstream build + bundled `solidification_mpstats` execution only.',
+              '- Only output filename, header/schema and row count are persisted.',
+              '- No bundled numerical data cell, numerical statistic, ranking or C0–C4 custom-controller performance is persisted or computed.',
+              '',
+              '## Runtime identity / 실행환경 identity',
+              f'- repository: `{repo}`',
+              f'- pinned_commit: `{pin}`',
+              '- runner: standard GitHub-hosted Ubuntu',
+              '- cmake_configure/build/install: `PASS`',
+              '- bundled_example_execution: `PASS`',
+              f'- generated_csv_name: `{csv_path.name}`',
+              '',
+              '## Output schema / 출력 schema',
+              f'- header_column_count: `{len(header)}`',
+              f'- header: `{header}`',
+              f'- data_row_count: `{rows}`',
+              f'- MP_width_hits_1based: `{[i+1 for i in width_hits]}`',
+              f'- MP_length_hits_1based: `{[i+1 for i in length_hits]}`',
+              f'- MP_depth_hits_1based: `{[i+1 for i in depth_hits]}`',
+              f'- deterministic_MP_width_field: `{len(width_hits) == 1}`',
+              '',
+              '## Frozen Stage A gate / 고정 Stage A 판정',
+          ]
+          if schema_pass:
+              lines += [
+                  '**PASS_E40_MPSTATS_SCHEMA_READY**',
+                  '- The frozen primary endpoint maps deterministically to the exact `MP_width` output field.',
+                  '- Stage B C0–C4 performance execution is now authorized under the unchanged F39 design contract.',
+              ]
+          else:
+              lines += [
+                  '**HOLD_E40_RUNTIME_OR_OUTPUT_SCHEMA**',
+                  '- Do not execute custom C0–C4 performance; no endpoint substitution is authorized.',
+              ]
+
+          out.write_text('\n'.join(lines) + '\n', encoding='utf-8')
+          PY
+
+      - name: Persist sanitized E40 schema preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/AMBENCH-E40/SCHEMA_PREFLIGHT.md
+          if git diff --cached --quiet; then
+            echo 'No E40 schema-preflight change.'
+          else
+            git commit -m 'record AMBENCH-E40 pinned MP_Stats schema gate'
+            git push
+          fi
