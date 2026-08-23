@@ -1,0 +1,462 @@
+name: AMBENCH E43 P01 path-order-only thermal benchmark
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ambench-e43-path-order-only.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  execute:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Reconstruct and verify frozen F42 inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          export E43_ROOT="$RUNNER_TEMP/e43"
+          mkdir -p "$E43_ROOT/generated"
+          python - <<'PY'
+          import csv, hashlib, io, json, math, re, urllib.request, zipfile, os
+          from pathlib import Path
+
+          DSID='mds2-2507'
+          EXPECTED_VERSION='1.0.1'
+          EXPECTED_SHA='c57a56cc9c906e4db134d7bfb8618b6678e80dd0318324de0b7baf1ce092a3f4'
+          EXPECTED_SIZE=18079576
+          EXPECTED_ROWS=25051
+          EXPECTED_POSITIVE=7408
+          EXPECTED_RUN_LENGTHS=[251,376,251,376,21,40,60,79,99,119,138,158,177,197,217,236,256,275,284,284,284,284,284,284,284,277,257,238,218,199,179,159,140,120,101,81,61,42,22]
+          RISK_ORDER=[5,39,6,18,24,22,20,21,23,25,27,17,16,28,29,15,14,13,30,26,31,7,32,19,12,11,33,34,10,8,9,38,35,36,37,1,3,2,4]
+          EXPECTED_N0='7b2860908b2c96b167e1f383af5fa150b92184ad433e1ca9b3320dba68eeb475'
+          EXPECTED_R1='778adef0041061f2413b35539798c3c5836b3290c1054e4c71b39f5dc689cd9b'
+          DT=10e-6
+          ROOT=Path(os.environ['E43_ROOT'])
+
+          def fetch(url):
+              req=urllib.request.Request(url,headers={'User-Agent':'AI-Innovative-Research-Engine/E43'})
+              with urllib.request.urlopen(req,timeout=90) as r:
+                  return r.read()
+
+          reasons=[]
+          meta=json.loads(fetch(f'https://data.nist.gov/od/id/{DSID}?format=nerdm').decode('utf-8'))
+          version=str(meta.get('version'))
+          comps=[c for c in meta.get('components',[]) if c.get('filepath')=='RHF_Command.zip']
+          comp=comps[0] if len(comps)==1 else None
+          raw=b''; got_sha=None; size_ok=False; hash_ok=False; member=None; rows=[]
+          if comp is None:
+              reasons.append(f'RHF_Command component count={len(comps)}')
+          else:
+              raw=fetch(comp['downloadURL'])
+              got_sha=hashlib.sha256(raw).hexdigest()
+              nerdm_sha=(comp.get('checksum') or {}).get('hash')
+              size_ok=(len(raw)==comp.get('size')==EXPECTED_SIZE)
+              hash_ok=(got_sha==nerdm_sha==EXPECTED_SHA)
+              if version!=EXPECTED_VERSION or not size_ok or not hash_ok:
+                  reasons.append('version/size/checksum mismatch')
+
+          if not reasons:
+              z=zipfile.ZipFile(io.BytesIO(raw))
+              rx=re.compile(r'(?:^|/)RHF_P01_layer0001\.csv$',re.I)
+              members=[n for n in z.namelist() if rx.search(n)]
+              if len(members)!=1:
+                  reasons.append(f'P01 member count={len(members)}')
+              else:
+                  member=members[0]
+                  text=z.read(member).decode('utf-8-sig',errors='strict')
+                  blank=0; malformed=0
+                  for row in csv.reader(io.StringIO(text)):
+                      if not row or all(not c.strip() for c in row):
+                          blank+=1; continue
+                      if len(row)!=4:
+                          malformed+=1; continue
+                      try:
+                          vals=tuple(map(float,row))
+                      except Exception:
+                          malformed+=1; continue
+                      if not all(math.isfinite(v) for v in vals):
+                          malformed+=1; continue
+                      rows.append(vals)
+                  if blank or malformed or len(rows)!=EXPECTED_ROWS:
+                      reasons.append(f'row integrity blank={blank} malformed={malformed} parsed={len(rows)}')
+
+          run_ranges=[]
+          if not reasons:
+              start=None
+              for i,(_,_,p,_) in enumerate(rows):
+                  if p>0 and start is None:
+                      start=i
+                  if p<=0 and start is not None:
+                      run_ranges.append((start,i-1)); start=None
+              if start is not None:
+                  run_ranges.append((start,len(rows)-1))
+              lengths=[b-a+1 for a,b in run_ranges]
+              positive=sum(lengths)
+              if lengths!=EXPECTED_RUN_LENGTHS or positive!=EXPECTED_POSITIVE or len(run_ranges)!=39:
+                  reasons.append('F42 source-run identity drift')
+          else:
+              lengths=[]; positive=0
+
+          if not reasons:
+              leading_off=run_ranges[0][0]
+              gaps=[run_ranges[i][0]-run_ranges[i-1][1]-1 for i in range(1,len(run_ranges))]
+              trailing_off=len(rows)-1-run_ranges[-1][1]
+              if leading_off+sum(gaps)+trailing_off+positive!=len(rows) or len(gaps)!=38:
+                  reasons.append('source timing partition mismatch')
+          else:
+              leading_off=trailing_off=0; gaps=[]
+
+          if not reasons:
+              run_points={}
+              allpos=[]
+              for rid,(a,b) in enumerate(run_ranges,start=1):
+                  pts=[(rows[i][0],rows[i][1]) for i in range(a,b+1)]
+                  run_points[rid]=pts; allpos.extend(pts)
+              minx=min(x for x,y in allpos); miny=min(y for x,y in allpos)
+              translated={rid:[(x-minx,y-miny) for x,y in pts] for rid,pts in run_points.items()}
+          else:
+              translated={}
+
+          def path_text(order):
+              lines=['Mode\tX(mm)\tY(mm)\tZ(mm)\tPmod\tVel(m/s)/Time(s)']
+              first=order[0]
+              x0,y0=translated[first][0]
+              if leading_off>0:
+                  lines.append(f'1\t{x0:.15g}\t{y0:.15g}\t0\t0\t{leading_off*DT:.15g}')
+              for pos,rid in enumerate(order):
+                  if pos>0:
+                      xs,ys=translated[rid][0]
+                      lines.append(f'1\t{xs:.15g}\t{ys:.15g}\t0\t0\t{gaps[pos-1]*DT:.15g}')
+                  for x,y in translated[rid]:
+                      lines.append(f'1\t{x:.15g}\t{y:.15g}\t0\t1\t{DT:.15g}')
+              if trailing_off>0:
+                  xe,ye=translated[order[-1]][-1]
+                  lines.append(f'1\t{xe:.15g}\t{ye:.15g}\t0\t0\t{trailing_off*DT:.15g}')
+              return '\n'.join(lines)+'\n'
+
+          n0=r1=''
+          n0_hash=r1_hash=None
+          if not reasons:
+              n0=path_text(list(range(1,40)))
+              r1=path_text(RISK_ORDER)
+              n0_hash=hashlib.sha256(n0.encode()).hexdigest()
+              r1_hash=hashlib.sha256(r1.encode()).hexdigest()
+              if n0_hash!=EXPECTED_N0 or r1_hash!=EXPECTED_R1:
+                  reasons.append(f'F42 path hash mismatch N0={n0_hash} R1={r1_hash}')
+
+          if not reasons:
+              (ROOT/'generated'/'N0.Path.txt').write_text(n0,encoding='utf-8')
+              (ROOT/'generated'/'R1.Path.txt').write_text(r1,encoding='utf-8')
+
+          info={
+              'input_integrity_ok': not reasons,
+              'reasons': reasons,
+              'version': version,
+              'archive_size': len(raw),
+              'archive_sha256': got_sha,
+              'archive_size_match': size_ok,
+              'archive_hash_match': hash_ok,
+              'member': member,
+              'rows': len(rows),
+              'positive_rows': positive,
+              'run_count': len(run_ranges),
+              'leading_off_rows': leading_off,
+              'gap_rows': gaps,
+              'trailing_off_rows': trailing_off,
+              'n0_hash': n0_hash,
+              'r1_hash': r1_hash,
+              'laser_on_time_s': positive*DT,
+              'laser_off_time_s': (leading_off+sum(gaps)+trailing_off)*DT if gaps else 0.0,
+              'total_time_s': len(rows)*DT,
+              'energy_proxy_J': positive*DT*600.0,
+          }
+          (ROOT/'input_meta.json').write_text(json.dumps(info,indent=2),encoding='utf-8')
+          print(json.dumps(info,indent=2))
+          PY
+
+      - name: Build pinned 3DThesis and prepare identical cases
+        shell: bash
+        run: |
+          set -u
+          ROOT="$RUNNER_TEMP/e43"
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          p=Path(os.environ['RUNNER_TEMP'])/'e43'/'input_meta.json'
+          m=json.loads(p.read_text())
+          print('INPUT_OK=1' if m['input_integrity_ok'] else 'INPUT_OK=0')
+          PY
+          INPUT_OK="$(python - <<'PY'
+          import json, os
+          from pathlib import Path
+          m=json.loads((Path(os.environ['RUNNER_TEMP'])/'e43'/'input_meta.json').read_text())
+          print('1' if m['input_integrity_ok'] else '0')
+          PY
+          )"
+          if [ "$INPUT_OK" != "1" ]; then
+            printf '{"build_ok":false,"build_reason":"input integrity failed; build skipped"}\n' > "$ROOT/build_meta.json"
+            exit 0
+          fi
+
+          WORK="$ROOT/3DThesis"
+          rm -rf "$WORK"
+          set +e
+          git clone --filter=blob:none https://github.com/ORNL-MDF/3DThesis.git "$WORK"
+          CLONE_RC=$?
+          if [ "$CLONE_RC" -eq 0 ]; then git -C "$WORK" checkout --detach 2de7fc6d8cfa5de78b111df97b1a4d9156a8cf60; CHECKOUT_RC=$?; else CHECKOUT_RC=99; fi
+          if [ "$CHECKOUT_RC" -eq 0 ]; then cmake -S "$WORK" -B "$WORK/build" -D CMAKE_INSTALL_PREFIX="$WORK/install"; CONFIG_RC=$?; else CONFIG_RC=99; fi
+          if [ "$CONFIG_RC" -eq 0 ]; then cmake --build "$WORK/build" --parallel 2; BUILD_RC=$?; else BUILD_RC=99; fi
+          if [ "$BUILD_RC" -eq 0 ]; then cmake --install "$WORK/build"; INSTALL_RC=$?; else INSTALL_RC=99; fi
+          set -e
+
+          BUILD_OK=0
+          if [ "$CLONE_RC" -eq 0 ] && [ "$CHECKOUT_RC" -eq 0 ] && [ "$CONFIG_RC" -eq 0 ] && [ "$BUILD_RC" -eq 0 ] && [ "$INSTALL_RC" -eq 0 ]; then BUILD_OK=1; fi
+          printf '{"build_ok":%s,"clone_rc":%s,"checkout_rc":%s,"configure_rc":%s,"build_rc":%s,"install_rc":%s}\n' "$([ "$BUILD_OK" -eq 1 ] && echo true || echo false)" "$CLONE_RC" "$CHECKOUT_RC" "$CONFIG_RC" "$BUILD_RC" "$INSTALL_RC" > "$ROOT/build_meta.json"
+          if [ "$BUILD_OK" -ne 1 ]; then exit 0; fi
+
+          for CASE in N0 R1; do
+            D="$ROOT/cases/$CASE"
+            mkdir -p "$D"
+            cp "$WORK/examples/solidification_mpstats/Material.txt" "$D/Material.txt"
+            cp "$WORK/examples/solidification_mpstats/Beam.txt" "$D/Beam.txt"
+            cp "$WORK/examples/solidification_mpstats/Output.txt" "$D/Output.txt"
+            cp "$WORK/examples/solidification_mpstats/Settings.txt" "$D/Settings.txt"
+            cp "$ROOT/generated/$CASE.Path.txt" "$D/Path.txt"
+            cat > "$D/Mode.txt" <<'EOF'
+          Solidification
+          {
+            Tracking Surface
+            Timestep 1e-5
+          }
+          EOF
+            cat > "$D/Domain.txt" <<'EOF'
+          X
+          {
+            Min -0.001
+            Max 0.004
+            Res 5.0e-5
+          }
+          Y
+          {
+            Min -0.001
+            Max 0.003
+            Res 5.0e-5
+          }
+          Z
+          {
+            Min -0.001
+            Max 0.000
+            Res 2.5e-5
+          }
+          EOF
+            cat > "$D/ParamInput.txt" <<EOF
+          Simulation
+          {
+            Name $CASE
+            Mode Mode.txt
+            Material Material.txt
+            Beam Beam.txt
+            Path Path.txt
+          }
+          Options
+          {
+            Domain Domain.txt
+            Output Output.txt
+            Settings Settings.txt
+          }
+          EOF
+          done
+
+      - name: Execute N0 and R1 under frozen caps
+        shell: bash
+        run: |
+          set -u
+          ROOT="$RUNNER_TEMP/e43"
+          BUILD_OK="$(python - <<'PY'
+          import json, os
+          from pathlib import Path
+          m=json.loads((Path(os.environ['RUNNER_TEMP'])/'e43'/'build_meta.json').read_text())
+          print('1' if m.get('build_ok') else '0')
+          PY
+          )"
+          if [ "$BUILD_OK" != "1" ]; then
+            printf '{"N0":{"executed":false,"rc":null,"elapsed_s":null},"R1":{"executed":false,"rc":null,"elapsed_s":null}}\n' > "$ROOT/runtime_meta.json"
+            exit 0
+          fi
+
+          EXE="$ROOT/3DThesis/install/bin/3DThesis"
+          printf '{' > "$ROOT/runtime_meta.json"
+          FIRST=1
+          N0_OK=0
+          for CASE in N0 R1; do
+            if [ "$CASE" = "R1" ] && [ "$N0_OK" -ne 1 ]; then
+              [ "$FIRST" -eq 0 ] && printf ',' >> "$ROOT/runtime_meta.json"
+              printf '"R1":{"executed":false,"rc":null,"elapsed_s":null}' >> "$ROOT/runtime_meta.json"
+              FIRST=0
+              continue
+            fi
+            D="$ROOT/cases/$CASE"
+            cd "$D"
+            rm -rf Data run.log
+            START="$(date +%s)"
+            set +e
+            timeout 480 "$EXE" ./ParamInput.txt > run.log 2>&1
+            RC=$?
+            set -e
+            END="$(date +%s)"
+            ELAPSED=$((END-START))
+            [ "$FIRST" -eq 0 ] && printf ',' >> "$ROOT/runtime_meta.json"
+            printf '"%s":{"executed":true,"rc":%s,"elapsed_s":%s}' "$CASE" "$RC" "$ELAPSED" >> "$ROOT/runtime_meta.json"
+            FIRST=0
+            if [ "$CASE" = "N0" ] && [ "$RC" -eq 0 ]; then N0_OK=1; fi
+          done
+          printf '}\n' >> "$ROOT/runtime_meta.json"
+          cat "$ROOT/runtime_meta.json"
+
+      - name: Apply frozen aggregate gate and persist result
+        shell: bash
+        run: |
+          set -euo pipefail
+          export E43_ROOT="$RUNNER_TEMP/e43"
+          python - <<'PY'
+          import csv, hashlib, json, math, os, statistics
+          from pathlib import Path
+
+          ROOT=Path(os.environ['E43_ROOT'])
+          repo=Path(os.environ['GITHUB_WORKSPACE'])
+          input_meta=json.loads((ROOT/'input_meta.json').read_text())
+          build_meta=json.loads((ROOT/'build_meta.json').read_text())
+          runtime_meta=json.loads((ROOT/'runtime_meta.json').read_text())
+          expected_header=['x','y','z','MP_width','MP_length','MP_depth']
+
+          reasons=[]
+          if not input_meta.get('input_integrity_ok'):
+              reasons.extend(input_meta.get('reasons') or ['input integrity failed'])
+          if not build_meta.get('build_ok'):
+              reasons.append('pinned runtime build/install failed')
+          for case in ('N0','R1'):
+              r=runtime_meta.get(case,{})
+              if not r.get('executed'):
+                  reasons.append(f'{case} not executed')
+              elif r.get('rc')!=0:
+                  reasons.append(f'{case} runtime rc={r.get("rc")} (124 indicates 480s timeout)')
+
+          metrics={}
+          if not reasons:
+              for case in ('N0','R1'):
+                  data_dir=ROOT/'cases'/case/'Data'
+                  files=sorted(data_dir.glob(f'{case}.Solidification.Final*.csv'))
+                  if len(files)!=1:
+                      reasons.append(f'{case} expected one final CSV; found {len(files)}')
+                      continue
+                  fp=files[0]
+                  with fp.open('r',encoding='utf-8-sig',newline='') as f:
+                      reader=csv.reader(f)
+                      try: header=next(reader)
+                      except StopIteration:
+                          reasons.append(f'{case} empty CSV'); continue
+                      if header!=expected_header:
+                          reasons.append(f'{case} schema mismatch {header}'); continue
+                      total=0; vals=[]; nonfinite=0
+                      for row in reader:
+                          total+=1
+                          if len(row)!=len(header):
+                              reasons.append(f'{case} ragged output row'); break
+                          try: v=float(row[3])
+                          except Exception:
+                              reasons.append(f'{case} nonnumeric MP_width'); break
+                          if not math.isfinite(v):
+                              nonfinite+=1; continue
+                          if v>0: vals.append(v)
+                  if reasons: continue
+                  if len(vals)<100:
+                      reasons.append(f'{case} finite positive MP_width count={len(vals)} <100')
+                      continue
+                  mean=statistics.mean(vals)
+                  sd=statistics.stdev(vals)
+                  if not math.isfinite(mean) or mean<=0 or not math.isfinite(sd):
+                      reasons.append(f'{case} invalid aggregate width statistic')
+                      continue
+                  metrics[case]={
+                      'output_file_name':fp.name,
+                      'output_rows':total,
+                      'positive_count':len(vals),
+                      'nonfinite_count':nonfinite,
+                      'mean_width':mean,
+                      'sd_width':sd,
+                      'cv_width':sd/mean,
+                      'max_width':max(vals),
+                  }
+
+          gate='HOLD_E43_RUNTIME_OR_INTEGRITY'
+          ratios={}
+          if not reasons and set(metrics)=={'N0','R1'}:
+              n=metrics['N0']; r=metrics['R1']
+              mean_ratio=r['mean_width']/n['mean_width']
+              count_ratio=r['positive_count']/n['positive_count']
+              cv_ratio=r['cv_width']/n['cv_width']
+              improvement=1.0-cv_ratio
+              ratios={'mean_ratio_R1_N0':mean_ratio,'positive_count_ratio_R1_N0':count_ratio,'cv_ratio_R1_N0':cv_ratio,'cv_improvement_fraction':improvement}
+              mean_ok=0.95<=mean_ratio<=1.05
+              count_ok=0.90<=count_ratio<=1.10
+              if r['cv_width']<=0.90*n['cv_width'] and mean_ok and count_ok:
+                  gate='PASS_E43_PATH_ORDER_ADDED_VALUE'
+              elif r['cv_width']<n['cv_width'] and mean_ok and count_ok:
+                  gate='PARTIAL_E43_PATH_ORDER_SMALL_GAIN'
+              else:
+                  gate='NO_E43_PATH_ORDER_ADDED_VALUE'
+
+          out=repo/'research/AMBENCH-E43/RESULT.md'
+          lines=[
+              '---','id: AMBENCH-E43-RESULT','type: source-grounded-path-order-only-thermal-result','created: 2026-08-24','source_of_truth: github-actions','raw_generated_paths_committed: false','raw_simulator_csv_committed: false','incremental_monetary_cost_usd: 0','---','',
+              '# AMBENCH-E43 Result — P01 Source-Grounded Path-Order-Only Thermal Benchmark',
+              '# AMBENCH-E43 결과 — P01 Source-Grounded Path-Order-Only 열 Benchmark','',
+              '## Integrity / 무결성',
+              '- simulator: `ORNL-MDF/3DThesis@2de7fc6d8cfa5de78b111df97b1a4d9156a8cf60`',
+              '- mode: `Solidification / Surface`',
+              '- frozen timestep: `1e-5 s`',
+              '- per-case hard cap: `480 s`',
+              '- workflow cap: `20 min`',
+              f'- source archive SHA-256: `{input_meta.get("archive_sha256")}`',
+              f'- source archive hash match: `{input_meta.get("archive_hash_match")}`',
+              f'- N0 path SHA-256: `{input_meta.get("n0_hash")}`',
+              f'- R1 path SHA-256: `{input_meta.get("r1_hash")}`',
+              f'- positive source rows: `{input_meta.get("positive_rows")}`',
+              f'- laser-on time: `{input_meta.get("laser_on_time_s")}` s',
+              f'- laser-off time: `{input_meta.get("laser_off_time_s")}` s',
+              f'- total modeled input time: `{input_meta.get("total_time_s")}` s',
+              f'- benchmark 600W energy proxy: `{input_meta.get("energy_proxy_J")}` J',
+              f'- pinned runtime build/install: `{build_meta.get("build_ok")}`',
+              f'- N0 execution: `{runtime_meta.get("N0")}`',
+              f'- R1 execution: `{runtime_meta.get("R1")}`','',
+              '## Frozen spatial MP_width aggregates / 고정 spatial MP_width 집계',
+              '- `MP_width` means per-grid-point maximum melt-pool width; no row-level p-value is used.',''
+          ]
+          for case in ('N0','R1'):
+              if case in metrics:
+                  m=metrics[case]
+                  lines += [f'### {case}',f'- output_rows: `{m["output_rows"]}`',f'- finite_positive_MP_width_count: `{m["positive_count"]}`',f'- nonfinite_MP_width_count: `{m["nonfinite_count"]}`',f'- mean_positive_MP_width: `{m["mean_width"]:.15g}`',f'- sample_SD_positive_MP_width: `{m["sd_width"]:.15g}`',f'- CV_width: `{m["cv_width"]:.15g}`',f'- max_positive_MP_width: `{m["max_width"]:.15g}`','']
+          if ratios:
+              lines += ['## Frozen comparison / 고정 비교',f'- CV_R1_over_N0: `{ratios["cv_ratio_R1_N0"]:.15g}`',f'- CV_improvement_fraction: `{ratios["cv_improvement_fraction"]:.15g}`',f'- CV_improvement_percent: `{100*ratios["cv_improvement_fraction"]:.12g}%`',f'- mean_width_R1_over_N0: `{ratios["mean_ratio_R1_N0"]:.15g}`',f'- positive_count_R1_over_N0: `{ratios["positive_count_ratio_R1_N0"]:.15g}`','']
+          if reasons:
+              lines += ['## HOLD reasons / HOLD 이유']+[f'- `{x}`' for x in reasons]+['']
+          lines += ['## Frozen E43 gate / 고정 E43 판정',f'**`{gate}`**','',
+                   '## Boundary / 경계','This is one deterministic pinned semi-analytic thermal benchmark comparing source-grounded path order only. It is not NIST physical-outcome reproduction, scanner-kinematics validation, material universality, novelty proof or production readiness.','']
+          out.write_text('\n'.join(lines),encoding='utf-8')
+          PY
+
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/AMBENCH-E43/RESULT.md
+          if git diff --cached --quiet; then
+            echo 'No E43 result change.'
+          else
+            git commit -m 'record AMBENCH-E43 P01 path-order-only thermal result'
+            git push
+          fi
