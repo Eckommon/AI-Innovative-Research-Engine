@@ -45,11 +45,11 @@ jobs:
 
           # AMBENCH-F23 Headerless Structural Verification / F23 Headerless 구조 검증
 
-          - route: public standard GitHub-hosted `ubuntu-latest`
-          - incremental monetary cost: `0 USD`
-          - artifacts/cache: `NONE`
-          - inherited exposure state: `NEW_REGISTERED_X4_NUMERICAL_OUTCOME_BLIND = VIOLATED_LIMITED`
-          - additional numerical values emitted: `NO`
+          - route: public standard GitHub-hosted ubuntu-latest
+          - incremental monetary cost: 0 USD
+          - artifacts/cache: NONE
+          - inherited exposure state: NEW_REGISTERED_X4_NUMERICAL_OUTCOME_BLIND = VIOLATED_LIMITED
+          - additional numerical values emitted: NO
           EOF
 
           GLOBAL_PASS=YES
@@ -73,7 +73,6 @@ jobs:
 
             python - "$FILE" > metrics.txt <<'PY'
           import csv, io, sys, zipfile
-          from pathlib import Path
 
           fn=sys.argv[1]
           csv_count=0
@@ -162,22 +161,22 @@ jobs:
             cat >> "$RESULT" <<EOF
 
           ## $FILE
-          - expected_size_bytes: `$EXPECTED_SIZE`
-          - actual_size_bytes: `$ACTUAL_SIZE`
-          - size_match: `$SIZE_MATCH`
-          - expected_SHA256: `$EXPECTED_SHA`
-          - actual_SHA256: `$ACTUAL_SHA`
-          - SHA256_match: `$HASH_MATCH`
-          - zip_test: `$ZIP_OK`
-          - csv_count: `$CSV_COUNT`
-          - nonempty_data_row_count: `$ROW_COUNT`
-          - empty_row_count: `$EMPTY_ROWS`
-          - observed_field_count_set: `[$WIDTH_SET]`
-          - rows_not_40_fields: `$BAD_WIDTH`
-          - numeric_parse_failure_fields: `$NUMFAIL`
-          - CSVs_with_first_nonempty_row_seen: `$FIRST_SEEN`
-          - CSVs_with_first_nonempty_row_all_numeric_or_NaN: `$FIRST_NUM`
-          - numerical_values_emitted: `NO`
+          - expected_size_bytes: $EXPECTED_SIZE
+          - actual_size_bytes: $ACTUAL_SIZE
+          - size_match: $SIZE_MATCH
+          - expected_SHA256: $EXPECTED_SHA
+          - actual_SHA256: $ACTUAL_SHA
+          - SHA256_match: $HASH_MATCH
+          - zip_test: $ZIP_OK
+          - csv_count: $CSV_COUNT
+          - nonempty_data_row_count: $ROW_COUNT
+          - empty_row_count: $EMPTY_ROWS
+          - observed_field_count_set: [$WIDTH_SET]
+          - rows_not_40_fields: $BAD_WIDTH
+          - numeric_parse_failure_fields: $NUMFAIL
+          - CSVs_with_first_nonempty_row_seen: $FIRST_SEEN
+          - CSVs_with_first_nonempty_row_all_numeric_or_NaN: $FIRST_NUM
+          - numerical_values_emitted: NO
           EOF
             rm -f "$FILE" metrics.txt
           done < specs.tsv
@@ -185,15 +184,15 @@ jobs:
           cat >> "$RESULT" <<EOF
 
           ## Aggregate / 종합
-          - total_csv_count: `$TOTAL_CSV`
-          - total_nonempty_data_row_count: `$TOTAL_ROWS`
-          - total_empty_row_count: `$TOTAL_EMPTY_ROWS`
-          - total_rows_not_40_fields: `$TOTAL_BAD_WIDTH`
-          - total_numeric_parse_failure_fields: `$TOTAL_NUMERIC_FAIL`
-          - total_CSVs_with_first_nonempty_row_all_numeric_or_NaN: `$TOTAL_FIRST_ROW_NUMERIC`
-          - all_four_hash_and_size_match: `$GLOBAL_PASS`
-          - all_1000_CSVs_structurally_headerless_40_field_numeric: `$GLOBAL_PASS`
-          - raw transient teardown: `SUCCESS`
+          - total_csv_count: $TOTAL_CSV
+          - total_nonempty_data_row_count: $TOTAL_ROWS
+          - total_empty_row_count: $TOTAL_EMPTY_ROWS
+          - total_rows_not_40_fields: $TOTAL_BAD_WIDTH
+          - total_numeric_parse_failure_fields: $TOTAL_NUMERIC_FAIL
+          - total_CSVs_with_first_nonempty_row_all_numeric_or_NaN: $TOTAL_FIRST_ROW_NUMERIC
+          - all_four_hash_and_size_match: $GLOBAL_PASS
+          - all_1000_CSVs_structurally_headerless_40_field_numeric: $GLOBAL_PASS
+          - raw transient teardown: SUCCESS
           EOF
 
       - name: Persist sanitized structural result only
