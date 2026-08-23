@@ -1,0 +1,116 @@
+# AMBENCH-F28 README Directory Context / F28 README 디렉터리 문맥
+
+- numerical literals: REDACTED
+- raw outcome/coordinate values: NOT EMITTED
+
+## Micrograph/reference context / Micrograph/reference context
+- L70: Data Manifest
+- L71: ---
+- L72: <NUM>_README.txt: This readme file.
+- L73: SampleIParameters.csv : Table of sample names and experiment parameters.
+- L74: Before_Images : Micrographs showing the top view of before cross-sectioning. The filename is the sample name. Scale bars provided on images.
+- L75: <NUM>_AMB_T1<NUM>.jpg
+- L76: <NUM>_AMB_T2<NUM>.jpg
+- L77: <NUM>_AMB_T3<NUM>.jpg
+- L78: <NUM>_AMB_T4<NUM>.jpg
+- L79: <NUM>_AMB_T5<NUM>.jpg
+- L80: <NUM>_AMB_T6<NUM>.jpg
+- L81: <NUM>_AMB_T7<NUM>.jpg
+- L82: <NUM>_AMB_T8<NUM>.jpg
+- L83: <NUM>_AMB_T9<NUM>.jpg
+- L84: <NUM>_AMB_T1<NUM>.jpg
+- L85: <NUM>_AMB_T1<NUM>.jpg
+- L86: <NUM>_AMB_T1<NUM>.jpg
+- L87: Cross_Sections : Contains all data related to cross-sections. Each sample was cross-sectioned into three pieces designated as P1, P2, and P3. Images or data for individual samples have a filename that starts with the sample name. “s” indicates stitching and stacking was performed. “rot” indicates image rotation was performed to make the substrate surface horizontal.
+- L88: Micrographs : contain all original and rotated micrographs as TIF files and tables of rotations, surface reference values, and image orientation.
+- L89: Image_Rotations.csv : List of image names and rotations that were applied to create image names with “rot” suffix.
+- L90: SurfaceReference_and_Orientation_Layers.csv : List of image names and the, Y reference pixel, and step over direction. The Y reference pixel is the y-pixel number that defines the substrate surface defined by the image origin in the top left corner. The step over direction is the direction in which the tracks progress perpendicular to the scan direction. A step over direction left-to-right means the tracks number from <NUM> to <NUM> going left-to-right. A right-to-left step over direction means the tracks number from <NUM> to <NUM> going right to left.
+- L91: <NUM>_AMB_T1<NUM>_P1s.tif
+- L92: <NUM>_AMB_T1<NUM>_P1s_rot.tif
+- L93: <NUM>_AMB_T1<NUM>_P2s.tif
+- L94: <NUM>_AMB_T1<NUM>_P2s_rot.tif
+- L95: <NUM>_AMB_T1<NUM>_P3s.tif
+- L96: <NUM>_AMB_T1<NUM>_P3s_rot.tif
+- L97: <NUM>_AMB_T4<NUM>_P1s.tif
+- L98: <NUM>_AMB_T4<NUM>_P1s_rot.tif
+- L99: <NUM>_AMB_T4<NUM>_P2s.tif
+- L100: <NUM>_AMB_T4<NUM>_P2s_rot.tif
+- L101: <NUM>_AMB_T4<NUM>_P3s.tif
+- L102: <NUM>_AMB_T4<NUM>_P3s_rot.tif
+- L103: <NUM>_AMB_T7<NUM>_P1s.tif
+- L104: <NUM>_AMB_T7<NUM>_P1s_rot.tif
+- L105: <NUM>_AMB_T7<NUM>_P2s.tif
+
+## Tracks-results context / Tracks-results context
+- L150: <NUM>_AMB_T9<NUM>_P3s_rot.tit
+- L151: <NUM>_AMB_T1<NUM>_P1s.tif
+- L152: <NUM>_AMB_T1<NUM>_P1s_rot.tif
+- L153: <NUM>_AMB_T1<NUM>_P2s.tif
+- L154: <NUM>_AMB_T1<NUM>_P2s_rot.tif
+- L155: <NUM>_AMB_T1<NUM>_P3s.tif
+- L156: <NUM>_AMB_T1<NUM>_P3s_rot.tif
+- L157: <NUM>_AMB_T1<NUM>_P1s.tif
+- L158: <NUM>_AMB_T1<NUM>_P1s_rot.tif
+- L159: <NUM>_AMB_T1<NUM>_P2s.tif
+- L160: <NUM>_AMB_T1<NUM>_P2s_rot.tif
+- L161: <NUM>_AMB_T1<NUM>_P3s.tif
+- L162: <NUM>_AMB_T1<NUM>_P3s_rot.tif
+- L163: Tracks_Results : Contains all measurement data for individual tracks. There are <NUM> total tracks per cross-section. Each measurand has two CSV files that begin with the measurand in the filename. The first file is a table of each cross-section and the measurement for each track number. The second file with “avgs” in the file name provides the average values with standard deviations, uncertainty terms, and combined-expanded uncertainty for each condition. Lastly, there is a CSV file for each cross-sectional micrograph that has the pixel locations relevant for each measurand. These CSV files start with the sample name followed by the cross-section position (P1, P2, or P3). Values of #N/A indicate the measurement or calculation are not available.
+- L164: bead_heights.csv
+- L165: bead_heights_avgs.csv
+- L166: bead_heights2.csv
+- L167: bead_heights2_avg.csv
+- L168: depths.csv
+- L169: depths_avg.csv
+- L170: overlap_depths.csv
+- L171: overlap_depths_avg.csv
+- L172: overlap_widths.csv
+- L173: overlap_widths_avg.csv
+- L174: widths.csv
+- L175: widths_avg.csv
+- L176: <NUM>_AMB_T1<NUM>_P1s_pixel_points.csv : Contains pixel locations that were used for measurements and calculations. Column <NUM> is the track number. depth_x and depth_y are the (x, y) coordinates of the deepest part of each track. width_x is the x-coordinate of the trailing width. Subtracting depth_x - width_x = width measurement. width_x (n+<NUM>) – width_x (n) = overlap width where n is the track number. bead_height_y is the y-coordinate of tallest point of each melt pool. Subtracting y-coordinate of the surface - bead_height_y = bead height measurement. overlap_depth_x and overlap_depth_y = (x, y) coordinates of the overlap depth location. Subtracting overlap_depth_y - y-coordinate of the surface = overlap depth measurement. The column headers are the same in each file ending in *_pixel_points.csv*
+- L177: <NUM>_AMB_T1<NUM>_P2s_pixel_points.csv
+- L178: <NUM>_AMB_T1<NUM>_P3s_pixel_points.csv
+- L179: <NUM>_AMB_T4<NUM>_P1s_pixel_points.csv
+- L180: <NUM>_AMB_T4<NUM>_P2s_pixel_points.csv
+- L181: <NUM>_AMB_T4<NUM>_P3s_pixel_points.csv
+- L182: <NUM>_AMB_T7<NUM>_P1s_pixel_points.csv
+- L183: <NUM>_AMB_T7<NUM>_P2s_pixel_points.csv
+- L184: <NUM>_AMB_T7<NUM>_P3s_pixel_points.csv
+- L185: <NUM>_AMB_T1<NUM>_P1s_pixel_points.csv
+- L186: <NUM>_AMB_T1<NUM>_P2s_pixel_points.csv
+- L187: <NUM>_AMB_T1<NUM>_P3s_pixel_points.csv
+- L188: <NUM>_AMB_T2<NUM>_P1s_pixel_points.csv
+- L189: <NUM>_AMB_T2<NUM>_P2s_pixel_points.csv
+- L190: <NUM>_AMB_T2<NUM>_P3s_pixel_points.csv
+- L191: <NUM>_AMB_T3<NUM>_P1s_pixel_points.csv
+- L192: <NUM>_AMB_T3<NUM>_P2s_pixel_points.csv
+- L193: <NUM>_AMB_T3<NUM>_P3s_pixel_points.csv
+- L194: <NUM>_AMB_T5<NUM>_P1s_pixel_points.csv
+- L195: <NUM>_AMB_T5<NUM>_P2s_pixel_points.csv
+- L196: <NUM>_AMB_T5<NUM>_P3s_pixel_points.csv
+- L197: <NUM>_AMB_T6<NUM>_P1s_pixel_points.csv
+- L198: <NUM>_AMB_T6<NUM>_P2s_pixel_points.csv
+- L199: <NUM>_AMB_T6<NUM>_P3s_pixel_points.csv
+- L200: <NUM>_AMB_T8<NUM>_P1s_pixel_points.csv
+- L201: <NUM>_AMB_T8<NUM>_P2s_pixel_points.csv
+- L202: <NUM>_AMB_T8<NUM>_P3s_pixel_points.csv
+- L203: <NUM>_AMB_T9<NUM>_P1s_pixel_points.csv
+- L204: <NUM>_AMB_T9<NUM>_P2s_pixel_points.csv
+- L205: <NUM>_AMB_T9<NUM>_P3s_pixel_points.csv
+- L206: <NUM>_AMB_T1<NUM>_P1s_pixel_points.csv
+- L207: <NUM>_AMB_T1<NUM>_P2s_pixel_points.csv
+- L208: <NUM>_AMB_T1<NUM>_P3s_pixel_points.csv
+- L209: <NUM>_AMB_T1<NUM>_P1s_pixel_points.csv
+- L210: <NUM>_AMB_T1<NUM>_P2s_pixel_points.csv
+- L211: <NUM>_AMB_T1<NUM>_P3s_pixel_points.csv
+- L212: Layers_Results : Contains all measurement data at the layer level such as dilution and solidified layer areas. LayerAreas.csv contains the measurements for each sample. LayerAreas_Avg.csv contains average values, standard deviations, uncertainty terms, and combined-expanded uncertainty for each condition. The layer area measurements were made using image segmentation.
+- L213: SurfaceReference_and_Orientation_Layers.csv : List of image names and the, Y reference pixel, and step over direction. The Y reference pixel is the y-pixel number that defines the substrate surface defined by the image origin in the top left corner. The step over direction is the direction in which the tracks progress perpendicular to the scan direction. A step over direction left-to-right means the tracks number from <NUM> to <NUM> going left-to-right. A right-to-left step over direction means the tracks number from <NUM> to <NUM> going right to left.
+- L214: LayerAreas.csv : Area measurements for each cross-section.
+- L215: LayerAreas_Avg.csv : Average area measurements for each condition. Contains standard deviations, uncertainty terms, and combined-expanded uncertainty.
+- L216: <NUM>_AMB_T1<NUM>_P1s_rot_LayerAnalysis_mask.tif : Image segmentation result with values of <NUM> for melt pool and values of <NUM> for no melt pool.
+- L217: <NUM>_AMB_T1<NUM>_P2s_rot_LayerAnalysis_mask.tif
+- L218: <NUM>_AMB_T1<NUM>_P3s_rot_LayerAnalysis_mask.tif
+- L219: <NUM>_AMB_T4<NUM>_P1s_rot_LayerAnalysis_mask.tif
+- L220: <NUM>_AMB_T4<NUM>_P2s_rot_LayerAnalysis_mask.tif
+
