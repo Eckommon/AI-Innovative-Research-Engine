@@ -49,7 +49,7 @@ No LWI features, power/speed features, alternative XCT columns, or learned featu
 Fit a two-way fixed-effect linear model on eligible part×block units:
 `XCT_mean5_block ~ melt_pool_area_t100_block + C(part) + C(block)`.
 
-Before fitting, predictor and outcome are standardized globally across eligible part×block units (mean 0, SD 1). The primary estimand is the standardized coefficient `beta_primary` on melt-pool area.
+Before fitting, predictor and outcome are standardized globally across eligible part×block units (mean 0, population SD with `ddof=0`). The primary estimand is the standardized coefficient `beta_primary` on melt-pool area. Reference-category choice for the fixed-effect dummies does not alter this predictor slope.
 
 Inference is descriptive/controlled, not causal. Report:
 - `beta_primary`;
