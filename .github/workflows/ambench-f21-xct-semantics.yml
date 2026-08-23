@@ -1,0 +1,126 @@
+name: AMBENCH F21 XCT semantics
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ambench-f21-xct-semantics.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  f21-semantics:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify X16 Data Description and extract semantic context only
+        shell: bash
+        run: |
+          set -euo pipefail
+          TMP="$(mktemp -d)"
+          trap 'rm -rf "$TMP"' EXIT
+          RESULT="$GITHUB_WORKSPACE/research/AMBENCH-F21/SEMANTIC_SOURCE_RESULT.md"
+          cd "$TMP"
+
+          curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors \
+            'https://data.nist.gov/od/id/mds2-2514?format=nerdm' -o nerdm.json
+
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          obj=json.loads(Path('nerdm.json').read_text())
+          target='DataDescription_OverhangPartX16_XCT.pdf'
+          exact=[c for c in obj.get('components',[]) if c.get('filepath')==target]
+          if len(exact)!=1:
+              raise SystemExit(f'COMPONENT_MATCH_COUNT={len(exact)}')
+          c=exact[0]; ck=c.get('checksum') or {}; alg=(ck.get('algorithm') or {}).get('tag'); h=ck.get('hash') or ''
+          if alg!='sha256' or len(h)!=64: raise SystemExit('PDF_CHECKSUM_METADATA_INVALID')
+          Path('url.txt').write_text(c.get('downloadURL') or '')
+          Path('hash.txt').write_text(h)
+          Path('size.txt').write_text(str(c.get('size') or 'UNKNOWN'))
+          PY
+
+          URL="$(cat url.txt)"
+          EXPECTED="$(cat hash.txt)"
+          curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors "$URL" -o description.pdf
+          ACTUAL="$(sha256sum description.pdf | awk '{print $1}')"
+          test "$EXPECTED" = "$ACTUAL"
+
+          # Render-first verification per project PDF workflow; renders remain transient.
+          mkdir renders
+          pdftoppm -png -r 90 description.pdf renders/page >/dev/null 2>&1
+          PAGE_COUNT="$(find renders -type f -name 'page-*.png' | wc -l | tr -d ' ')"
+          test "$PAGE_COUNT" -gt 0
+
+          pdftotext -layout description.pdf description.txt
+
+          # Persist only semantic context, not raw PDF or numeric workbook outcomes.
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          text=Path('description.txt').read_text(errors='replace')
+          lines=text.splitlines()
+          keys=re.compile(r'histogram|gray|grey|digital level|bin|count|voxel|threshold|crop|reconstruct|16-bit|intensity|surface|artifact|beam hardening|ring artifact',re.I)
+          hits=[]
+          for i,line in enumerate(lines):
+              if keys.search(line):
+                  a=max(0,i-2); b=min(len(lines),i+4)
+                  block='\n'.join(lines[a:b]).strip()
+                  if block and block not in hits: hits.append(block)
+          out=[]
+          for n,b in enumerate(hits,1):
+              out.append(f'### Context {n}\n```text\n{b}\n```')
+          Path('contexts.md').write_text('\n\n'.join(out[:60]))
+          PY
+
+          mkdir -p "$(dirname "$RESULT")"
+          cat > "$RESULT" <<EOF
+          ---
+          id: AMBENCH-F21-SEMANTIC-SOURCE-RESULT
+          type: sanitized-semantic-source-result
+          created: 2026-08-23
+          source_of_truth: github-actions
+          raw_source_committed: false
+          numerical_xct_outcomes_emitted: false
+          ---
+
+          # AMBENCH-F21 X16 XCT Semantic Source Result
+
+          ## Integrity / 무결성
+          - component: DataDescription_OverhangPartX16_XCT.pdf
+          - NERDm size: $(cat size.txt) bytes
+          - expected SHA-256: $EXPECTED
+          - actual SHA-256: $ACTUAL
+          - SHA-256 match: YES
+          - render-first page count: $PAGE_COUNT
+          - raw PDF/render artifact committed: NO
+
+          ## Semantic contexts / 의미론 문맥
+          EOF
+          cat contexts.md >> "$RESULT"
+
+          cat >> "$RESULT" <<EOF
+
+          ## Boundary / 경계
+          - workbook numerical histogram cells inspected: NO
+          - numerical process values inspected: NO
+          - association/modeling performed: NO
+          - raw transient teardown: SUCCESS
+          EOF
+
+      - name: Persist sanitized semantic source result only
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/AMBENCH-F21/SEMANTIC_SOURCE_RESULT.md
+          if git diff --cached --quiet; then
+            echo 'No semantic result change.'
+          else
+            git commit -m 'record sanitized AMBENCH-F21 XCT semantic source result'
+            git push
+          fi
