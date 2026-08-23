@@ -12,6 +12,7 @@ inherited_exposure: NO__INHERITED_E27_SCHEMA_PREFLIGHT_GIBBERISH_EMISSION
 - incremental monetary cost: 0 USD
 - raw P1 coordinate rows committed/emitted: NO
 - raw surface-reference rows committed/emitted: NO
+- amendment: AMENDMENT-01 symbolic hold diagnostics only
 
 ## Source identity / source identity
 - NERDm_version: 1.0.0
@@ -19,6 +20,7 @@ inherited_exposure: NO__INHERITED_E27_SCHEMA_PREFLIGHT_GIBBERISH_EMISSION
 
 ## Execution hold / 실행 HOLD
 - hold_error_type: RuntimeError
+- hold_symbolic_reason: README_NOT_UNIQUE
 - no adaptive redesign performed: YES
 
 ## Frozen E29 gate / 고정 E29 판정
