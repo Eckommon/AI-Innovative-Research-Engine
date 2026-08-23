@@ -12,12 +12,12 @@ permissions:
 jobs:
   f20-source-recovery:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Recover authoritative metadata, verify workbook, inspect schema only
+      - name: Recover authoritative metadata and verify bounded sources
         shell: bash
         run: |
           set -u
@@ -27,83 +27,77 @@ jobs:
           mkdir -p "$(dirname "$RESULT")"
           cd "$TMP"
 
-          STATUS='HOLD'
-          XNERDM='FAIL'
-          INERDM='FAIL'
-          WBMETA='FAIL'
-          XYMETA='FAIL'
-          WBDOWN='FAIL'
-          HASHMATCH='NOT_COMPUTED'
-          SCHEMA='NOT_INSPECTED'
-          WB_EXPECTED='UNKNOWN'
-          WB_ACTUAL='NOT_COMPUTED'
-          WB_SIZE='UNKNOWN'
-          XY_HASH='UNKNOWN'
-          SCHEMA_FILE="$TMP/schema.txt"
-          : > "$SCHEMA_FILE"
+          XNERDM='FAIL'; INERDM='FAIL'; WBMETA='FAIL'; XYMETA='FAIL'
+          WBDOWN='FAIL'; XYDOWN='FAIL'; WB_HASHMATCH='NOT_COMPUTED'; XY_HASHMATCH='NOT_COMPUTED'
+          SCHEMA='NOT_INSPECTED'; XYINV='NOT_INSPECTED'
+          WB_EXPECTED='UNKNOWN'; WB_ACTUAL='NOT_COMPUTED'; WB_SIZE='UNKNOWN'
+          XY_EXPECTED='UNKNOWN'; XY_ACTUAL='NOT_COMPUTED'; XY_SIZE='UNKNOWN'; XY_PATH='UNKNOWN'; XY_MEMBER_COUNT='NOT_COMPUTED'; XY_LAYER125='NOT_COMPUTED'
+          SCHEMA_FILE="$TMP/schema.txt"; XYINV_FILE="$TMP/xyinv.txt"
+          : > "$SCHEMA_FILE"; : > "$XYINV_FILE"
 
-          if curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors \
-              'https://data.nist.gov/od/id/mds2-2514?format=nerdm' -o xct_nerdm.json; then
-            XNERDM='PASS'
-          fi
-          if curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors \
-              'https://data.nist.gov/od/id/mds2-2309?format=nerdm' -o insitu_nerdm.json; then
-            INERDM='PASS'
-          fi
+          if curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors 'https://data.nist.gov/od/id/mds2-2514?format=nerdm' -o xct_nerdm.json; then XNERDM='PASS'; fi
+          if curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors 'https://data.nist.gov/od/id/mds2-2309?format=nerdm' -o insitu_nerdm.json; then INERDM='PASS'; fi
 
           if [ "$XNERDM" = PASS ] && [ "$INERDM" = PASS ]; then
             python - <<'PY' || true
           import json
           from pathlib import Path
 
-          def component(path,target,outprefix):
+          def select(path, target, outprefix, allow_suffix=False):
               obj=json.loads(Path(path).read_text())
-              exact=[c for c in obj.get('components',[]) if c.get('filepath')==target]
-              if len(exact)!=1:
+              comps=obj.get('components',[])
+              exact=[c for c in comps if c.get('filepath')==target]
+              if len(exact)==1:
+                  cand=exact
+              elif allow_suffix:
+                  cand=[c for c in comps if (c.get('filepath') or '').endswith('/'+target) or (c.get('filepath') or '').endswith(target)]
+              else:
+                  cand=[]
+              if len(cand)!=1:
                   Path(outprefix+'_status.txt').write_text('FAIL')
+                  Path(outprefix+'_match_count.txt').write_text(str(len(cand)))
                   return
-              c=exact[0]; ck=c.get('checksum') or {}; alg=(ck.get('algorithm') or {}).get('tag')
-              h=ck.get('hash') or ''
-              Path(outprefix+'_status.txt').write_text('PASS' if alg=='sha256' and len(h)==64 else 'FAIL')
+              c=cand[0]; ck=c.get('checksum') or {}; alg=(ck.get('algorithm') or {}).get('tag'); h=ck.get('hash') or ''
+              Path(outprefix+'_status.txt').write_text('PASS' if alg=='sha256' and len(h)==64 and c.get('downloadURL') else 'FAIL')
               Path(outprefix+'_hash.txt').write_text(h)
               Path(outprefix+'_url.txt').write_text(c.get('downloadURL') or '')
               Path(outprefix+'_size.txt').write_text(str(c.get('size') or 'UNKNOWN'))
-          component('xct_nerdm.json','OverhangX16_ImageHistograms.xlsx','wb')
-          component('insitu_nerdm.json','XYPT_L101-L125.zip','xy')
+              Path(outprefix+'_path.txt').write_text(c.get('filepath') or 'UNKNOWN')
+
+          select('xct_nerdm.json','OverhangX16_ImageHistograms.xlsx','wb')
+          select('insitu_nerdm.json','XYPT_L101-L125.zip','xy',True)
           PY
             [ -f wb_status.txt ] && WBMETA="$(cat wb_status.txt)"
             [ -f xy_status.txt ] && XYMETA="$(cat xy_status.txt)"
             [ -f wb_hash.txt ] && WB_EXPECTED="$(cat wb_hash.txt)"
             [ -f wb_size.txt ] && WB_SIZE="$(cat wb_size.txt)"
-            [ -f xy_hash.txt ] && XY_HASH="$(cat xy_hash.txt)"
+            [ -f xy_hash.txt ] && XY_EXPECTED="$(cat xy_hash.txt)"
+            [ -f xy_size.txt ] && XY_SIZE="$(cat xy_size.txt)"
+            [ -f xy_path.txt ] && XY_PATH="$(cat xy_path.txt)"
           fi
 
           if [ "$WBMETA" = PASS ] && [ -f wb_url.txt ]; then
-            WB_URL="$(cat wb_url.txt)"
-            if curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors "$WB_URL" -o workbook.xlsx; then
-              WBDOWN='PASS'
-              WB_ACTUAL="$(sha256sum workbook.xlsx | awk '{print $1}')"
+            if curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors "$(cat wb_url.txt)" -o workbook.xlsx; then
+              WBDOWN='PASS'; WB_ACTUAL="$(sha256sum workbook.xlsx | awk '{print $1}')"
               if [ "$WB_EXPECTED" = "$WB_ACTUAL" ]; then
-                HASHMATCH='YES'
+                WB_HASHMATCH='YES'
                 python - <<'PY' > "$SCHEMA_FILE"
-          # Schema-only XLSX inspection; numeric cell contents are not emitted.
           import re, zipfile, xml.etree.ElementTree as ET
           NS={'m':'http://schemas.openxmlformats.org/spreadsheetml/2006/main','r':'http://schemas.openxmlformats.org/officeDocument/2006/relationships'}
           def textish(s):
               s=(s or '').strip()
-              if not s or len(s)>120: return False
-              if re.fullmatch(r'[+\-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+\-]?\d+)?%?',s): return False
+              if not s or len(s)>120:return False
+              if re.fullmatch(r'[+\-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+\-]?\d+)?%?',s):return False
               return bool(re.search(r'[A-Za-z]',s))
           with zipfile.ZipFile('workbook.xlsx') as z:
-              wb=ET.fromstring(z.read('xl/workbook.xml'))
-              rel=ET.fromstring(z.read('xl/_rels/workbook.xml.rels'))
-              targets={e.attrib['Id']:e.attrib['Target'] for e in rel}
-              shared=[]
+              wb=ET.fromstring(z.read('xl/workbook.xml')); rel=ET.fromstring(z.read('xl/_rels/workbook.xml.rels'))
+              targets={e.attrib['Id']:e.attrib['Target'] for e in rel}; shared=[]
               if 'xl/sharedStrings.xml' in z.namelist():
                   ss=ET.fromstring(z.read('xl/sharedStrings.xml'))
                   for si in ss.findall('m:si',NS): shared.append(''.join(t.text or '' for t in si.findall('.//m:t',NS)))
+              sheets=[]
               for sh in wb.find('m:sheets',NS):
-                  name=sh.attrib['name']; rid=sh.attrib['{'+NS['r']+'}id']; target=targets[rid]
+                  name=sh.attrib['name']; sheets.append(name); rid=sh.attrib['{'+NS['r']+'}id']; target=targets[rid]
                   path='xl/'+target.lstrip('/') if not target.startswith('xl/') else target
                   root=ET.fromstring(z.read(path)); dim=root.find('m:dimension',NS)
                   print(f'- SHEET: `{name}`')
@@ -119,13 +113,44 @@ jobs:
                       elif t=='inlineStr': val=''.join(x.text or '' for x in c.findall('.//m:t',NS))
                       if textish(val) and val not in seen and n<80:
                           seen.add(val); n+=1; print(f'  - text_cell `{coord}`: `{val.strip()}`')
+              parts=[s for s in sheets if re.fullmatch(r'Part[1-4]_[1-4]',s)]
+              print(f'- exact_part_sheet_count: `{len(parts)}`')
               print('- numerical_cell_values_emitted: `NO`')
           PY
                 SCHEMA='PASS'
-                STATUS='PASS'
               else
-                HASHMATCH='NO'
-                STATUS='REJECT'
+                WB_HASHMATCH='NO'
+              fi
+            fi
+          fi
+
+          if [ "$XYMETA" = PASS ] && [ -f xy_url.txt ]; then
+            if curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors "$(cat xy_url.txt)" -o xypt.zip; then
+              XYDOWN='PASS'; XY_ACTUAL="$(sha256sum xypt.zip | awk '{print $1}')"
+              if [ "$XY_EXPECTED" = "$XY_ACTUAL" ]; then
+                XY_HASHMATCH='YES'
+                python - <<'PY' > "$XYINV_FILE"
+          import re, zipfile
+          with zipfile.ZipFile('xypt.zip') as z:
+              names=z.namelist()
+              print(f'- archive_member_count: `{len(names)}`')
+              l125=[n for n in names if re.search(r'(?<!\d)125(?!\d)',n)]
+              print(f'- layer125_filename_match_count: `{len(l125)}`')
+              for n in l125[:20]: print(f'- layer125_member: `{n}`')
+              print('- numerical_xypt_values_read: `NO`')
+          PY
+                XYINV='PASS'; XY_MEMBER_COUNT="$(python - <<'PY'
+          import zipfile
+          with zipfile.ZipFile('xypt.zip') as z: print(len(z.namelist()))
+          PY
+          )"
+                XY_LAYER125="$(python - <<'PY'
+          import re,zipfile
+          with zipfile.ZipFile('xypt.zip') as z: print(sum(bool(re.search(r'(?<!\d)125(?!\d)',n)) for n in z.namelist()))
+          PY
+          )"
+              else
+                XY_HASHMATCH='NO'
               fi
             fi
           fi
@@ -151,24 +176,38 @@ jobs:
           - XCT NERDm fetch: $XNERDM
           - in-situ NERDm fetch: $INERDM
           - workbook component checksum metadata: $WBMETA
-          - XYPT L101-L125 component checksum metadata: $XYMETA
           - workbook NERDm size: $WB_SIZE
           - workbook expected SHA-256: $WB_EXPECTED
-          - XYPT L101-L125 NERDm SHA-256: $XY_HASH
+          - XYPT component checksum metadata: $XYMETA
+          - XYPT exact NERDm filepath: $XY_PATH
+          - XYPT NERDm size: $XY_SIZE
+          - XYPT expected SHA-256: $XY_EXPECTED
 
           ## Workbook byte integrity / workbook byte 무결성
           - workbook authoritative download: $WBDOWN
           - workbook actual SHA-256: $WB_ACTUAL
-          - expected/actual SHA-256 match: $HASHMATCH
+          - workbook SHA-256 match: $WB_HASHMATCH
           - schema-only inspection: $SCHEMA
 
-          ## Schema-only output / schema 전용 출력
+          ## Workbook schema-only output / workbook schema 전용 출력
           EOF
           cat "$SCHEMA_FILE" >> "$RESULT"
           cat >> "$RESULT" <<EOF
 
-          ## Execution status / 실행 상태
-          - internal status: $STATUS
+          ## XYPT authoritative path / XYPT 권위 경로
+          - XYPT authoritative download: $XYDOWN
+          - XYPT actual SHA-256: $XY_ACTUAL
+          - XYPT SHA-256 match: $XY_HASHMATCH
+          - archive-inventory-only inspection: $XYINV
+          - archive member count: $XY_MEMBER_COUNT
+          - layer-125 filename match count: $XY_LAYER125
+
+          ## XYPT inventory-only output / XYPT inventory 전용 출력
+          EOF
+          cat "$XYINV_FILE" >> "$RESULT"
+          cat >> "$RESULT" <<EOF
+
+          ## Execution / 실행
           - raw transient teardown: SUCCESS
           EOF
 
