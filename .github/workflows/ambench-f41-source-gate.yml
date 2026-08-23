@@ -1,0 +1,278 @@
+name: AMBENCH F41 NIST RHF P01 path-order source gate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ambench-f41-source-gate.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  source_gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Inspect checksum-frozen P01 process input only
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import csv, hashlib, io, json, math, re, statistics, urllib.request, zipfile
+          from collections import deque
+          from pathlib import Path
+
+          DSID = 'mds2-2507'
+          EXPECTED_VERSION = '1.0.1'
+          EXPECTED_SHA = 'c57a56cc9c906e4db134d7bfb8618b6678e80dd0318324de0b7baf1ce092a3f4'
+          EXPECTED_SIZE = 18079576
+          DT = 10e-6
+          R_MM = 0.29
+          T_S = 6e-3
+          MAX_ROW_LAG = int(round(T_S / DT))
+          MIN_RUN_ROWS = 2
+          MIN_RUNS = 4
+          MATERIAL_RANGE = 0.05
+
+          out = Path('research/AMBENCH-F41/RESULT.md')
+          out.parent.mkdir(parents=True, exist_ok=True)
+
+          def fetch(url):
+              req = urllib.request.Request(url, headers={'User-Agent': 'AI-Innovative-Research-Engine/F41'})
+              with urllib.request.urlopen(req, timeout=90) as r:
+                  return r.read()
+
+          hold_reason = None
+          meta = json.loads(fetch(f'https://data.nist.gov/od/id/{DSID}?format=nerdm').decode('utf-8'))
+          version = str(meta.get('version'))
+          comps = [c for c in meta.get('components', []) if c.get('filepath') == 'RHF_Command.zip']
+          if len(comps) != 1:
+              hold_reason = f'RHF_Command.zip component count={len(comps)}'
+              comp = None
+          else:
+              comp = comps[0]
+
+          raw = b''
+          got_sha = None
+          size_ok = False
+          hash_ok = False
+          if comp is not None:
+              raw = fetch(comp['downloadURL'])
+              got_sha = hashlib.sha256(raw).hexdigest()
+              nerdm_sha = (comp.get('checksum') or {}).get('hash')
+              size_ok = len(raw) == comp.get('size') == EXPECTED_SIZE
+              hash_ok = got_sha == nerdm_sha == EXPECTED_SHA
+              if version != EXPECTED_VERSION or not size_ok or not hash_ok:
+                  hold_reason = 'dataset version/size/checksum mismatch'
+
+          member_name = None
+          rows = []
+          eligible_runs = []
+          positive_count = 0
+          if hold_reason is None:
+              z = zipfile.ZipFile(io.BytesIO(raw))
+              rx = re.compile(r'(?:^|/)RHF_P01_layer0001\.csv$', re.I)
+              members = [n for n in z.namelist() if rx.search(n)]
+              if len(members) != 1:
+                  hold_reason = f'P01 member count={len(members)}'
+              else:
+                  member_name = members[0]
+                  text = z.read(member_name).decode('utf-8-sig', errors='strict')
+                  malformed = 0
+                  for row_idx, row in enumerate(csv.reader(io.StringIO(text))):
+                      if not row or all(not c.strip() for c in row):
+                          continue
+                      if len(row) != 4:
+                          malformed += 1
+                          continue
+                      try:
+                          x, y, power, trigger = map(float, row)
+                      except Exception:
+                          malformed += 1
+                          continue
+                      rows.append((row_idx, x, y, power, trigger))
+                  if malformed or not rows:
+                      hold_reason = f'malformed/nonempty rows={malformed}, parsed_rows={len(rows)}'
+
+          # Extract source-native maximal positive-power runs without geometry splitting.
+          run_rows = []
+          if hold_reason is None:
+              current = []
+              previous_original_idx = None
+              for original_idx, x, y, power, trigger in rows:
+                  is_on = power > 0.0
+                  contiguous = previous_original_idx is not None and original_idx == previous_original_idx + 1
+                  if is_on:
+                      if current and not contiguous:
+                          run_rows.append(current)
+                          current = []
+                      current.append((original_idx, x, y))
+                      positive_count += 1
+                  else:
+                      if current:
+                          run_rows.append(current)
+                          current = []
+                  previous_original_idx = original_idx
+              if current:
+                  run_rows.append(current)
+              eligible_runs = [r for r in run_rows if len(r) >= MIN_RUN_ROWS]
+              if positive_count == 0:
+                  hold_reason = 'no positive-power command rows'
+
+          risks = []
+          risk_range = None
+          tie_tol = None
+          risk_order = []
+          gate = None
+
+          if hold_reason is not None:
+              gate = 'HOLD_F41_SOURCE_OR_SCHEMA_CONFLICT'
+          elif len(eligible_runs) < MIN_RUNS:
+              gate = 'REJECT_F41_NO_REORDERABLE_SOURCE_UNITS'
+          else:
+              # Flatten eligible positive rows in original source order while preserving run id.
+              positive = []
+              for run_id, run in enumerate(eligible_runs, start=1):
+                  for original_idx, x, y in run:
+                      positive.append((original_idx, x, y, run_id))
+              positive.sort(key=lambda t: t[0])
+
+              # RHF over earlier positive rows only, original command-row timing retained.
+              active = deque()
+              H = []
+              run_ids = []
+              for original_idx, x, y, run_id in positive:
+                  while active and original_idx - active[0][0] > MAX_ROW_LAG:
+                      active.popleft()
+                  terms = []
+                  for pidx, px, py in active:
+                      elapsed = (original_idx - pidx) * DT
+                      if elapsed > T_S + 1e-15:
+                          continue
+                      dx, dy = x - px, y - py
+                      d2 = dx * dx + dy * dy
+                      if d2 <= R_MM * R_MM:
+                          d = math.sqrt(d2)
+                          terms.append(((R_MM - d) / R_MM) ** 2 * ((T_S - elapsed) / T_S))
+                  H.append(math.fsum(terms))
+                  run_ids.append(run_id)
+                  active.append((original_idx, x, y))
+
+              denom = statistics.mean(H) + statistics.pstdev(H)
+              if not math.isfinite(denom) or denom <= 0:
+                  gate = 'HOLD_F41_SOURCE_OR_SCHEMA_CONFLICT'
+                  hold_reason = f'invalid RHF normalization denominator={denom}'
+              else:
+                  HN = [min(v / denom, 1.0) for v in H]
+                  by_run = {rid: [] for rid in range(1, len(eligible_runs) + 1)}
+                  for value, rid in zip(HN, run_ids):
+                      by_run[rid].append(value)
+                  risks = [statistics.mean(by_run[rid]) for rid in range(1, len(eligible_runs) + 1)]
+                  risk_range = max(risks) - min(risks)
+                  ulp = math.ulp(max(abs(v) for v in risks))
+                  tie_tol = 64.0 * ulp
+
+                  # Stable risk ordering with numerical-tie clusters; ties preserve original run id.
+                  pairs = sorted([(risk, rid) for rid, risk in enumerate(risks, start=1)], key=lambda z: (z[0], z[1]))
+                  clusters = []
+                  for risk, rid in pairs:
+                      if not clusters or abs(risk - clusters[-1][0][0]) > tie_tol:
+                          clusters.append([(risk, rid)])
+                      else:
+                          clusters[-1].append((risk, rid))
+                  risk_order = []
+                  for cluster in clusters:
+                      risk_order.extend(rid for _, rid in sorted(cluster, key=lambda z: z[1]))
+
+                  nominal = list(range(1, len(eligible_runs) + 1))
+                  if risk_range <= tie_tol or risk_order == nominal:
+                      gate = 'REJECT_F41_PATH_RISK_DEGENERATE'
+                  elif risk_range >= MATERIAL_RANGE:
+                      gate = 'PASS_F41_NONDEGENERATE_PATH_ORDER_SOURCE_READY'
+                  else:
+                      gate = 'PARTIAL_F41_WEAK_PATH_RISK_SEPARATION'
+
+          lines = [
+              '---',
+              'id: AMBENCH-F41-RESULT',
+              'type: nondegenerate-path-order-source-gate-result',
+              'created: 2026-08-24',
+              'raw_measurement_outcomes_inspected: false',
+              'simulator_performance_executed: false',
+              'incremental_monetary_cost_usd: 0',
+              '---',
+              '',
+              '# AMBENCH-F41 Result — NIST RHF P01 Source-Native Path/Order Gate',
+              '# AMBENCH-F41 결과 — NIST RHF P01 Source-Native Path/Order Gate',
+              '',
+              '## Boundary / 경계',
+              '- Only checksum-frozen P01 `X,Y,Power,Trigger` process-input rows are inspected.',
+              '- No MPM, encoder outcome, analysis-result, microscopy, or simulator-performance value is used.',
+              '- Scan runs are maximal contiguous `Power>0` source runs; no geometry-based split/merge.',
+              '',
+              '## Source integrity / source 무결성',
+              f'- dataset: `{DSID}`',
+              f'- NERDm_version: `{version}`',
+              f'- expected_version_match: `{version == EXPECTED_VERSION}`',
+              f'- archive_size_local: `{len(raw) if raw else 0}`',
+              f'- archive_size_match: `{size_ok}`',
+              f'- archive_sha256_local: `{got_sha}`',
+              f'- archive_sha256_match: `{hash_ok}`',
+              f'- P01_member: `{member_name}`',
+              f'- parsed_command_rows: `{len(rows)}`',
+              f'- positive_power_rows: `{positive_count}`',
+              '',
+              '## Source-native scan runs / source-native scan run',
+              f'- maximal_positive_run_count_all: `{len(run_rows)}`',
+              f'- eligible_run_count_min2rows: `{len(eligible_runs)}`',
+              f'- eligible_run_lengths: `{[len(r) for r in eligible_runs]}`',
+              '',
+              '## Unchanged RHF run-risk gate / 변경 없는 RHF run-risk gate',
+              '- R: `0.29 mm`',
+              '- T: `6 ms`',
+              '- timing: original command-row index x `10 us`',
+              '- positive prior command L_k: `1`',
+              '- normalization: `H_N=min(H/(mean(H)+population_SD(H)),1)`',
+          ]
+          if risks:
+              lines += [
+                  f'- run_risks: `{[float(f"{v:.15g}") for v in risks]}`',
+                  f'- run_risk_range: `{risk_range:.15g}`',
+                  f'- numerical_tie_guard_64ULP: `{tie_tol:.15g}`',
+                  f'- stable_risk_order: `{risk_order}`',
+                  f'- nominal_run_order: `{list(range(1, len(eligible_runs)+1))}`',
+              ]
+          if hold_reason:
+              lines += [f'- hold_reason: `{hold_reason}`']
+
+          lines += ['', '## Frozen F41 gate / 고정 F41 판정', f'**`{gate}`**', '']
+          if gate == 'PASS_F41_NONDEGENERATE_PATH_ORDER_SOURCE_READY':
+              lines += ['P01 contains source-native reorderable runs with materially distinct unchanged-RHF risks and a stable non-nominal risk ordering. A separately preregistered descendant performance design may be considered; this result itself authorizes no performance run.']
+          elif gate == 'PARTIAL_F41_WEAK_PATH_RISK_SEPARATION':
+              lines += ['P01 has a non-nominal risk ordering, but separation is below the prospective 0.05 normalized-risk materiality heuristic. Do not run controller performance from this gate.']
+          elif gate == 'REJECT_F41_NO_REORDERABLE_SOURCE_UNITS':
+              lines += ['P01 does not expose at least four eligible source-native positive-power runs under the preregistered extraction rule. Do not manufacture runs by geometric splitting.']
+          elif gate == 'REJECT_F41_PATH_RISK_DEGENERATE':
+              lines += ['P01 exposes enough source-native runs, but unchanged-RHF risks do not provide a stable distinct reordering. Do not retune R/T, normalization, run definition, or path score to rescue this source.']
+          else:
+              lines += ['Source/schema identity is insufficient for the preregistered gate. No substitution is authorized.']
+
+          out.write_text('\n'.join(lines) + '\n', encoding='utf-8')
+          PY
+
+      - name: Persist F41 source gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/AMBENCH-F41/RESULT.md
+          if git diff --cached --quiet; then
+            echo 'No F41 result change.'
+          else
+            git commit -m 'record AMBENCH-F41 NIST P01 path-order source gate'
+            git push
+          fi
