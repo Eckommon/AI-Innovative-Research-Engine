@@ -2,12 +2,12 @@
 id: SESSION-HANDOFF
 type: memory
 state: ACTIVE
-checkpoint_id: CHK-20260823-F26-PASS-INDEPENDENT-CONDITION-CANDIDATE-READY
-active_issue: none
-active_research: none
+checkpoint_id: CHK-20260823-E27-PREREGISTERED-SCHEMA-PREFLIGHT
+active_issue: 45
+active_research: AMBENCH-E27
 last_completed_issue: 44
 last_completed_research: AMBENCH-F26
-last_decision: DEC-054
+last_decision: DEC-056
 created: 2026-08-22
 updated: 2026-08-23
 source_of_truth: github
@@ -16,97 +16,56 @@ source_of_truth: github
 # Session Handoff / 세션 인수인계
 
 ## Current State / 현재 상태
-- Checkpoint: `CHK-20260823-F26-PASS-INDEPENDENT-CONDITION-CANDIDATE-READY`
-- Active Issue: none
-- Active research: none
+- Checkpoint: `CHK-20260823-E27-PREREGISTERED-SCHEMA-PREFLIGHT`
+- Active Issue: #45
+- Active research: `AMBENCH-E27`
 - Last completed: #44 `AMBENCH-F26 — PASS_F26_INDEPENDENT_CONDITION_CANDIDATE_READY`
-- Last decision: `DEC-054`
+- Last decision: `DEC-056`
+
+## Continuity Overlay / 지속운영 Overlay
+`DEC-055`: user-provided GPT Project ↔ GitHub ↔ Agent Capability Integration Audit & Upgrade Master Prompt v2.1 is adopted as a continuity overlay. It does not reset mission work, frozen research decisions, or existing governance.
+
+P0 correction completed: README no longer carries duplicated dynamic current-state values. Recover current state from `STATUS.md` + this handoff + live Issues.
+
+No root `AGENTS.md` is needed at this checkpoint because README/governance/sync/hallucination-control/status/handoff records functionally cover mission, authority, state, cost/human gate, decision/evidence, verification and continuation.
 
 ## Cost Authority / 비용 권위
-`COST-001` + `DEC-028`: any potentially billable action requires explicit user approval before execution. Unknown billing = `HOLD_COST_APPROVAL`.
+`COST-001` + `DEC-028`: any action that incurs or may reasonably incur monetary cost requires explicit user approval before execution. Unknown billing = `HOLD_COST_APPROVAL`.
 
 ## Preserved branches / 보존 branch
 - E14 remains `HOLD_SOURCE_INTEGRITY`; no redesign.
 - X16 F19 segmentation remains frozen.
 - F20 X16 workbook immutable identity/schema remains PASS.
-- F21 rejects only the X16 histogram-workbook-only structural-quality endpoint route.
+- F21 rejects only X16 histogram-workbook-only structural-quality endpoint route.
 - F22 registered-X4 immutable source bytes remain valid.
-- F23 registered-X4 headerless positional 40-column parser contract remains PASS.
+- F23 registered-X4 headerless positional parser remains PASS.
 - E24 remains `NO_MATERIAL_E24_ASSOCIATION`.
 - D25 remains `D25_BLOCK_DOMINANT_HIERARCHICAL_STRUCTURE`; same-representation escalation on `mds2-3761` remains prohibited by `DEC-052`.
+- F26 primary candidate remains AMB2025-07 optical `mds2-4103`; secondary remains `mds2-3662`.
 
-## F26 Result / F26 결과
-Frozen final gate: **`PASS_F26_INDEPENDENT_CONDITION_CANDIDATE_READY`**.
+## Active E27 Preregistration / 활성 E27 사전등록
+Frozen in `research/AMBENCH-E27/README.md` + `DEC-056` before six-plate outcome access:
+- groups: 0.75 ms = T72/T82/T92; 5.0 ms = T102/T112/T122;
+- independent unit = physical plate;
+- fixed location = 5 mm × 5 mm pad, P1, x=0.460 mm;
+- primary = average overlap depth;
+- sensitivity = average depth;
+- primary directional hypothesis = 0.75 ms > 5.0 ms;
+- exact exhaustive 20-allocation one-sided label-permutation test;
+- PASS requires positive Δ, p<=0.05 and rank-biserial>=0.777778;
+- no imputation/outlier deletion/P2-P3 substitution/endpoint switching/high-capacity ML.
 
-### Primary candidate / 1차 후보
-**AMB2025-07 optical route — NIST `mds2-4103`.**
+Inherited disclosure:
+`NEW_F26_B_NUMERICAL_OUTCOME_BLIND = VIOLATED_LIMITED_CALIBRATION_TABLE_PREOBSERVED`.
+The exposure concerned a single-track calibration table, not the six AMB2025-07 pad outcomes.
 
-Frozen independent physical repeat groups:
-- `0.75 ms` turnaround: T72, T82, T92;
-- `5.0 ms` turnaround: T102, T112, T122.
+## Capability delta / Capability delta
+Recurring project workflow remains `SHARED-INTERNAL-CANDIDATE`. `Eckommon/AI-Agent-Capability-Library` exists, but broad overlap search was insufficient to prove an existing matching capability or its absence; portfolio reconciliation remains `UNVERIFIED` and nonblocking.
 
-Plate identity is the independent replicate. `P1..P3` are sectioned pieces nested within each physical plate and must not be treated as independent repeats.
+## Exact Next Action / 정확한 다음 행동
+1. Official NERDm metadata preflight for `overlap_depths_avg.csv` and expected `depths_avg.csv`.
+2. Verify exact size/SHA-256 and header/identifier-only schema without emitting non-frozen outcome values.
+3. If source/schema pass, read exactly the six frozen P1 primary values and optionally six frozen sensitivity values, run the preregistered exact test, and persist the sanitized result.
+4. Apply frozen gate without redesign; close/HOLD Issue #45, synchronize checkpoint, re-read.
 
-Current NIST NERDm `mds2-4103`:
-- version `1.0.0`;
-- 552 components;
-- each of the six repeat plates has plate-specific P1/P2/P3 `Cross_Sections/Tracks_Results` CSV identities.
-
-Selected future relation:
-`turnaround/skywriting condition → ex-situ optical melt-pool geometry`.
-
-The exact public AMB2025-07 raw/analysis-ready thermography PDR remains `NOT_VERIFIED`. This does not block the selected optical-only route and no thermal↔geometry pairing readiness may be inferred.
-
-### Secondary candidate / 2차 후보
-NIST `mds2-3662` rapid-turnaround IN625 passes all six F26 dimensions and remains `SECONDARY_F26`.
-
-Current source facts:
-- NERDm version `1.0.1`;
-- all five components carry checksum metadata;
-- `README.txt`, `Measurements.xlsx`, and `Scan Strategy Data.zip` were transiently downloaded and local SHA-256 exactly matched NIST NERDm;
-- large `Image Data.zip` was not downloaded;
-- no numerical workbook outcome values were emitted or analyzed.
-
-It remains secondary because its track-count × direction design and source-author repeat outlier/attrition history are less clean than the AMB2025-07 two-condition repeat-plate design under the frozen tie-break rule.
-
-### Not selected / 미선정
-- `mds2-2525`: simultaneous absorptance/X-ray source integrity is strong, but repeat-resolved public event identity sufficient for deterministic repeat-level physical pairing remains `NOT_VERIFIED`.
-- `mds2-3842`: 7 conditions × 3 repeats and source integrity remain strong, but BP4 coupling specimens are not BP1 geometry/thermal specimens; cross-BP same-track pairing remains prohibited.
-
-### Protocol deviation / 프로토콜 deviation
-During F26 review of the current NIST AMB2025-06/07 design PDF, numerical values in a **single-track calibration table** were unintentionally exposed. No AMB2025-07 pad turnaround-condition outcome values from `mds2-4103` were read or compared, and no candidate association/ranking/model was computed.
-
-Descendant disclosure:
-**`NEW_F26_B_NUMERICAL_OUTCOME_BLIND = VIOLATED_LIMITED_CALIBRATION_TABLE_PREOBSERVED`**.
-
-Do not claim pristine outcome blindness in E27 or descendants, and do not use the preobserved calibration numbers to choose endpoint, transform, threshold or gate.
-
-Durable artifacts:
-- `research/AMBENCH-F26/README.md`
-- `research/AMBENCH-F26/AMENDMENT-01.md`
-- `research/AMBENCH-F26/NERDM_INVENTORY.md`
-- `research/AMBENCH-F26/CANDIDATE_A_SOURCE_QUALIFICATION.md`
-- `research/AMBENCH-F26/CANDIDATE_B_METADATA_QUALIFICATION.md`
-- `research/AMBENCH-F26/RESULT.md`
-- `registry/CLM-089.md`
-- `registry/CLM-090.md`
-- `registry/CLM-091.md`
-- `registry/DEC-053.md`
-- `registry/DEC-054.md`
-- `context/MEM-048-AMBENCH-F26.md`
-
-## Exact Next Eligible Work / 정확한 다음 eligible 작업
-No numerical experiment is active. Do **not** open `mds2-4103` outcome values yet.
-
-Next: separately preregister **AMBENCH-E27 — AMB2025-07 Six-Plate Turnaround-Time → Optical Geometry Controlled Experiment**.
-Before any outcome-value access, freeze:
-1. one pad geometry;
-2. one fixed cross-section position;
-3. one primary melt-pool geometry measurand and at most one sensitivity measurand;
-4. plate as the independent replicate; P sections nested only;
-5. exact six-plate small-sample permutation/randomization statistic and effect-size/materiality gate;
-6. missingness and measurement-uncertainty rules;
-7. `VIOLATED_LIMITED_CALIBRATION_TABLE_PREOBSERVED` disclosure;
-8. no endpoint fishing, post-hoc switching, or high-capacity ML.
-
-Any paid/potentially paid route requires prior explicit user approval.
+Raw external data remain transient. Any paid/potentially paid route requires prior explicit user approval.
