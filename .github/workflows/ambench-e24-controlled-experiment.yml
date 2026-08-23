@@ -1,0 +1,298 @@
+name: AMBENCH E24 controlled experiment
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ambench-e24-controlled-experiment.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  experiment:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install numerical dependency
+        run: python -m pip install --quiet numpy
+
+      - name: Execute preregistered controlled experiment
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import csv, hashlib, io, math, os, random, shutil, statistics, subprocess, tempfile, zipfile
+          from pathlib import Path
+          import numpy as np
+
+          ROOT=Path(os.environ['GITHUB_WORKSPACE'])
+          RESULT=ROOT/'research/AMBENCH-E24/EXECUTION_RESULT.md'
+          RESULT.parent.mkdir(parents=True, exist_ok=True)
+          specs=[
+              ('part1.zip',87041995,'0bf229f5a04d181f4c79549fa6357a1bfe3095437b26bb660de5e86b35bb2ec3','https://data.nist.gov/od/ds/mds2-3761/part1.zip',1),
+              ('part02.zip',85261726,'bf72d9e160d94094f9268fcf3f76a532c8a29fb64aff1afbec20256acaee178e','https://data.nist.gov/od/ds/mds2-3761/part02.zip',2),
+              ('part03.zip',83521608,'89e9e1afadca22b9c34177d82972272a4e73789b19388f0c83d62a9ebd53d878','https://data.nist.gov/od/ds/mds2-3761/part03.zip',3),
+              ('part04.zip',81225258,'6c3f655a1482001119c54d1f1e404a34eb401f386fffc06147628b36c7c8d7c5','https://data.nist.gov/od/ds/mds2-3761/part04.zip',4),
+          ]
+          # zero-based indices from F23 positional contract
+          pred_idx={'t80':12,'t100':15,'t120':18}
+          y_idx=39
+          tmp=Path(tempfile.mkdtemp(prefix='e24-'))
+          integrity=True
+          integrity_rows=[]
+          layer_data={k:{} for k in pred_idx}
+          primary_layer_eligible_by_part={p:0 for p in range(1,5)}
+          try:
+              for fn,expected_size,expected_sha,url,part in specs:
+                  path=tmp/fn
+                  cp=subprocess.run(['curl','-fsSL','--retry','5','--retry-delay','2','--retry-all-errors',url,'-o',str(path)],capture_output=True,text=True)
+                  if cp.returncode!=0 or not path.exists():
+                      integrity=False
+                      integrity_rows.append((fn,'DOWNLOAD_FAIL','NA','NA'))
+                      continue
+                  actual_size=path.stat().st_size
+                  h=hashlib.sha256()
+                  with path.open('rb') as f:
+                      for chunk in iter(lambda:f.read(1024*1024),b''): h.update(chunk)
+                  actual_sha=h.hexdigest()
+                  ok=(actual_size==expected_size and actual_sha==expected_sha)
+                  integrity = integrity and ok
+                  integrity_rows.append((fn,'PASS' if ok else 'FAIL',str(actual_size),actual_sha))
+                  if not ok:
+                      path.unlink(missing_ok=True)
+                      continue
+                  try:
+                      z=zipfile.ZipFile(path)
+                      if z.testzip() is not None: integrity=False
+                      names=sorted(n for n in z.namelist() if n.lower().endswith('.csv'))
+                      if len(names)!=250: integrity=False
+                      for name in names:
+                          base=Path(name).stem
+                          if not (base.startswith('L') and base[1:].isdigit()):
+                              integrity=False; continue
+                          layer=int(base[1:])
+                          vals={k:[] for k in pred_idx}; ys={k:[] for k in pred_idx}
+                          with z.open(name) as raw:
+                              text=io.TextIOWrapper(raw,encoding='utf-8-sig',newline='')
+                              for row in csv.reader(text):
+                                  if not row: continue
+                                  if len(row)!=40:
+                                      integrity=False; continue
+                                  try: y=float(row[y_idx].strip())
+                                  except Exception:
+                                      integrity=False; continue
+                                  if not math.isfinite(y):
+                                      continue
+                                  for k,idx in pred_idx.items():
+                                      try: x=float(row[idx].strip())
+                                      except Exception:
+                                          integrity=False; continue
+                                      if math.isfinite(x):
+                                          vals[k].append(x); ys[k].append(y)
+                          for k in pred_idx:
+                              if len(vals[k])>=30:
+                                  layer_data[k][(part,layer)]=(statistics.median(vals[k]),statistics.median(ys[k]),len(vals[k]))
+                                  if k=='t100': primary_layer_eligible_by_part[part]+=1
+                      z.close()
+                  except Exception:
+                      integrity=False
+                  path.unlink(missing_ok=True)
+          finally:
+              shutil.rmtree(tmp,ignore_errors=True)
+
+          def block_units(k):
+              units=[]
+              eligible_layers_by_block={}
+              for part in range(1,5):
+                  for block in range(1,11):
+                      lo=(block-1)*25+1; hi=block*25
+                      rec=[layer_data[k][(part,l)] for l in range(lo,hi+1) if (part,l) in layer_data[k]]
+                      eligible_layers_by_block[(part,block)]=len(rec)
+                      if len(rec)>=20:
+                          xs=[r[0] for r in rec]; ys=[r[1] for r in rec]
+                          units.append({'part':part,'block':block,'x':statistics.median(xs),'y':statistics.median(ys)})
+              counts={b:sum(1 for u in units if u['block']==b) for b in range(1,11)}
+              keep_blocks={b for b,c in counts.items() if c>=3}
+              units=[u for u in units if u['block'] in keep_blocks]
+              return units,eligible_layers_by_block,keep_blocks
+
+          def fe_arrays(units):
+              parts=sorted({u['part'] for u in units}); blocks=sorted({u['block'] for u in units})
+              x=np.array([u['x'] for u in units],float); y=np.array([u['y'] for u in units],float)
+              if len(x)<3 or np.std(x,ddof=0)==0 or np.std(y,ddof=0)==0:
+                  return None
+              xz=(x-x.mean())/x.std(ddof=0); yz=(y-y.mean())/y.std(ddof=0)
+              Z=[np.ones(len(units))]
+              for p in parts[1:]: Z.append(np.array([1.0 if u['part']==p else 0.0 for u in units]))
+              for b in blocks[1:]: Z.append(np.array([1.0 if u['block']==b else 0.0 for u in units]))
+              Z=np.column_stack(Z)
+              Q=np.linalg.qr(Z,mode='reduced')[0]
+              def resid(v): return v-Q@(Q.T@v)
+              ry=resid(yz); rx=resid(xz)
+              den=float(rx@rx)
+              if den<=1e-14: return None
+              beta=float((rx@ry)/den)
+              err=ry-beta*rx
+              sse_full=float(err@err); sse_red=float(ry@ry); sst=float(yz@yz)
+              r2=1-sse_full/sst if sst>0 else float('nan')
+              partial=(sse_red-sse_full)/sse_red if sse_red>0 else float('nan')
+              return {'beta':beta,'r2':r2,'partial_r2':partial,'xz':xz,'yz':yz,'Z':Z,'Q':Q,'ry':ry,'parts':parts,'blocks':blocks}
+
+          def permutation_p(units,fit,nperm=20000,seed=20260823):
+              rng=random.Random(seed)
+              xz=fit['xz']; ry=fit['ry']; Q=fit['Q']; obs=abs(fit['beta'])
+              block_indices={b:[i for i,u in enumerate(units) if u['block']==b] for b in fit['blocks']}
+              ge=0
+              for _ in range(nperm):
+                  xp=xz.copy()
+                  for inds in block_indices.values():
+                      vals=[xp[i] for i in inds]
+                      rng.shuffle(vals)
+                      for i,v in zip(inds,vals): xp[i]=v
+                  rx=xp-Q@(Q.T@xp)
+                  den=float(rx@rx)
+                  if den<=1e-14: bp=0.0
+                  else: bp=float((rx@ry)/den)
+                  if abs(bp)>=obs-1e-15: ge+=1
+              return (1+ge)/(1+nperm)
+
+          def rankdata(a):
+              a=np.asarray(a,float); order=np.argsort(a,kind='mergesort'); ranks=np.empty(len(a),float)
+              i=0
+              while i<len(a):
+                  j=i+1
+                  while j<len(a) and a[order[j]]==a[order[i]]: j+=1
+                  r=(i+j-1)/2+1
+                  for k in range(i,j): ranks[order[k]]=r
+                  i=j
+              return ranks
+
+          def spearman(xs,ys):
+              if len(xs)<3: return float('nan')
+              rx=rankdata(xs); ry=rankdata(ys)
+              if np.std(rx)==0 or np.std(ry)==0: return float('nan')
+              return float(np.corrcoef(rx,ry)[0,1])
+
+          def fmt(v,d=6):
+              if v is None or (isinstance(v,float) and not math.isfinite(v)): return 'NA'
+              return f'{v:.{d}f}'
+
+          lines=['---','id: AMBENCH-E24-EXECUTION-RESULT','type: controlled-experiment-result','created: 2026-08-23','source_of_truth: github-actions','raw_artifacts_committed: false','---','','# AMBENCH-E24 Execution Result / E24 실행 결과','', '- route: public standard GitHub-hosted ubuntu-latest','- incremental monetary cost: 0 USD','- raw ZIP/CSV artifacts/cache: NONE','- inherited exposure state: NEW_REGISTERED_X4_NUMERICAL_OUTCOME_BLIND = VIOLATED_LIMITED','']
+          lines.append('## Source integrity / source 무결성')
+          for fn,status,size,sha in integrity_rows:
+              lines.append(f'- {fn}: {status}; size={size}; SHA256={sha}')
+          lines.append(f'- all_source_integrity_pass: {"YES" if integrity else "NO"}')
+          if not integrity:
+              lines += ['','## Final gate / 최종 판정','**HOLD_E24_SOURCE_OR_SCHEMA_INTEGRITY**','', '- numerical effect analysis performed: NO']
+              RESULT.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+              raise SystemExit(0)
+
+          primary_units,primary_layer_by_block,primary_blocks=block_units('t100')
+          lines += ['','## Frozen coverage / 고정 coverage']
+          for p in range(1,5): lines.append(f'- part{p}_eligible_t100_layers: {primary_layer_eligible_by_part[p]} / 250')
+          lines.append(f'- primary_eligible_part_block_units_after_block_filter: {len(primary_units)} / 40')
+          lines.append(f'- primary_included_blocks: {len(primary_blocks)} / 10')
+          excluded=sorted(set(range(1,11))-set(primary_blocks))
+          lines.append(f'- excluded_blocks_lt3_parts: {excluded if excluded else "NONE"}')
+
+          if len(primary_units)<24 or len(primary_blocks)<6:
+              lines += ['','## Final gate / 최종 판정','**HOLD_E24_INSUFFICIENT_AGGREGATED_COVERAGE**','', '- numerical effect interpretation performed: NO']
+              RESULT.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+              raise SystemExit(0)
+
+          primary_fit=fe_arrays(primary_units)
+          if primary_fit is None:
+              lines += ['','## Final gate / 최종 판정','**HOLD_E24_INSUFFICIENT_AGGREGATED_COVERAGE**','', '- reason: degenerate standardized predictor or outcome']
+              RESULT.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+              raise SystemExit(0)
+          p_perm=permutation_p(primary_units,primary_fit)
+
+          sensitivity={}
+          sens_units={}
+          for k in ('t80','t120'):
+              u,_,blocks=block_units(k); sens_units[k]=u
+              sensitivity[k]=fe_arrays(u) if len(u)>=24 and len(blocks)>=6 else None
+
+          # 25-layer forward shift negative control on already frozen primary block aggregates.
+          umap={(u['part'],u['block']):u for u in primary_units}
+          shift=[]
+          for part in range(1,5):
+              for block in range(1,10):
+                  a=umap.get((part,block)); b=umap.get((part,block+1))
+                  if a and b: shift.append({'part':part,'block':block,'x':a['x'],'y':b['y']})
+          shift_counts={b:sum(1 for u in shift if u['block']==b) for b in range(1,10)}
+          shift_blocks={b for b,c in shift_counts.items() if c>=3}
+          shift=[u for u in shift if u['block'] in shift_blocks]
+          shift_fit=fe_arrays(shift) if len(shift)>=18 and len(shift_blocks)>=5 else None
+
+          rhos={}
+          for part in range(1,5):
+              us=sorted([u for u in primary_units if u['part']==part],key=lambda q:q['block'])
+              rhos[part]=spearman([u['x'] for u in us],[u['y'] for u in us])
+
+          b=primary_fit['beta']; pr=primary_fit['partial_r2']
+          bshift=shift_fit['beta'] if shift_fit else float('nan'); prshift=shift_fit['partial_r2'] if shift_fit else float('nan')
+          bs80=sensitivity['t80']['beta'] if sensitivity['t80'] else float('nan')
+          bs120=sensitivity['t120']['beta'] if sensitivity['t120'] else float('nan')
+          sign_disagree=False
+          if abs(b)>=0.10:
+              for sb in (bs80,bs120):
+                  if math.isfinite(sb) and abs(sb)>=0.10 and math.copysign(1,sb)!=math.copysign(1,b): sign_disagree=True
+          locality=math.isfinite(bshift) and abs(b)>abs(bshift)
+          if pr < 0.05:
+              gate='NO_MATERIAL_E24_ASSOCIATION'
+          elif pr>=0.05 and p_perm<=0.05 and locality and not sign_disagree:
+              gate='PASS_E24_CONTROLLED_ASSOCIATION_COMPLETED'
+          else:
+              gate='MIXED_E24_REGISTERED_ASSOCIATION'
+
+          lines += ['','## Primary preregistered result / 1차 사전등록 결과',
+                    f'- beta_primary_standardized: {fmt(b)}',
+                    f'- full_model_R2: {fmt(primary_fit["r2"])}',
+                    f'- partial_R2_predictor: {fmt(pr)}',
+                    f'- block_preserving_permutation_draws: 20000',
+                    f'- permutation_p_two_sided: {fmt(p_perm)}']
+          lines += ['','## Threshold sensitivity / threshold 민감도',
+                    f'- beta_t80: {fmt(bs80)}',
+                    f'- partial_R2_t80: {fmt(sensitivity["t80"]["partial_r2"] if sensitivity["t80"] else float("nan"))}',
+                    f'- eligible_units_t80: {len(sens_units["t80"])}',
+                    f'- beta_t120: {fmt(bs120)}',
+                    f'- partial_R2_t120: {fmt(sensitivity["t120"]["partial_r2"] if sensitivity["t120"] else float("nan"))}',
+                    f'- eligible_units_t120: {len(sens_units["t120"])}',
+                    f'- material_sign_disagreement: {"YES" if sign_disagree else "NO"}']
+          lines += ['','## +25-layer registration negative control / +25-layer registration 음성대조',
+                    f'- shift_control_units: {len(shift)}',
+                    f'- beta_shift25: {fmt(bshift)}',
+                    f'- partial_R2_shift25: {fmt(prshift)}',
+                    f'- locality_criterion_abs_primary_gt_abs_shift25: {"YES" if locality else "NO"}']
+          lines += ['','## Part-specific Spearman diagnostics / part별 Spearman 진단']
+          for p in range(1,5): lines.append(f'- part{p}_rho: {fmt(rhos[p])}')
+          lines += ['','## Frozen gate application / 고정 판정 적용',
+                    f'- partial_R2_ge_0_05: {"YES" if pr>=0.05 else "NO"}',
+                    f'- permutation_p_le_0_05: {"YES" if p_perm<=0.05 else "NO"}',
+                    f'- locality_criterion: {"YES" if locality else "NO"}',
+                    f'- no_material_sign_disagreement: {"YES" if not sign_disagree else "NO"}',
+                    '', '## Final gate / 최종 판정', f'**{gate}**', '',
+                    '- causal claim authorized: NO',
+                    '- raw numerical row/layer table persisted: NO',
+                    '- feature selection or endpoint switching performed: NO',
+                    '- raw transient teardown: SUCCESS']
+          RESULT.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          PY
+
+      - name: Persist sanitized experiment result only
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/AMBENCH-E24/EXECUTION_RESULT.md
+          if git diff --cached --quiet; then
+            echo 'No E24 result change.'
+          else
+            git commit -m 'record sanitized AMBENCH-E24 controlled experiment result'
+            git push
+          fi
