@@ -1,0 +1,124 @@
+name: AMBENCH E27 schema preflight
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ambench-e27-schema-preflight.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Qualify frozen E27 components without outcome emission
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import csv, hashlib, json, os, shutil, subprocess, tempfile, urllib.request
+          from pathlib import Path
+
+          root=Path(os.environ['GITHUB_WORKSPACE'])
+          out=root/'research/AMBENCH-E27/SCHEMA_PREFLIGHT.md'
+          out.parent.mkdir(parents=True,exist_ok=True)
+          nerdm_url='https://data.nist.gov/od/id/mds2-4103?format=nerdm'
+          targets={
+              'primary':'Cross_Sections/Tracks_Results/overlap_depths_avg.csv',
+              'sensitivity':'Cross_Sections/Tracks_Results/depths_avg.csv',
+          }
+          plates=['T72','T82','T92','T102','T112','T122']
+          tmp=Path(tempfile.mkdtemp(prefix='e27-schema-'))
+          lines=['---','id: AMBENCH-E27-SCHEMA-PREFLIGHT','type: schema-preflight','created: 2026-08-23','source_of_truth: github-actions','raw_artifacts_committed: false','numerical_outcome_values_emitted: false','---','','# AMBENCH-E27 Schema Preflight / E27 schema 사전검증','', '- route: official NIST NERDm + frozen summary components','- incremental monetary cost: 0 USD','- numerical outcome values emitted: NO','']
+          overall_primary=False
+          sensitivity_available=False
+          try:
+              with urllib.request.urlopen(nerdm_url,timeout=60) as r:
+                  meta=json.load(r)
+              comps=meta.get('components',[])
+              lines += ['## NERDm identity / NERDm identity',f"- version: {meta.get('version','UNKNOWN')}",f'- component_count: {len(comps)}','']
+              by_path={c.get('filepath'):c for c in comps if c.get('filepath')}
+              for role,target in targets.items():
+                  c=by_path.get(target)
+                  lines.append(f'## {role} / {role}')
+                  if not c:
+                      lines.append(f'- exact_component: NOT_FOUND ({target})')
+                      lines.append('')
+                      continue
+                  checksum=c.get('checksum') or {}
+                  expected_sha=checksum.get('hash') if isinstance(checksum,dict) else None
+                  if not expected_sha and isinstance(checksum,dict):
+                      # NERDm observed shape may store hash under value-like keys; find 64-hex string.
+                      for v in checksum.values():
+                          if isinstance(v,str) and len(v)==64 and all(ch in '0123456789abcdefABCDEF' for ch in v): expected_sha=v.lower()
+                  size=c.get('size')
+                  url=c.get('downloadURL')
+                  lines += [f'- exact_component: FOUND',f'- filepath: `{target}`',f'- NERDm_size: {size}',f'- NERDm_SHA256: {expected_sha or "UNKNOWN"}',f'- downloadURL_present: {"YES" if url else "NO"}']
+                  if not url or not expected_sha:
+                      lines += ['- local_integrity: HOLD_METADATA_INCOMPLETE','']
+                      continue
+                  path=tmp/Path(target).name
+                  cp=subprocess.run(['curl','-fsSL','--retry','5','--retry-delay','2','--retry-all-errors',url,'-o',str(path)],capture_output=True,text=True)
+                  if cp.returncode!=0 or not path.exists():
+                      lines += ['- local_integrity: DOWNLOAD_FAIL','']
+                      continue
+                  actual_size=path.stat().st_size
+                  h=hashlib.sha256(path.read_bytes()).hexdigest()
+                  integrity=(actual_size==size and h.lower()==expected_sha.lower())
+                  lines += [f'- local_size_match: {"YES" if actual_size==size else "NO"}',f'- local_SHA256_match: {"YES" if h.lower()==expected_sha.lower() else "NO"}']
+                  if not integrity:
+                      lines += ['- local_integrity: FAIL','']
+                      continue
+                  with path.open('r',encoding='utf-8-sig',newline='') as f:
+                      rows=csv.reader(f)
+                      try: header=next(rows)
+                      except StopIteration: header=[]
+                      header_safe=[str(x) for x in header]
+                      counts={p:0 for p in plates}
+                      p1_counts={p:0 for p in plates}
+                      row_count=0
+                      for row in rows:
+                          row_count+=1
+                          joined='|'.join(row)
+                          for p in plates:
+                              if p in joined:
+                                  counts[p]+=1
+                                  if 'P1' in joined or f'{p}_P1' in joined or f'{p}P1' in joined:
+                                      p1_counts[p]+=1
+                  lines += [f'- header: {header_safe}',f'- data_row_count: {row_count}',f'- target_plate_identifier_counts: {counts}',f'- target_plate_P1_identifier_counts: {p1_counts}']
+                  all_plate=all(counts[p]>0 for p in plates)
+                  all_p1=all(p1_counts[p]>0 for p in plates)
+                  lines += [f'- all_six_plate_identifiers_present: {"YES" if all_plate else "NO"}',f'- all_six_P1_identifiers_present: {"YES" if all_p1 else "NO"}']
+                  if role=='primary': overall_primary=integrity and all_plate and all_p1
+                  if role=='sensitivity': sensitivity_available=integrity and all_plate and all_p1
+                  lines.append('')
+                  path.unlink(missing_ok=True)
+          except Exception as e:
+              lines += ['## Preflight error / preflight 오류',f'- error_type: {type(e).__name__}','- numerical outcome analysis performed: NO','']
+          finally:
+              shutil.rmtree(tmp,ignore_errors=True)
+
+          lines += ['## Frozen preflight gate / 고정 preflight 판정']
+          if overall_primary:
+              lines.append('**PASS_E27_PRIMARY_SOURCE_SCHEMA_PREFLIGHT**')
+          else:
+              lines.append('**HOLD_E27_SOURCE_OR_SCHEMA_INTEGRITY**')
+          lines += [f'- sensitivity_schema_ready: {"YES" if sensitivity_available else "NO"}','- numerical outcome analysis performed: NO','- raw transient teardown: SUCCESS']
+          out.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          PY
+
+      - name: Commit sanitized preflight result
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/AMBENCH-E27/SCHEMA_PREFLIGHT.md
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'record sanitized AMBENCH-E27 schema preflight'
+          git push
