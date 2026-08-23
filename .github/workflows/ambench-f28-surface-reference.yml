@@ -15,53 +15,147 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
-      - name: Verify track-result surface reference component without values
+      - name: Verify Micrographs surface-reference component and six-P1 binding without values
         shell: bash
         run: |
           set -euo pipefail
           python - <<'PY'
-          import csv,hashlib,io,json,os,subprocess,tempfile,urllib.request,shutil
+          import csv, hashlib, io, json, os, re, shutil, subprocess, tempfile, urllib.request
           from pathlib import Path
-          root=Path(os.environ['GITHUB_WORKSPACE']); out=root/'research/AMBENCH-F28/SURFACE_REFERENCE_RESULT.md'
-          tmp=Path(tempfile.mkdtemp(prefix='f28-surface-')); plates=['T72','T82','T92','T102','T112','T122']
-          lines=['# AMBENCH-F28 Surface Reference Source Verification / F28 surface reference source 검증','', '- raw reference values emitted: NO','- incremental monetary cost: 0 USD','']
+
+          root=Path(os.environ['GITHUB_WORKSPACE'])
+          out=root/'research/AMBENCH-F28/SURFACE_REFERENCE_RESULT.md'
+          tmp=Path(tempfile.mkdtemp(prefix='f28-surface-'))
+          plates=['T72','T82','T92','T102','T112','T122']
+          target='Cross_Sections/Micrographs/SurfaceReference_and_Orientation_Layers.csv'
+          lines=[
+            '# AMBENCH-F28 Micrographs Surface-Reference Verification / F28 Micrographs surface-reference 검증','',
+            '- raw reference values emitted: NO',
+            '- numerical geometry/outcome computation: NO',
+            '- incremental monetary cost: 0 USD','',
+          ]
+
+          def checksum_hash(c):
+            cs=c.get('checksum') or {}
+            if not isinstance(cs,dict): return None
+            h=cs.get('hash')
+            if isinstance(h,str) and len(h)==64: return h.lower()
+            for v in cs.values():
+              if isinstance(v,str) and len(v)==64 and all(ch in '0123456789abcdefABCDEF' for ch in v):
+                return v.lower()
+            return None
+
           try:
-            with urllib.request.urlopen('https://data.nist.gov/od/id/mds2-4103?format=nerdm',timeout=60) as r: meta=json.load(r)
+            with urllib.request.urlopen('https://data.nist.gov/od/id/mds2-4103?format=nerdm',timeout=60) as r:
+              meta=json.load(r)
             comps=meta.get('components',[])
-            matches=[c for c in comps if (c.get('filepath') or '').endswith('SurfaceReference_and_Orientation_Layers.csv')]
-            lines.append(f'- basename_match_count: {len(matches)}')
-            lines.append(f'- basename_match_paths: {[c.get("filepath") for c in matches]}')
-            track=[c for c in matches if (c.get('filepath') or '')=='Cross_Sections/Tracks_Results/SurfaceReference_and_Orientation_Layers.csv']
-            lines.append(f'- exact_tracks_results_match_count: {len(track)}')
-            if len(track)!=1: raise RuntimeError('TRACK_SURFACE_REFERENCE_NOT_UNIQUE')
-            c=track[0]; cs=c.get('checksum') or {}; sha=cs.get('hash')
-            if not sha:
-              for v in cs.values():
-                if isinstance(v,str) and len(v)==64: sha=v; break
-            lines += [f"- filepath: `{c.get('filepath')}`",f"- NERDm_size: {c.get('size')}",f'- NERDm_SHA256: {sha or "UNKNOWN"}']
-            p=tmp/'surface.csv'; cp=subprocess.run(['curl','-fsSL','--retry','5','--retry-delay','2','--retry-all-errors',c['downloadURL'],'-o',str(p)],capture_output=True,text=True)
-            if cp.returncode!=0: raise RuntimeError('DOWNLOAD_FAIL')
-            b=p.read_bytes(); ok=(len(b)==c.get('size') and hashlib.sha256(b).hexdigest().lower()==sha.lower())
-            text=None; enc=None
+            exact=[c for c in comps if (c.get('filepath') or '')==target]
+            basename=[c for c in comps if (c.get('filepath') or '').endswith('SurfaceReference_and_Orientation_Layers.csv')]
+            lines += [
+              f'- NERDm_version: {meta.get("version","UNKNOWN")}',
+              f'- basename_match_count: {len(basename)}',
+              f'- exact_micrographs_path_match_count: {len(exact)}',
+            ]
+            if len(exact)!=1:
+              raise RuntimeError('MICROGRAPHS_SURFACE_REFERENCE_NOT_UNIQUE')
+
+            c=exact[0]
+            sha=checksum_hash(c); size=c.get('size'); url=c.get('downloadURL')
+            lines += [
+              f'- filepath: `{target}`',
+              f'- NERDm_size: {size}',
+              f'- NERDm_SHA256: {sha or "UNKNOWN"}',
+              f'- downloadURL_present: {"YES" if url else "NO"}',
+            ]
+            if not sha or not url or not isinstance(size,int):
+              raise RuntimeError('IMMUTABLE_METADATA_INCOMPLETE')
+
+            p=tmp/'surface.csv'
+            cp=subprocess.run(['curl','-fsSL','--retry','5','--retry-delay','2','--retry-all-errors',url,'-o',str(p)],capture_output=True,text=True)
+            if cp.returncode!=0 or not p.exists():
+              raise RuntimeError('DOWNLOAD_FAIL')
+            b=p.read_bytes()
+            actual_sha=hashlib.sha256(b).hexdigest().lower()
+            size_ok=len(b)==size; sha_ok=actual_sha==sha
+            lines += [
+              f'- local_size_match: {"YES" if size_ok else "NO"}',
+              f'- local_SHA256_match: {"YES" if sha_ok else "NO"}',
+            ]
+            if not (size_ok and sha_ok):
+              raise RuntimeError('LOCAL_INTEGRITY_FAIL')
+
+            text=None; enc=None; header=[]
             for e in ('utf-8-sig','cp1252','latin-1'):
-              try: text=b.decode(e); enc=e; break
-              except Exception: pass
-            if text is None: raise RuntimeError('DECODE_FAIL')
-            reader=csv.reader(io.StringIO(text,newline='')); header=next(reader,[])
-            safe=[' '.join(str(x).split())[:120] for x in header]
-            counts={p:False for p in plates}; row_count=0
+              try:
+                t=b.decode(e)
+                r=csv.reader(io.StringIO(t,newline=''))
+                h=next(r,[])
+                joined='|'.join(str(x).lower() for x in h)
+                if len(h)>=2 and ('reference' in joined or 'surface' in joined) and ('image' in joined or 'name' in joined):
+                  text=t; enc=e; header=h; break
+              except Exception:
+                pass
+            if text is None:
+              raise RuntimeError('SCHEMA_DECODE_OR_HEADER_FAIL')
+
+            safe_header=[' '.join(str(x).replace('\r',' ').replace('\n',' ').split())[:120] for x in header[:40]]
+            lower='|'.join(x.lower() for x in safe_header)
+            lines += [
+              f'- selected_encoding: {enc}',
+              f'- header_field_count: {len(header)}',
+              f'- bounded_header_fields: {safe_header}',
+              f'- y_reference_schema_present: {"YES" if ("reference" in lower and ("y" in lower or "surface" in lower)) else "NO"}',
+              f'- image_identity_schema_present: {"YES" if ("image" in lower or "name" in lower) else "NO"}',
+              f'- orientation_schema_present: {"YES" if ("direction" in lower or "orientation" in lower) else "NO"}',
+            ]
+
+            reader=csv.reader(io.StringIO(text,newline=''))
+            next(reader,None)
+            plate_any={plate:False for plate in plates}
+            plate_p1={plate:False for plate in plates}
+            plate_p1_row_matches={plate:0 for plate in plates}
+            row_count=0
             for row in reader:
               if not row: continue
-              row_count+=1; joined='|'.join(str(x) for x in row)
+              row_count+=1
+              joined='|'.join(str(x) for x in row)
               for plate in plates:
-                if plate in joined: counts[plate]=True
-            lower='|'.join(safe).lower()
-            lines += [f'- local_integrity_pass: {"YES" if ok else "NO"}',f'- selected_encoding: {enc}',f'- header_field_count: {len(header)}',f'- bounded_header_fields: {safe}',f'- data_row_count: {row_count}',f'- six_plate_identifier_presence: {counts}',f'- all_six_plate_identifiers_present: {"YES" if all(counts.values()) else "NO"}',f'- y_reference_schema_present: {"YES" if ("reference" in lower and ("y" in lower or "surface" in lower)) else "NO"}','- raw values emitted: NO']
+                # Plate token and P1s must coexist in the same reference row; raw row content is never emitted.
+                if re.search(r'(?<![0-9])'+re.escape(plate)+r'(?![0-9])', joined):
+                  plate_any[plate]=True
+                  if re.search(r'(?i)(?:^|[^A-Za-z0-9])P1s(?:[^A-Za-z0-9]|$)', joined):
+                    plate_p1[plate]=True
+                    plate_p1_row_matches[plate]+=1
+
+            all_any=all(plate_any.values())
+            all_p1=all(plate_p1.values())
+            unique_p1=all(plate_p1_row_matches[p]==1 for p in plates)
+            schema_ok=('reference' in lower and (('y' in lower) or ('surface' in lower)) and (('image' in lower) or ('name' in lower)))
+            lines += [
+              f'- data_row_count: {row_count}',
+              f'- six_plate_identifier_presence: {plate_any}',
+              f'- six_plate_P1_reference_presence: {plate_p1}',
+              f'- six_plate_P1_reference_row_counts: {plate_p1_row_matches}',
+              f'- all_six_plate_identifiers_present: {"YES" if all_any else "NO"}',
+              f'- all_six_P1_references_present: {"YES" if all_p1 else "NO"}',
+              f'- exactly_one_P1_reference_row_per_plate: {"YES" if unique_p1 else "NO"}',
+              '- raw reference values emitted: NO','',
+              '## Frozen provenance subgate / 고정 provenance subgate',
+              f'**{"PASS_F28_MICROGRAPHS_SURFACE_REFERENCE_BINDING" if (schema_ok and all_p1 and unique_p1) else "HOLD_F28_SURFACE_REFERENCE_BINDING"}**',
+            ]
           except Exception as e:
-            lines += [f'- verification_error: {type(e).__name__}','- raw values emitted: NO']
-          finally: shutil.rmtree(tmp,ignore_errors=True)
+            lines += [
+              f'- verification_error: {type(e).__name__}',
+              '- raw reference values emitted: NO','',
+              '## Frozen provenance subgate / 고정 provenance subgate',
+              '**HOLD_F28_SURFACE_REFERENCE_BINDING**',
+            ]
+          finally:
+            shutil.rmtree(tmp,ignore_errors=True)
+
           out.write_text('\n'.join(lines)+'\n',encoding='utf-8')
           PY
+
       - name: Commit sanitized result
         shell: bash
         run: |
@@ -70,5 +164,5 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add research/AMBENCH-F28/SURFACE_REFERENCE_RESULT.md
           if git diff --cached --quiet; then exit 0; fi
-          git commit -m 'record AMBENCH-F28 track surface-reference verification'
+          git commit -m 'record AMBENCH-F28 Micrographs surface-reference binding'
           git push
