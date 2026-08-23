@@ -15,7 +15,7 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
-      - name: Verify surface reference component without values
+      - name: Verify track-result surface reference component without values
         shell: bash
         run: |
           set -euo pipefail
@@ -29,9 +29,12 @@ jobs:
             with urllib.request.urlopen('https://data.nist.gov/od/id/mds2-4103?format=nerdm',timeout=60) as r: meta=json.load(r)
             comps=meta.get('components',[])
             matches=[c for c in comps if (c.get('filepath') or '').endswith('SurfaceReference_and_Orientation_Layers.csv')]
-            lines.append(f'- exact_filename_match_count: {len(matches)}')
-            if len(matches)!=1: raise RuntimeError('SURFACE_REFERENCE_NOT_UNIQUE')
-            c=matches[0]; cs=c.get('checksum') or {}; sha=cs.get('hash')
+            lines.append(f'- basename_match_count: {len(matches)}')
+            lines.append(f'- basename_match_paths: {[c.get("filepath") for c in matches]}')
+            track=[c for c in matches if (c.get('filepath') or '')=='Cross_Sections/Tracks_Results/SurfaceReference_and_Orientation_Layers.csv']
+            lines.append(f'- exact_tracks_results_match_count: {len(track)}')
+            if len(track)!=1: raise RuntimeError('TRACK_SURFACE_REFERENCE_NOT_UNIQUE')
+            c=track[0]; cs=c.get('checksum') or {}; sha=cs.get('hash')
             if not sha:
               for v in cs.values():
                 if isinstance(v,str) and len(v)==64: sha=v; break
@@ -67,5 +70,5 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add research/AMBENCH-F28/SURFACE_REFERENCE_RESULT.md
           if git diff --cached --quiet; then exit 0; fi
-          git commit -m 'record AMBENCH-F28 surface-reference source verification'
+          git commit -m 'record AMBENCH-F28 track surface-reference verification'
           git push
