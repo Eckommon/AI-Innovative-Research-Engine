@@ -27,12 +27,17 @@ jobs:
 
           DSID='mds2-2507'
           EXPECTED_SHA='306a3d26e6e77d6fef44b1bf7b1dd2c817560a84f21f27fc4cec8cdb10cabe59'
+          DOCUMENTED_SCHEMA=[
+              'X_mm','Y_mm','laser_power_W','scan_speed_mm_s',
+              'melt_pool_area_px','melt_pool_length_px','melt_pool_width_px',
+              'average_intensity_DL','spatter_count','spatter_area'
+          ]
           root=Path(os.environ['GITHUB_WORKSPACE'])
           out=root/'research/AMBENCH-E36/SCHEMA_PREFLIGHT.md'
           out.parent.mkdir(parents=True,exist_ok=True)
 
           def fetch(url):
-              req=urllib.request.Request(url,headers={'User-Agent':'AI-Innovative-Research-Engine/E36-schema'})
+              req=urllib.request.Request(url,headers={'User-Agent':'AI-Innovative-Research-Engine/E36-schema-v2'})
               with urllib.request.urlopen(req,timeout=60) as r:
                   return r.read()
 
@@ -66,18 +71,14 @@ jobs:
           members.sort()
 
           part_records=[]
-          canonical_headers=[]
           for pid,name,fsize in members:
               txt=z.read(name).decode('utf-8-sig',errors='replace')
-              reader=csv.reader(io.StringIO(txt))
-              rows=list(reader)
-              header=rows[0] if rows else []
-              data=rows[1:] if rows else []
-              width=len(header)
-              nonempty=[0]*width
+              rows=list(csv.reader(io.StringIO(txt)))
+              width=10
               types=[Counter() for _ in range(width)]
+              nonempty=[0]*width
               ragged=0
-              for row in data:
+              for row in rows:
                   if len(row)!=width:
                       ragged+=1
                   rr=row+['']*max(0,width-len(row))
@@ -88,85 +89,53 @@ jobs:
                       if typ!='blank':
                           nonempty[j]+=1
               part_records.append({
-                  'part':pid,'name':name,'size':fsize,'header':header,
-                  'rows':len(data),'ragged':ragged,'nonempty':nonempty,
-                  'types':[dict(c) for c in types]
+                  'part':pid,'name':name,'size':fsize,'rows':len(rows),
+                  'ragged':ragged,'nonempty':nonempty,'types':[dict(c) for c in types]
               })
-              canonical_headers.append(tuple(header))
 
           pids=[x['part'] for x in part_records]
           exact55=(pids==list(range(1,56)))
-          header_consistent=(len(set(canonical_headers))==1 and len(canonical_headers)==55)
-          header=list(canonical_headers[0]) if canonical_headers else []
+          exact10_all=all(r['ragged']==0 for r in part_records) and len(part_records)==55
 
-          def find_col(words):
-              hits=[]
-              for i,h in enumerate(header):
-                  lo=h.lower().replace('_',' ').replace('-',' ')
-                  if all(w in lo for w in words):
-                      hits.append(i)
-              return hits
-
-          area_hits=find_col(['area'])
-          length_hits=find_col(['length'])
-          width_hits=find_col(['width'])
-
-          required={'area':area_hits,'length':length_hits,'width':width_hits}
-          required_unique=all(len(v)==1 for v in required.values())
-
+          required={'area':4,'length':5,'width':6}
           coverage={}
-          for label,hits in required.items():
-              if len(hits)==1:
-                  j=hits[0]
-                  vals=[r['nonempty'][j] for r in part_records]
-                  numlooks=[r['types'][j].get('numeric-looking',0) for r in part_records]
-                  nonnum=[r['types'][j].get('nonnumeric',0) for r in part_records]
-                  coverage[label]={
-                      'column_index_1based':j+1,
-                      'header':header[j],
-                      'min_nonempty':min(vals) if vals else 0,
-                      'median_nonempty':statistics.median(vals) if vals else 0,
-                      'max_nonempty':max(vals) if vals else 0,
-                      'parts_with_any_nonempty':sum(v>0 for v in vals),
-                      'parts_with_numeric_looking':sum(v>0 for v in numlooks),
-                      'total_nonnumeric_tokens':sum(nonnum),
-                  }
+          for label,j in required.items():
+              vals=[r['nonempty'][j] for r in part_records]
+              numlooks=[r['types'][j].get('numeric-looking',0) for r in part_records]
+              nonnum=[r['types'][j].get('nonnumeric',0) for r in part_records]
+              blanks=[r['types'][j].get('blank',0) for r in part_records]
+              coverage[label]={
+                  'column_index_1based':j+1,
+                  'documented_name':DOCUMENTED_SCHEMA[j],
+                  'min_nonempty':min(vals) if vals else 0,
+                  'median_nonempty':statistics.median(vals) if vals else 0,
+                  'max_nonempty':max(vals) if vals else 0,
+                  'parts_with_any_nonempty':sum(v>0 for v in vals),
+                  'parts_with_numeric_looking':sum(v>0 for v in numlooks),
+                  'total_nonnumeric_tokens':sum(nonnum),
+                  'total_blank_tokens':sum(blanks),
+              }
 
-          # Adequate schema occupancy: all 55 parts must expose at least one numeric-looking cell
-          # in each required physical-outcome column. This is a schema/type gate, not an outcome-value test.
-          occupancy_ok=(required_unique and all(coverage[k]['parts_with_numeric_looking']==55 for k in ('area','length','width')))
-          ragged_total=sum(r['ragged'] for r in part_records)
-          schema_pass=(size_ok and hash_ok and exact55 and header_consistent and required_unique and occupancy_ok and ragged_total==0)
+          occupancy_ok=all(coverage[k]['parts_with_numeric_looking']==55 for k in ('area','length','width'))
+          nonnumeric_required_ok=all(coverage[k]['total_nonnumeric_tokens']==0 for k in ('area','length','width'))
+          schema_pass=(size_ok and hash_ok and exact55 and exact10_all and occupancy_ok and nonnumeric_required_ok)
 
-          lines=['---','id: AMBENCH-E36-SCHEMA-PREFLIGHT','type: schema-missingness-preflight','created: 2026-08-23','raw_analysis_numerical_values_emitted: false','raw_analysis_statistics_computed: false','incremental_monetary_cost_usd: 0','---','',
+          lines=['---','id: AMBENCH-E36-SCHEMA-PREFLIGHT','type: schema-missingness-preflight','created: 2026-08-23','parser_version: v2_documented_headerless_positional_10col','raw_analysis_numerical_values_emitted: false','raw_analysis_statistics_computed: false','incremental_monetary_cost_usd: 0','---','',
                  '# AMBENCH-E36 RHF Analysis Schema Preflight / RHF 분석 Schema 사전점검','',
-                 '## Boundary / 경계','- Checksum-frozen `RHF_Analysis_Results.zip` only.','- Numerical data cells are **not emitted** and no min/max/mean/median/std/correlation/group comparison is computed from result values.','- Only member identity, CSV header/order, row count, missing/non-empty counts and lexical type counts are used.','',
+                 '## Boundary / 경계','- Checksum-frozen `RHF_Analysis_Results.zip` only.','- Numerical data cells are **not emitted** and no min/max/mean/median/std/correlation/group comparison is computed from result values.','- Official NIST data-description fixes these CSVs as headerless 10-column analysis sheets; this parser uses only that positional schema plus lexical occupancy counts.','',
+                 '## Parser correction / parser 보정','- v1 incorrectly interpreted the first numerical row of each headerless CSV as a header.','- Official documented positional schema supersedes the v1 header assumption before any numerical outcome statistic is computed.','',
                  '## Source integrity / source 무결성',f'- dataset: `{DSID}`',f'- NERDm version: `{meta.get("version")}`',f'- archive_size_nerdm: `{comp.get("size")}`',f'- archive_size_local: `{len(raw)}`',f'- size_match: `{size_ok}`',f'- sha256_nerdm: `{exp}`',f'- sha256_preregistered: `{EXPECTED_SHA}`',f'- sha256_local: `{got}`',f'- checksum_match_all: `{hash_ok}`','',
-                 '## Member identity / member identity',f'- matching_analysis_csv_count: `{len(part_records)}`',f'- part_ids: `{pids}`',f'- exact_P01_to_P55: `{exact55}`','- members:']
+                 '## Documented positional schema / 문서화 positional schema',f'- column_count: `10`',f'- schema: `{DOCUMENTED_SCHEMA}`','- columns 5–7 are documented by NIST as melt-pool area, length, and width; values are not emitted here.','',
+                 '## Member identity / member identity',f'- matching_analysis_csv_count: `{len(part_records)}`',f'- part_ids: `{pids}`',f'- exact_P01_to_P55: `{exact55}`',f'- every_row_exactly_10_columns: `{exact10_all}`','- members:']
           for r in part_records:
-              lines.append(f'  - `P{r["part"]:02d}` | path=`{r["name"]}` | size=`{r["size"]}` | data_rows=`{r["rows"]}` | ragged_rows=`{r["ragged"]}`')
+              lines.append(f'  - `P{r["part"]:02d}` | path=`{r["name"]}` | size=`{r["size"]}` | data_rows=`{r["rows"]}` | non_10col_rows=`{r["ragged"]}`')
 
-          lines += ['', '## Header/schema consistency / header·schema 일관성',f'- header_consistent_all_55: `{header_consistent}`',f'- header_column_count: `{len(header)}`',f'- canonical_header: `{header}`',f'- area_column_hits_1based: `{[i+1 for i in area_hits]}`',f'- length_column_hits_1based: `{[i+1 for i in length_hits]}`',f'- width_column_hits_1based: `{[i+1 for i in width_hits]}`',f'- required_columns_unique: `{required_unique}`',f'- total_ragged_rows: `{ragged_total}`','']
-
-          lines += ['## Required physical-outcome column occupancy / 필수 물리 outcome 열 점유']
+          lines += ['', '## Required physical-outcome column occupancy / 필수 물리 outcome 열 점유']
           for label in ('area','length','width'):
-              if label in coverage:
-                  c=coverage[label]
-                  lines += [f'### `{label}`',f'- column_index_1based: `{c["column_index_1based"]}`',f'- header: `{c["header"]}`',f'- min_nonempty_rows_per_part: `{c["min_nonempty"]}`',f'- median_nonempty_rows_per_part: `{c["median_nonempty"]}`',f'- max_nonempty_rows_per_part: `{c["max_nonempty"]}`',f'- parts_with_any_nonempty: `{c["parts_with_any_nonempty"]}`',f'- parts_with_numeric_looking_tokens: `{c["parts_with_numeric_looking"]}`',f'- total_nonnumeric_tokens: `{c["total_nonnumeric_tokens"]}`','']
-              else:
-                  lines += [f'### `{label}`','- required_column: `NOT_UNIQUELY_IDENTIFIED`','']
+              c=coverage[label]
+              lines += [f'### `{label}`',f'- column_index_1based: `{c["column_index_1based"]}`',f'- documented_name: `{c["documented_name"]}`',f'- min_nonempty_rows_per_part: `{c["min_nonempty"]}`',f'- median_nonempty_rows_per_part: `{c["median_nonempty"]}`',f'- max_nonempty_rows_per_part: `{c["max_nonempty"]}`',f'- parts_with_any_nonempty: `{c["parts_with_any_nonempty"]}`',f'- parts_with_numeric_looking_tokens: `{c["parts_with_numeric_looking"]}`',f'- total_blank_tokens: `{c["total_blank_tokens"]}`',f'- total_nonnumeric_tokens: `{c["total_nonnumeric_tokens"]}`','']
 
-          lines += ['## Per-part lexical occupancy / part별 lexical 점유','- The following records contain counts only; no numerical result value is emitted.','']
-          if required_unique:
-              for r in part_records:
-                  bits=[]
-                  for label,hits in required.items():
-                      j=hits[0]
-                      t=r['types'][j]
-                      bits.append(f'{label}: nonempty={r["nonempty"][j]}, numeric-looking={t.get("numeric-looking",0)}, blank={t.get("blank",0)}, nonnumeric={t.get("nonnumeric",0)}')
-                  lines.append(f'- P{r["part"]:02d}: '+'; '.join(bits))
-
-          lines += ['', '## Frozen schema gate / 고정 schema gate',f'- source_integrity: `{size_ok and hash_ok}`',f'- exact_part_coverage: `{exact55}`',f'- header_consistency: `{header_consistent}`',f'- required_area_length_width_unique: `{required_unique}`',f'- required_column_occupancy: `{occupancy_ok}`',f'- no_ragged_rows: `{ragged_total==0}`','']
+          lines += ['## Frozen schema gate / 고정 schema gate',f'- source_integrity: `{size_ok and hash_ok}`',f'- exact_part_coverage: `{exact55}`',f'- documented_10col_shape: `{exact10_all}`',f'- required_area_length_width_occupancy: `{occupancy_ok}`',f'- required_columns_numeric_lexical_type_only: `{nonnumeric_required_ok}`','']
           if schema_pass:
               lines += ['**PASS_E36_SCHEMA_READY**','- Numerical result cells remain unopened for statistical use.','- Next required action is to commit an outcome-still-unopened numerical-contract amendment before any result-value statistic is computed.','']
           else:
@@ -185,6 +154,6 @@ jobs:
           if git diff --cached --quiet; then
             echo 'No E36 schema-preflight change.'
           else
-            git commit -m 'record AMBENCH-E36 outcome-blind schema gate'
+            git commit -m 'record AMBENCH-E36 corrected outcome-blind schema gate'
             git push
           fi
