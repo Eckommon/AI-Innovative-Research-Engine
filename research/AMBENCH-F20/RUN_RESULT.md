@@ -18,18 +18,20 @@ raw_artifacts_committed: false
 - XCT NERDm fetch: PASS
 - in-situ NERDm fetch: PASS
 - workbook component checksum metadata: PASS
-- XYPT L101-L125 component checksum metadata: FAIL
 - workbook NERDm size: 193261
 - workbook expected SHA-256: 7cc48fc8aa7a86af4e00c24bfcf91373ef15a8bc1e10d404e61ba8f4d29c422f
-- XYPT L101-L125 NERDm SHA-256: UNKNOWN
+- XYPT component checksum metadata: FAIL
+- XYPT exact NERDm filepath: UNKNOWN
+- XYPT NERDm size: UNKNOWN
+- XYPT expected SHA-256: UNKNOWN
 
 ## Workbook byte integrity / workbook byte 무결성
 - workbook authoritative download: PASS
 - workbook actual SHA-256: 7cc48fc8aa7a86af4e00c24bfcf91373ef15a8bc1e10d404e61ba8f4d29c422f
-- expected/actual SHA-256 match: YES
+- workbook SHA-256 match: YES
 - schema-only inspection: PASS
 
-## Schema-only output / schema 전용 출력
+## Workbook schema-only output / workbook schema 전용 출력
 - SHEET: `Plots`
   - dimension: `A1`
   - formula_count: `0`
@@ -81,8 +83,18 @@ raw_artifacts_committed: false
 - SHEET: `Part4_2`
   - dimension: `A1:B256`
   - formula_count: `0`
+- exact_part_sheet_count: `16`
 - numerical_cell_values_emitted: `NO`
 
-## Execution status / 실행 상태
-- internal status: PASS
+## XYPT authoritative path / XYPT 권위 경로
+- XYPT authoritative download: FAIL
+- XYPT actual SHA-256: NOT_COMPUTED
+- XYPT SHA-256 match: NOT_COMPUTED
+- archive-inventory-only inspection: NOT_INSPECTED
+- archive member count: NOT_COMPUTED
+- layer-125 filename match count: NOT_COMPUTED
+
+## XYPT inventory-only output / XYPT inventory 전용 출력
+
+## Execution / 실행
 - raw transient teardown: SUCCESS
