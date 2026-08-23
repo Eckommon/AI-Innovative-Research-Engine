@@ -66,12 +66,30 @@ jobs:
           fi
 
           if [ "$HASH" = YES ]; then
-            mkdir renders
-            if pdftoppm -png -r 90 description.pdf renders/page >/dev/null 2>&1; then
-              PAGE_COUNT="$(find renders -type f -name 'page-*.png' | wc -l | tr -d ' ')"
-              [ "$PAGE_COUNT" -gt 0 ] && RENDER='PASS'
-            fi
-            if pdftotext -layout description.pdf description.txt; then TEXT='PASS'; fi
+            python -m pip install --quiet pypdf pypdfium2 >/dev/null 2>&1 || true
+            python - <<'PY' || true
+          from pathlib import Path
+          try:
+              import pypdfium2 as pdfium
+              from pypdf import PdfReader
+              doc=pdfium.PdfDocument('description.pdf')
+              Path('renders').mkdir(exist_ok=True)
+              for i in range(len(doc)):
+                  page=doc[i]
+                  bitmap=page.render(scale=0.6)
+                  bitmap.to_pil().save(Path('renders')/f'page-{i+1}.png')
+              Path('render_status.txt').write_text('PASS')
+              Path('page_count.txt').write_text(str(len(doc)))
+              reader=PdfReader('description.pdf')
+              text='\n\f\n'.join((p.extract_text() or '') for p in reader.pages)
+              Path('description.txt').write_text(text)
+              Path('text_status.txt').write_text('PASS' if text.strip() else 'FAIL')
+          except Exception as e:
+              Path('python_pdf_error.txt').write_text(type(e).__name__+': '+str(e))
+          PY
+            [ -f render_status.txt ] && RENDER="$(cat render_status.txt)"
+            [ -f page_count.txt ] && PAGE_COUNT="$(cat page_count.txt)"
+            [ -f text_status.txt ] && TEXT="$(cat text_status.txt)"
           fi
 
           if [ "$TEXT" = PASS ]; then
@@ -80,14 +98,14 @@ jobs:
           from pathlib import Path
           text=Path('description.txt').read_text(errors='replace')
           lines=text.splitlines()
-          keys=re.compile(r'histogram|gray|grey|digital level|bin|count|voxel|threshold|crop|reconstruct|16-bit|intensity|surface|artifact|beam hardening|ring artifact',re.I)
+          keys=re.compile(r'histogram|gray|grey|digital level|bin|count|voxel|threshold|crop|reconstruct|16-bit|intensity|surface|artifact|beam hardening|ring artifact|frequency',re.I)
           hits=[]
           for i,line in enumerate(lines):
               if keys.search(line):
                   a=max(0,i-2); b=min(len(lines),i+4)
                   block='\n'.join(lines[a:b]).strip()
                   if block and block not in hits: hits.append(block)
-          Path('contexts.md').write_text('\n\n'.join(f'### Context {n}\n```text\n{b}\n```' for n,b in enumerate(hits[:60],1)))
+          Path('contexts.md').write_text('\n\n'.join(f'### Context {n}\n```text\n{b}\n```' for n,b in enumerate(hits[:80],1)))
           PY
           fi
 
