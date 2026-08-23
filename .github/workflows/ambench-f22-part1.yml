@@ -1,0 +1,123 @@
+name: AMBENCH F22 part1 byte verification
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ambench-f22-part1.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  part1:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify Part 1 bytes, inventory, and headers only
+        shell: bash
+        run: |
+          set -euo pipefail
+          TMP="$(mktemp -d)"
+          trap 'rm -rf "$TMP"' EXIT
+          RESULT="$GITHUB_WORKSPACE/research/AMBENCH-F22/PART1_RESULT.md"
+          mkdir -p "$(dirname "$RESULT")"
+          cd "$TMP"
+
+          curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors \
+            'https://data.nist.gov/od/id/mds2-3761?format=nerdm' -o nerdm.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          obj=json.loads(Path('nerdm.json').read_text())
+          exact=[c for c in obj.get('components',[]) if c.get('filepath')=='part1.zip']
+          if len(exact)!=1: raise SystemExit('PART1_COMPONENT_MATCH_FAIL')
+          c=exact[0]; ck=c.get('checksum') or {}; h=ck.get('hash') or ''; alg=(ck.get('algorithm') or {}).get('tag')
+          if alg!='sha256' or len(h)!=64: raise SystemExit('PART1_CHECKSUM_METADATA_FAIL')
+          Path('url.txt').write_text(c.get('downloadURL') or '')
+          Path('expected.txt').write_text(h)
+          Path('size.txt').write_text(str(c.get('size') or 'UNKNOWN'))
+          PY
+
+          URL="$(cat url.txt)"; EXPECTED="$(cat expected.txt)"
+          curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors "$URL" -o part1.zip
+          ACTUAL="$(sha256sum part1.zip | awk '{print $1}')"
+          test "$EXPECTED" = "$ACTUAL"
+
+          python - <<'PY' > inventory.md
+          import csv, io, re, zipfile
+          from pathlib import Path
+          with zipfile.ZipFile('part1.zip') as z:
+              bad=z.testzip()
+              names=[n for n in z.namelist() if not n.endswith('/')]
+              csvs=[n for n in names if n.lower().endswith('.csv')]
+              print(f'- zip_test: `{"PASS" if bad is None else "FAIL"}`')
+              print(f'- total_file_members: `{len(names)}`')
+              print(f'- csv_member_count: `{len(csvs)}`')
+              print(f'- first_csv_member: `{csvs[0] if csvs else "NONE"}`')
+              print(f'- last_csv_member: `{csvs[-1] if csvs else "NONE"}`')
+              # layer numbers: take the final integer token in each CSV basename and assess exact 1..250 coverage.
+              layers=[]
+              for n in csvs:
+                  stem=Path(n).stem
+                  ints=re.findall(r'\d+',stem)
+                  if ints: layers.append(int(ints[-1]))
+              uniq=sorted(set(layers))
+              exact_1_250=(uniq==list(range(1,251)))
+              print(f'- parsed_unique_layer_count: `{len(uniq)}`')
+              print(f'- exact_layer_1_250_coverage: `{"YES" if exact_1_250 else "NO"}`')
+              # headers only; never read a numerical data row.
+              headers=[]
+              for n in csvs:
+                  with z.open(n) as f:
+                      line=f.readline().decode('utf-8-sig',errors='replace').rstrip('\r\n')
+                  headers.append(next(csv.reader([line])))
+              widths=sorted(set(map(len,headers))) if headers else []
+              same=(len({tuple(h) for h in headers})==1) if headers else False
+              print(f'- header_widths: `{widths}`')
+              print(f'- all_csv_headers_identical: `{"YES" if same else "NO"}`')
+              if headers:
+                  print(f'- canonical_header_column_count: `{len(headers[0])}`')
+                  print('- canonical_header_names:')
+                  for i,h in enumerate(headers[0],1): print(f'  - `{i:02d}`: `{h}`')
+              print('- numerical_data_rows_read: `NO`')
+          PY
+
+          cat > "$RESULT" <<EOF
+          ---
+          id: AMBENCH-F22-PART1-RESULT
+          type: sanitized-byte-inventory-result
+          created: 2026-08-23
+          source_of_truth: github-actions
+          raw_artifacts_committed: false
+          numerical_outcomes_emitted: false
+          ---
+
+          # AMBENCH-F22 Part 1 Immutable Byte Result / F22 Part 1 불변 byte 결과
+
+          - component: part1.zip
+          - NERDm size_bytes: $(cat size.txt)
+          - expected SHA-256: $EXPECTED
+          - actual local SHA-256: $ACTUAL
+          - SHA-256 match: YES
+          - route: public standard GitHub-hosted ubuntu-latest
+          - incremental monetary cost: 0 USD
+          - artifact/cache: NONE
+
+          ## Archive inventory + header-only schema / archive inventory + header-only schema
+          EOF
+          cat inventory.md >> "$RESULT"
+          cat >> "$RESULT" <<EOF
+
+          - raw transient teardown: SUCCESS
+          EOF
+      - name: Persist sanitized result only
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/AMBENCH-F22/PART1_RESULT.md
+          git commit -m 'record sanitized AMBENCH-F22 part1 verification result'
+          git push
