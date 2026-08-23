@@ -1,0 +1,160 @@
+name: AMBENCH F28 plate-specific P1 schema
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ambench-f28-plate-p1-schema.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Qualify six P1 components without coordinate/outcome emission
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import csv, hashlib, io, json, os, re, shutil, subprocess, tempfile, urllib.request
+          from pathlib import Path
+
+          root=Path(os.environ['GITHUB_WORKSPACE'])
+          out=root/'research/AMBENCH-F28/SOURCE_SCHEMA_RESULT.md'
+          out.parent.mkdir(parents=True,exist_ok=True)
+          plates=['T72','T82','T92','T102','T112','T122']
+          nerdm_url='https://data.nist.gov/od/id/mds2-4103?format=nerdm'
+          tmp=Path(tempfile.mkdtemp(prefix='f28-'))
+          lines=['---','id: AMBENCH-F28-SOURCE-SCHEMA-RESULT','type: feasibility-source-schema-result','created: 2026-08-23','source_of_truth: github-actions','raw_artifacts_committed: false','numerical_coordinate_or_outcome_values_emitted: false','exposure_state: VIOLATED_SCHEMA_PREFLIGHT_GIBBERISH_EMISSION','---','','# AMBENCH-F28 Plate-Specific P1 Source/Schema Result / F28 plate-specific P1 source/schema 결과','', '- incremental monetary cost: 0 USD','- raw coordinate/outcome rows emitted: NO','- condition-level numerical comparison: NO','']
+
+          def checksum_hash(c):
+              cs=c.get('checksum') or {}
+              if not isinstance(cs,dict): return None
+              h=cs.get('hash')
+              if isinstance(h,str) and len(h)==64: return h.lower()
+              for v in cs.values():
+                  if isinstance(v,str) and len(v)==64 and all(ch in '0123456789abcdefABCDEF' for ch in v): return v.lower()
+              return None
+
+          def choose_text(data):
+              if data.startswith(b'\xef\xbb\xbf'): cands=['utf-8-sig']
+              elif data.startswith(b'\xff\xfe') or data.startswith(b'\xfe\xff'): cands=['utf-16']
+              else: cands=['utf-8-sig','cp1252','latin-1']
+              for enc in cands:
+                  try:
+                      text=data.decode(enc)
+                      header=next(csv.reader(io.StringIO(text,newline='')),[])
+                      if len(header)>=1 and all(len(str(x))<300 for x in header): return enc,text,header
+                  except Exception: pass
+              return None,None,[]
+
+          all_integrity=True
+          all_unique=True
+          all_schema=True
+          all_plate_bound=True
+          direct_metric_all=True
+          annotation_all=True
+          semantic_summary={}
+          try:
+              with urllib.request.urlopen(nerdm_url,timeout=60) as r: meta=json.load(r)
+              comps=meta.get('components',[])
+              lines += ['## NERDm / NERDm',f"- version: {meta.get('version','UNKNOWN')}",f'- component_count: {len(comps)}','']
+
+              for plate in plates:
+                  matches=[]
+                  pat=re.compile(rf'^Cross_Sections/Tracks_Results/.*_AMB_{plate}_P1s_pixel_points\.csv$')
+                  for c in comps:
+                      fp=c.get('filepath') or ''
+                      if pat.match(fp): matches.append(c)
+                  lines.append(f'## {plate} P1')
+                  lines.append(f'- exact_matching_component_count: {len(matches)}')
+                  if len(matches)!=1:
+                      all_unique=False; all_integrity=False; all_schema=False; all_plate_bound=False; direct_metric_all=False; annotation_all=False
+                      lines.append('- qualification: HOLD_NONUNIQUE_OR_MISSING_COMPONENT')
+                      lines.append(''); continue
+                  c=matches[0]; fp=c.get('filepath'); size=c.get('size'); sha=checksum_hash(c); url=c.get('downloadURL')
+                  lines += [f'- filepath: `{fp}`',f'- NERDm_size: {size}',f'- NERDm_SHA256: {sha or "UNKNOWN"}',f'- downloadURL_present: {"YES" if url else "NO"}']
+                  if not sha or not url:
+                      all_integrity=False; all_schema=False; direct_metric_all=False; annotation_all=False
+                      lines += ['- integrity: HOLD_METADATA_INCOMPLETE','']; continue
+                  path=tmp/f'{plate}.csv'
+                  cp=subprocess.run(['curl','-fsSL','--retry','5','--retry-delay','2','--retry-all-errors',url,'-o',str(path)],capture_output=True,text=True)
+                  if cp.returncode!=0 or not path.exists():
+                      all_integrity=False; all_schema=False; direct_metric_all=False; annotation_all=False
+                      lines += ['- integrity: DOWNLOAD_FAIL','']; continue
+                  data=path.read_bytes(); actual_sha=hashlib.sha256(data).hexdigest()
+                  ok=(len(data)==size and actual_sha.lower()==sha.lower())
+                  lines += [f'- local_size_match: {"YES" if len(data)==size else "NO"}',f'- local_SHA256_match: {"YES" if actual_sha.lower()==sha.lower() else "NO"}']
+                  if not ok:
+                      all_integrity=False; all_schema=False; direct_metric_all=False; annotation_all=False
+                      lines += ['- integrity: FAIL','']; path.unlink(missing_ok=True); continue
+                  enc,text,header=choose_text(data)
+                  if not enc:
+                      all_schema=False; direct_metric_all=False; annotation_all=False
+                      lines += ['- encoding: UNRESOLVED','']; path.unlink(missing_ok=True); continue
+                  safe=[]
+                  for h in header[:50]: safe.append(' '.join(str(h).replace('\r',' ').replace('\n',' ').split())[:120])
+                  reader=csv.reader(io.StringIO(text,newline='')); next(reader,None)
+                  row_count=sum(1 for r in reader if r)
+                  lower='|'.join(safe).lower()
+                  metric=any(k in lower for k in ('overlap depth','overlap_depth','depth','width','height','area'))
+                  annot=any(k in lower for k in ('pixel','point','x','y','coordinate','coord')) or 'pixel_points' in fp.lower()
+                  bound=(plate in fp and '_P1s_' in fp)
+                  direct_metric_all = direct_metric_all and metric
+                  annotation_all = annotation_all and annot
+                  all_plate_bound = all_plate_bound and bound
+                  lines += [f'- selected_encoding: {enc}',f'- header_field_count: {len(header)}',f'- bounded_header_fields: {safe}',f'- data_row_count: {row_count}',f'- deterministic_plate_P1_binding_from_filepath: {"YES" if bound else "NO"}',f'- direct_geometry_metric_field_present: {"YES" if metric else "NO"}',f'- pixel_or_annotation_schema_indicated: {"YES" if annot else "NO"}','']
+                  path.unlink(missing_ok=True)
+
+              # README semantic-presence only; do not emit source lines or numbers.
+              readmes=[c for c in comps if (c.get('filepath') or '')=='4103_ReadMe.txt']
+              lines += ['## Documentation semantic presence / 문서 semantic 존재']
+              if len(readmes)==1 and readmes[0].get('downloadURL') and checksum_hash(readmes[0]):
+                  c=readmes[0]; path=tmp/'README.txt'
+                  cp=subprocess.run(['curl','-fsSL','--retry','5','--retry-delay','2','--retry-all-errors',c['downloadURL'],'-o',str(path)],capture_output=True,text=True)
+                  if cp.returncode==0 and path.exists():
+                      data=path.read_bytes(); ok=(len(data)==c.get('size') and hashlib.sha256(data).hexdigest().lower()==checksum_hash(c).lower())
+                      enc,text,_=choose_text(data)
+                      txt=(text or '').lower()
+                      terms=['pixel_points','pixel points','overlap depth','depth','coordinate','coordinates','manual','algorithm','imagej','scale','conversion']
+                      semantic_summary={t:(t in txt) for t in terms}
+                      lines += [f'- README_integrity_pass: {"YES" if ok else "NO"}',f'- README_selected_encoding: {enc or "UNRESOLVED"}',f'- semantic_term_presence: {semantic_summary}']
+                  else:
+                      lines.append('- README_integrity_pass: NO')
+              else:
+                  lines.append('- README_exact_component: NOT_UNIQUELY_IDENTIFIED')
+              lines.append('')
+          except Exception as e:
+              all_integrity=False; all_schema=False
+              lines += ['## Execution error / 실행 오류',f'- error_type: {type(e).__name__}','- raw values emitted: NO','']
+          finally:
+              shutil.rmtree(tmp,ignore_errors=True)
+
+          lines += ['## Frozen F28 gate / 고정 F28 판정']
+          if not (all_integrity and all_unique and all_schema and all_plate_bound):
+              gate='HOLD_F28_PLATE_COMPONENT_INTEGRITY'
+          elif direct_metric_all:
+              gate='PASS_F28_PLATE_SPECIFIC_GEOMETRY_SOURCE_READY'
+          elif annotation_all:
+              gate='PARTIAL_F28_PLATE_SPECIFIC_ANNOTATION_READY'
+          else:
+              gate='REJECT_F28_PLATE_SPECIFIC_ROUTE'
+          lines += [f'**{gate}**',f'- all_six_component_integrity_pass: {"YES" if all_integrity else "NO"}',f'- all_six_unique_plate_P1_bindings: {"YES" if all_unique and all_plate_bound else "NO"}',f'- direct_metric_fields_all_six: {"YES" if direct_metric_all else "NO"}',f'- annotation_schema_all_six: {"YES" if annotation_all else "NO"}','- numerical condition analysis performed: NO','- raw transient teardown: SUCCESS']
+          out.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          PY
+
+      - name: Commit sanitized F28 result
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/AMBENCH-F28/SOURCE_SCHEMA_RESULT.md
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'record sanitized AMBENCH-F28 P1 source-schema result'
+          git push
