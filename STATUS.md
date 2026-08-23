@@ -1,62 +1,75 @@
 ---
-checkpoint_id: CHK-20260823-E36-RHF-SCHEMA-ACTIVE
-active_issue: 54
-active_research: AMBENCH-E36
-last_completed_issue: 53
-last_completed_research: AMBENCH-F35
-last_decision: DEC-075
+checkpoint_id: CHK-20260823-F38-PRIOR-ART-ACTIVE
+active_issue: 56
+active_research: AMBENCH-F38
+last_completed_issue: 55
+last_completed_research: AMBENCH-F37
+last_decision: DEC-078
 updated: 2026-08-23
 ---
 
 # Project Status / 프로젝트 상태
 
 **Project / 프로젝트:** AI-Innovative-Research-Engine / AI 기반 혁신 탐색 연구 엔진  
-**Latest verified baseline / 최신 검증 baseline:** `v0.44-f35-pass-e36-schema-active`  
-**State / 상태:** `F35_COMPLETED_PASS__E36_RHF_SCHEMA_GATE_ACTIVE`  
-**Active Work Queue / 활성 작업 큐:** Issue #54 `AMBENCH-E36`.
+**Latest verified baseline / 최신 검증 baseline:** `v0.47-f37-pass-f38-prior-art-active`  
+**State / 상태:** `E36_COMPLETED_PASS__F37_COMPLETED_PASS__F38_PRIOR_ART_SEPARATION_ACTIVE`  
+**Active Work Queue / 활성 작업 큐:** Issue #56 `AMBENCH-F38`.
 
 ## Governance / 거버넌스
-GitHub remains Source of Truth. `DEC-055` Continuity Overlay remains active. No known `MISSING-BLOCKING`. `COST-001` zero-incremental-cost default remains active; potentially billable work requires explicit user approval. Reusable source-integrity/preregistration workflow remains `SHARED-INTERNAL-CANDIDATE`; no duplicate Skill/MCP/Plugin or assumed shared paid quota.
+GitHub remains Source of Truth. `DEC-055` Continuity Overlay remains active. No known `MISSING-BLOCKING`. `COST-001` zero-incremental-cost default remains active; potentially billable work requires explicit user approval. Reusable research/source-integrity workflow remains `SHARED-INTERNAL-CANDIDATE`; no duplicate Skill/MCP/Plugin or assumed shared paid quota.
 
-## Last completed / 최근 완료
-Issue #53 `AMBENCH-F35` finalized as **`PASS_F35_RHF_EXTERNAL_CONFIRMATORY_SOURCE_READY`**.
+## Recently completed / 최근 완료
 
-Verified:
-- NIST `mds2-2507` v1.0.1, 119 components / 117 checksums;
-- exact checksum match for official data-description;
-- exact checksum match for `RHF_Command.zip`;
-- command-input recovery of physical parts `P01–P55`;
-- baseline constant-positive-power parts `P01/P12/P23/P34/P45` and 50 RHF variable-power parts;
-- deterministic `PXX` route across command, MPM, encoder, processed analysis and microscopy;
-- `RHF_Analysis_Results.zip` ~1.64 MB provides a bounded low-DOF downstream route.
+### Issue #54 — AMBENCH-E36
+**`PASS_E36_EXTERNAL_RHF_VARIABILITY_REDUCTION`**.
 
-Permanent exposure:
-`NEW_F35_PUBLICATION_LEVEL_OUTCOME_BLIND = NO__DIRECTIONAL_RHF_RESULT_PREOBSERVED`;
-raw dataset numerical outcomes remained unopened through F35.
+- NIST `mds2-2507` v1.0.1;
+- checksum-frozen `RHF_Analysis_Results.zip`;
+- physical part as independent unit, 55 parts × 1,498 nested rows;
+- five process-input-verified constant-power baseline parts vs 50 RHF variable-power parts;
+- one-sided 100,000 label-permutation `p = 0.0124798752012`;
+- frozen block stability 5/5 positive;
+- unit-semantic correction active: analysis endpoints are area/length/width but stored numerical unit remains conservatively `source numeric unit`.
 
-Durable records:
-- `research/AMBENCH-F35/RESULT.md`;
-- `registry/CLM-110.md`;
-- `registry/DEC-074.md`.
+Durable: `research/AMBENCH-E36/RESULT.md`, `AMENDMENT-02.md`, `registry/CLM-111.md`, `DEC-077.md`.
 
-## Active E36 / 활성 E36
-Preregistration: `research/AMBENCH-E36/README.md`; decision `DEC-075`; Issue #54.
+### Issue #55 — AMBENCH-F37
+**`PASS_F37_BOUNDED_MECHANISM_CLASS_CONVERGENCE`**.
 
-Frozen Stage A source:
-- `RHF_Analysis_Results.zip` size `1,637,430`;
-- SHA-256 `306a3d26e6e77d6fef44b1bf7b1dd2c817560a84f21f27fc4cec8cdb10cabe59`.
+Frozen evidence set:
+- E29 IN718 turnaround-time intervention;
+- E33 IN625 opposite prior-scan-history equivalent-length experiment;
+- E36 IN625 RHF residual-history-informed power-control experiment.
 
-Stage A is schema-only. Allowed: member names/sizes, PXX coverage, CSV headers/order, row counts, field non-empty/missing counts and lexical type counts. Forbidden: any numerical result cell emission/statistic/ranking, baseline-vs-RHF outcome comparison, endpoint switching from outcome evidence, image/AVI/microscopy access.
+Audit PASS: experiment independence, mechanism relevance, intervention triangulation, directional coherence, measurand triangulation, exposure/verification integrity.  
+PARTIAL: material/context breadth, causal isolation.
 
-Schema gates:
-- `PASS_E36_SCHEMA_READY`;
-- `HOLD_E36_SCHEMA_OR_IDENTITY_GAP`.
+Resulting research hypothesis:
+`HYP-F37-01 — Multi-Actuator Recent-Scan-History Control` = **`NOVELTY_UNVERIFIED`**.
 
-Preferred primary measurand, subject only to schema usability: **melt-pool area**.
+No same-construct replication, universal causality, novelty or patentability claim is authorized.
 
-Permanent E36 exposure:
-`NEW_E36_PUBLICATION_LEVEL_OUTCOME_BLIND = NO__RHF_DIRECTION_AND_SUMMARY_TARGETS_PREOBSERVED`;
-`NEW_E36_RAW_ANALYSIS_CSV_NUMERICAL_OUTCOME_BLIND = YES` at preregistration.
+## Active F38 / 활성 F38
+Preregistration: `research/AMBENCH-F38/README.md`; decision `DEC-078`; Issue #56.
+
+Candidate combination:
+`recent scan events → shared history/thermal state → coordinated actuator policy {laser power, turnaround/skywriting timing, local scan order/path} → melt-pool stability objective`.
+
+Frozen decomposition:
+A. history-state estimation;
+B. history-informed power modulation;
+C. thermal-history-informed scan path/order;
+D. adaptive turnaround/skywriting/inter-track timing;
+E. shared-state coordination of >=2 actuator classes;
+F. exact shared-state three-actuator coordination.
+
+Frozen gates:
+- `NOVELTY_REJECTED_F38`;
+- `NOVELTY_PARTIAL_GAP_F38`;
+- `NOVELTY_SEARCH_INCONCLUSIVE_F38`;
+- `HOLD_F38_SOURCE_CONFLICT`.
+
+Even a partial gap remains `LEGAL_NOVELTY_UNVERIFIED / PATENTABILITY_UNVERIFIED / OBVIOUSNESS_UNVERIFIED`.
 
 ## Exact Next Action / 정확한 다음 행동
-Checksum-verify `RHF_Analysis_Results.zip`; inspect only member/schema/missingness/type structure; verify P01–P55 and melt-pool-area column coverage; assign schema gate. If PASS, commit a numerical-contract amendment before any result cell is opened. No numerical outcome access before that amendment.
+Run zero-cost public prior-art separation using patent publications and primary literature. Classify A–F separately; do not infer legal novelty from absence in a bounded search. Persist source table, gate and exact next validation action; re-read GitHub state.
