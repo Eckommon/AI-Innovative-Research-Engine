@@ -142,25 +142,25 @@ jobs:
           # AMBENCH-F20 Sanitized Run Result / F20 정제 실행 결과
 
           ## Route / 경로
-          - runner: public standard GitHub-hosted `ubuntu-latest`
-          - incremental monetary cost: `0 USD` under current GitHub public-repository standard-runner policy
-          - artifacts/cache: `NONE`
-          - numerical XCT/process outcomes emitted: `NO`
+          - runner: public standard GitHub-hosted ubuntu-latest
+          - incremental monetary cost: 0 USD under current GitHub public-repository standard-runner policy
+          - artifacts/cache: NONE
+          - numerical XCT/process outcomes emitted: NO
 
           ## Machine metadata / machine metadata
-          - XCT NERDm fetch: `$XNERDM`
-          - in-situ NERDm fetch: `$INERDM`
-          - workbook component checksum metadata: `$WBMETA`
-          - XYPT L101-L125 component checksum metadata: `$XYMETA`
-          - workbook NERDm size: `$WB_SIZE`
-          - workbook expected SHA-256: `$WB_EXPECTED`
-          - XYPT L101-L125 NERDm SHA-256: `$XY_HASH`
+          - XCT NERDm fetch: $XNERDM
+          - in-situ NERDm fetch: $INERDM
+          - workbook component checksum metadata: $WBMETA
+          - XYPT L101-L125 component checksum metadata: $XYMETA
+          - workbook NERDm size: $WB_SIZE
+          - workbook expected SHA-256: $WB_EXPECTED
+          - XYPT L101-L125 NERDm SHA-256: $XY_HASH
 
           ## Workbook byte integrity / workbook byte 무결성
-          - workbook authoritative download: `$WBDOWN`
-          - workbook actual SHA-256: `$WB_ACTUAL`
-          - expected/actual SHA-256 match: `$HASHMATCH`
-          - schema-only inspection: `$SCHEMA`
+          - workbook authoritative download: $WBDOWN
+          - workbook actual SHA-256: $WB_ACTUAL
+          - expected/actual SHA-256 match: $HASHMATCH
+          - schema-only inspection: $SCHEMA
 
           ## Schema-only output / schema 전용 출력
           EOF
@@ -168,8 +168,8 @@ jobs:
           cat >> "$RESULT" <<EOF
 
           ## Execution status / 실행 상태
-          - internal status: `$STATUS`
-          - raw transient teardown: `SUCCESS`
+          - internal status: $STATUS
+          - raw transient teardown: SUCCESS
           EOF
 
       - name: Persist sanitized result only
