@@ -1,0 +1,77 @@
+name: AMBENCH F28 formula detail
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ambench-f28-formula-detail.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract redacted authoritative reconstruction statements
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,json,os,re,subprocess,tempfile,urllib.request,shutil
+          from pathlib import Path
+          root=Path(os.environ['GITHUB_WORKSPACE']); out=root/'research/AMBENCH-F28/DOC_FORMULA_DETAIL.md'
+          tmp=Path(tempfile.mkdtemp(prefix='f28-formula-'))
+          lines=['# AMBENCH-F28 Authoritative Geometry Reconstruction Detail / F28 권위 geometry reconstruction 상세','', '- raw coordinate/outcome values emitted: NO','- all numeric literals in documentation excerpts: REDACTED','']
+          try:
+            with urllib.request.urlopen('https://data.nist.gov/od/id/mds2-4103?format=nerdm',timeout=60) as r: meta=json.load(r)
+            c=[x for x in meta.get('components',[]) if (x.get('filepath') or '')=='4103_ReadMe.txt'][0]
+            cs=c.get('checksum') or {}; sha=cs.get('hash')
+            if not sha:
+              for v in cs.values():
+                if isinstance(v,str) and len(v)==64: sha=v; break
+            p=tmp/'README.txt'; cp=subprocess.run(['curl','-fsSL','--retry','5','--retry-delay','2','--retry-all-errors',c['downloadURL'],'-o',str(p)],capture_output=True,text=True)
+            if cp.returncode!=0: raise RuntimeError('DOWNLOAD_FAIL')
+            b=p.read_bytes(); ok=(len(b)==c.get('size') and hashlib.sha256(b).hexdigest().lower()==sha.lower())
+            text=None
+            for enc in ('utf-8-sig','cp1252','latin-1'):
+              try: text=b.decode(enc); break
+              except Exception: pass
+            if text is None: raise RuntimeError('DECODE_FAIL')
+            lines.append(f'- README_integrity_pass: {"YES" if ok else "NO"}')
+            wanted=[]
+            for i,line in enumerate(text.splitlines(),1):
+              low=line.lower()
+              if ('pixel_points.csv' in low and 'contains pixel locations' in low) or ('surface reference' in low and 'y reference pixel' in low) or ('pixel scaling' in low and 'micrometer' in low):
+                s=' '.join(line.split())
+                s=re.sub(r'(?<![A-Za-z])[-+]?\d+(?:\.\d+)?(?:[eE][-+]?\d+)?','<NUM>',s)
+                wanted.append((i,s[:3000]))
+            lines += ['', '## Redacted authoritative statements / 숫자 redacted 권위 문장']
+            for i,s in wanted: lines.append(f'- L{i}: {s}')
+            joined=' '.join(s.lower() for _,s in wanted)
+            flags={
+              'pixel_locations_used_for_measurements_and_calculations': ('contains pixel locations' in joined and 'measurements and calculations' in joined),
+              'surface_reference_defined': ('reference pixel' in joined and 'substrate surface' in joined),
+              'physical_pixel_scale_defined': ('pixel scaling' in joined and ('micrometer' in joined or 'µm' in joined)),
+              'depth_formula_semantics_present': ('depth_y' in joined and 'depth measurement' in joined),
+              'overlap_depth_formula_semantics_present': ('overlap_depth' in joined and 'overlap depth' in joined),
+              'width_formula_semantics_present': ('depth_x' in joined and 'width_x' in joined and 'width measurement' in joined),
+            }
+            lines += ['',f'- reconstruction_contract_flags: {flags}']
+          except Exception as e:
+            lines += ['',f'- verification_error: {type(e).__name__}']
+          finally: shutil.rmtree(tmp,ignore_errors=True)
+          out.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          PY
+      - name: Commit sanitized formula verification
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/AMBENCH-F28/DOC_FORMULA_DETAIL.md
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'record AMBENCH-F28 authoritative reconstruction contract verification'
+          git push
