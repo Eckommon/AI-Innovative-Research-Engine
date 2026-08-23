@@ -1,0 +1,141 @@
+name: AMBENCH E33 schema-only preflight
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ambench-e33-schema-preflight.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract documentation and string-only workbook schema
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, html, json, os, re, urllib.request, zipfile
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+
+          DSID='mds2-3662'
+          META=f'https://data.nist.gov/od/id/{DSID}?format=nerdm'
+          root=Path(os.environ['GITHUB_WORKSPACE'])
+          out=root/'research/AMBENCH-E33/SCHEMA_PREFLIGHT.md'
+          out.parent.mkdir(parents=True, exist_ok=True)
+
+          def fetch(url):
+              req=urllib.request.Request(url, headers={'User-Agent':'AI-Innovative-Research-Engine/E33-schema-preflight'})
+              with urllib.request.urlopen(req, timeout=30) as r:
+                  return r.read()
+
+          meta=json.loads(fetch(META).decode('utf-8'))
+          comps={c.get('filepath'):c for c in meta.get('components',[]) if c.get('filepath')}
+          def expected_hash(c):
+              x=c.get('checksum') or {}
+              return x.get('hash') if isinstance(x,dict) else None
+          def verify(c, raw):
+              got=hashlib.sha256(raw).hexdigest(); exp=expected_hash(c)
+              return exp,got,(exp==got if exp else None)
+
+          lines=['---','id: AMBENCH-E33-SCHEMA-PREFLIGHT','type: schema-design-preflight','created: 2026-08-23','source_of_truth: nist-current-nerdm','numerical_outcome_values_emitted: false','raw_artifacts_committed: false','incremental_monetary_cost_usd: 0','---','',
+                 '# AMBENCH-E33 Schema/Design Preflight / Schema·Design 사전점검','',
+                 '## Boundary / 경계',
+                 '- Current NIST metadata, README design text, XLSX structure and **string-valued cells only**. / 현재 NIST metadata, README 설계 문구, XLSX 구조 및 **문자열 cell만** 사용.',
+                 '- Numeric XLSX cell values are never emitted or inspected by this workflow. / XLSX 숫자 cell 값은 이 workflow에서 출력·검토하지 않음.',
+                 '- No condition effect, outcome statistic, ranking, model, or image archive access. / 조건 effect, outcome statistic, ranking, model, image archive 접근 없음.','',
+                 '## Current source identity / 현재 source identity',
+                 f'- dataset: `{DSID}`',f'- version: `{meta.get("version","UNKNOWN")}`',f'- component_count: `{len(meta.get("components",[]))}`',f'- components_with_checksum: `{sum(1 for c in meta.get("components",[]) if c.get("checksum"))}`','']
+
+          # README design-only bounded lines
+          rc=comps['README.txt']; rr=fetch(rc['downloadURL']); rexp,rgot,rok=verify(rc,rr)
+          lines += ['## README integrity and bounded design strings / README 무결성·설계 문구',
+                    f'- size: `{len(rr)}`',f'- sha256_nerdm: `{rexp}`',f'- sha256_local: `{rgot}`',f'- checksum_match: `{rok}`','- bounded_lines:']
+          text=rr.decode('utf-8-sig',errors='replace')
+          keywords=('set 1','set 2','converging','diverging','repeat','operator','sample','scan strategy','track','measurement')
+          forbidden=('average width','average area','measured width','measured area','result was','results were')
+          for i,line in enumerate(text.splitlines(),1):
+              lo=line.lower()
+              if any(k in lo for k in keywords) and not any(f in lo for f in forbidden):
+                  lines.append(f'  - L{i}: {line.strip()}')
+          lines.append('')
+
+          # XLSX integrity and string-only extraction via OOXML; do not read numeric cell <v> as values.
+          xc=comps['Measurements.xlsx']; xr=fetch(xc['downloadURL']); xexp,xgot,xok=verify(xc,xr)
+          tmp=root/'_e33_measurements.xlsx'; tmp.write_bytes(xr)
+          ns={'m':'http://schemas.openxmlformats.org/spreadsheetml/2006/main','r':'http://schemas.openxmlformats.org/officeDocument/2006/relationships'}
+          relns={'p':'http://schemas.openxmlformats.org/package/2006/relationships'}
+          with zipfile.ZipFile(tmp) as z:
+              shared=[]
+              if 'xl/sharedStrings.xml' in z.namelist():
+                  ss=ET.fromstring(z.read('xl/sharedStrings.xml'))
+                  for si in ss.findall('m:si',ns):
+                      pieces=[]
+                      for t in si.iter('{http://schemas.openxmlformats.org/spreadsheetml/2006/main}t'):
+                          pieces.append(t.text or '')
+                      shared.append(''.join(pieces))
+              wb=ET.fromstring(z.read('xl/workbook.xml'))
+              rel=ET.fromstring(z.read('xl/_rels/workbook.xml.rels'))
+              relmap={x.attrib['Id']:x.attrib['Target'] for x in rel.findall('p:Relationship',relns)}
+              sheets=[]
+              for s in wb.find('m:sheets',ns):
+                  name=s.attrib.get('name'); rid=s.attrib.get('{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id')
+                  target=relmap[rid]
+                  if target.startswith('/'):
+                      path=target.lstrip('/')
+                  else:
+                      path='xl/'+target.lstrip('/')
+                  sheets.append((name,path))
+
+              lines += ['## Measurements.xlsx integrity / Measurements.xlsx 무결성',
+                        f'- size: `{len(xr)}`',f'- sha256_nerdm: `{xexp}`',f'- sha256_local: `{xgot}`',f'- checksum_match: `{xok}`',f'- sheet_count: `{len(sheets)}`','']
+              for name,path in sheets:
+                  sh=ET.fromstring(z.read(path))
+                  dim=sh.find('m:dimension',ns); dimref=dim.attrib.get('ref') if dim is not None else 'UNKNOWN'
+                  merges=sh.find('m:mergeCells',ns)
+                  mrefs=[m.attrib['ref'] for m in merges] if merges is not None else []
+                  lines += [f'### Sheet `{name}`',f'- dimension: `{dimref}`',f'- merged_ranges: `{mrefs}`','- string_cells:']
+                  count=0
+                  for c in sh.findall('.//m:c',ns):
+                      typ=c.attrib.get('t'); ref=c.attrib.get('r','?'); val=None
+                      if typ=='s':
+                          v=c.find('m:v',ns)
+                          if v is not None and v.text is not None:
+                              idx=int(v.text); val=shared[idx] if 0<=idx<len(shared) else '<BAD_SHARED_STRING_INDEX>'
+                      elif typ=='inlineStr':
+                          isel=c.find('m:is',ns)
+                          if isel is not None:
+                              val=''.join((t.text or '') for t in isel.iter('{http://schemas.openxmlformats.org/spreadsheetml/2006/main}t'))
+                      elif typ=='str':
+                          v=c.find('m:v',ns); val=v.text if v is not None else ''
+                      # Numeric/default cells intentionally ignored.
+                      if val is not None:
+                          clean=val.replace('\n','\\n').replace('\r','')
+                          lines.append(f'  - `{ref}`: {clean}')
+                          count+=1
+                  lines.append(f'- string_cell_count: `{count}`')
+                  lines.append('')
+          tmp.unlink(missing_ok=True)
+          out.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          PY
+
+      - name: Persist sanitized schema-only preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/AMBENCH-E33/SCHEMA_PREFLIGHT.md
+          if git diff --cached --quiet; then
+            echo 'No schema-preflight change.'
+          else
+            git commit -m 'record AMBENCH-E33 schema-only preflight'
+            git push
+          fi
