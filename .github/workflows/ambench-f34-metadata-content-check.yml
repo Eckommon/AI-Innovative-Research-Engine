@@ -1,0 +1,72 @@
+name: AMBENCH F34 bounded metadata content check
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ambench-f34-metadata-content-check.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify Metadata.zip and inspect scan-angle metadata only
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, io, json, os, re, urllib.request, zipfile
+          from pathlib import Path
+
+          DSID='mds1103vzr'
+          EXPECTED='cf788593b45675dfbf380782b9141ebafd85bf6653f8ca57f0cf69d578c60ee6'
+          root=Path(os.environ['GITHUB_WORKSPACE'])
+          out=root/'research/AMBENCH-F34/METADATA_CONTENT_CHECK.md'
+          out.parent.mkdir(parents=True,exist_ok=True)
+
+          def fetch(url):
+              req=urllib.request.Request(url,headers={'User-Agent':'AI-Innovative-Research-Engine/F34-metadata-check'})
+              with urllib.request.urlopen(req,timeout=45) as r: return r.read()
+
+          meta=json.loads(fetch(f'https://data.nist.gov/od/id/{DSID}?format=nerdm').decode('utf-8'))
+          comp=next(c for c in meta['components'] if c.get('filepath')=='Metadata.zip')
+          raw=fetch(comp['downloadURL']); got=hashlib.sha256(raw).hexdigest(); exp=(comp.get('checksum') or {}).get('hash')
+          if not (got==exp==EXPECTED): raise RuntimeError('Metadata.zip checksum mismatch')
+          z=zipfile.ZipFile(io.BytesIO(raw))
+          target='Metadata/2018_AMMTLaserScanAngles.txt'
+          txt=z.read(target).decode('utf-8-sig',errors='replace')
+          los=txt.splitlines()
+          terms=['part','cube','gcode','strategy','layer','mpm','camera','trigger','scan','angle','position','laser']
+          counts={t:sum(line.lower().count(t) for line in los) for t in terms}
+          nonnumeric=[]
+          for i,line in enumerate(los,1):
+              # safe metadata file: retain lines containing letters/headings; suppress rows that are only numeric tables.
+              if re.search(r'[A-Za-z]',line): nonnumeric.append((i,line.strip()))
+
+          lines=['---','id: AMBENCH-F34-METADATA-CONTENT-CHECK','type: bounded-metadata-content-check','created: 2026-08-23','candidate_outcomes_inspected: false','large_archives_downloaded: false','incremental_monetary_cost_usd: 0','---','',
+                 '# AMBENCH-F34 Bounded Metadata Content Check / 제한 Metadata 내용 점검','',
+                 '## Integrity / 무결성',f'- dataset: `{DSID}`',f'- version: `{meta.get("version")}`',f'- Metadata.zip SHA-256 NERDm: `{exp}`',f'- Metadata.zip SHA-256 local: `{got}`',f'- checksum_match: `{got==exp==EXPECTED}`','',
+                 f'## `{target}`',f'- byte_size: `{len(z.read(target))}`',f'- line_count: `{len(los)}`',f'- design_token_counts: `{counts}`','- nonnumeric/headings-only lines:']
+          for i,line in nonnumeric:
+              lines.append(f'  - L{i}: {line}')
+          lines += ['', '## Qualification consequence / 적격성 결과','- This Metadata.zip file is laser-incidence-angle calibration metadata.','- `part`, `cube`, `gcode`, `strategy`, `layer`, `mpm`, `camera`, and `trigger` token presence is reported above rather than inferred.','- No part→scan-strategy assignment is claimed unless explicitly present in this checksum-frozen file.','- No candidate outcome or large archive was opened.','']
+          out.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          PY
+      - name: Persist bounded check
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/AMBENCH-F34/METADATA_CONTENT_CHECK.md
+          if git diff --cached --quiet; then
+            echo 'No change.'
+          else
+            git commit -m 'record AMBENCH-F34 bounded metadata content check'
+            git push
+          fi
