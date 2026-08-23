@@ -1,0 +1,221 @@
+name: AMBENCH E33 confirmatory numerical execution
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ambench-e33-confirmatory.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  execute:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Execute frozen E33 analysis contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, json, math, os, random, statistics, urllib.request, zipfile
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+
+          DSID='mds2-3662'
+          SEED=20260823
+          NPERM=100000
+          root=Path(os.environ['GITHUB_WORKSPACE'])
+          out=root/'research/AMBENCH-E33/RESULT.md'
+          out.parent.mkdir(parents=True,exist_ok=True)
+
+          def fetch(url):
+              req=urllib.request.Request(url,headers={'User-Agent':'AI-Innovative-Research-Engine/E33-confirmatory'})
+              with urllib.request.urlopen(req,timeout=30) as r: return r.read()
+
+          def mean_valid(vals):
+              x=[v for v in vals if v is not None]
+              if not x: return None
+              return sum(x)/len(x)
+
+          def median3(vals):
+              x=[v for v in vals if v is not None]
+              return statistics.median(x) if len(x)>=2 else None
+
+          def rankdata(a):
+              order=sorted(range(len(a)), key=lambda i:a[i])
+              r=[0.0]*len(a); i=0
+              while i<len(order):
+                  j=i+1
+                  while j<len(order) and a[order[j]]==a[order[i]]: j+=1
+                  avg=(i+1+j)/2.0
+                  for k in range(i,j): r[order[k]]=avg
+                  i=j
+              return r
+
+          def pearson(a,b):
+              if len(a)<2: return float('nan')
+              ma=sum(a)/len(a); mb=sum(b)/len(b)
+              da=[x-ma for x in a]; db=[y-mb for y in b]
+              den=math.sqrt(sum(x*x for x in da)*sum(y*y for y in db))
+              return (sum(x*y for x,y in zip(da,db))/den) if den else 0.0
+
+          def spearman(a,b): return pearson(rankdata(a),rankdata(b))
+
+          def perm_test(h,d):
+              obs=spearman(h,d)
+              rx=rankdata(h); ry=rankdata(d)
+              rng=random.Random(SEED); extreme=0
+              for _ in range(NPERM):
+                  yp=ry[:]; rng.shuffle(yp)
+                  rp=pearson(rx,yp)
+                  if abs(rp)+1e-15 >= abs(obs): extreme+=1
+              return obs,(extreme+1)/(NPERM+1),extreme
+
+          def sgn(x):
+              if math.isnan(x): return None
+              return 1 if x>0 else (-1 if x<0 else 0)
+
+          meta=json.loads(fetch(f'https://data.nist.gov/od/id/{DSID}?format=nerdm').decode('utf-8'))
+          comp=next(c for c in meta['components'] if c.get('filepath')=='Measurements.xlsx')
+          raw=fetch(comp['downloadURL']); got=hashlib.sha256(raw).hexdigest(); exp=(comp.get('checksum') or {}).get('hash')
+          if exp!=got: raise RuntimeError(f'Measurements.xlsx checksum mismatch: expected {exp}, got {got}')
+          tmp=root/'_e33_measurements.xlsx'; tmp.write_bytes(raw)
+
+          NS='http://schemas.openxmlformats.org/spreadsheetml/2006/main'
+          ns={'m':NS,'r':'http://schemas.openxmlformats.org/officeDocument/2006/relationships'}
+          relns={'p':'http://schemas.openxmlformats.org/package/2006/relationships'}
+          with zipfile.ZipFile(tmp) as z:
+              shared=[]
+              if 'xl/sharedStrings.xml' in z.namelist():
+                  ss=ET.fromstring(z.read('xl/sharedStrings.xml'))
+                  for si in ss.findall('m:si',ns):
+                      shared.append(''.join((t.text or '') for t in si.iter('{'+NS+'}t')))
+              wb=ET.fromstring(z.read('xl/workbook.xml'))
+              rel=ET.fromstring(z.read('xl/_rels/workbook.xml.rels'))
+              relmap={x.attrib['Id']:x.attrib['Target'] for x in rel.findall('p:Relationship',relns)}
+              sheet=next(iter(wb.find('m:sheets',ns)))
+              rid=sheet.attrib['{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id']
+              target=relmap[rid]; path=target.lstrip('/') if target.startswith('/') else 'xl/'+target.lstrip('/')
+              sh=ET.fromstring(z.read(path))
+              cells={}
+              for c in sh.findall('.//m:c',ns):
+                  ref=c.attrib.get('r'); typ=c.attrib.get('t'); v=c.find('m:v',ns)
+                  if not ref or v is None or v.text is None: continue
+                  txt=v.text
+                  if typ=='s':
+                      cells[ref]=shared[int(txt)]
+                  else:
+                      try: cells[ref]=float(txt)
+                      except Exception: cells[ref]=txt
+
+          tmp.unlink(missing_ok=True)
+
+          def num(ref):
+              v=cells.get(ref)
+              return float(v) if isinstance(v,(int,float)) and math.isfinite(float(v)) else None
+
+          def track_rows(start,end):
+              m={}
+              for r in range(start,end+1):
+                  t=num(f'H{r}')
+                  if t is not None and 1 <= round(t) <= 18: m[int(round(t))]=r
+              return m
+
+          op1=track_rows(6,23); op2=track_rows(27,44)
+          if set(op1)!=set(range(1,19)) or set(op2)!=set(range(1,19)):
+              raise RuntimeError(f'track map incomplete op1={sorted(op1)} op2={sorted(op2)}')
+
+          COLS={
+            'width':{'D':['I','J','K'],'C':['L','M','N']},
+            'area': {'D':['O','P','Q'],'C':['R','S','T']},
+          }
+
+          def cellval(operator,endpoint,direction,repeat_idx,t):
+              r=(op1 if operator==1 else op2)[t]
+              col=COLS[endpoint][direction][repeat_idx]
+              return num(f'{col}{r}')
+
+          def collapsed_sample(endpoint,direction,repeat_idx,t):
+              return mean_valid([cellval(1,endpoint,direction,repeat_idx,t),cellval(2,endpoint,direction,repeat_idx,t)])
+
+          def blocks(endpoint, operator=None):
+              rows=[]
+              for t in range(1,19):
+                  dt=19-t
+                  if operator is None:
+                      cv=[collapsed_sample(endpoint,'C',j,t) for j in range(3)]
+                      dv=[collapsed_sample(endpoint,'D',j,dt) for j in range(3)]
+                  else:
+                      cv=[cellval(operator,endpoint,'C',j,t) for j in range(3)]
+                      dv=[cellval(operator,endpoint,'D',j,dt) for j in range(3)]
+                  cm=median3(cv); dm=median3(dv)
+                  if cm is not None and dm is not None:
+                      rows.append({'t':t,'dt':dt,'h':2*t-19,'cmed':cm,'dmed':dm,'diff':cm-dm,'c_n':sum(v is not None for v in cv),'d_n':sum(v is not None for v in dv)})
+              return rows
+
+          def analyze(endpoint):
+              b=blocks(endpoint); h=[r['h'] for r in b]; d=[r['diff'] for r in b]
+              if len(b)>=2: rho,p,extreme=perm_test(h,d)
+              else: rho,p,extreme=float('nan'),float('nan'),None
+              ops={}
+              for o in (1,2):
+                  ob=blocks(endpoint,o); oh=[r['h'] for r in ob]; od=[r['diff'] for r in ob]
+                  orho=spearman(oh,od) if len(ob)>=2 else float('nan')
+                  ops[o]={'n':len(ob),'rho':orho,'sign':sgn(orho)}
+              return {'blocks':b,'n':len(b),'rho':rho,'p':p,'extreme':extreme,'ops':ops,
+                      'median_diff':statistics.median(d) if d else float('nan'),
+                      'mean_diff':statistics.mean(d) if d else float('nan'),
+                      'pos':sum(x>0 for x in d),'neg':sum(x<0 for x in d),'zero':sum(x==0 for x in d)}
+
+          W=analyze('width'); A=analyze('area')
+          if W['n'] < 16:
+              primary='HOLD_E33_INSUFFICIENT_VALID_BLOCKS'
+          elif abs(W['rho']) >= 0.50 and W['p'] <= 0.05:
+              stable=(W['ops'][1]['n']>=16 and W['ops'][2]['n']>=16 and W['ops'][1]['sign']==sgn(W['rho']) and W['ops'][2]['sign']==sgn(W['rho']))
+              primary='PASS_E33_GEOMETRY_MATCHED_HISTORY_ASSOCIATION' if stable else 'MIXED_E33_OPERATOR_OR_EFFECT_INSTABILITY'
+          else:
+              primary='NO_E33_GEOMETRY_MATCHED_HISTORY_ASSOCIATION'
+
+          if A['n'] < 16:
+              secondary='SECONDARY_INSUFFICIENT_VALID_BLOCKS'
+          elif A['p'] <= 0.05 and sgn(A['rho']) is not None and sgn(W['rho']) is not None and sgn(A['rho']) == -sgn(W['rho']) and sgn(W['rho'])!=0:
+              secondary='MEASURAND_CONFLICT'
+          elif A['p'] <= 0.05 and sgn(A['rho'])==sgn(W['rho']) and sgn(W['rho'])!=0:
+              secondary='CROSS_MEASURAND_STRENGTHENING'
+          else:
+              secondary='SECONDARY_NULL_OR_WEAK'
+
+          def fmt(x):
+              if isinstance(x,float) and math.isnan(x): return 'NA'
+              return f'{x:.12g}' if isinstance(x,float) else str(x)
+
+          lines=['---','id: AMBENCH-E33-RESULT','type: confirmatory-result','state: COMPLETED_NUMERICAL_EXECUTION','created: 2026-08-23','source_of_truth: github-actions','publication_level_outcomes_preexposed: true','raw_workbook_cells_committed: false','incremental_monetary_cost_usd: 0','---','',
+                 '# AMBENCH-E33 Result — Equivalent-Length Rapid-Turnaround History Falsification',
+                 '# AMBENCH-E33 결과 — 동등 길이 Rapid-Turnaround History 반증 실험','',
+                 '## Execution integrity / 실행 무결성',f'- dataset: `{DSID}`',f'- NERDm version: `{meta.get("version")}`',f'- Measurements.xlsx SHA-256 expected: `{exp}`',f'- Measurements.xlsx SHA-256 local: `{got}`',f'- checksum_match: `{exp==got}`',f'- Operator 1 track map: `{sorted(op1)}`',f'- Operator 2 track map: `{sorted(op2)}`','- No raw workbook measurement cells are committed; only preregistered aggregates/statistics are persisted.','- Publication-level outcomes had already been exposed after preregistration per `AMENDMENT-01`; this execution is confirmatory/reanalysis.','',
+                 '## Frozen primary — width / 고정 1차 — width',f'- valid_blocks: `{W["n"]}`',f'- Spearman_rho: `{fmt(W["rho"])}`',f'- permutation_n: `{NPERM}`',f'- permutation_seed: `{SEED}`',f'- extreme_count: `{W["extreme"]}`',f'- add_one_two_sided_p: `{fmt(W["p"])}`',f'- median_geometry_matched_diff_um: `{fmt(W["median_diff"])}`',f'- mean_geometry_matched_diff_um: `{fmt(W["mean_diff"])}`',f'- diff_sign_counts: `positive={W["pos"]}; negative={W["neg"]}; zero={W["zero"]}`',f'- Operator1: `n={W["ops"][1]["n"]}; rho={fmt(W["ops"][1]["rho"])}; sign={W["ops"][1]["sign"]}`',f'- Operator2: `n={W["ops"][2]["n"]}; rho={fmt(W["ops"][2]["rho"])}; sign={W["ops"][2]["sign"]}`',f'- **primary_gate: `{primary}`**','',
+                 '### Primary aggregate blocks / 1차 집계 block', '| C track | D reverse track | h | C median width | D median width | C-D | C valid repeats | D valid repeats |','|---:|---:|---:|---:|---:|---:|---:|---:|']
+          for r in W['blocks']:
+              lines.append(f'| {r["t"]} | {r["dt"]} | {r["h"]} | {r["cmed"]:.9f} | {r["dmed"]:.9f} | {r["diff"]:.9f} | {r["c_n"]} | {r["d_n"]} |')
+          lines += ['', '## Secondary sensitivity — area / 2차 sensitivity — area',f'- valid_blocks: `{A["n"]}`',f'- Spearman_rho: `{fmt(A["rho"])}`',f'- add_one_two_sided_p: `{fmt(A["p"])}`',f'- median_geometry_matched_diff_um2: `{fmt(A["median_diff"])}`',f'- mean_geometry_matched_diff_um2: `{fmt(A["mean_diff"])}`',f'- diff_sign_counts: `positive={A["pos"]}; negative={A["neg"]}; zero={A["zero"]}`',f'- Operator1: `n={A["ops"][1]["n"]}; rho={fmt(A["ops"][1]["rho"])}; sign={A["ops"][1]["sign"]}`',f'- Operator2: `n={A["ops"][2]["n"]}; rho={fmt(A["ops"][2]["rho"])}; sign={A["ops"][2]["sign"]}`',f'- **secondary_interpretation: `{secondary}`**','',
+                    '## Final / 최종',f'- primary: **`{primary}`**',f'- secondary: **`{secondary}`**','- Claim scope: equivalent programmed-track-length / different prior-scan-history association within this IN625 beam-on-plate experiment only; not same-XY matching and not AMB2025-07 turnaround-time replication.','- No post-hoc exclusion, trimming, imputation, track subset search, endpoint switch, model escalation, or paid computation was used.','']
+          out.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          PY
+
+      - name: Persist sanitized E33 result
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/AMBENCH-E33/RESULT.md
+          if git diff --cached --quiet; then
+            echo 'No E33 result change.'
+          else
+            git commit -m 'record frozen AMBENCH-E33 confirmatory result'
+            git push
+          fi
