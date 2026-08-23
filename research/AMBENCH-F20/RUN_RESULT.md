@@ -9,25 +9,25 @@ raw_artifacts_committed: false
 # AMBENCH-F20 Sanitized Run Result / F20 정제 실행 결과
 
 ## Route / 경로
-- runner: public standard GitHub-hosted 
-- incremental monetary cost:  under current GitHub public-repository standard-runner policy
-- artifacts/cache: 
-- numerical XCT/process outcomes emitted: 
+- runner: public standard GitHub-hosted ubuntu-latest
+- incremental monetary cost: 0 USD under current GitHub public-repository standard-runner policy
+- artifacts/cache: NONE
+- numerical XCT/process outcomes emitted: NO
 
 ## Machine metadata / machine metadata
-- XCT NERDm fetch: 
-- in-situ NERDm fetch: 
-- workbook component checksum metadata: 
-- XYPT L101-L125 component checksum metadata: 
-- workbook NERDm size: 
-- workbook expected SHA-256: 
-- XYPT L101-L125 NERDm SHA-256: 
+- XCT NERDm fetch: PASS
+- in-situ NERDm fetch: PASS
+- workbook component checksum metadata: PASS
+- XYPT L101-L125 component checksum metadata: FAIL
+- workbook NERDm size: 193261
+- workbook expected SHA-256: 7cc48fc8aa7a86af4e00c24bfcf91373ef15a8bc1e10d404e61ba8f4d29c422f
+- XYPT L101-L125 NERDm SHA-256: UNKNOWN
 
 ## Workbook byte integrity / workbook byte 무결성
-- workbook authoritative download: 
-- workbook actual SHA-256: 
-- expected/actual SHA-256 match: 
-- schema-only inspection: 
+- workbook authoritative download: PASS
+- workbook actual SHA-256: 7cc48fc8aa7a86af4e00c24bfcf91373ef15a8bc1e10d404e61ba8f4d29c422f
+- expected/actual SHA-256 match: YES
+- schema-only inspection: PASS
 
 ## Schema-only output / schema 전용 출력
 - SHEET: `Plots`
@@ -84,5 +84,5 @@ raw_artifacts_committed: false
 - numerical_cell_values_emitted: `NO`
 
 ## Execution status / 실행 상태
-- internal status: 
-- raw transient teardown: 
+- internal status: PASS
+- raw transient teardown: SUCCESS
