@@ -1,18 +1,18 @@
 ---
-checkpoint_id: CHK-20260823-E24-NO-MATERIAL-REGISTERED-ASSOCIATION
+checkpoint_id: CHK-20260823-D25-BLOCK-DOMINANT-HIERARCHICAL-STRUCTURE
 active_issue: none
 active_research: none
-last_completed_issue: 42
-last_completed_research: AMBENCH-E24
-last_decision: DEC-051
+last_completed_issue: 43
+last_completed_research: AMBENCH-D25
+last_decision: DEC-052
 updated: 2026-08-23
 ---
 
 # Project Status / 프로젝트 상태
 
 **Project / 프로젝트:** AI-Innovative-Research-Engine / AI 기반 혁신 탐색 연구 엔진  
-**Latest verified baseline / 최신 검증 baseline:** `v0.30-e24-no-material-registered-association`  
-**State / 상태:** `E24_COMPLETED__NO_MATERIAL_E24_ASSOCIATION`  
+**Latest verified baseline / 최신 검증 baseline:** `v0.31-d25-block-dominant-hierarchical-structure`  
+**State / 상태:** `D25_COMPLETED__BLOCK_DOMINANT_HIERARCHICAL_STRUCTURE`  
 **Active Work Queue / 활성 작업 큐:** none.
 
 ## Mandatory Governance / 필수 거버넌스
@@ -44,59 +44,61 @@ updated: 2026-08-23
 - #39 F21 — `REJECT_F21_ENDPOINT_ROUTE`
 - #40 F22 — `PARTIAL_F22_ALL_FOUR_IMMUTABLE_BYTES_READY__SCHEMA_HEADER_HOLD`
 - #41 F23 — `PASS_F23_HEADERLESS_40_COLUMN_MAPPING_READY`
-- #42 E24 — **`NO_MATERIAL_E24_ASSOCIATION`**
+- #42 E24 — `NO_MATERIAL_E24_ASSOCIATION`
+- #43 D25 — **`D25_BLOCK_DOMINANT_HIERARCHICAL_STRUCTURE`**
 
-## E24 Final / E24 최종
-Preregistration: `research/AMBENCH-E24/README.md`.  
-Execution: `research/AMBENCH-E24/EXECUTION_RESULT.md`.  
-Result: `research/AMBENCH-E24/RESULT.md`.  
-Claims: `CLM-083..085`. Decision: `DEC-051`. Memory: `MEM-046-AMBENCH-E24`.
+## D25 Final / D25 최종
+Preregistration: `research/AMBENCH-D25/README.md`.  
+Execution: `research/AMBENCH-D25/EXECUTION_RESULT.md`.  
+Result: `research/AMBENCH-D25/RESULT.md`.  
+Claims: `CLM-086..088`. Decision: `DEC-052`. Memory: `MEM-047-AMBENCH-D25`.
 
-### First registered controlled experiment / 첫 registered 통제 실험
-Frozen primary:
-- predictor: col16 `melt_pool_area_t100_mm2`;
-- outcome: col40 `xct_voxel_mean5`;
-- hierarchy: row → part×layer median → fixed 25-layer part×block medians;
-- model: standardized predictor/outcome + part/block fixed effects.
+### E24 reproduction / E24 재현
+- source SHA ×4 exact PASS;
+- 36/40 part×block units;
+- 9/10 blocks; Block 1 excluded;
+- beta `0.015305236`;
+- predictor partial R² `0.019321313`;
+- frozen reproduction integrity PASS.
 
-Coverage:
-- Part1 232/250 eligible layers;
-- Part2 231/250;
-- Part3 230/250;
-- Part4 230/250;
-- 36/40 eligible part×block units;
-- 9/10 blocks included; Block 1 excluded by frozen rule.
+### Outcome hierarchy / Outcome 계층
+- part-only R² `0.000602`;
+- block-only R² `0.998820`;
+- part+block R² `0.999421`;
+- block|part partial R² `0.999421`;
+- part|block partial R² `0.509735` of the tiny post-block remainder;
+- residual fraction after part+block `0.000579`.
 
-Primary result:
-- beta `0.015305`;
-- full R² `0.999432`;
-- predictor partial R² `0.019321`;
-- block-preserving permutation p `0.007900`.
+The registered XCT aggregate outcome is therefore block/build-progression dominant under the frozen D25 gate.
 
-Frozen materiality threshold `partial_R2 >= 0.05` was not met. Therefore statistical detectability is not promoted to a material association.
+### Predictor hierarchy / Predictor 계층
+- part-only R² `0.747172`;
+- block-only R² `0.205094`;
+- part+block R² `0.952265`;
+- residual fraction after part+block `0.047735`.
 
-Threshold sensitivity:
-- t80 beta `0.016772`, partial R² `0.025308`;
-- t120 beta `0.017831`, partial R² `0.021048`;
-- material sign disagreement: NO.
+Thus the melt-pool predictor is itself strongly structured by part/location and block progression rather than behaving as a free independent perturbation.
 
-Registration control:
-- +25-layer shift beta `0.011634`;
-- shift partial R² `0.009379`;
-- locality criterion PASS, but both registered and shifted effects remain small.
+### Sign structure / 부호 구조
+- pooled beta `-0.278047`;
+- part-adjusted `-1.026589`;
+- block-adjusted `-0.022349`;
+- part+block-adjusted `+0.015305`;
+- `STRUCTURAL_SIGN_REVERSAL=YES`;
+- `BLOCK_REMOVAL_EXPLAINS_REVERSAL=NO`.
 
-Part-specific block Spearman rhos are all negative (`-0.460255`, `-0.268917`, `-0.483333`, `-0.694567`) while the fixed-effect beta is weakly positive. These are different estimands and indicate strong block/layer structure; naive pooled interpretation is prohibited.
+All four part-specific x↔y Spearman diagnostics remain negative. The weak positive E24 beta is therefore a tiny fully adjusted residual estimand, not the dominant build-level association.
 
-Exposure remains `NEW_REGISTERED_X4_NUMERICAL_OUTCOME_BLIND = VIOLATED_LIMITED` from F22. E24 had no post-hoc feature selection, endpoint switching, or high-capacity modeling.
+## Branch Decision / branch 결정
+`DEC-052`: do not feature-fish, switch endpoints or increase model capacity on the same registered-X4 aggregate representation. E24 + D25 are informative negative evidence against a material local melt-pool-area → XCT-voxel association on this representation.
 
 ## Exact Next Eligible Work / 정확한 다음 행동
 No experiment is active.
 
-Do **not** feature-fish or escalate model capacity on the same registered representation. Next highest-leverage work is a separately preregistered diagnostic, tentatively **AMBENCH-D25 — Registered X4 Fixed-Effect Dominance / Variance-Structure Diagnostic**, to quantify without adding new predictors/endpoints:
-1. between-block/layer-geometry contribution;
-2. persistent between-part/location contribution;
-3. residual within-block between-part contribution;
-4. why within-part rank trajectories and fixed-effect slope have opposite signs;
-5. whether the E24 weak registered-locality signal merits a genuinely new independent experiment.
+Next highest-leverage work is an **independent-condition / independently varied dataset qualification** before another mechanistic experiment. The next gate should prioritize a source where:
+1. process variation is deliberately or naturally independent of part/block identity;
+2. structural outcome variation is interpretable independently of deterministic build progression;
+3. replication supports condition-level inference;
+4. source integrity can be established through zero-cost official routes.
 
-E14 and X16 branches remain frozen/unchanged. Any paid/potentially paid route requires explicit prior user approval.
+Do not automatically return to `mds2-3761`, X16, or high-capacity ML to rescue E24. E14 and preserved X16 branches remain unchanged. Any paid/potentially paid route requires explicit prior user approval.
