@@ -10,7 +10,7 @@ incremental_monetary_cost_usd: 0
 # AMBENCH-E33 Scan-Strategy Design Map Preflight / Scan-Strategy 설계 map 사전점검
 
 ## Boundary / 경계
-- Scan-strategy process-input CSV only; no `Measurements.xlsx` numerical values, images, or outcomes. / scan-strategy 공정입력 CSV만 사용; `Measurements.xlsx` 숫자값·이미지·outcome 미사용.
+- Process-input scan strategy only. `Measurements.xlsx` numerical outcomes were not opened.
 
 ## Source integrity / source 무결성
 - dataset: `mds2-3662`
@@ -21,27 +21,42 @@ incremental_monetary_cost_usd: 0
 - checksum_match: `True`
 
 ## `Scan Strategy Data/scanStrategyConverging.csv`
-- line_count: `2981`
-- first_lines_process_input_only:
-  - `x (�m),y (�m),laser power (W),time (seconds)`
-  - `2435,675,285,0`
-  - `2435,685,285,0.00001`
-  - `2435,694,285,0.00002`
-  - `2435,709,285,0.00003`
+- parsed_rows: `2980`
+- skipped_rows: `0`
+- header: `['x (�m)', 'y (�m)', 'laser power (W)', 'time (seconds)']`
+- laser_power_values: `[0.0, 285.0]`
+- positive_dt_median_s: `9.999999999999593e-06`
+- nonpositive_dt_count: `0`
+- dt_gt_50us_count: `0`
 
 ## `Scan Strategy Data/scanStrategyDiverging.csv`
-- line_count: `2966`
-- first_lines_process_input_only:
-  - `x (�m),y (�m),laser power (W),time (seconds)`
-  - `2432,738,285,0`
-  - `2432,747,285,0.00001`
-  - `2431,757,285,0.00002`
-  - `2431,767,285,0.00003`
+- parsed_rows: `2965`
+- skipped_rows: `0`
+- header: `['x (�m)', 'y (�m)', 'laser power (W)', 'time (seconds)']`
+- laser_power_values: `[0.0, 285.0]`
+- positive_dt_median_s: `9.999999999999593e-06`
+- nonpositive_dt_count: `0`
+- dt_gt_50us_count: `0`
 
-## `Scan Strategy Data/singleTrack.csv`
-- line_count: `3`
-- first_lines_process_input_only:
-  - `x (�m),y (�m),laser power (W),time (seconds)`
-  - `500,500,285,0`
-  - `500,2500,285,0.00208`
+## Segmentation / track 분할
+- C_segment_count: `1`
+- D_segment_count: `1`
+- C_base_dt: `9.999999999999593e-06`
+- D_base_dt: `9.999999999999593e-06`
+- threshold_s: `5e-05`
+
+### C process-input segments
+- C1: n=2980; start=(2435.0, 675.0); end=(570.0, 734.0); segment_time_s=0.02979
+
+### D process-input segments
+- D1: n=2965; start=(2432.0, 738.0); end=(568.0, 649.0); segment_time_s=0.02964
+
+## Geometry-location matching / geometry 위치 매칭
+- one_to_one_18x18: `False`
+- exact_Ct_to_D19minusT: `False`
+- matches:
+  - C1 -> D1: endpoint_error_sum_um=148.095; next_best_error_sum_um=NA
+
+## Pre-outcome design conclusion / outcome 전 설계 결론
+**HOLD_GEOMETRY_REVERSE_MAPPING_NOT_VERIFIED** — do not open measurement outcomes.
 
