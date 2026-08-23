@@ -1,0 +1,112 @@
+name: AMBENCH F22 parts 2-4 source integrity
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ambench-f22-parts234.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  parts234:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify bytes and filename inventory only
+        shell: bash
+        run: |
+          set -euo pipefail
+          TMP="$(mktemp -d)"
+          trap 'rm -rf "$TMP"' EXIT
+          RESULT="$GITHUB_WORKSPACE/research/AMBENCH-F22/PARTS234_RESULT.md"
+          mkdir -p "$(dirname "$RESULT")"
+          cd "$TMP"
+
+          curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors \
+            'https://data.nist.gov/od/id/mds2-3761?format=nerdm' -o nerdm.json
+
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          obj=json.loads(Path('nerdm.json').read_text())
+          for t in ['part02.zip','part03.zip','part04.zip']:
+              exact=[c for c in obj.get('components',[]) if c.get('filepath')==t]
+              if len(exact)!=1: raise SystemExit(f'{t}:COMPONENT_MATCH_FAIL')
+              c=exact[0]; ck=c.get('checksum') or {}; h=ck.get('hash') or ''; alg=(ck.get('algorithm') or {}).get('tag')
+              if alg!='sha256' or len(h)!=64 or not c.get('downloadURL'): raise SystemExit(f'{t}:META_FAIL')
+              stem=t[:-4]
+              Path(stem+'.url').write_text(c['downloadURL'])
+              Path(stem+'.hash').write_text(h)
+              Path(stem+'.size').write_text(str(c.get('size') or 'UNKNOWN'))
+          PY
+
+          : > body.md
+          for ZIP in part02 part03 part04; do
+            URL="$(cat "$ZIP.url")"; EXPECTED="$(cat "$ZIP.hash")"; SIZE="$(cat "$ZIP.size")"
+            curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors "$URL" -o "$ZIP.zip"
+            ACTUAL="$(sha256sum "$ZIP.zip" | awk '{print $1}')"
+            test "$EXPECTED" = "$ACTUAL"
+            python - "$ZIP.zip" <<'PY' > one.md
+          import re, sys, zipfile
+          from pathlib import Path
+          p=sys.argv[1]
+          with zipfile.ZipFile(p) as z:
+              bad=z.testzip()
+              names=[n for n in z.namelist() if not n.endswith('/')]
+              csvs=[n for n in names if n.lower().endswith('.csv')]
+              layers=[]
+              for n in csvs:
+                  ints=re.findall(r'\d+',Path(n).stem)
+                  if ints: layers.append(int(ints[-1]))
+              uniq=sorted(set(layers))
+              print(f'- zip_test: `{"PASS" if bad is None else "FAIL"}`')
+              print(f'- total_file_members: `{len(names)}`')
+              print(f'- csv_member_count: `{len(csvs)}`')
+              print(f'- first_csv_member: `{csvs[0] if csvs else "NONE"}`')
+              print(f'- last_csv_member: `{csvs[-1] if csvs else "NONE"}`')
+              print(f'- parsed_unique_layer_count: `{len(uniq)}`')
+              print(f'- exact_layer_1_250_coverage: `{"YES" if uniq==list(range(1,251)) else "NO"}`')
+              print('- CSV_CONTENT_LINES_READ: `NO`')
+          PY
+            {
+              echo "## $ZIP.zip"
+              echo "- NERDm size_bytes: \`$SIZE\`"
+              echo "- expected SHA-256: \`$EXPECTED\`"
+              echo "- actual local SHA-256: \`$ACTUAL\`"
+              echo "- SHA-256 match: **YES**"
+              cat one.md
+              echo
+            } >> body.md
+            rm -f "$ZIP.zip"
+          done
+
+          cat > "$RESULT" <<'EOF'
+          ---
+          id: AMBENCH-F22-PARTS234-RESULT
+          type: sanitized-source-integrity-result
+          created: 2026-08-23
+          source_of_truth: github-actions
+          raw_artifacts_committed: false
+          csv_content_lines_read: false
+          ---
+
+          # AMBENCH-F22 Parts 2–4 Source Integrity Result / F22 Part 2–4 source 무결성 결과
+
+          - route: public standard GitHub-hosted `ubuntu-latest`
+          - incremental monetary cost: `0 USD`
+          - artifact/cache: `NONE`
+          EOF
+          cat body.md >> "$RESULT"
+          echo '- raw transient teardown: `SUCCESS`' >> "$RESULT"
+      - name: Persist sanitized result only
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/AMBENCH-F22/PARTS234_RESULT.md
+          git commit -m 'record sanitized AMBENCH-F22 parts2-4 source integrity result'
+          git push
