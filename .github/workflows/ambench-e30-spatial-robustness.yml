@@ -1,0 +1,258 @@
+name: AMBENCH E30 spatial robustness
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ambench-e30-spatial-robustness.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  execute:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Execute frozen E30 P2-P3 spatial robustness falsification
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import csv, hashlib, io, itertools, json, math, os, re, shutil, statistics, subprocess, tempfile, urllib.request
+          from pathlib import Path
+
+          root=Path(os.environ['GITHUB_WORKSPACE'])
+          out=root/'research/AMBENCH-E30/RESULT.md'
+          out.parent.mkdir(parents=True,exist_ok=True)
+          tmp=Path(tempfile.mkdtemp(prefix='e30-'))
+          plates=['T72','T82','T92','T102','T112','T122']
+          positions=['P2','P3']
+          short={'T72','T82','T92'}
+          long={'T102','T112','T122'}
+          surface_target='Cross_Sections/Micrographs/SurfaceReference_and_Orientation_Layers.csv'
+          safe_codes={
+            'IMMUTABLE_METADATA_INCOMPLETE','DOWNLOAD_FAIL','HASH_OR_SIZE_MISMATCH','CSV_DECODE_OR_SCHEMA_FAIL',
+            'README_NOT_UNIQUE','README_SCALE_TEXT_UNRESOLVED','PIXEL_SCALE_NOT_UNIQUE','SURFACE_COMPONENT_NOT_UNIQUE',
+            'SURFACE_SCHEMA_UNRESOLVED','POSITION_SURFACE_BINDING_NOT_UNIQUE','POSITION_SURFACE_REFERENCE_NONNUMERIC',
+            'POSITION_COMPONENT_NOT_UNIQUE','POSITION_REQUIRED_COLUMNS_MISSING','TRACK_ID_NONNUMERIC','TRACK_ID_DUPLICATE',
+            'NEGATIVE_RECONSTRUCTED_OVERLAP_DEPTH','POSITION_ROW_COUNT_NOT_45','POSITION_VALID_COVERAGE_LT_41',
+            'COMMON_TRACK_BECAME_INVALID','NEGATIVE_COMMON_RECONSTRUCTION','COMMON_TRACK_COUNT_MISMATCH'
+          }
+          lines=[
+            '---','id: AMBENCH-E30-RESULT','type: spatial-robustness-result','created: 2026-08-23',
+            'source_of_truth: github-actions','raw_artifacts_committed: false',
+            'inherited_exposure: NO__INHERITED_E27_SCHEMA_PREFLIGHT_GIBBERISH_EMISSION','---','',
+            '# AMBENCH-E30 Result / E30 결과','',
+            '- incremental monetary cost: 0 USD',
+            '- raw P2/P3 coordinate rows committed/emitted: NO',
+            '- raw surface-reference rows committed/emitted: NO','',
+          ]
+
+          def checksum_hash(c):
+            cs=c.get('checksum') or {}
+            if not isinstance(cs,dict): return None
+            h=cs.get('hash')
+            if isinstance(h,str) and len(h)==64: return h.lower()
+            for v in cs.values():
+              if isinstance(v,str) and len(v)==64 and all(ch in '0123456789abcdefABCDEF' for ch in v): return v.lower()
+            return None
+
+          def download_verified(c,dest):
+            sha=checksum_hash(c); size=c.get('size'); url=c.get('downloadURL')
+            if not sha or not isinstance(size,int) or not url: raise RuntimeError('IMMUTABLE_METADATA_INCOMPLETE')
+            cp=subprocess.run(['curl','-fsSL','--retry','5','--retry-delay','2','--retry-all-errors',url,'-o',str(dest)],capture_output=True,text=True)
+            if cp.returncode!=0 or not dest.exists(): raise RuntimeError('DOWNLOAD_FAIL')
+            b=dest.read_bytes(); actual=hashlib.sha256(b).hexdigest().lower()
+            if len(b)!=size or actual!=sha: raise RuntimeError('HASH_OR_SIZE_MISMATCH')
+            return b,sha,size
+
+          def decode_csv_bytes(b, tokens=()):
+            for enc in ('utf-8-sig','cp1252','latin-1'):
+              try:
+                text=b.decode(enc); reader=csv.reader(io.StringIO(text,newline='')); header=next(reader,[])
+                low='|'.join(str(x).lower() for x in header)
+                if len(header)>=2 and all(t.lower() in low for t in tokens): return enc,text,header
+              except Exception: pass
+            raise RuntimeError('CSV_DECODE_OR_SCHEMA_FAIL')
+
+          def numeric(v):
+            s=str(v).strip()
+            if not s or s.upper() in {'#N/A','N/A','NA','NAN'}: return None
+            try:
+              x=float(s); return x if math.isfinite(x) else None
+            except Exception: return None
+
+          pos_means={}; valid_counts={}; valid_tracks={}; raw_cache={}; yrefs={}; scale=None
+          try:
+            with urllib.request.urlopen('https://data.nist.gov/od/id/mds2-4103?format=nerdm',timeout=60) as r: meta=json.load(r)
+            comps=meta.get('components',[])
+            lines += ['## Source identity / source identity',f"- NERDm_version: {meta.get('version','UNKNOWN')}",f'- component_count: {len(comps)}','']
+
+            # Exact root README and immutable verification.
+            readmes=[c for c in comps if (c.get('filepath') or '')=='4103_ReadMe.txt']
+            if len(readmes)!=1: raise RuntimeError('README_NOT_UNIQUE')
+            readme_b,readme_sha,readme_size=download_verified(readmes[0],tmp/'readme.txt')
+            readme_text=None
+            for enc in ('utf-8-sig','cp1252','latin-1'):
+              try:
+                t=readme_b.decode(enc)
+                if 'pixel scaling' in t.lower() and 'micrometers/pixel' in t.lower(): readme_text=t; break
+              except Exception: pass
+            if readme_text is None: raise RuntimeError('README_SCALE_TEXT_UNRESOLVED')
+            matches=re.findall(r'pixel\s+scaling\s+of\s+([0-9]+(?:\.[0-9]+)?)\s*micrometers/pixel',readme_text,flags=re.I)
+            scales=sorted(set(float(x) for x in matches if float(x)>0))
+            if len(scales)!=1: raise RuntimeError('PIXEL_SCALE_NOT_UNIQUE')
+            scale=scales[0]
+            lines += [f'- README_filepath: `4103_ReadMe.txt`',f'- README_size: {readme_size}',f'- README_SHA256: {readme_sha}','- README_local_integrity_match: YES',f'- pixel_scale_um_per_px: {scale:.12g}','']
+
+            # Exact Micrographs surface reference.
+            surf=[c for c in comps if (c.get('filepath') or '')==surface_target]
+            if len(surf)!=1: raise RuntimeError('SURFACE_COMPONENT_NOT_UNIQUE')
+            surf_b,surf_sha,surf_size=download_verified(surf[0],tmp/'surface.csv')
+            _,surf_text,surf_header=decode_csv_bytes(surf_b,('reference',))
+            hlow=[str(x).lower() for x in surf_header]
+            image_idx=next((i for i,x in enumerate(hlow) if 'image' in x or 'name' in x),None)
+            yref_idx=next((i for i,x in enumerate(hlow) if 'reference' in x and 'y' in x),None)
+            if image_idx is None or yref_idx is None: raise RuntimeError('SURFACE_SCHEMA_UNRESOLVED')
+            refs={(p,k):[] for p in plates for k in positions}
+            sr=csv.reader(io.StringIO(surf_text,newline='')); next(sr,None)
+            for row in sr:
+              if len(row)<=max(image_idx,yref_idx): continue
+              name=str(row[image_idx])
+              for p in plates:
+                if not re.search(r'(?<![0-9])'+re.escape(p)+r'(?![0-9])',name): continue
+                for k in positions:
+                  if re.search(r'(?i)(?:^|[^A-Za-z0-9])'+k+r's(?:[^A-Za-z0-9]|$)',name): refs[(p,k)].append(row[yref_idx])
+            for key,arr in refs.items():
+              if len(arr)!=1: raise RuntimeError('POSITION_SURFACE_BINDING_NOT_UNIQUE')
+              y=numeric(arr[0])
+              if y is None: raise RuntimeError('POSITION_SURFACE_REFERENCE_NONNUMERIC')
+              yrefs[key]=y
+            lines += [f'- surface_filepath: `{surface_target}`',f'- surface_size: {surf_size}',f'- surface_SHA256: {surf_sha}','- surface_local_integrity_match: YES','- exactly_one_P2_P3_surface_reference_per_plate_position: YES','']
+
+            # Exact 12 plate-position components and reconstruction.
+            component_records=[]
+            for p in plates:
+              for k in positions:
+                pat=re.compile(r'.*_AMB_'+re.escape(p)+r'_'+k+r's_pixel_points\.csv$',re.I)
+                mm=[c for c in comps if pat.match(c.get('filepath') or '')]
+                if len(mm)!=1: raise RuntimeError('POSITION_COMPONENT_NOT_UNIQUE')
+                c=mm[0]
+                b,sha,size=download_verified(c,tmp/f'{p}_{k}.csv')
+                raw_cache[(p,k)]=b
+                component_records.append((p,k,c.get('filepath'),size,sha))
+                _,text,header=decode_csv_bytes(b,('overlap_depth_y',))
+                low=[str(x).strip().lower() for x in header]
+                row_idx=next((i for i,x in enumerate(low) if x=='row'),None)
+                ody_idx=next((i for i,x in enumerate(low) if x=='overlap_depth_y (px)' or x=='overlap_depth_y'),None)
+                if row_idx is None or ody_idx is None: raise RuntimeError('POSITION_REQUIRED_COLUMNS_MISSING')
+                reader=csv.reader(io.StringIO(text,newline='')); next(reader,None)
+                rows=[]; seen=set(); vals={}
+                for row in reader:
+                  if not row: continue
+                  rows.append(row)
+                  if len(row)<=max(row_idx,ody_idx): continue
+                  try: track=int(float(str(row[row_idx]).strip()))
+                  except Exception: raise RuntimeError('TRACK_ID_NONNUMERIC')
+                  if track in seen: raise RuntimeError('TRACK_ID_DUPLICATE')
+                  seen.add(track)
+                  oy=numeric(row[ody_idx])
+                  if oy is None: continue
+                  dpx=oy-yrefs[(p,k)]
+                  if dpx<0: raise RuntimeError('NEGATIVE_RECONSTRUCTED_OVERLAP_DEPTH')
+                  vals[track]=dpx*scale
+                if len(rows)!=45: raise RuntimeError('POSITION_ROW_COUNT_NOT_45')
+                valid_counts[(p,k)]=len(vals); valid_tracks[(p,k)]=set(vals)
+                if len(vals)<41: raise RuntimeError('POSITION_VALID_COVERAGE_LT_41')
+                pos_means[(p,k)]=statistics.fmean(vals.values())
+
+            lines += ['## Immutable P2/P3 components / immutable P2/P3 component']
+            for p,k,path,size,sha in component_records:
+              lines.append(f'- {p}_{k}: `{path}` | size={size} | SHA256={sha} | local_match=YES')
+            lines += ['', '## Position reconstruction / 위치 재구성', '- all_12_component_integrity_pass: YES',f'- valid_track_counts: '+str({f'{p}_{k}':valid_counts[(p,k)] for p in plates for k in positions}),'- all_12_plate_position_coverage_gte_41: YES']
+            for p in plates:
+              for k in positions: lines.append(f'- {p}_{k}_mean_overlap_depth_um: {pos_means[(p,k)]:.9f}')
+            lines.append('')
+
+            delta_p2=statistics.fmean([pos_means[(p,'P2')] for p in plates if p in short])-statistics.fmean([pos_means[(p,'P2')] for p in plates if p in long])
+            delta_p3=statistics.fmean([pos_means[(p,'P3')] for p in plates if p in short])-statistics.fmean([pos_means[(p,'P3')] for p in plates if p in long])
+            combined={p:(pos_means[(p,'P2')]+pos_means[(p,'P3')])/2 for p in plates}
+            delta_combined=statistics.fmean([combined[p] for p in plates if p in short])-statistics.fmean([combined[p] for p in plates if p in long])
+
+            vals=[combined[p] for p in plates]
+            perm=[]
+            for combo in itertools.combinations(range(6),3):
+              s=set(combo); a=[vals[i] for i in s]; b=[vals[i] for i in range(6) if i not in s]
+              perm.append(statistics.fmean(a)-statistics.fmean(b))
+            p_exact=sum(1 for d in perm if d>=delta_combined-1e-12)/20
+
+            short_vals=[combined[p] for p in plates if p in short]; long_vals=[combined[p] for p in plates if p in long]
+            wins=losses=ties=0
+            for a in short_vals:
+              for b in long_vals:
+                if a>b: wins+=1
+                elif a<b: losses+=1
+                else: ties+=1
+            rrb=(wins-losses)/9
+
+            common=set.intersection(*(valid_tracks[(p,k)] for p in plates for k in positions))
+            common_n=len(common); delta_common=None
+            if common_n>=36:
+              common_pos={}
+              for p in plates:
+                for k in positions:
+                  b=raw_cache[(p,k)]
+                  _,text,header=decode_csv_bytes(b,('overlap_depth_y',))
+                  low=[str(x).strip().lower() for x in header]
+                  row_idx=next(i for i,x in enumerate(low) if x=='row')
+                  ody_idx=next(i for i,x in enumerate(low) if x=='overlap_depth_y (px)' or x=='overlap_depth_y')
+                  reader=csv.reader(io.StringIO(text,newline='')); next(reader,None)
+                  vv=[]
+                  for row in reader:
+                    if not row or len(row)<=max(row_idx,ody_idx): continue
+                    try: track=int(float(str(row[row_idx]).strip()))
+                    except Exception: continue
+                    if track not in common: continue
+                    oy=numeric(row[ody_idx])
+                    if oy is None: raise RuntimeError('COMMON_TRACK_BECAME_INVALID')
+                    dpx=oy-yrefs[(p,k)]
+                    if dpx<0: raise RuntimeError('NEGATIVE_COMMON_RECONSTRUCTION')
+                    vv.append(dpx*scale)
+                  if len(vv)!=common_n: raise RuntimeError('COMMON_TRACK_COUNT_MISMATCH')
+                  common_pos[(p,k)]=statistics.fmean(vv)
+              common_combined={p:(common_pos[(p,'P2')]+common_pos[(p,'P3')])/2 for p in plates}
+              delta_common=statistics.fmean([common_combined[p] for p in plates if p in short])-statistics.fmean([common_combined[p] for p in plates if p in long])
+
+            if delta_p2>0 and delta_p3>0 and delta_combined>0 and p_exact<=0.05 and rrb>=(7/9) and common_n>=36 and delta_common is not None and delta_common>0:
+              gate='PASS_E30_SPATIALLY_ROBUST_DIRECTIONAL_EFFECT'
+            elif delta_combined>0:
+              gate='MIXED_E30_SPATIAL_ROBUSTNESS'
+            else:
+              gate='FALSIFIED_E30_SPATIAL_GENERALITY'
+
+            lines += ['## Combined plate robustness endpoints / 결합 plate 강건성 endpoint']
+            for p in plates: lines.append(f'- {p}_P2P3_equal_weight_mean_um: {combined[p]:.9f}')
+            lines += ['', '## Frozen robustness statistics / 고정 강건성 통계',f'- Delta_P2_um: {delta_p2:.9f}',f'- Delta_P3_um: {delta_p3:.9f}',f'- Delta_combined_um: {delta_combined:.9f}',f'- exact_one_sided_combined_permutation_p: {p_exact:.9f}',f'- combined_plate_rank_biserial: {rrb:.9f}',f'- combined_rank_wins_losses_ties: {wins}/{losses}/{ties}',f'- global_common_valid_track_count: {common_n}',f'- Delta_common_combined_um: {delta_common:.9f}' if delta_common is not None else '- Delta_common_combined_um: NOT_COMPUTED_LOW_COMMON_COVERAGE','', '## Frozen E30 gate / 고정 E30 판정',f'**{gate}**','', '## Interpretation boundary / 해석 경계','- independent replicate remains physical plate (n=3 vs n=3)','- P2/P3 are nested spatial repeats; tracks are nested within plate-position','- P1 was not used to rescue or weight E30','- no position dropping, imputation, endpoint search, sign/scale/source adaptation, or model escalation','- inherited exposure disclosure remains active']
+
+          except Exception as e:
+            msg=str(e) if isinstance(e,RuntimeError) and str(e) in safe_codes else 'UNCLASSIFIED_SAFE_HOLD'
+            lines += ['## Execution hold / 실행 HOLD',f'- hold_error_type: {type(e).__name__}',f'- hold_symbolic_reason: {msg}','- no adaptive redesign performed: YES','', '## Frozen E30 gate / 고정 E30 판정','**HOLD_E30_INTEGRITY_OR_COVERAGE**']
+          finally:
+            shutil.rmtree(tmp,ignore_errors=True)
+
+          out.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          PY
+
+      - name: Commit sanitized E30 result
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/AMBENCH-E30/RESULT.md
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'record preregistered AMBENCH-E30 spatial robustness result'
+          git push
