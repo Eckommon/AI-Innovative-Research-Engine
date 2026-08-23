@@ -1,0 +1,164 @@
+name: AMBENCH E36 frozen RHF variability reproduction
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ambench-e36-result.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Execute frozen part-level RHF variability contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import csv, hashlib, io, json, os, random, re, statistics, urllib.request, zipfile
+          from pathlib import Path
+
+          DSID='mds2-2507'
+          EXPECTED_SHA='306a3d26e6e77d6fef44b1bf7b1dd2c817560a84f21f27fc4cec8cdb10cabe59'
+          BASELINE=[1,12,23,34,45]
+          BLOCKS=[(1,list(range(2,12))),(12,list(range(13,23))),(23,list(range(24,34))),(34,list(range(35,45))),(45,list(range(46,56)))]
+          NPERM=100000
+          SEED=20260823
+          root=Path(os.environ['GITHUB_WORKSPACE'])
+          out=root/'research/AMBENCH-E36/RESULT.md'
+          out.parent.mkdir(parents=True,exist_ok=True)
+
+          def fetch(url):
+              req=urllib.request.Request(url,headers={'User-Agent':'AI-Innovative-Research-Engine/E36-result'})
+              with urllib.request.urlopen(req,timeout=60) as r:
+                  return r.read()
+
+          def med(xs): return statistics.median(xs)
+          def sd(xs): return statistics.stdev(xs)
+
+          meta=json.loads(fetch(f'https://data.nist.gov/od/id/{DSID}?format=nerdm').decode('utf-8'))
+          comp=next(c for c in meta.get('components',[]) if c.get('filepath')=='RHF_Analysis_Results.zip')
+          exp=(comp.get('checksum') or {}).get('hash')
+          raw=fetch(comp['downloadURL']); got=hashlib.sha256(raw).hexdigest()
+          if len(raw)!=comp.get('size') or got!=exp or got!=EXPECTED_SHA:
+              raise RuntimeError('E36 source-integrity failure')
+
+          z=zipfile.ZipFile(io.BytesIO(raw))
+          rx=re.compile(r'(?:^|/)DAQ_RHF_P(\d{2})_layer0001_T80_XYPVALWI\.csv$',re.I)
+          files={}
+          for n in z.namelist():
+              m=rx.search(n)
+              if m: files[int(m.group(1))]=n
+          if sorted(files)!=list(range(1,56)):
+              raise RuntimeError('E36 P01-P55 coverage failure')
+
+          part={}
+          for pid in range(1,56):
+              rows=list(csv.reader(io.StringIO(z.read(files[pid]).decode('utf-8-sig',errors='strict'))))
+              if len(rows)!=1498 or any(len(r)!=10 for r in rows):
+                  raise RuntimeError(f'E36 row-shape failure P{pid:02d}')
+              cols={4:[],5:[],6:[]}
+              for r in rows:
+                  for j in cols:
+                      cols[j].append(float(r[j]))
+              part[pid]={
+                  'area_sd':sd(cols[4]),
+                  'length_sd':sd(cols[5]),
+                  'width_sd':sd(cols[6]),
+                  'n':len(rows),
+              }
+
+          RHF=[p for p in range(1,56) if p not in BASELINE]
+          area=[part[p]['area_sd'] for p in range(1,56)]
+          base_vals=[part[p]['area_sd'] for p in BASELINE]
+          rhf_vals=[part[p]['area_sd'] for p in RHF]
+          delta=med(base_vals)-med(rhf_vals)
+
+          rng=random.Random(SEED)
+          extreme=0
+          ids=list(range(1,56))
+          for _ in range(NPERM):
+              bset=set(rng.sample(ids,5))
+              b=[part[p]['area_sd'] for p in ids if p in bset]
+              r=[part[p]['area_sd'] for p in ids if p not in bset]
+              d=med(b)-med(r)
+              if d>=delta:
+                  extreme+=1
+          pval=(extreme+1)/(NPERM+1)
+
+          block_rows=[]; pos=neg=zero=0
+          for bi,(bpid,rpids) in enumerate(BLOCKS,1):
+              d=part[bpid]['area_sd']-med([part[p]['area_sd'] for p in rpids])
+              if d>0: pos+=1
+              elif d<0: neg+=1
+              else: zero+=1
+              block_rows.append((bi,bpid,rpids,d))
+
+          valid=(len(part)==55 and all(v['n']==1498 for v in part.values()))
+          if not valid:
+              gate='HOLD_E36_NUMERICAL_INTEGRITY'
+          elif delta>0 and pval<=0.05 and pos>=4:
+              gate='PASS_E36_EXTERNAL_RHF_VARIABILITY_REDUCTION'
+          elif delta>0 and pval<=0.05:
+              gate='MIXED_E36_RHF_VARIABILITY_REDUCTION'
+          else:
+              gate='NO_E36_NONSEL_RHF_VARIABILITY_REDUCTION'
+
+          min_pid=min(RHF,key=lambda p: part[p]['area_sd'])
+          min_sd=part[min_pid]['area_sd']
+          base_mean=statistics.mean(base_vals)
+          base_median=med(base_vals)
+          reduction=(base_mean-min_sd)/base_mean*100 if base_mean else float('nan')
+
+          def sensitivity(field):
+              bv=[part[p][field] for p in BASELINE]
+              rv=[part[p][field] for p in RHF]
+              ds=med(bv)-med(rv)
+              signs=[]
+              for bpid,rpids in BLOCKS:
+                  bd=part[bpid][field]-med([part[p][field] for p in rpids])
+                  signs.append(1 if bd>0 else (-1 if bd<0 else 0))
+              return med(bv),med(rv),ds,signs
+          len_s=sensitivity('length_sd'); wid_s=sensitivity('width_sd')
+
+          lines=['---','id: AMBENCH-E36-RESULT','type: confirmatory-reproduction-result','state: COMPLETED_NUMERICAL_EXECUTION','created: 2026-08-23','source_of_truth: github-actions','publication_level_outcomes_preexposed: true','raw_analysis_rows_committed: false','incremental_monetary_cost_usd: 0','---','',
+                 '# AMBENCH-E36 Result — RHF External Part-Level Variability Reproduction',
+                 '# AMBENCH-E36 결과 — RHF 외부 Part-Level 변동성 재현','',
+                 '## Execution integrity / 실행 무결성',f'- dataset: `{DSID}`',f'- NERDm version: `{meta.get("version")}`',f'- archive_size: `{len(raw)}`',f'- SHA-256 expected/NERDm/local: `{got}`',f'- checksum_match: `{got==EXPECTED_SHA==exp}`',f'- physical_parts: `55`',f'- rows_per_part: `1498`',f'- baseline_parts: `{BASELINE}`',f'- RHF_parts: `50`','- No raw analysis rows are committed; only preregistered physical-part aggregates/statistics are persisted.','',
+                 '## Frozen primary — melt-pool-area variability / 고정 1차 — melt-pool area 변동성',f'- baseline_part_sd_median_px: `{base_median:.12g}`',f'- RHF_part_sd_median_px: `{med(rhf_vals):.12g}`',f'- Delta_med_baseline_minus_RHF_px: `{delta:.12g}`',f'- permutation_n: `{NPERM}`',f'- permutation_seed: `{SEED}`',f'- extreme_count: `{extreme}`',f'- add_one_one_sided_p: `{pval:.12g}`',f'- block_sign_counts: `positive={pos}; negative={neg}; zero={zero}`',f'- **primary_gate: `{gate}`**','',
+                 '### Physical-part area SD aggregates / Physical-part area SD 집계','| Part | Group | SD area (px) | Rows |','|---:|---|---:|---:|']
+          for pid in range(1,56):
+              grp='BASELINE_CONSTANT_POWER' if pid in BASELINE else 'RHF_VARIABLE_POWER'
+              lines.append(f'| P{pid:02d} | {grp} | {part[pid]["area_sd"]:.12g} | {part[pid]["n"]} |')
+
+          lines += ['', '### Frozen block stability / 고정 block 안정성','| Block | Baseline | RHF parts | Baseline SD - RHF median SD (px) | Sign |','|---:|---:|---|---:|---|']
+          for bi,bpid,rpids,d in block_rows:
+              sign='positive' if d>0 else ('negative' if d<0 else 'zero')
+              lines.append(f'| B{bi} | P{bpid:02d} | P{rpids[0]:02d}–P{rpids[-1]:02d} | {d:.12g} | {sign} |')
+
+          lines += ['', '## Publication-form descriptive reproduction / 논문형 기술 재현',f'- mean_baseline_part_area_SD_px: `{base_mean:.12g}`',f'- median_baseline_part_area_SD_px: `{base_median:.12g}`',f'- minimum_RHF_part: `P{min_pid:02d}`',f'- minimum_RHF_part_area_SD_px: `{min_sd:.12g}`',f'- descriptive_reduction_vs_mean_baseline_pct: `{reduction:.12g}`','- This optimum/minimum section is descriptive only and has no independent PASS authority because the candidate optimum is selected across 50 RHF conditions and publication-level optimum information was already known.','',
+                 '## Secondary sensitivity / 2차 sensitivity',
+                 'Length and width use the same part-level sample-SD construction but cannot rescue the primary area gate.',f'- length: baseline_median_SD=`{len_s[0]:.12g}`; RHF_median_SD=`{len_s[1]:.12g}`; Delta=`{len_s[2]:.12g}`; block_signs=`{len_s[3]}`',f'- width: baseline_median_SD=`{wid_s[0]:.12g}`; RHF_median_SD=`{wid_s[1]:.12g}`; Delta=`{wid_s[2]:.12g}`; block_signs=`{wid_s[3]}`','',
+                 '## Final / 최종',f'- **`{gate}`**','- Claim scope: independent NIST IN625 bare-plate RHF parameter-sweep experiment; physical-part-level non-selective association between RHF variable-power conditions and melt-pool-area variability.','- Not randomized causal proof, not universal superiority of every RHF setting, not same-construct replication of E33, and not pristine outcome-blind discovery.','- No post-hoc filtering, row/frame pseudo-replication, parameter-subset search, endpoint switch, model escalation, or paid computation was used.','']
+          out.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          PY
+
+      - name: Persist frozen E36 result
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/AMBENCH-E36/RESULT.md
+          if git diff --cached --quiet; then
+            echo 'No E36 result change.'
+          else
+            git commit -m 'record frozen AMBENCH-E36 RHF variability reproduction result'
+            git push
+          fi
