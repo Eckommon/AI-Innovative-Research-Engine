@@ -1,0 +1,211 @@
+name: AMBENCH F23 headerless schema structure
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ambench-f23-schema-structure.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  verify-structure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify all registered X4 CSV rows structurally without value emission
+        shell: bash
+        run: |
+          set -euo pipefail
+          TMP="$(mktemp -d)"
+          trap 'rm -rf "$TMP"' EXIT
+          RESULT="$GITHUB_WORKSPACE/research/AMBENCH-F23/STRUCTURE_RESULT.md"
+          mkdir -p "$(dirname "$RESULT")"
+          cd "$TMP"
+
+          cat > specs.tsv <<'EOF'
+          part1.zip	87041995	0bf229f5a04d181f4c79549fa6357a1bfe3095437b26bb660de5e86b35bb2ec3	https://data.nist.gov/od/ds/mds2-3761/part1.zip
+          part02.zip	85261726	bf72d9e160d94094f9268fcf3f76a532c8a29fb64aff1afbec20256acaee178e	https://data.nist.gov/od/ds/mds2-3761/part02.zip
+          part03.zip	83521608	89e9e1afadca22b9c34177d82972272a4e73789b19388f0c83d62a9ebd53d878	https://data.nist.gov/od/ds/mds2-3761/part03.zip
+          part04.zip	81225258	6c3f655a1482001119c54d1f1e404a34eb401f386fffc06147628b36c7c8d7c5	https://data.nist.gov/od/ds/mds2-3761/part04.zip
+          EOF
+
+          cat > "$RESULT" <<'EOF'
+          ---
+          id: AMBENCH-F23-STRUCTURE-RESULT
+          type: sanitized-structural-result
+          created: 2026-08-23
+          source_of_truth: github-actions
+          raw_artifacts_committed: false
+          numerical_values_emitted: false
+          ---
+
+          # AMBENCH-F23 Headerless Structural Verification / F23 Headerless 구조 검증
+
+          - route: public standard GitHub-hosted `ubuntu-latest`
+          - incremental monetary cost: `0 USD`
+          - artifacts/cache: `NONE`
+          - inherited exposure state: `NEW_REGISTERED_X4_NUMERICAL_OUTCOME_BLIND = VIOLATED_LIMITED`
+          - additional numerical values emitted: `NO`
+          EOF
+
+          GLOBAL_PASS=YES
+          TOTAL_CSV=0
+          TOTAL_ROWS=0
+          TOTAL_BAD_WIDTH=0
+          TOTAL_NUMERIC_FAIL=0
+          TOTAL_EMPTY_ROWS=0
+          TOTAL_FIRST_ROW_NUMERIC=0
+
+          while IFS=$'\t' read -r FILE EXPECTED_SIZE EXPECTED_SHA URL; do
+            curl -fsSL --retry 5 --retry-delay 2 --retry-all-errors "$URL" -o "$FILE"
+            ACTUAL_SIZE="$(stat -c%s "$FILE")"
+            ACTUAL_SHA="$(sha256sum "$FILE" | awk '{print $1}')"
+            HASH_MATCH=NO
+            SIZE_MATCH=NO
+            [ "$ACTUAL_SHA" = "$EXPECTED_SHA" ] && HASH_MATCH=YES
+            [ "$ACTUAL_SIZE" = "$EXPECTED_SIZE" ] && SIZE_MATCH=YES
+            [ "$HASH_MATCH" = YES ] || GLOBAL_PASS=NO
+            [ "$SIZE_MATCH" = YES ] || GLOBAL_PASS=NO
+
+            python - "$FILE" > metrics.txt <<'PY'
+          import csv, io, sys, zipfile
+          from pathlib import Path
+
+          fn=sys.argv[1]
+          csv_count=0
+          row_count=0
+          empty_rows=0
+          bad_width=0
+          numeric_fail=0
+          width_set=set()
+          first_row_numeric_count=0
+          first_row_seen_count=0
+          zip_ok=True
+
+          try:
+              with zipfile.ZipFile(fn) as z:
+                  bad=z.testzip()
+                  if bad is not None:
+                      zip_ok=False
+                  names=sorted(n for n in z.namelist() if not n.endswith('/') and n.lower().endswith('.csv'))
+                  csv_count=len(names)
+                  for name in names:
+                      first_nonempty_seen=False
+                      with z.open(name) as raw:
+                          text=io.TextIOWrapper(raw, encoding='utf-8-sig', newline='')
+                          reader=csv.reader(text)
+                          for row in reader:
+                              if not row or all(not x.strip() for x in row):
+                                  empty_rows += 1
+                                  continue
+                              row_count += 1
+                              width=len(row)
+                              width_set.add(width)
+                              if width != 40:
+                                  bad_width += 1
+                              row_numeric=True
+                              for field in row:
+                                  try:
+                                      float(field.strip())
+                                  except Exception:
+                                      numeric_fail += 1
+                                      row_numeric=False
+                              if not first_nonempty_seen:
+                                  first_nonempty_seen=True
+                                  first_row_seen_count += 1
+                                  if row_numeric:
+                                      first_row_numeric_count += 1
+          except Exception:
+              zip_ok=False
+
+          def p(k,v): print(f'{k}={v}')
+          p('ZIP_OK','YES' if zip_ok else 'NO')
+          p('CSV_COUNT',csv_count)
+          p('ROW_COUNT',row_count)
+          p('EMPTY_ROWS',empty_rows)
+          p('BAD_WIDTH_ROWS',bad_width)
+          p('NUMERIC_PARSE_FAILURE_FIELDS',numeric_fail)
+          p('WIDTH_SET',','.join(map(str,sorted(width_set))) if width_set else 'NONE')
+          p('FIRST_NONEMPTY_ROW_SEEN_CSV_COUNT',first_row_seen_count)
+          p('FIRST_NONEMPTY_ROW_ALL_NUMERIC_CSV_COUNT',first_row_numeric_count)
+          PY
+
+            ZIP_OK="$(grep '^ZIP_OK=' metrics.txt | cut -d= -f2-)"
+            CSV_COUNT="$(grep '^CSV_COUNT=' metrics.txt | cut -d= -f2-)"
+            ROW_COUNT="$(grep '^ROW_COUNT=' metrics.txt | cut -d= -f2-)"
+            EMPTY_ROWS="$(grep '^EMPTY_ROWS=' metrics.txt | cut -d= -f2-)"
+            BAD_WIDTH="$(grep '^BAD_WIDTH_ROWS=' metrics.txt | cut -d= -f2-)"
+            NUMFAIL="$(grep '^NUMERIC_PARSE_FAILURE_FIELDS=' metrics.txt | cut -d= -f2-)"
+            WIDTH_SET="$(grep '^WIDTH_SET=' metrics.txt | cut -d= -f2-)"
+            FIRST_SEEN="$(grep '^FIRST_NONEMPTY_ROW_SEEN_CSV_COUNT=' metrics.txt | cut -d= -f2-)"
+            FIRST_NUM="$(grep '^FIRST_NONEMPTY_ROW_ALL_NUMERIC_CSV_COUNT=' metrics.txt | cut -d= -f2-)"
+
+            [ "$ZIP_OK" = YES ] || GLOBAL_PASS=NO
+            [ "$CSV_COUNT" = 250 ] || GLOBAL_PASS=NO
+            [ "$BAD_WIDTH" = 0 ] || GLOBAL_PASS=NO
+            [ "$NUMFAIL" = 0 ] || GLOBAL_PASS=NO
+            [ "$WIDTH_SET" = 40 ] || GLOBAL_PASS=NO
+            [ "$FIRST_SEEN" = 250 ] || GLOBAL_PASS=NO
+            [ "$FIRST_NUM" = 250 ] || GLOBAL_PASS=NO
+
+            TOTAL_CSV=$((TOTAL_CSV + CSV_COUNT))
+            TOTAL_ROWS=$((TOTAL_ROWS + ROW_COUNT))
+            TOTAL_EMPTY_ROWS=$((TOTAL_EMPTY_ROWS + EMPTY_ROWS))
+            TOTAL_BAD_WIDTH=$((TOTAL_BAD_WIDTH + BAD_WIDTH))
+            TOTAL_NUMERIC_FAIL=$((TOTAL_NUMERIC_FAIL + NUMFAIL))
+            TOTAL_FIRST_ROW_NUMERIC=$((TOTAL_FIRST_ROW_NUMERIC + FIRST_NUM))
+
+            cat >> "$RESULT" <<EOF
+
+          ## $FILE
+          - expected_size_bytes: `$EXPECTED_SIZE`
+          - actual_size_bytes: `$ACTUAL_SIZE`
+          - size_match: `$SIZE_MATCH`
+          - expected_SHA256: `$EXPECTED_SHA`
+          - actual_SHA256: `$ACTUAL_SHA`
+          - SHA256_match: `$HASH_MATCH`
+          - zip_test: `$ZIP_OK`
+          - csv_count: `$CSV_COUNT`
+          - nonempty_data_row_count: `$ROW_COUNT`
+          - empty_row_count: `$EMPTY_ROWS`
+          - observed_field_count_set: `[$WIDTH_SET]`
+          - rows_not_40_fields: `$BAD_WIDTH`
+          - numeric_parse_failure_fields: `$NUMFAIL`
+          - CSVs_with_first_nonempty_row_seen: `$FIRST_SEEN`
+          - CSVs_with_first_nonempty_row_all_numeric_or_NaN: `$FIRST_NUM`
+          - numerical_values_emitted: `NO`
+          EOF
+            rm -f "$FILE" metrics.txt
+          done < specs.tsv
+
+          cat >> "$RESULT" <<EOF
+
+          ## Aggregate / 종합
+          - total_csv_count: `$TOTAL_CSV`
+          - total_nonempty_data_row_count: `$TOTAL_ROWS`
+          - total_empty_row_count: `$TOTAL_EMPTY_ROWS`
+          - total_rows_not_40_fields: `$TOTAL_BAD_WIDTH`
+          - total_numeric_parse_failure_fields: `$TOTAL_NUMERIC_FAIL`
+          - total_CSVs_with_first_nonempty_row_all_numeric_or_NaN: `$TOTAL_FIRST_ROW_NUMERIC`
+          - all_four_hash_and_size_match: `$GLOBAL_PASS`
+          - all_1000_CSVs_structurally_headerless_40_field_numeric: `$GLOBAL_PASS`
+          - raw transient teardown: `SUCCESS`
+          EOF
+
+      - name: Persist sanitized structural result only
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/AMBENCH-F23/STRUCTURE_RESULT.md
+          if git diff --cached --quiet; then
+            echo 'No structural result change.'
+          else
+            git commit -m 'record sanitized AMBENCH-F23 structural schema result'
+            git push
+          fi
