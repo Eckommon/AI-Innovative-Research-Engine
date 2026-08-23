@@ -1,0 +1,250 @@
+name: AMBENCH E29 experiment
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ambench-e29-experiment.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  execute:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Execute frozen E29 plate-level reconstruction and exact test
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import csv, hashlib, io, itertools, json, math, os, re, shutil, statistics, subprocess, tempfile, urllib.request
+          from pathlib import Path
+
+          root=Path(os.environ['GITHUB_WORKSPACE'])
+          out=root/'research/AMBENCH-E29/RESULT.md'
+          out.parent.mkdir(parents=True,exist_ok=True)
+          tmp=Path(tempfile.mkdtemp(prefix='e29-'))
+          plates=['T72','T82','T92','T102','T112','T122']
+          short=set(['T72','T82','T92'])
+          long=set(['T102','T112','T122'])
+          surface_target='Cross_Sections/Micrographs/SurfaceReference_and_Orientation_Layers.csv'
+          lines=[
+            '---','id: AMBENCH-E29-RESULT','type: controlled-experiment-result','created: 2026-08-23',
+            'source_of_truth: github-actions','raw_artifacts_committed: false',
+            'inherited_exposure: NO__INHERITED_E27_SCHEMA_PREFLIGHT_GIBBERISH_EMISSION','---','',
+            '# AMBENCH-E29 Result / E29 결과','',
+            '- incremental monetary cost: 0 USD',
+            '- raw P1 coordinate rows committed/emitted: NO',
+            '- raw surface-reference rows committed/emitted: NO','',
+          ]
+
+          def checksum_hash(c):
+            cs=c.get('checksum') or {}
+            if not isinstance(cs,dict): return None
+            h=cs.get('hash')
+            if isinstance(h,str) and len(h)==64: return h.lower()
+            for v in cs.values():
+              if isinstance(v,str) and len(v)==64 and all(ch in '0123456789abcdefABCDEF' for ch in v): return v.lower()
+            return None
+
+          def download_verified(c, dest):
+            sha=checksum_hash(c); size=c.get('size'); url=c.get('downloadURL')
+            if not sha or not isinstance(size,int) or not url: raise RuntimeError('IMMUTABLE_METADATA_INCOMPLETE')
+            cp=subprocess.run(['curl','-fsSL','--retry','5','--retry-delay','2','--retry-all-errors',url,'-o',str(dest)],capture_output=True,text=True)
+            if cp.returncode!=0 or not dest.exists(): raise RuntimeError('DOWNLOAD_FAIL')
+            b=dest.read_bytes()
+            if len(b)!=size or hashlib.sha256(b).hexdigest().lower()!=sha: raise RuntimeError('HASH_OR_SIZE_MISMATCH')
+            return b,sha,size
+
+          def decode_csv_bytes(b, header_tokens=()):
+            for enc in ('utf-8-sig','cp1252','latin-1'):
+              try:
+                text=b.decode(enc)
+                reader=csv.reader(io.StringIO(text,newline=''))
+                header=next(reader,[])
+                low='|'.join(str(x).lower() for x in header)
+                if len(header)>=2 and all(tok.lower() in low for tok in header_tokens):
+                  return enc,text,header
+              except Exception:
+                pass
+            raise RuntimeError('CSV_DECODE_OR_SCHEMA_FAIL')
+
+          def numeric(v):
+            s=str(v).strip()
+            if not s or s.upper() in {'#N/A','N/A','NA','NAN'}: return None
+            try:
+              x=float(s)
+              return x if math.isfinite(x) else None
+            except Exception:
+              return None
+
+          integrity=True; hold_reason=None
+          endpoints={}; valid_counts={}; valid_tracks={}; scale=None
+          try:
+            with urllib.request.urlopen('https://data.nist.gov/od/id/mds2-4103?format=nerdm',timeout=60) as r:
+              meta=json.load(r)
+            comps=meta.get('components',[])
+            lines += ['## Source identity / source identity',f"- NERDm_version: {meta.get('version','UNKNOWN')}",f'- component_count: {len(comps)}','']
+
+            # README: require one current authoritative dataset readme and parse one physical scale.
+            readmes=[c for c in comps if (c.get('filepath') or '').lower().endswith('4103_readme.txt')]
+            if len(readmes)!=1: raise RuntimeError('README_NOT_UNIQUE')
+            readme_b,_,_=download_verified(readmes[0],tmp/'readme.txt')
+            readme_text=None
+            for enc in ('utf-8-sig','cp1252','latin-1'):
+              try:
+                t=readme_b.decode(enc)
+                if 'pixel scaling' in t.lower() and 'micrometers/pixel' in t.lower(): readme_text=t; break
+              except Exception: pass
+            if readme_text is None: raise RuntimeError('README_SCALE_TEXT_UNRESOLVED')
+            matches=re.findall(r'pixel\s+scaling\s+of\s+([0-9]+(?:\.[0-9]+)?)\s*micrometers/pixel',readme_text,flags=re.I)
+            unique_scales=sorted(set(float(x) for x in matches if float(x)>0))
+            if len(unique_scales)!=1: raise RuntimeError('PIXEL_SCALE_NOT_UNIQUE')
+            scale=unique_scales[0]
+            lines += ['- README_integrity_pass: YES','- authoritative_pixel_scale_parse: PASS',f'- pixel_scale_um_per_px: {scale:.12g}','']
+
+            # Surface reference exact path and six unique P1 bindings.
+            surf=[c for c in comps if (c.get('filepath') or '')==surface_target]
+            if len(surf)!=1: raise RuntimeError('SURFACE_COMPONENT_NOT_UNIQUE')
+            surf_b,_,_=download_verified(surf[0],tmp/'surface.csv')
+            _,surf_text,surf_header=decode_csv_bytes(surf_b,('reference',))
+            hlow=[str(x).lower() for x in surf_header]
+            image_idx=next((i for i,x in enumerate(hlow) if 'image' in x or 'name' in x),None)
+            yref_idx=next((i for i,x in enumerate(hlow) if 'reference' in x and 'y' in x),None)
+            if image_idx is None or yref_idx is None: raise RuntimeError('SURFACE_SCHEMA_UNRESOLVED')
+            ref_rows={p:[] for p in plates}
+            sr=csv.reader(io.StringIO(surf_text,newline='')); next(sr,None)
+            for row in sr:
+              if len(row)<=max(image_idx,yref_idx): continue
+              name=str(row[image_idx])
+              for p in plates:
+                if re.search(r'(?<![0-9])'+re.escape(p)+r'(?![0-9])',name) and re.search(r'(?i)(?:^|[^A-Za-z0-9])P1s(?:[^A-Za-z0-9]|$)',name):
+                  ref_rows[p].append(row[yref_idx])
+            yrefs={}
+            for p in plates:
+              if len(ref_rows[p])!=1: raise RuntimeError('P1_SURFACE_BINDING_NOT_UNIQUE')
+              y=numeric(ref_rows[p][0])
+              if y is None: raise RuntimeError('P1_SURFACE_REFERENCE_NONNUMERIC')
+              yrefs[p]=y
+            lines += ['- surface_reference_integrity_pass: YES','- exactly_one_P1_surface_reference_per_plate: YES','']
+
+            # Six plate-specific P1 annotations.
+            plate_components={}
+            for p in plates:
+              pat=re.compile(r'.*_AMB_'+re.escape(p)+r'_P1s_pixel_points\.csv$',re.I)
+              mm=[c for c in comps if pat.match(c.get('filepath') or '')]
+              if len(mm)!=1: raise RuntimeError('P1_COMPONENT_NOT_UNIQUE')
+              plate_components[p]=mm[0]
+
+            for p in plates:
+              b,_,_=download_verified(plate_components[p],tmp/f'{p}.csv')
+              _,text,header=decode_csv_bytes(b,('overlap_depth_y',))
+              low=[str(x).strip().lower() for x in header]
+              row_idx=next((i for i,x in enumerate(low) if x=='row'),None)
+              ody_idx=next((i for i,x in enumerate(low) if x=='overlap_depth_y (px)' or x=='overlap_depth_y'),None)
+              if row_idx is None or ody_idx is None: raise RuntimeError('P1_REQUIRED_COLUMNS_MISSING')
+              reader=csv.reader(io.StringIO(text,newline='')); next(reader,None)
+              rows=[]; seen=set(); vals={}
+              for row in reader:
+                if not row: continue
+                rows.append(row)
+                if len(row)<=max(row_idx,ody_idx): continue
+                track_raw=str(row[row_idx]).strip()
+                try: track=int(float(track_raw))
+                except Exception: raise RuntimeError('TRACK_ID_NONNUMERIC')
+                if track in seen: raise RuntimeError('TRACK_ID_DUPLICATE')
+                seen.add(track)
+                oy=numeric(row[ody_idx])
+                if oy is None: continue
+                dpx=oy-yrefs[p]
+                if dpx < 0: raise RuntimeError('NEGATIVE_RECONSTRUCTED_OVERLAP_DEPTH')
+                vals[track]=dpx*scale
+              if len(rows)!=45: raise RuntimeError('P1_ROW_COUNT_NOT_45')
+              valid_counts[p]=len(vals); valid_tracks[p]=set(vals)
+              if valid_counts[p] < 41: raise RuntimeError('PLATE_VALID_COVERAGE_LT_41')
+              endpoints[p]=statistics.fmean(vals.values())
+
+            lines += ['## Plate reconstruction / plate 재구성', '- six_P1_component_integrity_pass: YES',f'- valid_track_counts: {valid_counts}', '- all_plates_valid_track_count_gte_41: YES']
+            for p in plates:
+              lines.append(f'- {p}_plate_mean_overlap_depth_um: {endpoints[p]:.9f}')
+            lines.append('')
+
+            short_vals=[endpoints[p] for p in plates if p in short]
+            long_vals=[endpoints[p] for p in plates if p in long]
+            delta=statistics.fmean(short_vals)-statistics.fmean(long_vals)
+
+            vals=[endpoints[p] for p in plates]
+            obs_idx={0,1,2}
+            perm_deltas=[]
+            for combo in itertools.combinations(range(6),3):
+              s=set(combo); a=[vals[i] for i in s]; b=[vals[i] for i in range(6) if i not in s]
+              perm_deltas.append(statistics.fmean(a)-statistics.fmean(b))
+            p_exact=sum(1 for d in perm_deltas if d >= delta-1e-12)/len(perm_deltas)
+
+            wins=losses=ties=0
+            for a in short_vals:
+              for b in long_vals:
+                if a>b: wins+=1
+                elif a<b: losses+=1
+                else: ties+=1
+            rrb=(wins-losses)/9.0
+
+            common=set.intersection(*(valid_tracks[p] for p in plates))
+            common_n=len(common); delta_common=None
+            if common_n>=36:
+              common_ep={}
+              # Re-read transient files deterministically; no raw rows emitted.
+              for p in plates:
+                b=(tmp/f'{p}.csv').read_bytes()
+                _,text,header=decode_csv_bytes(b,('overlap_depth_y',))
+                low=[str(x).strip().lower() for x in header]
+                row_idx=next(i for i,x in enumerate(low) if x=='row')
+                ody_idx=next(i for i,x in enumerate(low) if x=='overlap_depth_y (px)' or x=='overlap_depth_y')
+                reader=csv.reader(io.StringIO(text,newline='')); next(reader,None)
+                vals_common=[]
+                for row in reader:
+                  if not row or len(row)<=max(row_idx,ody_idx): continue
+                  try: track=int(float(str(row[row_idx]).strip()))
+                  except Exception: continue
+                  if track not in common: continue
+                  oy=numeric(row[ody_idx])
+                  if oy is None: raise RuntimeError('COMMON_TRACK_BECAME_INVALID')
+                  dpx=oy-yrefs[p]
+                  if dpx<0: raise RuntimeError('NEGATIVE_COMMON_RECONSTRUCTION')
+                  vals_common.append(dpx*scale)
+                if len(vals_common)!=common_n: raise RuntimeError('COMMON_TRACK_COUNT_MISMATCH')
+                common_ep[p]=statistics.fmean(vals_common)
+              delta_common=statistics.fmean([common_ep[p] for p in plates if p in short])-statistics.fmean([common_ep[p] for p in plates if p in long])
+
+            if delta>0 and p_exact<=0.05 and rrb>=(7/9) and common_n>=36 and delta_common is not None and delta_common>0:
+              gate='PASS_E29_STRONG_DIRECTIONAL_EFFECT'
+            elif delta>0:
+              gate='MIXED_E29_DIRECTIONAL_SIGNAL'
+            else:
+              gate='NO_MATERIAL_GAIN_E29'
+
+            lines += ['## Frozen statistical result / 고정 통계 결과',f'- Delta_primary_um: {delta:.9f}',f'- exact_one_sided_permutation_p: {p_exact:.9f}',f'- plate_rank_biserial: {rrb:.9f}',f'- rank_pair_wins_losses_ties: {wins}/{losses}/{ties}',f'- common_valid_track_count: {common_n}',f'- Delta_common_um: {delta_common:.9f}' if delta_common is not None else '- Delta_common_um: NOT_COMPUTED_LOW_COMMON_COVERAGE','', '## Frozen E29 gate / 고정 E29 판정',f'**{gate}**','', '## Interpretation boundary / 해석 경계','- independent replicate: physical plate (n=3 vs n=3)','- 45 tracks are nested within-plate measurements, not independent replicates','- no P2/P3 rescue, imputation, sign flip, endpoint switch, feature search, or model escalation performed','- inherited exposure disclosure remains active']
+
+          except Exception as e:
+            integrity=False; hold_reason=type(e).__name__
+            lines += ['## Execution hold / 실행 HOLD',f'- hold_error_type: {hold_reason}','- no adaptive redesign performed: YES','', '## Frozen E29 gate / 고정 E29 판정','**HOLD_E29_INTEGRITY_OR_COVERAGE**']
+          finally:
+            shutil.rmtree(tmp,ignore_errors=True)
+
+          out.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          PY
+
+      - name: Commit sanitized aggregate E29 result
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/AMBENCH-E29/RESULT.md
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'record preregistered AMBENCH-E29 aggregate result'
+          git push
