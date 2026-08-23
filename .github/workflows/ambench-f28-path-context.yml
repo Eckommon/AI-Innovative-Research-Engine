@@ -1,0 +1,59 @@
+name: AMBENCH F28 path context
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ambench-f28-path-context.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract redacted README path context
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,json,os,re,subprocess,tempfile,urllib.request,shutil
+          from pathlib import Path
+          root=Path(os.environ['GITHUB_WORKSPACE']); out=root/'research/AMBENCH-F28/DOC_PATH_CONTEXT.md'; tmp=Path(tempfile.mkdtemp(prefix='f28-context-'))
+          lines=['# AMBENCH-F28 README Directory Context / F28 README 디렉터리 문맥','', '- numerical literals: REDACTED','- raw outcome/coordinate values: NOT EMITTED','']
+          try:
+            with urllib.request.urlopen('https://data.nist.gov/od/id/mds2-4103?format=nerdm',timeout=60) as r: meta=json.load(r)
+            c=[x for x in meta.get('components',[]) if (x.get('filepath') or '')=='4103_ReadMe.txt'][0]
+            p=tmp/'r.txt'; subprocess.run(['curl','-fsSL',c['downloadURL'],'-o',str(p)],check=True)
+            b=p.read_bytes(); text=None
+            for enc in ('utf-8-sig','cp1252','latin-1'):
+              try: text=b.decode(enc); break
+              except Exception: pass
+            if text is None: raise RuntimeError('DECODE_FAIL')
+            src=text.splitlines()
+            # Include only file-structure context windows; redact all numeric literals.
+            for lo,hi,title in [(70,105,'Micrograph/reference context'),(150,220,'Tracks-results context')]:
+              lines += [f'## {title} / {title}']
+              for n in range(lo,min(hi,len(src))+1):
+                s=' '.join(src[n-1].split())
+                if not s: continue
+                s=re.sub(r'(?<![A-Za-z])[-+]?\d+(?:\.\d+)?(?:[eE][-+]?\d+)?','<NUM>',s)
+                lines.append(f'- L{n}: {s[:1000]}')
+              lines.append('')
+          except Exception as e: lines.append(f'- context_error: {type(e).__name__}')
+          finally: shutil.rmtree(tmp,ignore_errors=True)
+          out.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          PY
+      - name: Commit sanitized context
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/AMBENCH-F28/DOC_PATH_CONTEXT.md
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'record AMBENCH-F28 README directory context'
+          git push
