@@ -1,0 +1,97 @@
+name: AMBENCH F35 RHF command-design qualification
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ambench-f35-command-design.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect checksum-frozen RHF command inputs only
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import csv, hashlib, io, json, os, re, statistics, urllib.request, zipfile
+          from pathlib import Path
+
+          DSID='mds2-2507'
+          root=Path(os.environ['GITHUB_WORKSPACE'])
+          out=root/'research/AMBENCH-F35/COMMAND_DESIGN_PREFLIGHT.md'
+          out.parent.mkdir(parents=True,exist_ok=True)
+
+          def fetch(url):
+              req=urllib.request.Request(url,headers={'User-Agent':'AI-Innovative-Research-Engine/F35-command-design'})
+              with urllib.request.urlopen(req,timeout=60) as r: return r.read()
+
+          meta=json.loads(fetch(f'https://data.nist.gov/od/id/{DSID}?format=nerdm').decode('utf-8'))
+          comp=next(c for c in meta['components'] if c.get('filepath')=='RHF_Command.zip')
+          exp=(comp.get('checksum') or {}).get('hash'); raw=fetch(comp['downloadURL']); got=hashlib.sha256(raw).hexdigest()
+          if exp!=got: raise RuntimeError(f'RHF_Command.zip checksum mismatch: {exp} != {got}')
+          z=zipfile.ZipFile(io.BytesIO(raw))
+          members=z.namelist()
+          rx=re.compile(r'(?:^|/)RHF_P(\d{2})_layer0001\.csv$',re.I)
+          files=[]
+          for n in members:
+              m=rx.search(n)
+              if m: files.append((int(m.group(1)),n))
+          files.sort()
+
+          records=[]
+          for pid,n in files:
+              reader=csv.DictReader(io.StringIO(z.read(n).decode('utf-8-sig',errors='replace')))
+              fields=reader.fieldnames or []
+              # identify power column from schema; no outcome file is involved.
+              pfield=next((f for f in fields if 'power' in f.lower()), fields[2] if len(fields)>=3 else None)
+              vals=[]; rows=0
+              for r in reader:
+                  rows+=1
+                  try: vals.append(float(r[pfield]))
+                  except Exception: pass
+              uniq=sorted(set(round(v,9) for v in vals))
+              # Constant-vs-variable is the only treatment-structure statistic persisted.
+              is_constant=(len(uniq)<=1)
+              records.append({'part':pid,'path':n,'rows':rows,'power_field':pfield,'unique_power_count':len(uniq),'constant':is_constant})
+
+          pids=[r['part'] for r in records]
+          constant=[r['part'] for r in records if r['constant']]
+          variable=[r['part'] for r in records if not r['constant']]
+          exact55=(pids==list(range(1,56)))
+          expected_split=(len(constant)==5 and len(variable)==50)
+
+          lines=['---','id: AMBENCH-F35-COMMAND-DESIGN-PREFLIGHT','type: process-input-design-preflight','created: 2026-08-23','candidate_outcomes_inspected: false','process_inputs_only: true','incremental_monetary_cost_usd: 0','---','',
+                 '# AMBENCH-F35 RHF Command Design Preflight / RHF Command 설계 사전점검','',
+                 '## Boundary / 경계','- `RHF_Command.zip` process-input CSVs only. No encoder, MPM, analysis-result, microscopy or synchronized-movie data opened.','- Persisted classification uses only whether commanded laser power is constant or variable within each PXX command file; no candidate outcome values are used.','',
+                 '## Source integrity / source 무결성',f'- dataset: `{DSID}`',f'- version: `{meta.get("version")}`',f'- archive_size_nerdm: `{comp.get("size")}`',f'- archive_size_local: `{len(raw)}`',f'- sha256_nerdm: `{exp}`',f'- sha256_local: `{got}`',f'- checksum_match: `{exp==got}`','',
+                 '## Physical-part command inventory / physical-part command inventory',f'- command_csv_count: `{len(records)}`',f'- part_ids: `{pids}`',f'- exact_P01_to_P55: `{exact55}`',f'- constant_power_part_count: `{len(constant)}`',f'- variable_power_part_count: `{len(variable)}`',f'- expected_5_baseline_50_RHF_split: `{expected_split}`',f'- constant_power_part_ids: `{constant}`',f'- variable_power_part_ids: `{variable}`','',
+                 '## Per-part process-input classification / part별 공정입력 분류','| Part | Command path | Rows | Power field | Unique commanded power count | Class |','|---:|---|---:|---|---:|---|']
+          for r in records:
+              lines.append(f'| P{r["part"]:02d} | `{r["path"]}` | {r["rows"]} | `{r["power_field"]}` | {r["unique_power_count"]} | {"BASELINE_CONSTANT" if r["constant"] else "RHF_VARIABLE_POWER"} |')
+          lines += ['', '## Pre-outcome design conclusion / outcome 전 설계 결론']
+          if exact55 and expected_split:
+              lines += ['**PASS_F35_COMMAND_INTERVENTION_STRUCTURE** — checksum-frozen process inputs independently recover P01–P55 and the publication-described `5 baseline constant-power + 50 RHF variable-power` intervention split.','- This establishes treatment/control structure from commands, not from outcomes.','']
+          else:
+              lines += ['**HOLD_F35_COMMAND_INTERVENTION_STRUCTURE** — command structure does not reproduce the preregistered 55-part / 5+50 design. Do not open outcomes.','']
+          out.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          PY
+      - name: Persist sanitized command-design preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/AMBENCH-F35/COMMAND_DESIGN_PREFLIGHT.md
+          if git diff --cached --quiet; then
+            echo 'No F35 command-design change.'
+          else
+            git commit -m 'record AMBENCH-F35 RHF command-design preflight'
+            git push
+          fi
