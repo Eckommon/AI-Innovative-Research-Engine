@@ -2,12 +2,12 @@
 id: SESSION-HANDOFF
 type: memory
 state: ACTIVE
-checkpoint_id: CHK-20260823-F22-PARTIAL-ALL-FOUR-BYTES-SCHEMA-HOLD
+checkpoint_id: CHK-20260823-F23-PASS-HEADERLESS-40-COLUMN-MAPPING
 active_issue: none
 active_research: none
-last_completed_issue: 40
-last_completed_research: AMBENCH-F22
-last_decision: DEC-049
+last_completed_issue: 41
+last_completed_research: AMBENCH-F23
+last_decision: DEC-050
 created: 2026-08-22
 updated: 2026-08-23
 source_of_truth: github
@@ -16,69 +16,69 @@ source_of_truth: github
 # Session Handoff / 세션 인수인계
 
 ## Current State / 현재 상태
-- Checkpoint: `CHK-20260823-F22-PARTIAL-ALL-FOUR-BYTES-SCHEMA-HOLD`
+- Checkpoint: `CHK-20260823-F23-PASS-HEADERLESS-40-COLUMN-MAPPING`
 - Active Issue: none
 - Active research: none
-- Last completed: #40 `AMBENCH-F22 — PARTIAL_F22_ALL_FOUR_IMMUTABLE_BYTES_READY__SCHEMA_HEADER_HOLD`
-- Last decision: `DEC-049`
+- Last completed: #41 `AMBENCH-F23 — PASS_F23_HEADERLESS_40_COLUMN_MAPPING_READY`
+- Last decision: `DEC-050`
 
 ## Cost Authority / 비용 권위
 `COST-001` + `DEC-028`: any potentially billable action requires explicit user approval before execution. Unknown billing = `HOLD_COST_APPROVAL`.
 
 ## Preserved branches / 보존 branch
 - E14 remains `HOLD_SOURCE_INTEGRITY`; no redesign.
-- F19 X16 segmentation method remains frozen.
+- X16 F19 segmentation remains frozen.
 - F20 X16 workbook immutable identity/schema remains PASS.
 - F21 rejects only the X16 histogram-workbook-only structural-quality endpoint route.
+- F22 all-four immutable registered-X4 bytes remain valid; F23 supersedes only the schema/header HOLD by establishing the headerless positional contract.
 
-## F22 Result / F22 결과
-Frozen descriptive final gate: **`PARTIAL_F22_ALL_FOUR_IMMUTABLE_BYTES_READY__SCHEMA_HEADER_HOLD`**.
+## F23 Result / F23 결과
+Frozen final gate: **`PASS_F23_HEADERLESS_40_COLUMN_MAPPING_READY`**.
 
-### All-four immutable source bytes / 4개 전체 불변 source bytes
-Current NIST NERDm plus zero-cost transient retrieval verified exact SHA-256 for all four registered X4 archives:
-- `part1.zip`: `0bf229f5a04d181f4c79549fa6357a1bfe3095437b26bb660de5e86b35bb2ec3`
-- `part02.zip`: `bf72d9e160d94094f9268fcf3f76a532c8a29fb64aff1afbec20256acaee178e`
-- `part03.zip`: `89e9e1afadca22b9c34177d82972272a4e73789b19388f0c83d62a9ebd53d878`
-- `part04.zip`: `6c3f655a1482001119c54d1f1e404a34eb401f386fffc06147628b36c7c8d7c5`
+### Authoritative semantic contract / 권위 semantic contract
+NIST AMS 100-69 Section 3.2 and Tables 1–3 define each registered CSV as 40 columns and multiple measured-point rows and define positions 1..40. F23 froze the exact positional map in `research/AMBENCH-F23/README.md` before structural execution.
 
-Every local SHA matched NERDm exactly. Every ZIP is valid and contains exactly 250 CSV members with deterministic `L0001.csv`–`L0250.csv` layer coverage. Raw archives were transient-only, with no artifacts/cache.
+### Full structural verification / 전체 구조 검증
+All four registered ZIPs were revalidated against the F22/NIST NERDm SHA-256 identities, then the full published dataset was structurally inspected without emitting numerical field values:
+- 1000 CSVs total;
+- 4,748,352 non-empty rows total;
+- field-count set `{40}` only;
+- rows with !=40 fields: 0;
+- numeric/NaN parse failure fields: 0;
+- empty rows: 0;
+- first non-empty row numeric/NaN in 1000/1000 CSVs.
 
-This resolves the prior F15/F16 source-byte access/integrity blocker.
+Therefore downstream parsing is frozen as `header=None`, raw positions 1..40 → exact AMS 100-69 documented semantics.
 
-### Headerless serialization discovery / headerless serialization 발견
-The F22 preregistration assumed textual CSV headers. Actual registered CSVs are headerless.
+### Hierarchy / 계층
+Preserve `row(measured point) ⊂ layer ⊂ part`. Do not treat rows, layers or four parts as automatically independent statistical replicates.
 
-During the Part 1 attempted header check, first numerical lines were read and the initial result persisted the first CSV row as if it were a header. Current-facing values were redacted; `research/AMBENCH-F22/AMENDMENT-01.md` preserves the event and consequence.
-
-Current exposure state:
+### Exposure state / 사전노출 상태
+Inherited from F22:
 **`NEW_REGISTERED_X4_NUMERICAL_OUTCOME_BLIND = VIOLATED_LIMITED`**.
 
-No correlation, aggregation, ranking, feature selection, process↔XCT statistic, or model was computed. Parts 2–4 verification read no CSV content lines.
-
-Because original F22 full PASS required a textual 40-column header/schema check, do not claim `PASS_F22_REGISTERED_X4_IMMUTABLE_SOURCE_READY`. `AMENDMENT-02` creates the descriptive PARTIAL gate without weakening the original full PASS.
+F23 added no numerical-value exposure and computed no association, ranking, feature selection, or model.
 
 Durable artifacts:
-- `research/AMBENCH-F22/README.md`
-- `research/AMBENCH-F22/AMENDMENT-01.md`
-- `research/AMBENCH-F22/AMENDMENT-02.md`
-- `research/AMBENCH-F22/METADATA_RESULT.md`
-- `research/AMBENCH-F22/PART1_RESULT.md`
-- `research/AMBENCH-F22/PARTS234_RESULT.md`
-- `research/AMBENCH-F22/RESULT.md`
-- `CLM-077..079`
-- `DEC-049`
-- `MEM-044-AMBENCH-F22`
+- `research/AMBENCH-F23/README.md`
+- `research/AMBENCH-F23/STRUCTURE_RESULT.md`
+- `research/AMBENCH-F23/RESULT.md`
+- `CLM-080..082`
+- `DEC-050`
+- `MEM-045-AMBENCH-F23`
 
 ## Exact Next Eligible Work / 정확한 다음 eligible 작업
-No numerical experiment is active. Do not model yet.
+No numerical experiment is active yet.
 
-Next: separately preregister a **headerless serialization/schema mapping gate**:
-1. freeze exact positional column order 1..40 from authoritative NIST AMS 100-69;
-2. validate structural field count while suppressing numerical values;
-3. verify deterministic raw position → documented semantic mapping across all four archives;
-4. preserve rows nested in layers nested in parts;
-5. carry `VIOLATED_LIMITED` pre-exposure disclosure into all later numerical work.
+Next: separately preregister a low-degree-of-freedom registered process/melt-pool ↔ XCT controlled experiment. Before numerical association analysis, freeze:
+1. question/estimand;
+2. exact predictor columns;
+3. exact XCT outcome/transform;
+4. aggregation and hierarchy policy;
+5. missingness handling;
+6. validation/holdout structure;
+7. primary statistic/model + null controls;
+8. NIST uncertainty interpretation;
+9. `VIOLATED_LIMITED` disclosure.
 
-Only after this gate passes may a low-degree-of-freedom registered process/melt-pool ↔ XCT experiment be separately preregistered.
-
-Any paid/potentially paid route requires prior explicit user approval.
+Do not use high-capacity ML or pseudo-replicate millions of rows. Any paid/potentially paid route requires prior explicit user approval.
