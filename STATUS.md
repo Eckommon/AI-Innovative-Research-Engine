@@ -1,38 +1,62 @@
 ---
-checkpoint_id: CHK-20260823-F31-PREREGISTERED-SOURCE-DESIGN-ACTIVE
-active_issue: 49
-active_research: AMBENCH-F31
-last_completed_issue: 48
-last_completed_research: AMBENCH-E30
-last_decision: DEC-064
+checkpoint_id: CHK-20260823-F34-SOURCE-DESIGN-ACTIVE
+active_issue: 52
+active_research: AMBENCH-F34
+last_completed_issue: 51
+last_completed_research: AMBENCH-E33
+last_decision: DEC-071
 updated: 2026-08-23
 ---
 
 # Project Status / 프로젝트 상태
 
 **Project / 프로젝트:** AI-Innovative-Research-Engine / AI 기반 혁신 탐색 연구 엔진  
-**Latest verified baseline / 최신 검증 baseline:** `v0.41-f31-source-design-active`  
-**State / 상태:** `F31_PREREGISTERED__SOURCE_DESIGN_QUALIFICATION_ACTIVE`  
-**Active Work Queue / 활성 작업 큐:** Issue #49 `AMBENCH-F31`.
+**Latest verified baseline / 최신 검증 baseline:** `v0.42-e33-pass-f34-source-active`  
+**State / 상태:** `E33_COMPLETED_PASS__F34_SOURCE_DESIGN_QUALIFICATION_ACTIVE`  
+**Active Work Queue / 활성 작업 큐:** Issue #52 `AMBENCH-F34`.
 
 ## Governance / 거버넌스
-GitHub remains Source of Truth. `DEC-055` compact Continuity Overlay active. Seven Minimum Operability functions remain PRESENT/EQUIVALENT with no `MISSING-BLOCKING`. Zero-cost only; raw source bytes transient; no shared paid quota assumed; reusable workflow remains `SHARED-INTERNAL-CANDIDATE`.
+GitHub remains Source of Truth. `DEC-055` compact Continuity Overlay remains active. Minimum Operability remains satisfied with no known `MISSING-BLOCKING`. `COST-001` zero-incremental-cost default remains active; potentially billable work requires explicit user approval. Reusable research/source-integrity workflow remains `SHARED-INTERNAL-CANDIDATE`; no duplicate Skill/MCP/Plugin or assumed shared paid quota.
 
 ## Last completed / 최근 완료
-Issue #48 `AMBENCH-E30` — `PASS_E30_SPATIALLY_ROBUST_DIRECTIONAL_EFFECT`. E29 direction remained positive at both P2 and P3 and combined strong gate passed; independent n remains 3 vs 3.
+Issue #51 `AMBENCH-E33` closed as:
+- primary `PASS_E33_GEOMETRY_MATCHED_HISTORY_ASSOCIATION`;
+- secondary `CROSS_MEASURAND_STRENGTHENING`.
 
-## Active F31 / 활성 F31
-Preregistration: `research/AMBENCH-F31/README.md`; decision `DEC-064`.
+Verified primary:
+- NIST `mds2-3662` v1.0.1;
+- equivalent programmed-length reverse map `C(t) ↔ D(19−t)` passed after the initial same-XY interpretation was falsified;
+- width valid blocks `18/18`;
+- Spearman `rho = +1.0`;
+- deterministic two-sided 100,000-permutation add-one `p = 9.999900001e-06`;
+- Operator 1/2 signs both positive.
 
-F31 is source/design only. It may inspect NERDm metadata/component paths, exact root README and authoritative sample/design parameter files. It must not inspect or emit numerical measurement outcomes, pixel coordinate rows, outcome summary rows, images or masks, and must not calculate a turnaround effect.
+Area sensitivity: `rho = +0.997936016512`, same add-one p, `CROSS_MEASURAND_STRENGTHENING`.
 
-Question: whether AMB2025-07 `1 mm × 5 mm` geometry has a distinct deterministic plate-resolved outcome route for T72/T82/T92/T102/T112/T122, with authoritative measurand/unit/nesting semantics and immutable source identities.
+Permanent boundary: E33 reverse pairs are equivalent programmed lengths, **not same XY locations**. Publication-level converging/diverging outcomes were exposed after preregistration, so raw-workbook execution is confirmatory/reanalysis rather than pristine outcome-blind discovery. Do not escalate model capacity or endpoint/subset search on the same E33 workbook.
+
+Durable records:
+- `research/AMBENCH-E33/RESULT.md`;
+- `registry/CLM-107.md`;
+- `registry/CLM-108.md`;
+- `registry/DEC-070.md`.
+
+## Active F34 / 활성 F34
+Preregistration: `research/AMBENCH-F34/README.md`; decision `DEC-071`; Issue #52.
+
+Frozen priority source:
+NIST `Process Monitoring Dataset from the AMMT: 3D Scan Strategies`, DOI `10.18434/M32044`, legacy identifier `mds1103vzr`, current release lineage through `v1.0.4`.
+
+F34 is **source/design qualification only**. It may inspect current PDR/NERDm, official documentation and checksum-verified `Metadata.zip` (~2.49 MB). It must not open/download the multi-GB `Build Command Data.zip`, `In-situ Meas Data.zip` or `Movies.zip`, and must not inspect candidate numerical monitoring/quality outcomes.
+
+Frozen dimensions:
+`Immutable source identity · Independent physical units · Explicit scan-strategy intervention · Deterministic strategy→monitoring route · Outcome semantics · Claim-transfer integrity · Zero-cost feasibility`.
 
 Frozen gates:
-- `PASS_F31_ALTERNATE_PAD_GEOMETRY_ROUTE_READY`
-- `PARTIAL_F31_ALTERNATE_GEOMETRY_DESIGN_READY`
-- `HOLD_F31_SOURCE_OR_IDENTITY`
-- `REJECT_F31_ALTERNATE_GEOMETRY_ROUTE`
+- `PASS_F34_EXTERNAL_SCAN_HISTORY_SOURCE_READY`;
+- `PARTIAL_F34_METADATA_READY_OUTCOME_ROUTE_GAP`;
+- `HOLD_F34_SOURCE_OR_IDENTITY_GAP`;
+- `REJECT_F34_NOT_INDEPENDENT_SCAN_HISTORY_TEST`.
 
 ## Exact Next Action / 정확한 다음 행동
-After synchronized active state, run zero-cost metadata/documentation qualification. Use exact root `4103_ReadMe.txt`, `SampleIParameters.csv` if current NERDm exposes it, and component-path inventory. Do not open outcome files. Persist the route/no-route decision, close/HOLD #49, synchronize and re-read.
+Resolve current `mds1103vzr` NERDm/PDR identity, verify top-level component metadata, download **only** `Metadata.zip`, require exact SHA-256 match, inventory/inspect metadata-only small files, recover part/layer/scan-strategy/sensor/file-ID hierarchy, apply the seven frozen F34 dimensions, write back the gate result, and re-read GitHub state. No candidate numerical outcome access.
