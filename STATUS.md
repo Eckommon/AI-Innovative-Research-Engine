@@ -1,89 +1,90 @@
 ---
-checkpoint_id: CHK-20260903-MISSION-ANCHOR-PORTFOLIO-RESET
-active_issue: 64
-active_research: PORTFOLIO-R01
-last_completed_issue: 63
-last_completed_research: AMBENCH-F45
-last_decision: DEC-093
+checkpoint_id: CHK-20260903-KR-PORT-F01-ACTIVE
+active_issue: 65
+active_research: KR-PORT-F01
+last_completed_issue: 64
+last_completed_research: PORTFOLIO-R01
+last_decision: DEC-094
 updated: 2026-09-03
 ---
 
 # Project Status / 프로젝트 상태
 
 **Project / 프로젝트:** AI-Innovative-Research-Engine / AI 기반 혁신 탐색 연구 엔진  
-**State / 상태:** `MISSION_ANCHOR_FIXED__BRANCH_STOP_ACTIVE__PORTFOLIO_RESELECTION_ACTIVE`  
-**Active Work Queue / 활성 작업 큐:** Issue #64 `PORTFOLIO-R01 — Mission-aligned candidate reselection / 목적 정렬 후보 재선정`.
-
-## Governance / 거버넌스
-
-GitHub remains the Source of Truth. `DEC-055` Continuity Overlay and `COST-001` zero-incremental-cost default remain active.
-
-New mandatory controls adopted on 2026-09-03:
-- `context/MEM-054-MISSION-ANCHOR.md` — fixed project purpose / 프로젝트 목적 고정기억;
-- `registry/DEC-093.md` — Mission Anchor + portfolio Branch-Stop adoption;
-- `docs/GOVERNANCE.md` — Mission-over-branch and Mission-ROI/Branch-Stop governance;
-- `docs/METHODOLOGY.md` — Stage 0 Portfolio/Mission-ROI selection + Stage 9 Portfolio Return.
-
-No potentially billable work is authorized without explicit user approval.
+**State / 상태:** `MISSION_ANCHOR_FIXED__PORTFOLIO_RESET_COMPLETE__KR_PORT_F01_ACTIVE`  
+**Active Work Queue / 활성 작업 큐:** Issue #65 `KR-PORT-F01 — Port-call identity & turnaround-target feasibility`.
 
 ## Fixed Mission / 고정 목적
 
-The project exists to discover and validate **new, falsifiable, reproducible, and practically useful innovation opportunities or structural bottlenecks from relationships among public/research data**.
+The highest-level purpose is to discover and validate **new, falsifiable, reproducible, and practically useful innovation opportunities or structural bottlenecks from relationships among public/research data**.
 
-특정 데이터셋·실험·도구·시뮬레이터·재현경로의 완주는 목적이 아니다. Route dependency를 mission dependency로 승격하지 않는다.
+특정 데이터셋·실험·도구·시뮬레이터·재현경로의 완주는 목적이 아니다. `context/MEM-054-MISSION-ANCHOR.md` is mandatory durable memory.
 
-When priorities conflict, mission-level innovation/bottleneck value and cross-dataset/cross-agency/cross-national relationship value outrank completion of a single branch.
+## Governance correction / 거버넌스 보정
 
-## Branch-Stop Rule / Branch 중단 규칙
+Mandatory controls:
+- `MEM-054` Mission Anchor;
+- `DEC-093` Mission-ROI / Branch-Stop;
+- updated `docs/GOVERNANCE.md`;
+- updated `docs/METHODOLOGY.md` with Stage 0 Portfolio Selection and Stage 9 Portfolio Return;
+- `COST-001` zero-incremental-cost default.
 
-After HOLD/REJECT/runtime/source-access failure, descendants require a `MISSION-ROI` review.
+Default branch stop:
+**>=2 consecutive infrastructure/runtime/source-transfer descendants without new scientific evidence + credible alternative + route not uniquely mission-critical → HOLD/ARCHIVE route and RETURN_TO_PORTFOLIO.**
 
-Default stop condition:
+## PORTFOLIO-R01 completed / PORTFOLIO-R01 완료
 
-**`>=2` consecutive infrastructure/runtime/source-transfer descendants without new scientific evidence + credible alternative candidate + blocked route not uniquely mission-critical → `HOLD_BRANCH / ARCHIVE_ROUTE → RETURN_TO_PORTFOLIO`.**
+Issue #64 completed under `DEC-094`.
 
-Evidence standards are not weakened: source provenance, preregistration, anti-pseudoreplication, fail-closed evaluation, exposure disclosure and negative-result preservation remain mandatory.
+Selected primary:
+**`C-KR-003 Port Weakest-Link Intelligence / 항만 최약고리 지능화`**.
 
-## AMBENCH P01 branch disposition / AMBENCH P01 branch 상태
+Ranked secondary portfolio:
+2. `C-EU-001` Cross-National Grid Stress — HOLD_READY_SECONDARY;
+3. `C-EU-004` Industrial Site Climate Risk — HOLD_READY_SECONDARY;
+4. `C-US-003` Critical Mineral Resilience — HOLD_READY_SECONDARY;
+5. Wave 2 Japan/UK/Singapore discovery — CONTINUE_AFTER_PRIMARY_GATE;
+6. independent non-P01 F37 thermal-history continuation — HOLD_BRANCH_LEVEL.
 
-Preserve as valid historical assets:
-- F41/F42 source-grounded path/order feasibility PASS;
-- E43 runtime HOLD;
-- F44 representation attempt source-ingress HOLD;
-- F45 range-ingress HOLD.
+Durable result: `research/PORTFOLIO-R01/RESULT.md`.
 
-`RHF_Command.zip` (18,079,576 bytes) is classified as a **route dependency, not a project dependency**.
+## AMBENCH disposition / AMBENCH 상태
 
-F46 is now:
-**`DORMANT__NOT_ACTIVE__REQUIRES_REAUTHORIZATION`**.
+Preserve valid historical scientific/methodological assets, but the P01/E43-F46 route is not active.
 
-`DEC-093` supersedes the F46 automatic execution authorization portion of `DEC-092`. Do not create an F46 Issue/workflow/download unless a future Mission-ROI review or explicit user instruction reauthorizes it.
+`RHF_Command.zip` 18,079,576 bytes = **route dependency, not project dependency**.
 
-## Active PORTFOLIO-R01 / 활성 PORTFOLIO-R01
+F46 = **`DORMANT__NOT_ACTIVE__REQUIRES_REAUTHORIZATION`**.
 
-Issue #64 returns the engine to the portfolio layer. Before any new large download/model/experiment, compare:
-1. remaining high-value Wave 1 cross-dataset candidates;
-2. Wave 2 geographic discovery (Japan / UK / Singapore);
-3. independent non-P01 testing of the F37 thermal-history hypothesis only if its Mission-ROI beats broader alternatives.
+## Active KR-PORT-F01 / 활성 KR-PORT-F01
 
-Selection must explicitly consider:
-- Combination/Project IPS;
-- mission-level information gain;
-- cross-dataset/cross-agency/cross-national value;
-- falsifiability and outcome availability;
-- join/semantic certainty;
-- practical utility/scalability;
-- source/compute burden;
-- zero-cost feasibility;
-- infrastructure-recursion / branch-persistence risk.
+Purpose: before long-history extraction or modeling, qualify one deterministic port-call identity and one defensible arrival→departure operational turnaround/stay target across official Korean port data.
+
+Frozen candidate identity:
+`(port/port-authority identifier, arrival year, arrival count, call sign)`.
+
+Frozen target candidate if same-call semantics pass:
+`port_stay_hours = departure_timestamp - arrival_timestamp`.
+
+Current official metadata already confirms:
+- vessel/entry-exit data expose port, call sign, arrival count and arrival/departure-time semantics;
+- Ministry of Oceans and Fisheries port-facility-use API queries by `prtAgCd + etryptYear + etryptCo + clsgn` and returns the same identifiers plus berth/mooring-place context;
+- KMA ASOS provides hourly weather context through a free official API.
+
+Do not call the target berth delay/congestion delay without additional timestamps establishing those constructs.
 
 ## Exact next action / 정확한 다음 행동
 
-Execute Issue #64 as a **portfolio decision**, not a scientific experiment:
-- re-read `research/WAVE1-SYNTHESIS.md` and the current candidate/evidence registry;
-- produce a ranked shortlist under `MEM-054 / DEC-093`;
-- identify one exact next feasibility/research action;
-- explicitly mark major branches `CONTINUE / HOLD / ARCHIVE`;
-- only after selection perform fresh authoritative-source verification for the chosen branch.
+Execute only the frozen `KR-PORT-F01` feasibility checks in `research/KR-PORT-F01/README.md`:
+- exact field/identity semantics;
+- duplicate/correction rules;
+- same-call arrival/departure validity;
+- nested facility-use semantics;
+- weather-join route;
+- bounded free sample-access feasibility.
+
+No long-history download or predictive model is authorized yet.
+
+If HOLD/REJECT: return immediately to Stage 0 portfolio selection. If PASS: at most one preregistered controlled experiment before another mandatory Mission-ROI review.
 
 Incremental monetary cost remains `0 USD`.
