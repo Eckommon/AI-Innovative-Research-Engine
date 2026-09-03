@@ -1,0 +1,149 @@
+name: US MINERAL F01 execution contract preflight
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/us-mineral-f01-execution-contract.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  execution-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Freeze 2023 Census execution contract without opening trade rows
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import os
+          import urllib.request
+          import urllib.error
+          from pathlib import Path
+
+          OUT=Path(os.environ['GITHUB_WORKSPACE'])/'research/US-MINERAL-F01/EXECUTION_CONTRACT.md'
+          UA={'User-Agent':'AI-Innovative-Research-Engine/US-MINERAL-F01 execution-contract'}
+          IMP_LAYOUT='https://www.census.gov/foreign-trade/reference/products/layouts/imdb.html'
+          PORT_LAYOUT='https://www.census.gov/foreign-trade/reference/products/layouts/dporths6i.html'
+          REVISION='https://www.census.gov/foreign-trade/guide/revisions.html'
+          GUIDE='https://www.census.gov/foreign-trade/guide/sec2.html'
+
+          def get(url,method='GET',timeout=60):
+              req=urllib.request.Request(url,headers=UA,method=method)
+              with urllib.request.urlopen(req,timeout=timeout) as r:
+                  body=r.read() if method!='HEAD' else b''
+                  return body,getattr(r,'status',200),dict(r.headers)
+
+          def head(url):
+              try:
+                  _,status,h=get(url,method='HEAD')
+                  return status,h.get('Content-Type'),h.get('Content-Length')
+              except urllib.error.HTTPError as e:
+                  return e.code,e.headers.get('Content-Type'),e.headers.get('Content-Length')
+              except Exception as e:
+                  return 'ERROR',type(e).__name__,None
+
+          docs=[]
+          for name,url in [('IMP_DETL layout',IMP_LAYOUT),('Port HS6 layout',PORT_LAYOUT),('Revision procedure',REVISION),('Trade statistical guide',GUIDE)]:
+              b,s,_=get(url)
+              docs.append((name,url,s,hashlib.sha256(b).hexdigest()))
+
+          merch=[]; port=[]
+          for m in range(1,13):
+              mm=f'{m:02d}'
+              mu=f'https://www.census.gov/trade/downloads/2023/Merch/im_m/IMDB23{mm}.ZIP'
+              pu=f'https://www.census.gov/trade/downloads/2023/Port/im_hs6_m/PORTHS6MM23{mm}.ZIP'
+              merch.append((mm,mu,*head(mu)))
+              port.append((mm,pu,*head(pu)))
+
+          merch_ok=all(x[2]==200 for x in merch)
+          port_ok=all(x[2]==200 for x in port)
+
+          lines=[
+            '---',
+            'id: US-MINERAL-F01-EXECUTION-CONTRACT',
+            'type: source-semantic-execution-contract',
+            'created: 2026-09-04',
+            'trade_rows_opened: false',
+            'outcome_concentration_computed: false',
+            'incremental_monetary_cost_usd: 0',
+            '---','',
+            '# US-MINERAL-F01 Census Execution Contract / Census 실행 계약','',
+            '## 1. Frozen period / 고정 기간','',
+            '- Primary bounded period: **2023-01 through 2023-12**.',
+            '- Rationale: USGS OFR 2025-1047 states the underlying assessment used year 2023 data unless otherwise noted; F01 therefore fixes the Census public-file compatibility test to the same statistical year.',
+            '- This gate does not open any `IMP_DETL` or port trade rows. Only documentation bytes and HTTP HEAD metadata are read.','',
+            '## 2. Official static-file availability / 공식 정적 파일 존재성','',
+            f'- 2023 Merchandise Trade Imports monthly ZIPs available for all 12 months: **{"YES" if merch_ok else "NO"}**',
+            f'- 2023 Port Imports HS6 monthly ZIPs available for all 12 months: **{"YES" if port_ok else "NO"}**','',
+            '### Merchandise / `IMP_DETL` carrier ZIPs','',
+            '| Month | HEAD | Content-Type | URL |','|---|---:|---|---|']
+          for mm,url,status,ct,cl in merch:
+              lines.append(f'| 2023-{mm} | {status} | {ct} | `{url}` |')
+          lines += ['', '### Port HS6 carrier ZIPs','', '| Month | HEAD | Content-Type | URL |','|---|---:|---|---|']
+          for mm,url,status,ct,cl in port:
+              lines.append(f'| 2023-{mm} | {status} | {ct} | `{url}` |')
+
+          lines += ['', '## 3. Frozen parse and identity rules / 파싱·식별 규칙','',
+            '- Parse Census fixed-width files strictly according to the official record layout; do not infer columns from whitespace.',
+            '- `IMP_DETL` raw identity key is frozen as: `commodity × cty_code × cty_subco × dist_entry × dist_unlad × rate_prov × year × month`.',
+            '- The research aggregation key is: `mineral × cty_code × dist_entry × dist_unlad × year × month` after the frozen USGS→HTS mapping is applied.',
+            '- `cty_subco` and `rate_prov` are tariff/reporting dimensions, not separate mineral/source-country/node identities; sum them only after validating the raw full key.',
+            '- A repeated raw full identity key is **fail-closed**: do not silently deduplicate or sum duplicates. Stop that file/month and inspect source integrity before any outcome metric.',
+            '- Use monthly (`*_mo`) fields only for monthly analysis; never sum YTD (`*_yr`) fields across months.',
+            '- Primary concentration weight is `gen_val_mo` (General Imports, Total Value). This matches the Port HS6 file `value_mo`, which is also General Imports, Total Value.',
+            '- `cards_mo` is a support/count diagnostic only; it is not a concentration weight.','',
+            '## 4. Quantity, mode and suppression rules / 수량·운송·억제 규칙','',
+            '- Quantity units are code-specific and come from the official Census concordance (`unit_qy1`, `unit_qy2`). Do not sum heterogeneous quantity units across HTS codes unless an explicit common-unit conversion is separately preregistered.',
+            '- Core concentration therefore uses published value, not quantity or shipping weight.',
+            '- Blank, suppressed or otherwise unavailable quantity/shipping-weight fields are **not imputed**. They remain unavailable and may only affect quantity/weight diagnostics, not the value-based core metric.',
+            '- Census disclosure rules can suppress quantity/shipping weight and can combine/alter district/port presentation. Preserve official published district/port codes exactly; do not manually disaggregate, reallocate, or reverse-engineer suppressed geography.',
+            '- `air_val_mo` and `ves_val_mo` are mutually exclusive mode components of general-import value for air and vessel. `cnt_val_mo` is a subset of vessel value, not a third additive mode.',
+            '- If a later mode decomposition is used, define `other_value = gen_val_mo - air_val_mo - ves_val_mo`; containerized vessel remains a vessel subcategory. Negative residuals or parse inconsistencies are fail-closed diagnostics.',
+            '- Actual-port HS6 outputs, if used, must be labeled **published port-of-unlading statistics** rather than transaction-level physical routing truth because Census disclosure protection can affect port presentation.','',
+            '## 5. Null and code-validity rules / 결측·코드 유효성 규칙','',
+            '- Mandatory research keys (`commodity`, `cty_code`, `dist_entry`, `dist_unlad`, `year`, `month`) and primary weight `gen_val_mo` must parse successfully. A malformed/blank mandatory key or primary value is fail-closed for that source month.',
+            '- Zero is a valid published numeric value and is not converted to null.',
+            '- Official special/combined district or country designations are retained as published if they are valid reference codes; they are not reassigned to a guessed geography.',
+            '- Only HTS10 codes in the frozen 2023 Census concordance and in `MAPPING_IDENTIFIABILITY.md` are eligible for the primary `IMP_DETL` experiment.','',
+            '## 6. Revision and snapshot policy / 개정·스냅샷 정책','',
+            '- Census merchandise statistics are revised; therefore **the experiment uses one contemporaneous official 2023 snapshot**, not an assumed first-release 2023 vintage.',
+            '- At the first outcome-bearing execution, download all 12 official 2023 monthly ZIPs in one run and record for each: URL, access timestamp, HTTP metadata, ZIP SHA-256, member filename(s), member byte size and member SHA-256.',
+            '- Persist that manifest before computing concentration outputs. Never silently replace a file if Census later changes it; a changed hash creates a new source snapshot/version.',
+            '- For reproducibility, all primary 2023 metrics must come from one manifest version. Mixing files from different snapshot manifests is prohibited.',
+            '- Any Census statistical correction notice relevant to 2023 that changes a frozen file must be recorded as a new snapshot, not patched manually.','',
+            '## 7. Documentation snapshots / 문서 스냅샷','']
+          for name,url,status,sha in docs:
+              lines.append(f'- {name}: HTTP `{status}`, SHA-256 `{sha}`, URL `{url}`')
+
+          lines += ['', '## 8. Final contract preflight / 최종 계약 사전검증','',
+            f'- all 12 `IMP_DETL` carrier months reachable: **{"PASS" if merch_ok else "FAIL"}**',
+            f'- all 12 Port HS6 carrier months reachable: **{"PASS" if port_ok else "FAIL"}**',
+            '- duplicate/revision/suppression/null/quantity-unit rules: **FROZEN**',
+            '- bounded period and snapshot/hash plan: **FROZEN**','',
+          ]
+          if merch_ok:
+              lines += ['**`EXECUTION_CONTRACT_READY_FOR_F01_FINAL_GATE`**','']
+          else:
+              lines += ['**`EXECUTION_CONTRACT_BLOCKED_MISSING_2023_MERCH_MONTH`**','']
+          lines += ['Incremental monetary cost remained **0 USD**. No paid source, API credential, dashboard scraping, larger runner, or commercial trade database was used.']
+
+          OUT.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          PY
+
+      - name: Commit execution contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-MINERAL-F01/EXECUTION_CONTRACT.md
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'record US-MINERAL-F01 execution contract'
+          git push
