@@ -1,76 +1,51 @@
 ---
-checkpoint_id: CHK-20260903-F45-RANGE-INGRESS-ACTIVE
-active_issue: 63
-active_research: AMBENCH-F45
-last_completed_issue: 62
-last_completed_research: AMBENCH-F44
-last_decision: DEC-091
+checkpoint_id: CHK-20260903-RESEARCH-PROCESS-AUDIT
+active_issue: null
+active_research: PROJECT-RESEARCH-PROCESS-AUDIT
+last_completed_issue: 63
+last_completed_research: AMBENCH-F45
+last_decision: DEC-092
 updated: 2026-09-03
 ---
 
 # Project Status / 프로젝트 상태
 
 **Project / 프로젝트:** AI-Innovative-Research-Engine / AI 기반 혁신 탐색 연구 엔진  
-**Latest verified baseline / 최신 검증 baseline:** `v0.55-f44-source-hold-f45-range-ingress-active`  
-**State / 상태:** `E43_COMPLETED_HOLD__F44_COMPLETED_SOURCE_HOLD__F45_ACTIVE`  
-**Active Work Queue / 활성 작업 큐:** Issue #63 `AMBENCH-F45`.
+**State / 상태:** `NO_ACTIVE_RESEARCH_ISSUE__ROOT_AUDIT_COMPLETE__USER_DIRECTION_PENDING`  
+**Active Work Queue / 활성 작업 큐:** none / 없음.
 
 ## Governance / 거버넌스
-GitHub remains Source of Truth. `DEC-055` Continuity Overlay and `COST-001` zero-incremental-cost default remain active. Billable work requires explicit user approval. Runtime/source-integrity/evaluation logic remains `SHARED-INTERNAL-CANDIDATE`; no duplicate Skill/MCP/Plugin or assumed shared paid quota.
+GitHub remains the Source of Truth. `DEC-055` Continuity Overlay and `COST-001` zero-incremental-cost default remain active. No potentially billable work is authorized without explicit user approval.
 
-## Completed E43 / 완료 E43
+## Last completed scientific/feasibility branch / 최근 완료 연구 branch
 
-**`HOLD_E43_RUNTIME_OR_INTEGRITY`**.
+- E43: `HOLD_E43_RUNTIME_OR_INTEGRITY` — exact P01 full-Z 3DThesis N0 timed out at the frozen 480 s cap; no N0-vs-R1 performance comparison exists.
+- F44: `HOLD_F44_RUNTIME_OR_INTEGRITY` — source ingress failed before FULL41/TOP1 representation-equivalence execution.
+- F45: `HOLD_F45_SOURCE_OR_NETWORK` — first 1 MiB range exhausted three 90 s attempts; no archive reconstruction.
 
-Exact source and F42 path integrity passed in recovery, but N0 hit the prospectively frozen `480 s` runtime cap (`rc=124`); R1 was not executed. No N0-vs-R1 `MP_width` comparison exists. `DEC-088` closes E43 and forbids within-E43 timestep/domain/resolution/solver rescue.
+Issue #63 is closed. There are currently **no open GitHub Issues** in this repository.
 
-## Completed F44 / 완료 F44
+## Root research-process audit / 연구 진행방식 근원 감사
 
-**`HOLD_F44_RUNTIME_OR_INTEGRITY`** — specifically a source-ingress HOLD, not a representation reject.
+Durable audit: `docs/RESEARCH_PROCESS_AUDIT_2026-09-03.md`.
 
-F44 preregistered FULL41 vs TOP1 top-surface MP_Stats equivalence, but its three bounded whole-object NIST transfers failed before calibration construction:
-1. `IncompleteRead(13,532,892 bytes read, 4,546,684 more expected)`;
-2. HTTP `524`;
-3. HTTP `524`.
+Audit verdict:
+**`METHOD_SCIENTIFICALLY_STRONG__PORTFOLIO_CONTROL_NEEDS_CORRECTION`**.
 
-Consequences:
-- archive size/SHA were not verified in the F44 run;
-- calibration Path was not constructed;
-- FULL41 and TOP1 were not executed;
-- no 8,181-coordinate `MP_width`/`MP_length` comparison exists.
+Key finding:
+- `RHF_Command.zip` (18,079,576 bytes) is **not project-essential**; it is only a dependency of the exact current P01/3DThesis descendant route.
+- The recent queue has shifted from scientific uncertainty toward source-transfer/runtime infrastructure uncertainty.
+- Evidence/preregistration/fail-closed standards should remain strong, but a portfolio-level `MISSION-ROI / BRANCH-STOP` rule is needed to prevent repeated descendant gates from consuming the research queue after scientific marginal value falls.
+- F46 exists only as a preregistration draft (`research/AMBENCH-F46/README.md`). It is **not active and not authorized for execution by this audit**.
 
-The Actions workflow completed successfully only in the operational sense and correctly persisted the scientific HOLD. `CLM-116` and `DEC-090` are authoritative. Issue #62 is closed.
+## Exact next action / 정확한 다음 행동
 
-## Active F45 / 활성 F45
+Await user direction after the root audit. Do not execute F46 or create a new experiment automatically.
 
-**AMBENCH-F45 — Checksum-Preserving Resumable Source-Ingress Qualification**; Issue #63; execution authorized by `DEC-091`.
+Eligible strategic choices include:
+1. return to high-IPS cross-dataset/cross-agency/cross-national portfolio research;
+2. seek an independent dataset for the F37 thermal-history mechanism without the current ZIP dependency;
+3. advance Wave 2 geographic discovery;
+4. first formalize branch-level mission-ROI/stop criteria in methodology/governance.
 
-F45 is source-only. It builds no simulator and accesses no MP_Stats/performance/physical outcome.
-
-### Frozen source identity / 고정 source identity
-- NIST `mds2-2507` v1.0.1;
-- component `RHF_Command.zip`;
-- size `18,079,576` bytes;
-- SHA-256 `c57a56cc9c906e4db134d7bfb8618b6678e80dd0318324de0b7baf1ce092a3f4`.
-
-### Frozen range protocol / 고정 range protocol
-- chunk size `1,048,576` bytes (1 MiB);
-- 18 sequential, non-overlapping ranges;
-- exact HTTP `206 Partial Content` required;
-- exact `Content-Range` and requested body length required;
-- maximum 3 attempts per unchanged range;
-- 90 s read timeout per attempt;
-- fixed 3 s retry delay;
-- workflow cap 15 min;
-- no adaptive chunk size, concurrency, whole-object fallback, alternate mirror/endpoint, raw artifact persistence or paid service.
-
-### Frozen gates / 고정 gate
-- `PASS_F45_CHECKSUM_PRESERVING_RANGE_INGRESS`: all 18 ranges reconstruct exact size/SHA and valid ZIP/P01 identity;
-- `REJECT_F45_RANGE_PROTOCOL_NOT_SUPPORTED`: deterministic HTTP range semantic incompatibility;
-- `HOLD_F45_SOURCE_OR_NETWORK`: metadata/source drift, exhausted network retries, or workflow cap.
-
-Current run: GitHub Actions `33736865119`; ingress step active at last verified read.
-
-## Exact Next Action / 정확한 다음 행동
-
-Finish run `33736865119`, verify `research/AMBENCH-F45/RESULT.md` against the frozen source/range/size/SHA/ZIP contract, close Issue #63 with the observed gate, synchronize STATUS/HANDOFF, and only if F45 PASS decide whether a separately numbered representation-equivalence experiment may reuse the qualified ingress protocol. Do not reopen or rewrite F44.
+Incremental monetary cost remains `0 USD`.
