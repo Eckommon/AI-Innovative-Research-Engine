@@ -1,0 +1,101 @@
+name: AMBENCH E43 workflow-run diagnostic
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ambench-e43-run-diagnostic.yml'
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Inspect latest E43 workflow run
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p research/AMBENCH-E43
+          python - <<'PY'
+          import json, os, urllib.request
+          from pathlib import Path
+
+          repo=os.environ['GITHUB_REPOSITORY']
+          token=os.environ['GH_TOKEN']
+          workflow='ambench-e43-path-order-only.yml'
+          base=f'https://api.github.com/repos/{repo}'
+          headers={
+              'Authorization': f'Bearer {token}',
+              'Accept': 'application/vnd.github+json',
+              'X-GitHub-Api-Version': '2022-11-28',
+              'User-Agent': 'AI-Innovative-Research-Engine/E43-diagnostic',
+          }
+          def get(url):
+              req=urllib.request.Request(url,headers=headers)
+              with urllib.request.urlopen(req,timeout=60) as r:
+                  return json.loads(r.read().decode('utf-8'))
+
+          runs=get(f'{base}/actions/workflows/{workflow}/runs?per_page=10').get('workflow_runs',[])
+          target=None
+          for r in runs:
+              if r.get('head_sha')=='f3bcdf71170c478a67c391c87b53c016a22c35d6':
+                  target=r; break
+          if target is None and runs:
+              target=runs[0]
+
+          lines=[
+              '---',
+              'id: AMBENCH-E43-RUN-DIAGNOSTIC',
+              'type: execution-harness-diagnostic',
+              'created: 2026-09-03',
+              'experiment_contract_changed: false',
+              'performance_result_interpreted: false',
+              'incremental_monetary_cost_usd: 0',
+              '---','',
+              '# AMBENCH-E43 Workflow Run Diagnostic / Workflow 실행 진단','',
+              'This file diagnoses the historical E43 Actions execution only. It does not change or interpret the frozen experiment.',''
+          ]
+          if target is None:
+              lines += ['**DIAGNOSTIC_NO_E43_RUN_FOUND**','']
+          else:
+              run_id=target['id']
+              lines += [
+                  f'- run_id: `{run_id}`',
+                  f'- event: `{target.get("event")}`',
+                  f'- status: `{target.get("status")}`',
+                  f'- conclusion: `{target.get("conclusion")}`',
+                  f'- head_sha: `{target.get("head_sha")}`',
+                  f'- created_at: `{target.get("created_at")}`',
+                  f'- updated_at: `{target.get("updated_at")}`','',
+                  '## Jobs / Jobs',''
+              ]
+              jobs=get(f'{base}/actions/runs/{run_id}/jobs?per_page=100').get('jobs',[])
+              for j in jobs:
+                  lines += [f'### {j.get("name")}', f'- status: `{j.get("status")}`', f'- conclusion: `{j.get("conclusion")}`']
+                  for s in j.get('steps',[]):
+                      lines.append(f'- step `{s.get("number")}` — {s.get("name")}: status=`{s.get("status")}`, conclusion=`{s.get("conclusion")}`')
+                  lines.append('')
+              if target.get('conclusion')=='success':
+                  lines += ['**DIAGNOSTIC_E43_RUN_SUCCESS_BUT_WRITEBACK_MISSING**','']
+              else:
+                  lines += ['**DIAGNOSTIC_E43_RUN_NOT_SUCCESSFUL**','']
+          Path('research/AMBENCH-E43/RUN_DIAGNOSTIC.md').write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          PY
+
+      - name: Persist diagnostic
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/AMBENCH-E43/RUN_DIAGNOSTIC.md
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'record AMBENCH-E43 historical workflow diagnostic'
+          git push
