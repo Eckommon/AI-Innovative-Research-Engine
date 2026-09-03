@@ -2,12 +2,12 @@
 id: SESSION-HANDOFF
 type: memory
 state: ACTIVE
-checkpoint_id: CHK-20260903-KR-PORT-F01-ACTIVE
-active_issue: 65
-active_research: KR-PORT-F01
-last_completed_issue: 64
-last_completed_research: PORTFOLIO-R01
-last_decision: DEC-094
+checkpoint_id: CHK-20260903-UK-GRID-F01-ACTIVE
+active_issue: 68
+active_research: UK-GRID-F01
+last_completed_issue: 67
+last_completed_research: WAVE2-GEO-D01
+last_decision: DEC-098
 created: 2026-08-22
 updated: 2026-09-03
 source_of_truth: github
@@ -22,84 +22,68 @@ Before material work, read and reconcile:
 2. `STATUS.md`;
 3. `context/PROJECT_MEMORY.md`;
 4. **`context/MEM-054-MISSION-ANCHOR.md`**;
-5. this `SESSION_HANDOFF.md`;
+5. this file;
 6. live GitHub Issue state;
-7. `registry/DEC-093.md`, `registry/DEC-094.md`, and relevant research/claim records.
+7. `DEC-093`, latest portfolio decision and relevant research/claim records.
 
-`MEM-054` is the fixed purpose anchor. If a proposed next step conflicts with it, the Mission Anchor wins unless the user explicitly changes the project mission.
-
-## Fixed Mission / 고정 목적
-
-**KO:** 프로젝트의 최상위 목적은 특정 데이터셋·실험·도구를 끝까지 완주하는 것이 아니다. 공공·연구 데이터를 발견·정규화·결합하고, **데이터 간 관계에서 새롭고 반증 가능하며 재현 가능하고 실용적인 산업·기술·사회 혁신 기회 또는 구조적 병목 통찰을 발견·검증·축적하는 것**이다.
-
-**EN:** The highest-level purpose is not to finish a particular dataset, experiment or toolchain. It is to discover, normalize and combine public/research data and **discover, test and accumulate new, falsifiable, reproducible and practically useful innovation opportunities or structural-bottleneck insights from relationships among data**.
-
-Mission priority:
+Mission priority remains:
 `mission innovation/bottleneck value → cross-dataset/cross-agency/cross-national value → falsifiability/reproducibility → practical utility/scalability → efficient route → branch completion`.
 
-## Branch-Stop / Mission-ROI / Branch 중단
+## Recent completed sequence / 최근 완료 순서
 
-Mandatory `MEM-054 / DEC-093` default:
+- #65 `KR-PORT-F01`: `PARTIAL_KR_PORT_METADATA_SCHEMA_READY__SAMPLE_ACCESS_PENDING`; no access/tooling rescue descendant.
+- #66 `EU-ISR-F01`: `PASS_EU_ISR_FACILITY_CLIMATE_JOIN_READY`; validated EEA site-coordinate → NASA POWER join only; no forced weak climate regression.
+- #67 `WAVE2-GEO-D01`: Japan/UK/Singapore relationship discovery; `C-UK-001` selected.
 
-**>=2 consecutive infrastructure/runtime/source-transfer descendants without new scientific evidence + credible alternative + route not uniquely mission-critical → HOLD/ARCHIVE route and RETURN_TO_PORTFOLIO.**
+Wave 2 ranking:
+1. `C-UK-001 GB Grid Constraint Regime Intelligence` — SELECT;
+2. `C-JP-001 Port Weather–Throughput Stress` — HOLD_READY_SECONDARY;
+3. `C-SG-001 Maritime Activity × Weather Regime` — HOLD_READY_SECONDARY.
 
-A technically possible workaround alone does not justify another research ID.
+Decision: `registry/DEC-098.md`.
 
-## Portfolio reset result / 포트폴리오 재선정 결과
+## Active Issue #68 — UK-GRID-F01
 
-Issue #64 `PORTFOLIO-R01` completed under `DEC-094`.
+Purpose: qualify daily alignment between current public NESO Constraint Breakdown and Historic Demand before any numerical association/model.
 
-Selected primary:
-**`C-KR-003 Port Weakest-Link Intelligence / 항만 최약고리 지능화`**.
+Frozen resources:
+- FY2026-27 Constraint Breakdown resource `4136a8e2-07c5-4784-8096-28999447a16e`;
+- Historic Demand Data 2026 resource `8a4a771c-3929-4e56-93ad-cdf13219dea5`.
 
-Secondary ranking:
-2. `C-EU-001` Cross-National Grid Stress — HOLD_READY_SECONDARY;
-3. `C-EU-004` Industrial Site Climate Risk — HOLD_READY_SECONDARY;
-4. `C-US-003` Critical Mineral Resilience — HOLD_READY_SECONDARY;
-5. Wave 2 Japan/UK/Singapore discovery — CONTINUE_AFTER_PRIMARY_GATE;
-6. independent non-P01 F37 thermal-history continuation — HOLD_BRANCH_LEVEL.
+Outcome-blind boundary:
+- constraint: schema + `Date` only;
+- demand: schema + `SETTLEMENT_DATE` + `SETTLEMENT_PERIOD` only;
+- no FY2026-27 constraint cost/volume or system-state numerical values in F01.
 
-Durable portfolio result: `research/PORTFOLIO-R01/RESULT.md`.
+Exposure disclosure:
+- first five 2025-26 constraint and first five 2026 demand numerical records were opened during Wave2 source qualification;
+- selected FY2026-27 constraint actual numerical values remained unopened at F01 preregistration.
 
-## AMBENCH disposition / AMBENCH 상태
+Frozen checks:
+- public access and expected schema;
+- current `Thermal constraints cost` numeric type;
+- one constraint row per date;
+- unique `(SETTLEMENT_DATE, SETTLEMENT_PERIOD)`;
+- daily settlement count compatible with `{46,48,50}`;
+- non-empty date overlap from `2026-04-01`;
+- correction/version boundary documented.
 
-Preserve valid scientific/methodological assets. P01/E43-F46 transport/runtime route is not active.
+NESO correction semantics:
+- constraint action tags may be changed post-event and refreshed;
+- Historic Demand is populated 21 days in arrears and may receive retrospective solar/demand corrections.
+Future experiments must freeze extraction timestamp/resource IDs/response hashes/evaluation window/maturity rule before numerical outcome analysis.
 
-`RHF_Command.zip` 18,079,576 bytes is a **route dependency, not a project dependency**.
-
-F46 = **`DORMANT__NOT_ACTIVE__REQUIRES_REAUTHORIZATION`**.
-
-## Active Issue #65 — KR-PORT-F01
-
-Purpose: qualify a deterministic official Korean port-call identity and a defensible arrival→departure operational turnaround/stay target before long-history extraction or modeling.
-
-Frozen candidate identity:
-`(port/port-authority identifier, arrival year, arrival count, call sign)`.
-
-Frozen target candidate if same-call semantics pass:
-`port_stay_hours = departure_timestamp - arrival_timestamp`.
-
-Current official metadata supports the candidate route:
-- vessel/entry-exit data describe port, call sign, arrival count and arrival/departure time;
-- port-facility-use API explicitly uses `prtAgCd + etryptYear + etryptCo + clsgn` and returns berth/mooring context;
-- KMA ASOS provides hourly physical-weather context.
-
-Important boundary: `port_stay_hours` is not automatically berth waiting, congestion delay or cargo-handling time.
-
-Preregistration: `research/KR-PORT-F01/README.md`.
+Workflow: `.github/workflows/uk-grid-f01-alignment.yml`.
+Expected durable result: `research/UK-GRID-F01/SOURCE_PREFLIGHT.md`.
 
 ## Exact Next Action / 정확한 다음 행동
 
-Execute only KR-PORT-F01 feasibility checks:
-- exact source/schema field correspondence;
-- duplicate/correction semantics;
-- same-call arrival/departure validity;
-- nested facility-use relation;
-- weather join route;
-- bounded free sample access if available.
+Read the workflow result and apply exactly one gate:
+- `PASS_UK_GRID_DAILY_ALIGNMENT_READY`;
+- `PARTIAL_UK_GRID_SCHEMA_READY__DATE_ALIGNMENT_PENDING`;
+- `HOLD_UK_GRID_TIME_OR_VERSION_SEMANTICS_GAP`;
+- `REJECT_UK_GRID_ALIGNMENT_ROUTE`.
 
-No long-history download or predictive model yet.
+If PASS, fully freeze at most one low-DOF controlled experiment before any FY2026-27 constraint numerical values are opened. If HOLD/REJECT, return to Stage 0. No tooling rescue chain.
 
-If HOLD/REJECT: immediate Stage 0 portfolio return. If PASS: at most one separately preregistered controlled experiment before another mandatory Mission-ROI review.
-
-`COST-001` remains mandatory; incremental monetary cost stays `0 USD`.
+`COST-001` remains mandatory; incremental monetary cost stays **0 USD**.
