@@ -2,12 +2,12 @@
 id: SESSION-HANDOFF
 type: memory
 state: ACTIVE
-checkpoint_id: CHK-20260903-PORTFOLIO-R02-ACTIVE
-active_issue: 71
-active_research: PORTFOLIO-R02
+checkpoint_id: CHK-20260903-US-PORT-F01-TRANSITION
+active_issue: 72
+active_research: US-PORT-F01
 last_completed_issue: 70
 last_completed_research: UK-GRID-E01
-last_decision: DEC-101
+last_decision: DEC-102
 created: 2026-08-22
 updated: 2026-09-03
 source_of_truth: github
@@ -17,61 +17,35 @@ source_of_truth: github
 
 ## Mandatory first read / 의무 선읽기
 
-Before material work, read and reconcile:
-1. `README.md`;
-2. `STATUS.md`;
-3. `context/PROJECT_MEMORY.md`;
-4. **`context/MEM-054-MISSION-ANCHOR.md`**;
-5. this file;
-6. live GitHub Issue state;
-7. `DEC-093`, `DEC-101`, latest portfolio decision and relevant research/claim records.
+Read README, STATUS, PROJECT_MEMORY, `MEM-054`, this handoff, live Issues, `DEC-093`, `DEC-101`, `DEC-102`, and relevant result/claim records before material work.
 
-Mission priority:
-`mission innovation/bottleneck value → cross-dataset/cross-agency/cross-national value → falsifiability/reproducibility → practical utility/scalability → efficient route → branch completion`.
+## UK-GRID-E01 terminal / UK-GRID-E01 종결
 
-## Last completed research — UK-GRID-E01
+Issue #70 closed as `HOLD_E01_SOURCE_CARDINALITY`: 122 dates but 5,846 vs preregistered 5,856 day-ahead rows; per-date counts `[38,48]`; thermal-cost structure PASS; Stage B did not execute; no selected Flow/Limit/Cost observations opened. No automatic rescue.
 
-Issue #70 is closed as completed HOLD.
+## PORTFOLIO-R02 selection / PORTFOLIO-R02 선정
 
-Final gate: **`HOLD_E01_SOURCE_CARDINALITY`**.
+`research/PORTFOLIO-R02/RESULT.md` and `DEC-102` selected:
 
-Evidence:
-- 122 frozen day-ahead dates existed;
-- structural rows were `5,846`, not preregistered `5,856`;
-- per-day unique timestamp counts were `[38, 48]`;
-- thermal-cost source had exactly 122 dates / 122 rows / one row per date;
-- no selected observation-level `Flow`, `Limit`, or `Daily Cost` values were requested;
-- Stage B did not execute.
+**`C-US-002 — U.S. Port Weakest-Link Intelligence`**
 
-Do not infer why the 38-row date exists. Do not delete it, move the frozen window, impute rows, substitute ESTEX/another boundary, change the metric/cardinality contract, or open a descendant merely to rescue E01.
+because current official BTS vessel berthing/dwell evidence offers a direct operational bottleneck outcome and can potentially be related to NOAA weather-event evidence without paid/credential-heavy work. UK Grid remains HOLD, KR Port remains access-held, EU industrial-climate is an asset awaiting stronger outcome, and AMBENCH P01/F46 remains dormant.
 
-Durable records:
-- `research/UK-GRID-E01/README.md`;
-- `research/UK-GRID-E01/RESULT.md`;
-- `registry/CLM-122.md`;
-- `registry/DEC-101.md`.
+Issue #71 is being closed only after safe active-state transition to Issue #72; until then the last-completed checkpoint remains #70.
 
-## Active Issue #71 — PORTFOLIO-R02
+## Active Issue #72 — US-PORT-F01
 
-Purpose: mandatory Stage 0 Mission-ROI reselection after E01 HOLD.
+This gate is source-semantic/join feasibility only. It may qualify stable official BTS tabular/API access, temporal/port/vessel/dwell/call semantics, deterministic official port geography, NOAA Storm Events temporal/geographic fields, bounded overlap, and revision/hash rules.
 
-Compare independent preserved candidates using:
-- mission-level bottleneck/innovation value;
-- cross-dataset/cross-agency/cross-national relationship value;
-- direct observable operational/economic outcome where possible;
-- falsifiability and low-confounder design;
-- practical utility/scalability;
-- zero-cost official-source feasibility;
-- bounded next scientific gate rather than tooling work.
+It must not compute or claim a weather→dwell effect.
 
-Explicitly avoid automatic UK-GRID rescue, AMBENCH P01/F46 reactivation, and credential/tooling-heavy descendants without new portfolio justification.
+If BTS data require opaque dashboard scraping/reverse engineering, or geography requires arbitrary manual mapping, stop as HOLD/PARTIAL and return to Stage 0. Do not create a tooling descendant.
 
-## Exact Next Action / 정확한 다음 행동
+## Exact next action / 정확한 다음 행동
 
-1. Confirm State Integrity PASS for this checkpoint.
-2. Re-read durable portfolio records and preserved candidates.
-3. Persist bilingual `research/PORTFOLIO-R02/RESULT.md` with comparison and one selected next gate.
-4. Close #71 after selection.
-5. Only then activate the selected bounded scientific/feasibility gate.
+1. Close #71 as completed selection.
+2. Atomically promote `last_completed_issue: 71`, `last_completed_research: PORTFOLIO-R02` while #72 stays active.
+3. Confirm State Integrity.
+4. Run US-PORT-F01 source-semantic qualification only.
 
-`COST-001` remains mandatory; incremental monetary cost stays **0 USD**.
+Incremental monetary cost remains **0 USD**.

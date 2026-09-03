@@ -1,58 +1,52 @@
 ---
-checkpoint_id: CHK-20260903-PORTFOLIO-R02-ACTIVE
-active_issue: 71
-active_research: PORTFOLIO-R02
+checkpoint_id: CHK-20260903-US-PORT-F01-TRANSITION
+active_issue: 72
+active_research: US-PORT-F01
 last_completed_issue: 70
 last_completed_research: UK-GRID-E01
-last_decision: DEC-101
+last_decision: DEC-102
 updated: 2026-09-03
 ---
 
 # Project Status / 프로젝트 상태
 
 **Project / 프로젝트:** AI-Innovative-Research-Engine / AI 기반 혁신 탐색 연구 엔진  
-**State / 상태:** `MISSION_ANCHOR_FIXED__UK_GRID_E01_HOLD__PORTFOLIO_R02_ACTIVE`  
-**Active Work Queue / 활성 작업 큐:** Issue #71 `PORTFOLIO-R02 — post-UK-grid Stage 0 Mission-ROI reselection`.
+**State / 상태:** `MISSION_ANCHOR_FIXED__PORTFOLIO_R02_SELECTED_US_PORT__F01_TRANSITION`  
+**Active Work Queue / 활성 작업 큐:** Issue #72 `US-PORT-F01 — BTS berthing × NOAA weather join feasibility`.
 
 ## Fixed Mission / 고정 목적
 
-The project exists to discover and validate **new, falsifiable, reproducible and practically useful innovation opportunities or structural bottlenecks from relationships among public/research data**. `context/MEM-054-MISSION-ANCHOR.md` remains mandatory durable memory.
+Discover and validate new, falsifiable, reproducible and practically useful innovation opportunities or structural bottlenecks from relationships among public/research data. `MEM-054` remains mandatory; route completion is subordinate to mission value.
 
-특정 데이터셋·실험·도구·접근경로 완주는 목적이 아니다. Route dependency를 mission dependency로 승격하지 않는다.
+## Last completed empirical branch / 마지막 완료 실증 branch
 
-## Governance / 거버넌스
+Issue #70 / `UK-GRID-E01`: `HOLD_E01_SOURCE_CARDINALITY`; Stage B did not execute and selected Flow/Limit/Cost observations were not opened. No same-branch rescue is authorized under `DEC-101`.
 
-- `MEM-054` Mission Anchor;
-- `DEC-093` Mission-ROI / Branch-Stop;
-- `DEC-101` UK-GRID-E01 HOLD finalization;
-- Stage 0 Portfolio Selection + Stage 9 Portfolio Return;
-- `COST-001`: incremental monetary cost defaults to `0 USD`.
+## Portfolio-R02 selection / Portfolio-R02 선정
 
-## Last completed research / 마지막 완료 연구
+Issue #71 completed its Mission-ROI selection substantively and selected `C-US-002 — U.S. Port Weakest-Link Intelligence` in `research/PORTFOLIO-R02/RESULT.md` / `DEC-102`.
 
-Issue #70 / `UK-GRID-E01` completed as **`HOLD_E01_SOURCE_CARDINALITY`**.
+Exact next gate: `US-PORT-F01 — BTS Berthing × NOAA Weather Join Feasibility`.
 
-- frozen dates: 122 / PASS;
-- SCOTEX day-ahead structural rows: `5,846` vs required `5,856` / FAIL;
-- per-date row/timestamp count set: `[38, 48]`;
-- thermal-cost dates/rows: `122 / 122`, one per date / PASS;
-- selected numerical `Flow`, `Limit`, `Daily Cost` observations requested: **False**;
-- Stage B numerical analysis executed: **False**.
+During this transition, Issue #71 remains open until the active checkpoint has moved safely to #72; therefore `last_completed_issue` remains #70 until #71 closure is durable.
 
-Durable records: `research/UK-GRID-E01/RESULT.md`, `registry/CLM-122.md`, `registry/DEC-101.md`.
+## F01 authorization boundary / F01 승인 경계
 
-No same-branch rescue is authorized without a future Stage 0 Mission-ROI justification.
+F01 is source-semantic/join feasibility only:
+- qualify stable official BTS tabular/API access for vessel berthing/dwell;
+- freeze time grain, port/vessel identity, dwell and call-support semantics;
+- qualify deterministic official port geography;
+- qualify NOAA Storm Events temporal/geographic mapping;
+- identify bounded common coverage and revision/hash rules;
+- do not compute or claim weather→dwell effect.
 
-## Active Stage 0 / 활성 Stage 0
-
-Issue #71 shall compare preserved independent candidates and select exactly one next bounded scientific/innovation uncertainty. Selection must favor mission value, cross-source relationships, direct observable bottlenecks/outcomes, falsifiability, practical utility, zero-cost accessibility, and low tooling burden.
+If official tabular access requires opaque dashboard scraping or geography is arbitrary, HOLD/PARTIAL and return to Stage 0. No scraping/tooling descendant is authorized.
 
 ## Exact next action / 정확한 다음 행동
 
-1. Confirm State Integrity for checkpoint `CHK-20260903-PORTFOLIO-R02-ACTIVE`.
-2. Re-read durable portfolio/candidate records.
-3. Rank independent candidates under Mission-ROI.
-4. Persist `research/PORTFOLIO-R02/RESULT.md` and the selection decision.
-5. Close #71, then activate exactly one selected bounded gate.
+1. Close Issue #71 as completed selection.
+2. Promote #71 / PORTFOLIO-R02 to last-completed state while keeping #72 active.
+3. Confirm State Integrity.
+4. Execute US-PORT-F01 source-semantic qualification only.
 
 Incremental monetary cost remains **0 USD**.
