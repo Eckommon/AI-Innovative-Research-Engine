@@ -1,0 +1,408 @@
+name: AMBENCH F44 surface-only MP_Stats equivalence
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ambench-f44-surface-equivalence.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  equivalence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Reconstruct checksum-frozen F44 calibration prefix
+        shell: bash
+        run: |
+          set -euo pipefail
+          export F44_ROOT="$RUNNER_TEMP/f44"
+          mkdir -p "$F44_ROOT/generated"
+          python - <<'PY'
+          import csv, hashlib, io, json, math, os, re, time, urllib.request, zipfile
+          from pathlib import Path
+
+          DSID='mds2-2507'
+          EXPECTED_VERSION='1.0.1'
+          EXPECTED_SHA='c57a56cc9c906e4db134d7bfb8618b6678e80dd0318324de0b7baf1ce092a3f4'
+          EXPECTED_SIZE=18079576
+          EXPECTED_ROWS=25051
+          EXPECTED_POSITIVE=7408
+          EXPECTED_RUN_LENGTHS=[251,376,251,376,21,40,60,79,99,119,138,158,177,197,217,236,256,275,284,284,284,284,284,284,284,277,257,238,218,199,179,159,140,120,101,81,61,42,22]
+          EXPECTED_LEADING=200
+          EXPECTED_GAPS=[614,614,614,1067,423,423,423,423,423,423,423,423,423,423,423,423,423,397,423,423,423,423,423,423,402,423,423,423,423,423,423,423,423,423,423,423,423,423]
+          SUBSET_RUNS=list(range(1,7))
+          EXPECTED_SUBSET_POS=1315
+          EXPECTED_SUBSET_ROWS=4847
+          DT=10e-6
+          ROOT=Path(os.environ['F44_ROOT'])
+
+          def fetch_complete(url, attempts=3, timeout=240):
+              errors=[]
+              for attempt in range(1,attempts+1):
+                  try:
+                      req=urllib.request.Request(url,headers={'User-Agent':'AI-Innovative-Research-Engine/F44'})
+                      with urllib.request.urlopen(req,timeout=timeout) as r:
+                          data=r.read()
+                      return data,attempt,errors
+                  except Exception as e:
+                      errors.append(f'attempt_{attempt}:{type(e).__name__}:{e}')
+                      if attempt<attempts: time.sleep(5)
+              raise RuntimeError('all bounded fetch attempts failed: '+' | '.join(errors))
+
+          info={'input_integrity_ok':False,'reasons':[],'network':{},'version':None,'archive_size':None,'archive_sha256':None,'member':None,'rows':0,'positive_rows':0,'run_count':0,'subset_run_ids':SUBSET_RUNS,'subset_positive_rows':None,'subset_modeled_rows':None,'subset_time_s':None,'subset_energy_proxy_J':None,'subset_path_sha256':None}
+          try:
+              meta_raw,ma,me=fetch_complete(f'https://data.nist.gov/od/id/{DSID}?format=nerdm')
+              info['network']['metadata_attempt_used']=ma; info['network']['metadata_prior_errors']=me
+              meta=json.loads(meta_raw.decode('utf-8')); version=str(meta.get('version')); info['version']=version
+              comps=[c for c in meta.get('components',[]) if c.get('filepath')=='RHF_Command.zip']
+              if len(comps)!=1: raise RuntimeError(f'RHF_Command component count={len(comps)}')
+              comp=comps[0]
+              raw,za,ze=fetch_complete(comp['downloadURL'])
+              info['network']['archive_attempt_used']=za; info['network']['archive_prior_errors']=ze
+              got_sha=hashlib.sha256(raw).hexdigest(); nerdm_sha=(comp.get('checksum') or {}).get('hash')
+              info['archive_size']=len(raw); info['archive_sha256']=got_sha
+              if version!=EXPECTED_VERSION: raise RuntimeError(f'version mismatch {version}')
+              if not (len(raw)==comp.get('size')==EXPECTED_SIZE): raise RuntimeError('archive size mismatch')
+              if not (got_sha==nerdm_sha==EXPECTED_SHA): raise RuntimeError('archive checksum mismatch')
+
+              z=zipfile.ZipFile(io.BytesIO(raw)); rx=re.compile(r'(?:^|/)RHF_P01_layer0001\.csv$',re.I)
+              members=[n for n in z.namelist() if rx.search(n)]
+              if len(members)!=1: raise RuntimeError(f'P01 member count={len(members)}')
+              member=members[0]; info['member']=member
+              text=z.read(member).decode('utf-8-sig',errors='strict')
+              rows=[]; blank=0; malformed=0
+              for row in csv.reader(io.StringIO(text)):
+                  if not row or all(not c.strip() for c in row): blank+=1; continue
+                  if len(row)!=4: malformed+=1; continue
+                  try: vals=tuple(map(float,row))
+                  except Exception: malformed+=1; continue
+                  if not all(math.isfinite(v) for v in vals): malformed+=1; continue
+                  rows.append(vals)
+              info['rows']=len(rows)
+              if blank or malformed or len(rows)!=EXPECTED_ROWS: raise RuntimeError(f'row integrity blank={blank} malformed={malformed} parsed={len(rows)}')
+
+              run_ranges=[]; start=None
+              for i,(_,_,p,_) in enumerate(rows):
+                  if p>0 and start is None: start=i
+                  if p<=0 and start is not None: run_ranges.append((start,i-1)); start=None
+              if start is not None: run_ranges.append((start,len(rows)-1))
+              lengths=[b-a+1 for a,b in run_ranges]; positive=sum(lengths)
+              info['positive_rows']=positive; info['run_count']=len(run_ranges)
+              if lengths!=EXPECTED_RUN_LENGTHS or positive!=EXPECTED_POSITIVE or len(run_ranges)!=39: raise RuntimeError('F42 source-run identity drift')
+              leading=run_ranges[0][0]
+              gaps=[run_ranges[i][0]-run_ranges[i-1][1]-1 for i in range(1,len(run_ranges))]
+              if leading!=EXPECTED_LEADING or gaps!=EXPECTED_GAPS: raise RuntimeError('F42 timing partition drift')
+
+              run_points={}; allpos=[]
+              for rid,(a,b) in enumerate(run_ranges,start=1):
+                  pts=[(rows[i][0],rows[i][1]) for i in range(a,b+1)]
+                  run_points[rid]=pts; allpos.extend(pts)
+              minx=min(x for x,y in allpos); miny=min(y for x,y in allpos)
+              translated={rid:[(x-minx,y-miny) for x,y in pts] for rid,pts in run_points.items()}
+
+              lines=['Mode\tX(mm)\tY(mm)\tZ(mm)\tPmod\tVel(m/s)/Time(s)']
+              x0,y0=translated[1][0]
+              lines.append(f'1\t{x0:.15g}\t{y0:.15g}\t0\t0\t{leading*DT:.15g}')
+              for pos,rid in enumerate(SUBSET_RUNS):
+                  if pos>0:
+                      xs,ys=translated[rid][0]
+                      lines.append(f'1\t{xs:.15g}\t{ys:.15g}\t0\t0\t{gaps[pos-1]*DT:.15g}')
+                  for x,y in translated[rid]:
+                      lines.append(f'1\t{x:.15g}\t{y:.15g}\t0\t1\t{DT:.15g}')
+              path='\n'.join(lines)+'\n'
+              subset_pos=sum(lengths[:6]); subset_rows=leading+sum(gaps[:5])+subset_pos
+              if subset_pos!=EXPECTED_SUBSET_POS or subset_rows!=EXPECTED_SUBSET_ROWS: raise RuntimeError(f'subset identity mismatch pos={subset_pos} rows={subset_rows}')
+              ph=hashlib.sha256(path.encode()).hexdigest()
+              (ROOT/'generated'/'CAL.Path.txt').write_text(path,encoding='utf-8')
+              info['subset_positive_rows']=subset_pos; info['subset_modeled_rows']=subset_rows
+              info['subset_time_s']=subset_rows*DT; info['subset_energy_proxy_J']=subset_pos*DT*600.0; info['subset_path_sha256']=ph
+              info['input_integrity_ok']=True
+          except Exception as e:
+              info['reasons'].append(f'{type(e).__name__}: {e}')
+          (ROOT/'input_meta.json').write_text(json.dumps(info,indent=2),encoding='utf-8')
+          print(json.dumps(info,indent=2))
+          PY
+
+      - name: Build pinned 3DThesis and prepare FULL41 and TOP1
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$RUNNER_TEMP/f44"
+          INPUT_OK="$(python - <<'PY'
+          import json,os
+          from pathlib import Path
+          m=json.loads((Path(os.environ['RUNNER_TEMP'])/'f44'/'input_meta.json').read_text())
+          print('1' if m.get('input_integrity_ok') else '0')
+          PY
+          )"
+          if [ "$INPUT_OK" != 1 ]; then printf '{"build_ok":false,"reason":"input integrity failed"}\n' > "$ROOT/build_meta.json"; exit 0; fi
+          WORK="$ROOT/3DThesis"
+          set +e
+          git clone --filter=blob:none https://github.com/ORNL-MDF/3DThesis.git "$WORK" > "$ROOT/build.log" 2>&1; C1=$?
+          if [ $C1 -eq 0 ]; then git -C "$WORK" checkout --detach 2de7fc6d8cfa5de78b111df97b1a4d9156a8cf60 >> "$ROOT/build.log" 2>&1; C2=$?; else C2=99; fi
+          if [ $C2 -eq 0 ]; then cmake -S "$WORK" -B "$WORK/build" -D CMAKE_INSTALL_PREFIX="$WORK/install" >> "$ROOT/build.log" 2>&1; C3=$?; else C3=99; fi
+          if [ $C3 -eq 0 ]; then cmake --build "$WORK/build" --parallel 2 >> "$ROOT/build.log" 2>&1; C4=$?; else C4=99; fi
+          if [ $C4 -eq 0 ]; then cmake --install "$WORK/build" >> "$ROOT/build.log" 2>&1; C5=$?; else C5=99; fi
+          set -e
+          OK=false; if [ $C1 -eq 0 ] && [ $C2 -eq 0 ] && [ $C3 -eq 0 ] && [ $C4 -eq 0 ] && [ $C5 -eq 0 ]; then OK=true; fi
+          printf '{"build_ok":%s,"clone_rc":%s,"checkout_rc":%s,"configure_rc":%s,"build_rc":%s,"install_rc":%s}\n' "$OK" "$C1" "$C2" "$C3" "$C4" "$C5" > "$ROOT/build_meta.json"
+          if [ "$OK" != true ]; then exit 0; fi
+
+          for CASE in FULL41 TOP1; do
+            D="$ROOT/cases/$CASE"; mkdir -p "$D"
+            cp "$WORK/examples/solidification_mpstats/Material.txt" "$D/Material.txt"
+            cp "$WORK/examples/solidification_mpstats/Beam.txt" "$D/Beam.txt"
+            cp "$WORK/examples/solidification_mpstats/Output.txt" "$D/Output.txt"
+            cp "$WORK/examples/solidification_mpstats/Settings.txt" "$D/Settings.txt"
+            cp "$ROOT/generated/CAL.Path.txt" "$D/Path.txt"
+            cat > "$D/Mode.txt" <<'EOF'
+          Solidification
+          {
+            Tracking Surface
+            Timestep 1e-5
+          }
+          EOF
+            if [ "$CASE" = FULL41 ]; then
+              cat > "$D/Domain.txt" <<'EOF'
+          X
+          {
+            Min -0.001
+            Max 0.004
+            Res 5.0e-5
+          }
+          Y
+          {
+            Min -0.001
+            Max 0.003
+            Res 5.0e-5
+          }
+          Z
+          {
+            Min -0.001
+            Max 0.000
+            Res 2.5e-5
+          }
+          EOF
+            else
+              cat > "$D/Domain.txt" <<'EOF'
+          X
+          {
+            Min -0.001
+            Max 0.004
+            Res 5.0e-5
+          }
+          Y
+          {
+            Min -0.001
+            Max 0.003
+            Res 5.0e-5
+          }
+          Z
+          {
+            Min -0.001
+            Max 0.000
+            Num 1
+          }
+          EOF
+            fi
+            cat > "$D/ParamInput.txt" <<EOF
+          Simulation
+          {
+            Name $CASE
+            Mode Mode.txt
+            Material Material.txt
+            Beam Beam.txt
+            Path Path.txt
+          }
+          Options
+          {
+            Domain Domain.txt
+            Output Output.txt
+            Settings Settings.txt
+          }
+          EOF
+          done
+          A=$(sha256sum "$ROOT/cases/FULL41/Path.txt" | awk '{print $1}')
+          B=$(sha256sum "$ROOT/cases/TOP1/Path.txt" | awk '{print $1}')
+          if [ "$A" != "$B" ]; then printf '{"build_ok":false,"reason":"case Path hashes differ"}\n' > "$ROOT/build_meta.json"; fi
+
+      - name: Execute frozen F44 calibration cases
+        shell: bash
+        run: |
+          set -euo pipefail
+          ROOT="$RUNNER_TEMP/f44"
+          BUILD_OK="$(python - <<'PY'
+          import json,os
+          from pathlib import Path
+          m=json.loads((Path(os.environ['RUNNER_TEMP'])/'f44'/'build_meta.json').read_text())
+          print('1' if m.get('build_ok') else '0')
+          PY
+          )"
+          python - <<'PY'
+          import os
+          from pathlib import Path
+          Path(os.environ['RUNNER_TEMP']+'/f44/runtime_meta.json').write_text('{}')
+          PY
+          if [ "$BUILD_OK" != 1 ]; then exit 0; fi
+          EXE="$ROOT/3DThesis/install/bin/3DThesis"
+          for CASE in FULL41 TOP1; do
+            D="$ROOT/cases/$CASE"; cd "$D"; rm -rf Data run.log
+            START=$(date +%s)
+            set +e
+            timeout 180 "$EXE" ./ParamInput.txt > run.log 2>&1
+            RC=$?
+            set -e
+            END=$(date +%s); ELAPSED=$((END-START))
+            export CASE RC ELAPSED F44_ROOT="$ROOT"
+            python - <<'PY'
+          import json,os
+          from pathlib import Path
+          p=Path(os.environ['F44_ROOT'])/'runtime_meta.json'; m=json.loads(p.read_text())
+          m[os.environ['CASE']]={'executed':True,'rc':int(os.environ['RC']),'elapsed_s':int(os.environ['ELAPSED'])}
+          p.write_text(json.dumps(m,indent=2))
+          PY
+          done
+          export F44_ROOT="$ROOT"
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          p=Path(os.environ['F44_ROOT'])/'runtime_meta.json'; m=json.loads(p.read_text())
+          for c in ('FULL41','TOP1'): m.setdefault(c,{'executed':False,'rc':None,'elapsed_s':None})
+          p.write_text(json.dumps(m,indent=2)); print(json.dumps(m,indent=2))
+          PY
+
+      - name: Apply frozen coordinate-wise equivalence gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          export F44_ROOT="$RUNNER_TEMP/f44"
+          python - <<'PY'
+          import csv,json,math,os
+          from pathlib import Path
+          ROOT=Path(os.environ['F44_ROOT']); TOL=1e-12; ZTOL=1e-15; EXPECTED=8181
+          inp=json.loads((ROOT/'input_meta.json').read_text()) if (ROOT/'input_meta.json').exists() else {'input_integrity_ok':False,'reasons':['missing input_meta']}
+          bld=json.loads((ROOT/'build_meta.json').read_text()) if (ROOT/'build_meta.json').exists() else {'build_ok':False,'reason':'missing build_meta'}
+          run=json.loads((ROOT/'runtime_meta.json').read_text()) if (ROOT/'runtime_meta.json').exists() else {}
+          reasons=[]
+          if not inp.get('input_integrity_ok'): reasons += ['input:'+x for x in inp.get('reasons',[])]
+          if not bld.get('build_ok'): reasons.append('build/runtime preparation failed: '+str(bld))
+          for c in ('FULL41','TOP1'):
+              r=run.get(c,{})
+              if not r.get('executed') or r.get('rc')!=0: reasons.append(f'{c} runtime not successful: {r}')
+
+          expected_header=['x','y','z','MP_width','MP_length','MP_depth']
+          fields={}; diagnostics={}
+          if not reasons:
+              for c in ('FULL41','TOP1'):
+                  f=ROOT/'cases'/c/'Data'/f'{c}.Solidification.Final.csv'
+                  if not f.exists(): reasons.append(f'{c} output missing: {f}'); continue
+                  d={}; total=0; top=0; nonfinite=0; duplicate=0; non_top_top1=0
+                  with f.open(newline='') as fh:
+                      rd=csv.reader(fh); header=next(rd,None)
+                      if header!=expected_header: reasons.append(f'{c} schema mismatch: {header}'); continue
+                      for row in rd:
+                          total+=1
+                          if len(row)!=6: reasons.append(f'{c} malformed row length'); break
+                          try: x,y,zv,w,l,dep=map(float,row)
+                          except Exception: reasons.append(f'{c} nonnumeric row'); break
+                          if not all(math.isfinite(v) for v in (x,y,zv,w,l,dep)): nonfinite+=1; continue
+                          if c=='TOP1' and abs(zv)>ZTOL: non_top_top1+=1
+                          if abs(zv)<=ZTOL:
+                              top+=1; key=(x,y)
+                              if key in d: duplicate+=1
+                              d[key]=(w,l)
+                  diagnostics[c]={'total_rows':total,'top_rows':top,'unique_top_coordinates':len(d),'nonfinite_rows':nonfinite,'duplicate_top_coordinates':duplicate,'non_top_rows_in_TOP1':non_top_top1}
+                  if nonfinite or duplicate: reasons.append(f'{c} nonfinite/duplicate rows: {diagnostics[c]}')
+                  if c=='TOP1' and non_top_top1: reasons.append(f'TOP1 contains non-top rows: {non_top_top1}')
+                  if len(d)!=EXPECTED: reasons.append(f'{c} unique top coordinates != {EXPECTED}: {len(d)}')
+                  fields[c]=d
+
+          eq={}
+          gate='HOLD_F44_RUNTIME_OR_INTEGRITY'
+          if not reasons and all(c in fields for c in ('FULL41','TOP1')):
+              a=fields['FULL41']; b=fields['TOP1']; ka=set(a); kb=set(b)
+              coord_missing_full=len(kb-ka); coord_missing_top=len(ka-kb)
+              if ka!=kb:
+                  reasons.append(f'coordinate sets differ: only_FULL41={coord_missing_top} only_TOP1={coord_missing_full}')
+              else:
+                  width_mismatch=0; length_mismatch=0; pos_support_mismatch=0; max_dw=0.0; max_dl=0.0
+                  for k in ka:
+                      wa,la=a[k]; wb,lb=b[k]
+                      dw=abs(wa-wb); dl=abs(la-lb); max_dw=max(max_dw,dw); max_dl=max(max_dl,dl)
+                      if dw>TOL: width_mismatch+=1
+                      if dl>TOL: length_mismatch+=1
+                      if (wa>0)!=(wb>0): pos_support_mismatch+=1
+                  eq={'coordinate_count':len(ka),'width_tolerance_m':TOL,'length_tolerance_m':TOL,'width_mismatch_count':width_mismatch,'length_mismatch_count':length_mismatch,'positive_width_support_mismatch_count':pos_support_mismatch,'max_abs_width_diff_m':max_dw,'max_abs_length_diff_m':max_dl}
+                  width_ok=(width_mismatch==0 and pos_support_mismatch==0)
+                  length_ok=(length_mismatch==0)
+                  if width_ok and length_ok: gate='PASS_F44_SURFACE_ONLY_MPSTATS_EQUIVALENT'
+                  elif width_ok: gate='PARTIAL_F44_MPWIDTH_ONLY_EQUIVALENT'
+                  else: gate='REJECT_F44_SURFACE_ONLY_REPRESENTATION'
+
+          runtime_ratio=None
+          if run.get('FULL41',{}).get('elapsed_s') and run.get('TOP1',{}).get('elapsed_s') is not None:
+              runtime_ratio=run['TOP1']['elapsed_s']/run['FULL41']['elapsed_s'] if run['FULL41']['elapsed_s'] else None
+
+          lines=['---','id: AMBENCH-F44-RESULT','type: runtime-representation-equivalence-result','created: 2026-09-03','incremental_monetary_cost_usd: 0','---','','# AMBENCH-F44 Result — Surface-Only MP_Stats Representation Equivalence','# AMBENCH-F44 결과 — Surface-Only MP_Stats 표현 동등성','',f'**Final gate / 최종 gate: `{gate}`**','', '## Source and calibration integrity / source 및 calibration 무결성',f'- NIST version: `{inp.get("version")}`',f'- archive size: `{inp.get("archive_size")}`',f'- archive SHA-256: `{inp.get("archive_sha256")}`',f'- source member: `{inp.get("member")}`',f'- calibration run IDs: `{inp.get("subset_run_ids")}`',f'- calibration positive rows: `{inp.get("subset_positive_rows")}`',f'- calibration modeled rows: `{inp.get("subset_modeled_rows")}`',f'- calibration modeled time: `{inp.get("subset_time_s")}` s',f'- calibration energy proxy: `{inp.get("subset_energy_proxy_J")}` J',f'- calibration Path SHA-256: `{inp.get("subset_path_sha256")}`','', '## Frozen representations / 고정 표현','- FULL41: `101 x 81 x 41 = 335421` points','- TOP1: `101 x 81 x 1 = 8181` points','- Same Path/material/beam/output/settings/X/Y; only Z representation differs.','', '## Runtime / 실행시간',f'- FULL41: `{run.get("FULL41")}`',f'- TOP1: `{run.get("TOP1")}`',f'- TOP1/FULL41 elapsed ratio: `{runtime_ratio}`','', '## Output diagnostics / 출력 진단','```json',json.dumps(diagnostics,indent=2,sort_keys=True),'```','', '## Frozen equivalence diagnostics / 고정 동등성 진단','```json',json.dumps(eq,indent=2,sort_keys=True),'```','']
+          if reasons: lines += ['## HOLD/integrity reasons / HOLD·무결성 사유','']+[f'- {x}' for x in reasons]+['']
+          lines += ['## Boundary / 경계','', 'This gate tests only pinned-model top-surface representation equivalence on the preregistered source-native P01 prefix. It does not establish full-P01 runtime feasibility or N0-vs-R1 path-order added value. `MP_depth` is intentionally excluded.','', 'Raw simulator CSV and generated Path remain transient and are not committed.','']
+          Path('research/AMBENCH-F44/RESULT.md').write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          print(gate); print(json.dumps(eq,indent=2)); print(json.dumps(diagnostics,indent=2))
+          PY
+
+      - name: Persist F44 result
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git pull --rebase origin main
+          git add research/AMBENCH-F44/RESULT.md
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'record AMBENCH-F44 surface equivalence result'
+          git push
+
+  terminal_recorder:
+    if: ${{ always() }}
+    needs: equivalence
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Persist fail-closed F44 result if normal result missing
+        shell: bash
+        env:
+          JOB_RESULT: ${{ needs.equivalence.result }}
+        run: |
+          set -euo pipefail
+          if [ -f research/AMBENCH-F44/RESULT.md ]; then exit 0; fi
+          mkdir -p research/AMBENCH-F44
+          cat > research/AMBENCH-F44/RESULT.md <<EOF
+          ---
+          id: AMBENCH-F44-RESULT
+          type: runtime-representation-equivalence-result
+          created: 2026-09-03
+          incremental_monetary_cost_usd: 0
+          ---
+
+          # AMBENCH-F44 Terminal Fail-Closed Result
+          # AMBENCH-F44 Terminal Fail-Closed 결과
+
+          **Final gate / 최종 gate: \`HOLD_F44_RUNTIME_OR_INTEGRITY\`**
+
+          The preregistered F44 job did not persist a normal result. GitHub job result: \`${JOB_RESULT}\`.
+
+          No equivalence or performance inference is authorized from this terminal record.
+          EOF
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git pull --rebase origin main
+          git add research/AMBENCH-F44/RESULT.md
+          git commit -m 'record AMBENCH-F44 terminal fail-closed hold'
+          git push
