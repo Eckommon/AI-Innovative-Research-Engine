@@ -1,0 +1,195 @@
+name: UK-GRID-F01 outcome-blind daily alignment preflight
+
+on:
+  push:
+    paths:
+      - '.github/workflows/uk-grid-f01-alignment.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run frozen schema/date-only alignment preflight
+        shell: bash
+        run: |
+          python - <<'PY'
+          import collections
+          import datetime as dt
+          import hashlib
+          import json
+          import pathlib
+          import urllib.parse
+          import urllib.request
+
+          CONSTRAINT_ID = '4136a8e2-07c5-4784-8096-28999447a16e'
+          DEMAND_ID = '8a4a771c-3929-4e56-93ad-cdf13219dea5'
+          API = 'https://api.neso.energy/api/3/action/datastore_search'
+          OUT = pathlib.Path('research/UK-GRID-F01/SOURCE_PREFLIGHT.md')
+          OUT.parent.mkdir(parents=True, exist_ok=True)
+
+          def get_json(params, timeout=90):
+              url = API + '?' + urllib.parse.urlencode(params)
+              req = urllib.request.Request(url, headers={'User-Agent': 'AI-Innovative-Research-Engine/1.0'})
+              with urllib.request.urlopen(req, timeout=timeout) as r:
+                  status = getattr(r, 'status', 200)
+                  b = r.read()
+              return status, b, json.loads(b.decode('utf-8'))
+
+          def schema_map(obj):
+              return {str(f.get('id','')).strip(): str(f.get('type','')).strip().lower() for f in obj['result']['fields']}
+
+          checks = []
+          diag = {}
+          gate = None
+          try:
+              # Schema-only: zero data records.
+              cs, cb, cj = get_json({'resource_id': CONSTRAINT_ID, 'limit': 0})
+              ds, db, dj = get_json({'resource_id': DEMAND_ID, 'limit': 0})
+              diag['constraint_schema_http_status'] = cs
+              diag['demand_schema_http_status'] = ds
+              diag['constraint_schema_sha256'] = hashlib.sha256(cb).hexdigest()
+              diag['demand_schema_sha256'] = hashlib.sha256(db).hexdigest()
+              checks += [('Constraint CKAN public schema access', cs == 200 and cj.get('success') is True),
+                         ('Demand CKAN public schema access', ds == 200 and dj.get('success') is True)]
+
+              c_schema = schema_map(cj)
+              d_schema = schema_map(dj)
+              c_expected = [
+                  'Date',
+                  'Reducing largest loss cost', 'Increasing system inertia cost',
+                  'Voltage constraints cost', 'Thermal constraints cost',
+                  'Reducing largest loss volume', 'Increasing system inertia volume',
+                  'Voltage constraints volume', 'Thermal constraints volume'
+              ]
+              d_expected = [
+                  'SETTLEMENT_DATE','SETTLEMENT_PERIOD','ND','TSD',
+                  'EMBEDDED_WIND_GENERATION','EMBEDDED_SOLAR_GENERATION',
+                  'IFA_FLOW','IFA2_FLOW','BRITNED_FLOW','MOYLE_FLOW',
+                  'EAST_WEST_FLOW','NEMO_FLOW','NSL_FLOW','ELECLINK_FLOW',
+                  'VIKING_FLOW','GREENLINK_FLOW'
+              ]
+              for f in c_expected:
+                  checks.append((f'Constraint schema field {f}', f in c_schema))
+              checks.append(('FY2026-27 Thermal constraints cost typed numeric', c_schema.get('Thermal constraints cost') in {'numeric','number','float','float8','int','int4','int8'}))
+              for f in d_expected:
+                  checks.append((f'Demand schema field {f}', f in d_schema))
+
+              # Date-only current FY constraint request. No cost/volume values requested.
+              cs2, cb2, cj2 = get_json({'resource_id': CONSTRAINT_ID, 'limit': 1000, 'fields': 'Date'})
+              diag['constraint_date_http_status'] = cs2
+              diag['constraint_date_response_sha256'] = hashlib.sha256(cb2).hexdigest()
+              c_records = cj2.get('result', {}).get('records', [])
+              c_dates = [str(r.get('Date')) for r in c_records if r.get('Date') not in (None,'')]
+              c_counts = collections.Counter(c_dates)
+              checks.append(('Constraint date-only request returned rows', len(c_dates) > 0))
+              checks.append(('Constraint Date unique at daily unit', bool(c_dates) and max(c_counts.values()) == 1))
+              diag['constraint_date_count'] = len(c_dates)
+              diag['constraint_unique_date_count'] = len(c_counts)
+              diag['constraint_min_date'] = min(c_dates) if c_dates else 'NONE'
+              diag['constraint_max_date'] = max(c_dates) if c_dates else 'NONE'
+              diag['constraint_numerical_outcomes_requested'] = False
+
+              # Date + settlement-period only. No ND/wind/solar/flow values requested.
+              ds2, db2, dj2 = get_json({'resource_id': DEMAND_ID, 'limit': 20000, 'fields': 'SETTLEMENT_DATE,SETTLEMENT_PERIOD'})
+              diag['demand_date_period_http_status'] = ds2
+              diag['demand_date_period_response_sha256'] = hashlib.sha256(db2).hexdigest()
+              d_records = dj2.get('result', {}).get('records', [])
+              pairs = []
+              per_day = collections.Counter()
+              for r in d_records:
+                  d = r.get('SETTLEMENT_DATE')
+                  p = r.get('SETTLEMENT_PERIOD')
+                  if d in (None,'') or p in (None,''):
+                      continue
+                  d = str(d)
+                  p = int(p)
+                  pairs.append((d,p))
+                  per_day[d] += 1
+              checks.append(('Demand date/settlement-period request returned rows', len(pairs) > 0))
+              checks.append(('Demand (date, settlement period) pairs unique', len(pairs) == len(set(pairs)) and len(pairs) > 0))
+              count_set = sorted(set(per_day.values()))
+              checks.append(('Daily settlement-period counts compatible with 46/48/50', bool(count_set) and set(count_set).issubset({46,48,50})))
+              diag['demand_date_period_row_count'] = len(pairs)
+              diag['demand_unique_date_count'] = len(per_day)
+              diag['demand_period_count_set'] = ','.join(map(str,count_set)) if count_set else 'NONE'
+              diag['demand_min_date'] = min(per_day) if per_day else 'NONE'
+              diag['demand_max_date'] = max(per_day) if per_day else 'NONE'
+              diag['demand_numerical_system_state_requested'] = False
+
+              # Exact date overlap after frozen lower bound.
+              lower = '2026-04-01'
+              overlap = sorted(set(d for d in c_dates if d >= lower) & set(d for d in per_day if d >= lower))
+              checks.append(('Non-empty daily overlap from 2026-04-01 onward', len(overlap) > 0))
+              checks.append(('Every overlap date has one constraint record', bool(overlap) and all(c_counts[d] == 1 for d in overlap)))
+              checks.append(('Every overlap date has allowed settlement-period count', bool(overlap) and all(per_day[d] in {46,48,50} for d in overlap)))
+              diag['overlap_date_count'] = len(overlap)
+              diag['overlap_min_date'] = min(overlap) if overlap else 'NONE'
+              diag['overlap_max_date'] = max(overlap) if overlap else 'NONE'
+
+              if all(ok for _,ok in checks):
+                  gate = 'PASS_UK_GRID_DAILY_ALIGNMENT_READY'
+              elif cs == 200 and ds == 200 and all(f in c_schema for f in c_expected) and all(f in d_schema for f in d_expected):
+                  gate = 'HOLD_UK_GRID_TIME_OR_VERSION_SEMANTICS_GAP'
+              else:
+                  gate = 'PARTIAL_UK_GRID_SCHEMA_READY__DATE_ALIGNMENT_PENDING'
+          except Exception as e:
+              diag['exception_type'] = type(e).__name__
+              diag['exception_message'] = str(e)[:500]
+              if gate is None:
+                  gate = 'PARTIAL_UK_GRID_SCHEMA_READY__DATE_ALIGNMENT_PENDING'
+
+          lines = [
+              '---',
+              'id: UK-GRID-F01-SOURCE-PREFLIGHT',
+              'type: schema-date-alignment-preflight',
+              'created: 2026-09-03',
+              f'gate: {gate}',
+              'incremental_monetary_cost_usd: 0',
+              '---','',
+              '# UK-GRID-F01 Source/Alignment Preflight / Source·정렬 사전검증','',
+              f'**Gate / 게이트:** `{gate}`','',
+              '## Outcome-blind execution boundary / 결과 비사용 실행경계','',
+              '- FY2026-27 constraint API: schema metadata + `Date` only.',
+              '- Historic Demand 2026 API: schema metadata + `SETTLEMENT_DATE` + `SETTLEMENT_PERIOD` only.',
+              '- No FY2026-27 constraint cost/volume values were requested or emitted.',
+              '- No demand/wind/solar/interconnector numerical values were requested or emitted.','',
+              '## Checks / 검증','',
+              '| Check / 검증 | Result |','|---|---|'
+          ]
+          for name, ok in checks:
+              lines.append(f'| {name} | {"PASS" if ok else "FAIL"} |')
+          lines += ['', '## Diagnostics / 진단','']
+          for k in sorted(diag):
+              lines.append(f'- `{k}`: `{diag[k]}`')
+          lines += [
+              '', '## Correction/version boundary / 수정·버전 경계','',
+              'NESO documents that Constraint Breakdown may be refreshed when post-event action tags change. Historic Demand is populated 21 days in arrears and may receive retrospective solar/demand corrections. A later experiment must therefore freeze extraction UTC timestamp, exact resource IDs, raw/query response hashes, an evaluation window and a maturity rule before numerical outcome access.','',
+              '## Claim boundary / 주장 경계','',
+              'A PASS establishes daily source/time alignment feasibility only. It does not establish that system-state variables explain or predict constraint costs, nor does it establish causal transmission bottleneck drivers.','',
+              'Incremental monetary cost remained **0 USD**.',''
+          ]
+          OUT.write_text('\n'.join(lines), encoding='utf-8')
+          print(gate)
+          PY
+
+      - name: Commit durable preflight result
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/UK-GRID-F01/SOURCE_PREFLIGHT.md
+          if git diff --cached --quiet; then
+            echo 'No result change'
+            exit 0
+          fi
+          git commit -m 'record UK-GRID-F01 outcome-blind daily alignment preflight'
+          git push
