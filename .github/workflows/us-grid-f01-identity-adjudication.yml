@@ -1,0 +1,196 @@
+name: US GRID F01 identity adjudication
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/us-grid-f01-identity-adjudication.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  identity-adjudication:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Requalify source-defined LBNL entity against EIA BA identity
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, io, os, re, urllib.request, zipfile
+          import xml.etree.ElementTree as ET
+          from collections import Counter
+          from pathlib import Path
+
+          ROOT=Path(os.environ['GITHUB_WORKSPACE'])
+          OUT=ROOT/'research/US-GRID-F01/IDENTITY_ADJUDICATION.md'
+          UA={'User-Agent':'AI-Innovative-Research-Engine/US-GRID-F01 identity-adjudication'}
+          LBNL='https://eta-publications.lbl.gov/sites/default/files/2026-05/lbnl_ix_queue_data_file_thru2025.xlsx'
+          EIA861='https://www.eia.gov/electricity/data/eia861/zip/f8612025er.zip'
+
+          def get(url,timeout=180):
+              req=urllib.request.Request(url,headers=UA)
+              with urllib.request.urlopen(req,timeout=timeout) as r:
+                  b=r.read(); return b,getattr(r,'status',200),dict(r.headers),r.geturl()
+          def sha(b): return hashlib.sha256(b).hexdigest()
+          def norm(s): return re.sub(r'[^a-z0-9]+','',str(s).casefold())
+
+          NS='{http://schemas.openxmlformats.org/spreadsheetml/2006/main}'
+          REL='{http://schemas.openxmlformats.org/officeDocument/2006/relationships}'
+          PKG='{http://schemas.openxmlformats.org/package/2006/relationships}'
+          def colnum(ref):
+              m=re.match(r'([A-Z]+)',ref or '')
+              if not m:return None
+              n=0
+              for c in m.group(1):n=n*26+ord(c)-64
+              return n
+          class Xlsx:
+              def __init__(self,b):
+                  self.z=zipfile.ZipFile(io.BytesIO(b)); self.shared=[]
+                  if 'xl/sharedStrings.xml' in self.z.namelist():
+                      root=ET.fromstring(self.z.read('xl/sharedStrings.xml'))
+                      for si in root.findall(NS+'si'):
+                          self.shared.append(''.join(t.text or '' for t in si.iter(NS+'t')))
+                  wb=ET.fromstring(self.z.read('xl/workbook.xml'))
+                  rr=ET.fromstring(self.z.read('xl/_rels/workbook.xml.rels'))
+                  rm={x.attrib['Id']:x.attrib['Target'] for x in rr.findall(PKG+'Relationship')}
+                  self.sheets=[]
+                  for s in wb.find(NS+'sheets'):
+                      target=rm[s.attrib[REL+'id']]
+                      path=target.lstrip('/') if target.startswith('/') else 'xl/'+target.lstrip('/')
+                      path=re.sub(r'xl/\.\./','',path)
+                      self.sheets.append((s.attrib['name'],path))
+              def rows(self,path,max_rows=None,selected_cols=None):
+                  root=ET.fromstring(self.z.read(path)); sd=root.find('.//'+NS+'sheetData')
+                  if sd is None:return
+                  n=0
+                  for row in sd.findall(NS+'row'):
+                      n+=1
+                      if max_rows and n>max_rows:break
+                      out={}
+                      for c in row.findall(NS+'c'):
+                          idx=colnum(c.attrib.get('r'))
+                          if selected_cols and idx not in selected_cols:continue
+                          typ=c.attrib.get('t');v=c.find(NS+'v')
+                          if typ=='inlineStr':
+                              isel=c.find(NS+'is'); val=''.join(t.text or '' for t in isel.iter(NS+'t')) if isel is not None else ''
+                          elif v is None:val=''
+                          elif typ=='s':
+                              try:val=self.shared[int(v.text)]
+                              except:val=''
+                          else:val=v.text or ''
+                          out[idx]=val
+                      yield out
+
+          lb,lst,lh,lf=get(LBNL); lx=Xlsx(lb); sp=dict(lx.sheets)
+          data_path=sp['03. Complete Queue Data']; ba_path=sp['01. Balancing Areas']; cb_path=sp['04. Data Codebook']
+
+          # fixed source-defined project header row = first row with q_id/entity
+          hdr=None;hr=None
+          for rn,row in enumerate(lx.rows(data_path,max_rows=10),1):
+              vals={i:str(v).strip() for i,v in row.items()}
+              if 'q_id' in vals.values() and 'entity' in vals.values():hdr=vals;hr=rn;break
+          if hdr is None: raise RuntimeError('source-defined project headers not found')
+          byname={v:k for k,v in hdr.items()}
+          qcol=byname['q_id']; ecol=byname['entity']; rcol=byname.get('region')
+
+          entities=set(); entity_counts=Counter(); regions=Counter(); keys=set(); dup=0; blank_entity=0; blank_qid=0; rows=0
+          sel={qcol,ecol} | ({rcol} if rcol else set())
+          for rn,row in enumerate(lx.rows(data_path,selected_cols=sel),1):
+              if rn<=hr:continue
+              rows+=1
+              q=str(row.get(qcol,'')).strip(); e=str(row.get(ecol,'')).strip(); rg=str(row.get(rcol,'')).strip() if rcol else ''
+              if not e:blank_entity+=1
+              else:entities.add(e);entity_counts[e]+=1
+              if not q:blank_qid+=1
+              if rg:regions[rg]+=1
+              if e and q:
+                  k=(e,q)
+                  if k in keys:dup+=1
+                  else:keys.add(k)
+
+          # Entire source-defined 01 Balancing Areas sheet (identity metadata only)
+          ba_rows=[]
+          for row in lx.rows(ba_path,max_rows=100):
+              vals=[str(row.get(i,'')).strip() for i in range(1,max(row.keys(),default=0)+1)]
+              if any(vals):ba_rows.append(vals)
+
+          # Codebook rows for entity/q_id/region/date semantics only
+          cb_hits=[]
+          for row in lx.rows(cb_path,max_rows=100):
+              vals=[str(row.get(i,'')).strip() for i in range(1,max(row.keys(),default=0)+1)]
+              blob=' | '.join(vals)
+              if re.match(r'^(q_id|entity|region|q_date|on_date|wd_date|ia_date)\b',blob,re.I):cb_hits.append(blob)
+
+          # EIA-861 2025 early release BA table
+          eb,est,eh,ef=get(EIA861); ez=zipfile.ZipFile(io.BytesIO(eb))
+          baf=[n for n in ez.namelist() if Path(n).name.casefold().startswith('balancing_authority_') and n.casefold().endswith('.xlsx')]
+          if len(baf)!=1:raise RuntimeError(f'expected one BA workbook, got {baf}')
+          ex=Xlsx(ez.read(baf[0])); ename,epath=max(ex.sheets,key=lambda np:sum(1 for _ in ex.rows(np[1])))
+          ehdr=None; ehr=None
+          for rn,row in enumerate(ex.rows(epath,max_rows=10),1):
+              vals={i:str(v).strip() for i,v in row.items()}
+              if 'BA Code' in vals.values() and 'Balancing Authority Name' in vals.values():ehdr=vals;ehr=rn;break
+          if ehdr is None:raise RuntimeError('EIA BA headers not found')
+          eby={v:k for k,v in ehdr.items()}; codecol=eby['BA Code']; namecol=eby['Balancing Authority Name']; idcol=eby.get('BA ID'); statecol=eby.get('State')
+          esel={codecol,namecol}|({idcol} if idcol else set())|({statecol} if statecol else set())
+          eia_records=[]; codes=set();names=set(); name_to_codes={};code_to_names={}
+          for rn,row in enumerate(ex.rows(epath,selected_cols=esel),1):
+              if rn<=ehr:continue
+              code=str(row.get(codecol,'')).strip(); name=str(row.get(namecol,'')).strip(); bid=str(row.get(idcol,'')).strip() if idcol else ''; state=str(row.get(statecol,'')).strip() if statecol else ''
+              if not code and not name:continue
+              if code:codes.add(code)
+              if name:names.add(name)
+              if name and code:name_to_codes.setdefault(name,set()).add(code);code_to_names.setdefault(code,set()).add(name)
+              eia_records.append((bid,code,name,state))
+
+          nname={norm(n):(n,sorted(name_to_codes.get(n,set()))) for n in names if norm(n)}
+          ncode={norm(c):(c,sorted(code_to_names.get(c,set()))) for c in codes if norm(c)}
+          exact=[];unmatched=[];amb=[]
+          for e in sorted(entities):
+              hits=[];ne=norm(e)
+              if ne in nname:hits.append(('name',)+nname[ne])
+              if ne in ncode:hits.append(('code',)+ncode[ne])
+              if len(hits)==1:exact.append((e,hits[0]))
+              elif len(hits)>1:amb.append((e,hits))
+              else:unmatched.append(e)
+
+          # Source-declared aliases that can be prospectively evaluated later are NOT auto-applied here.
+          lines=['---','id: US-GRID-F01-IDENTITY-ADJUDICATION','type: outcome-blind-identity-adjudication','created: 2026-09-04','relationship_outcome_computed: false','eia_operating_values_opened: false','incremental_monetary_cost_usd: 0','---','',
+                 '# US-GRID-F01 Identity Adjudication / 식별성 보정 판정','',
+                 '## Amendment applied / 보정 적용','',
+                 '- Primary LBNL identity: source-defined `entity` only.','- Project key: source-defined composite `entity + q_id`.','- EIA identity: explicit `BA Code` + `Balancing Authority Name`.','- No fuzzy matching, geography inference or relationship outcome was used.','',
+                 '## A. LBNL entity identity / LBNL entity 식별','',
+                 f'- workbook SHA-256: `{sha(lb)}`',f'- project rows: **{rows}**',f'- unique nonblank `entity`: **{len(entities)}**',f'- blank entity rows: **{blank_entity}**',f'- blank q_id rows: **{blank_qid}**',f'- composite `entity+q_id` duplicates: **{dup}**',f'- unique region vocabulary: `{sorted(regions)}`','',
+                 '### Codebook identity/date semantics','']
+          lines += [f'- {x}' for x in cb_hits]
+          lines += ['', '### Source-defined `01. Balancing Areas` sheet / source-defined balancing-area sheet','']
+          for r in ba_rows:lines.append('- '+' | '.join(r))
+          lines += ['', '### LBNL entity vocabulary / entity 목록','']+[f'- `{e}` — rows `{entity_counts[e]}`' for e in sorted(entities)]
+          lines += ['', '## B. EIA 2025 early-release BA identity / EIA BA identity','',f'- source ZIP SHA-256: `{sha(eb)}`',f'- BA workbook: `{baf[0]}`',f'- parsed rows: **{len(eia_records)}**',f'- unique BA codes: **{len(codes)}**',f'- unique BA names: **{len(names)}**','', '### EIA BA code/name pairs','']
+          pairs=sorted(set((c,n) for _,c,n,_ in eia_records if c or n))
+          lines += [f'- `{c}` → `{n}`' for c,n in pairs]
+          lines += ['', '## C. Conservative exact identity / 보수적 exact identity','',f'- LBNL entities: **{len(entities)}**',f'- exact normalized matches to EIA BA name/code: **{len(exact)}**',f'- unmatched: **{len(unmatched)}**',f'- ambiguous exact: **{len(amb)}**',f'- exact-match share: **{(len(exact)/len(entities) if entities else 0):.6f}**','', '### Exact matches','']
+          for e,h in exact:lines.append(f'- `{e}` → {h}')
+          lines += ['', '### Unmatched entities requiring source-backed adjudication','']+[f'- `{e}`' for e in unmatched]
+          if amb:lines += ['', '### Ambiguous exact matches','']+[f'- `{e}` → `{h}`' for e,h in amb]
+          lines += ['', '## D. Current gate / 현재 gate','', '**`CONTINUE_US_GRID_F01_SOURCE_BACKED_ALIAS_ADJUDICATION`**','',
+                    'Exact identity matching is now performed on the correct source-defined unit. Remaining unmatched entities may be admitted only through explicit one-to-one source-backed aliases. If a substantial share remains many-to-many or requires geographic inference, F01 must HOLD/REJECT.','',
+                    'No queue-duration result and no EIA operating-value relationship has been computed. Incremental monetary cost remained **0 USD**.']
+          OUT.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          PY
+
+      - name: Commit identity adjudication
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-GRID-F01/IDENTITY_ADJUDICATION.md
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'record US-GRID-F01 source-defined identity adjudication'
+          git push
