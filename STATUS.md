@@ -1,90 +1,87 @@
 ---
-checkpoint_id: CHK-20260903-KR-PORT-F01-ACTIVE
-active_issue: 65
-active_research: KR-PORT-F01
-last_completed_issue: 64
-last_completed_research: PORTFOLIO-R01
-last_decision: DEC-094
+checkpoint_id: CHK-20260903-EU-ISR-F01-ACTIVE
+active_issue: 66
+active_research: EU-ISR-F01
+last_completed_issue: 65
+last_completed_research: KR-PORT-F01
+last_decision: DEC-096
 updated: 2026-09-03
 ---
 
 # Project Status / 프로젝트 상태
 
 **Project / 프로젝트:** AI-Innovative-Research-Engine / AI 기반 혁신 탐색 연구 엔진  
-**State / 상태:** `MISSION_ANCHOR_FIXED__PORTFOLIO_RESET_COMPLETE__KR_PORT_F01_ACTIVE`  
-**Active Work Queue / 활성 작업 큐:** Issue #65 `KR-PORT-F01 — Port-call identity & turnaround-target feasibility`.
+**State / 상태:** `MISSION_ANCHOR_FIXED__PORTFOLIO_RETURN_COMPLETE__EU_ISR_F01_ACTIVE`  
+**Active Work Queue / 활성 작업 큐:** Issue #66 `EU-ISR-F01 — Facility-coordinate × climate-exposure join feasibility`.
 
 ## Fixed Mission / 고정 목적
 
-The highest-level purpose is to discover and validate **new, falsifiable, reproducible, and practically useful innovation opportunities or structural bottlenecks from relationships among public/research data**.
+The project exists to discover and validate **new, falsifiable, reproducible and practically useful innovation opportunities or structural bottlenecks from relationships among public/research data**. `context/MEM-054-MISSION-ANCHOR.md` is mandatory durable memory.
 
-특정 데이터셋·실험·도구·시뮬레이터·재현경로의 완주는 목적이 아니다. `context/MEM-054-MISSION-ANCHOR.md` is mandatory durable memory.
+특정 데이터셋·실험·도구·접근경로 완주는 목적이 아니다. Route dependency를 mission dependency로 승격하지 않는다.
 
-## Governance correction / 거버넌스 보정
+## Governance / 거버넌스
 
-Mandatory controls:
+Mandatory:
 - `MEM-054` Mission Anchor;
 - `DEC-093` Mission-ROI / Branch-Stop;
-- updated `docs/GOVERNANCE.md`;
-- updated `docs/METHODOLOGY.md` with Stage 0 Portfolio Selection and Stage 9 Portfolio Return;
+- Stage 0 Portfolio Selection + Stage 9 Portfolio Return in `docs/METHODOLOGY.md`;
 - `COST-001` zero-incremental-cost default.
 
-Default branch stop:
-**>=2 consecutive infrastructure/runtime/source-transfer descendants without new scientific evidence + credible alternative + route not uniquely mission-critical → HOLD/ARCHIVE route and RETURN_TO_PORTFOLIO.**
+Default stop: >=2 infrastructure/runtime/source-transfer descendants without new scientific evidence + credible alternative + route not uniquely mission-critical → `HOLD/ARCHIVE → RETURN_TO_PORTFOLIO`.
 
-## PORTFOLIO-R01 completed / PORTFOLIO-R01 완료
+## KR-PORT-F01 completed / KR-PORT-F01 완료
 
-Issue #64 completed under `DEC-094`.
+Issue #65 closed as:
+**`PARTIAL_KR_PORT_METADATA_SCHEMA_READY__SAMPLE_ACCESS_PENDING`**.
 
-Selected primary:
-**`C-KR-003 Port Weakest-Link Intelligence / 항만 최약고리 지능화`**.
+Durable records:
+- `research/KR-PORT-F01/RESULT.md`;
+- `research/KR-PORT-F01/AMENDMENT-01.md`;
+- `registry/CLM-118.md`;
+- `registry/DEC-095.md`.
 
-Ranked secondary portfolio:
-2. `C-EU-001` Cross-National Grid Stress — HOLD_READY_SECONDARY;
-3. `C-EU-004` Industrial Site Climate Risk — HOLD_READY_SECONDARY;
-4. `C-US-003` Critical Mineral Resilience — HOLD_READY_SECONDARY;
-5. Wave 2 Japan/UK/Singapore discovery — CONTINUE_AFTER_PRIMARY_GATE;
-6. independent non-P01 F37 thermal-history continuation — HOLD_BRANCH_LEVEL.
+`C-KR-003` remains `HOLD_READY__HIGH_VALUE__SAMPLE_ACCESS_PENDING`. No KR-PORT-F02 is authorized automatically.
 
-Durable result: `research/PORTFOLIO-R01/RESULT.md`.
+## Portfolio return / Portfolio 복귀
 
-## AMBENCH disposition / AMBENCH 상태
+`DEC-096` selected **`C-EU-004 Industrial Site Climate Risk`** as the next primary branch.
 
-Preserve valid historical scientific/methodological assets, but the P01/E43-F46 route is not active.
+Why:
+- EEA Industrial Reporting ver.16.0 (20 Feb 2026) has direct-download spatial/tabular official data covering 2007–2024;
+- official Industrial Emissions Portal exposes site/facility identity and spatial geometry semantics;
+- NASA POWER provides a free public point API for meteorological data with explicit UTC/LST standards;
+- the next uncertainty is scientific/spatial-temporal joinability rather than credential acquisition.
 
-`RHF_Command.zip` 18,079,576 bytes = **route dependency, not project dependency**.
+Original ERA5 route is not used for F01 because current official CDS/ARCO programmatic access requires a CDS API key. This route choice was made prospectively before any facility-climate association or model result.
 
-F46 = **`DORMANT__NOT_ACTIVE__REQUIRES_REAUTHORIZATION`**.
+## Active EU-ISR-F01 / 활성 EU-ISR-F01
 
-## Active KR-PORT-F01 / 활성 KR-PORT-F01
+Preregistration: `research/EU-ISR-F01/README.md`.
+Outcome-blind deterministic sample route: `research/EU-ISR-F01/AMENDMENT-01.md`.
 
-Purpose: before long-history extraction or modeling, qualify one deterministic port-call identity and one defensible arrival→departure operational turnaround/stay target across official Korean port data.
+Frozen test route:
+1. official EEA `IED_SiteMap` ArcGIS REST layer 0;
+2. deterministic first feature: `where=1=1`, `OBJECTID ASC`, one record;
+3. server-side `outSR=4326` from documented EPSG:3857 layer;
+4. require `InspireSiteId`, reporting year, country and valid point geometry;
+5. request NASA POWER Daily Point for the returned coordinate, 2024-01-01..2024-01-03, UTC, fixed low-DOF climate fields;
+6. validate access/schema/date coverage only — do not emit or interpret meteorological values or facility associations.
 
-Frozen candidate identity:
-`(port/port-authority identifier, arrival year, arrival count, call sign)`.
-
-Frozen target candidate if same-call semantics pass:
-`port_stay_hours = departure_timestamp - arrival_timestamp`.
-
-Current official metadata already confirms:
-- vessel/entry-exit data expose port, call sign, arrival count and arrival/departure-time semantics;
-- Ministry of Oceans and Fisheries port-facility-use API queries by `prtAgCd + etryptYear + etryptCo + clsgn` and returns the same identifiers plus berth/mooring-place context;
-- KMA ASOS provides hourly weather context through a free official API.
-
-Do not call the target berth delay/congestion delay without additional timestamps establishing those constructs.
+Official EEA ArcGIS service already documents:
+- Feature Layer / point geometry;
+- spatial reference 102100 (3857);
+- query support (JSON/GeoJSON/PBF);
+- `x_4258`, `y_4258`, `Site_reporting_year`, `siteName`, `InspireSiteId`, `countryCode`, sector/activity fields.
 
 ## Exact next action / 정확한 다음 행동
 
-Execute only the frozen `KR-PORT-F01` feasibility checks in `research/KR-PORT-F01/README.md`:
-- exact field/identity semantics;
-- duplicate/correction rules;
-- same-call arrival/departure validity;
-- nested facility-use semantics;
-- weather-join route;
-- bounded free sample-access feasibility.
+Run the frozen bounded EU-ISR-F01 public-source preflight and write back one gate:
+- `PASS_EU_ISR_FACILITY_CLIMATE_JOIN_READY`;
+- `PARTIAL_EU_ISR_METADATA_SCHEMA_READY__FEATURE_SAMPLE_PENDING`;
+- `HOLD_EU_ISR_SPATIAL_OR_TEMPORAL_SEMANTICS_GAP`;
+- `REJECT_EU_ISR_JOIN_ROUTE`.
 
-No long-history download or predictive model is authorized yet.
-
-If HOLD/REJECT: return immediately to Stage 0 portfolio selection. If PASS: at most one preregistered controlled experiment before another mandatory Mission-ROI review.
+No large bulk download, risk score, ranking or predictive model is authorized. PASS allows at most one separately preregistered low-DOF experiment before mandatory portfolio return.
 
 Incremental monetary cost remains `0 USD`.
