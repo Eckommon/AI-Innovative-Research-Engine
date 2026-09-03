@@ -1,18 +1,18 @@
 ---
-checkpoint_id: CHK-20260904-US-MINERAL-F01-ACTIVE
-active_issue: 74
-active_research: US-MINERAL-F01
-last_completed_issue: 73
-last_completed_research: PORTFOLIO-R03
-last_decision: DEC-104
+checkpoint_id: CHK-20260904-US-MINERAL-E01-PREREGISTERED
+active_issue: 75
+active_research: US-MINERAL-E01
+last_completed_issue: 74
+last_completed_research: US-MINERAL-F01
+last_decision: DEC-105
 updated: 2026-09-04
 ---
 
 # Project Status / 프로젝트 상태
 
 **Project / 프로젝트:** AI-Innovative-Research-Engine / AI 기반 혁신 탐색 연구 엔진  
-**State / 상태:** `MISSION_ANCHOR_FIXED__PORTFOLIO_R03_COMPLETE__US_MINERAL_F01_ACTIVE`  
-**Active Work Queue / 활성 작업 큐:** Issue #74 `US-MINERAL-F01 — USGS Critical-Mineral Trade-Code × Census Import-Node Join Feasibility`.
+**State / 상태:** `MISSION_ANCHOR_FIXED__US_MINERAL_F01_PASS__US_MINERAL_E01_PREREGISTERED_OUTCOME_BLIND`  
+**Active Work Queue / 활성 작업 큐:** Issue #75 `US-MINERAL-E01 — 2023 Critical-Mineral Source × Unlading-District Dual Trade-Value Concentration`.
 
 ## Fixed Mission / 고정 목적
 
@@ -20,65 +20,86 @@ Discover and validate **new, falsifiable, reproducible and practically useful in
 
 ## Last completed work / 마지막 완료 작업
 
-Issue #73 / `PORTFOLIO-R03` completed as:
+Issue #74 / `US-MINERAL-F01` completed as:
 
-**`SELECT_C_US_003R_CRITICAL_MINERAL_ENTRY_NODE_CONCENTRATION`**.
+**`PASS_US_MINERAL_TRADE_IMPORT_NODE_JOIN_READY`**.
 
-Selected branch:
-`C-US-003R — Critical Mineral Import-Source × U.S. Entry-Node Concentration Intelligence`.
+The gate established a deterministic source-semantic bridge from the Final 2025 U.S. critical-mineral universe through USGS Appendix-2 trade-code semantics to Census 2023 public import-node data for a prospectively qualified subset.
+
+### Frozen primary `IMP_DETL` subset — 8 / 60
+
+`Antimony, Barite, Beryllium, Palladium, Phosphate, Potash, Rhodium, Tellurium`.
+
+### Frozen HS6 identity-preserving port subset — 6 / 8
+
+`Antimony, Barite, Palladium, Phosphate, Potash, Rhodium`.
+
+Prospective exclusions across the final 60 were applied before outcomes:
+- no one-to-one Appendix-2 mapping: 6;
+- multi-stage/multi-form family: 12;
+- rare-earth special disaggregation: 15;
+- shared expanded 2023 HTS10: 9;
+- transaction unit-value allocation: 8;
+- unresolved 2023 HTS vintage: 2;
+- support-qualified: 8.
+
+No Census trade row, country/district concentration, HHI, top-share, ranking, correlation or regression was opened/computed during F01.
 
 Durable records:
-- `research/PORTFOLIO-R03/RESULT.md`;
-- `registry/DEC-104.md`;
-- Issue #73 completed.
+- `research/US-MINERAL-F01/SOURCE_PREFLIGHT.md`;
+- `research/US-MINERAL-F01/MAPPING_IDENTIFIABILITY.md`;
+- `research/US-MINERAL-F01/EXECUTION_CONTRACT.md`;
+- `research/US-MINERAL-F01/RESULT.md`;
+- `registry/CLM-124.md`;
+- `registry/DEC-105.md`;
+- Issue #74 closed completed.
 
-Ranking preserved:
-1. C-US-003R — SELECT;
-2. C-US-001 U.S. Grid Bottleneck — strongest fallback;
-3. C-EU-001 Cross-National Grid Stress;
-4. C-EU-004 Industrial Site Climate Risk — preserve join PASS;
-5. C-JP-001;
-6. C-SG-001.
+Incremental monetary cost: **0 USD**.
 
-## Active F01 authorization / 활성 F01 승인 범위
+## Active E01 preregistration / 활성 E01 사전등록
 
-`US-MINERAL-F01` is **source-semantic/join feasibility only**.
+`US-MINERAL-E01` is now **`PREREGISTERED_OUTCOME_BLIND`**.
 
-Frozen critical-mineral universe:
-- Final 2025 U.S. List of Critical Minerals;
-- 60 minerals;
-- universe fixed before any concentration result.
+Frozen primary design:
+- universe: all 8 F01-qualified minerals, no post-outcome selection;
+- period: 2023-01 through 2023-12;
+- source: Census monthly Merchandise Trade Imports `IMP_DETL.TXT`;
+- primary weight: `gen_val_mo` = General Imports, Total Value;
+- primary foreign axis: country of origin;
+- primary domestic axis: district of unlading;
+- primary statistics: `H_country`, `H_unlad`, `D=min(H_country,H_unlad)`;
+- materiality heuristic: `D >= 0.25`;
+- replicated count: `K = number of 8 minerals crossing the dual threshold`.
 
-Primary semantic bridge:
-- USGS `OFR 2025-1047` methodology/technical input mineral→trade-code mappings;
-- MCS 2026 / public data release only as identity/context cross-check.
+Frozen gate:
+- `PASS_E01_REPLICATED_DUAL_TRADE_VALUE_CONCENTRATION` if `K >= 2`;
+- `PARTIAL_E01_SINGLE_DUAL_TRADE_VALUE_CONCENTRATION` if `K = 1`;
+- `NO_E01_DUAL_TRADE_VALUE_CONCENTRATION` if `K = 0`;
+- `HOLD_E01_SOURCE_OR_NUMERICAL_INTEGRITY` if the full frozen experiment cannot execute without prohibited alteration.
 
-Preferred Census route:
-- official no-cost international-trade public file/bulk products;
-- do not provision an API key merely for convenience.
+Interpretation is explicitly limited to **published general-import trade-value exposure concentration**, not physical mineral tonnage or causal supply-risk.
 
-F01 may verify mapping/cardinality/schema/vintage/suppression/unit/hash semantics.
+Durable preregistration:
+- Issue #75;
+- `research/US-MINERAL-E01/README.md`.
 
-F01 may **not** compute:
-- source-country concentration;
-- customs-district/entry-node concentration;
-- HHI/entropy/top-share;
-- mineral/gateway rankings;
-- correlation/regression;
-- policy/investment rankings.
+## Exposure boundary / 노출 경계
 
-## Branch-stop / 중단
+No E01 `gen_val_mo` outcome has yet been parsed, aggregated, ranked or persisted.
 
-HOLD/REJECT rather than rescue if official source semantics require arbitrary manual HTS assignment, mixed-product codes make the mineral unit non-identifiable, or required Census origin/district/mode fields are unavailable through the zero-cost public-file route.
+The next execution must preserve two stages:
+1. Stage A — source manifest + identity/cardinality/full-key duplicate gate, with no numerical `gen_val_mo` parsing;
+2. Stage B — only after Stage A PASS, parse the frozen values once and compute the preregistered metrics/gate.
 
-No commercial trade database, visualization scraping, or post-outcome commodity selection is authorized.
+No mineral/window/weight/geography/threshold retuning is allowed after Stage B begins.
 
 ## Exact next action / 정확한 다음 행동
 
-1. Confirm State Integrity for `CHK-20260904-US-MINERAL-F01-ACTIVE`.
-2. Qualify authoritative 60-mineral universe and USGS trade-code mapping source/version.
-3. Qualify exact Census public import file/record layout and vintage without concentration analysis.
-4. Determine deterministic mapping/support rules and snapshot/hash plan.
-5. Persist F01 result with PASS/PARTIAL/HOLD/REJECT and follow the frozen branch-stop rule.
+1. Confirm State Integrity for `CHK-20260904-US-MINERAL-E01-PREREGISTERED`.
+2. Implement one fail-closed E01 workflow from the committed README without changing the scientific contract.
+3. Execute Stage A first and persist the 12-month Census source manifest/hash/cardinality diagnostics.
+4. Only if Stage A passes, allow Stage B to compute the frozen 8-mineral 2023 trade-value concentration results.
+5. Persist `RESULT.md`, claim/decision records and close Issue #75.
+6. Return to mandatory mission-level review after E01 regardless of PASS/PARTIAL/NO/HOLD; do not run same-branch tuning automatically.
 
 Incremental monetary cost remains **0 USD**. Any potentially billable work requires explicit prior user approval.
