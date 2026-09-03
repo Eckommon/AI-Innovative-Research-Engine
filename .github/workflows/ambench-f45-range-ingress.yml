@@ -1,0 +1,210 @@
+name: AMBENCH F45 checksum-preserving range ingress
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ambench-f45-range-ingress.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  ingress:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Execute frozen checksum-preserving range ingress
+        shell: bash
+        run: |
+          set -euo pipefail
+          export F45_ROOT="$RUNNER_TEMP/f45"
+          mkdir -p "$F45_ROOT"
+          python - <<'PY'
+          import hashlib, io, json, os, re, time, urllib.error, urllib.request, zipfile
+          from pathlib import Path
+
+          DSID='mds2-2507'
+          EXPECTED_VERSION='1.0.1'
+          EXPECTED_PATH='RHF_Command.zip'
+          EXPECTED_SIZE=18079576
+          EXPECTED_SHA='c57a56cc9c906e4db134d7bfb8618b6678e80dd0318324de0b7baf1ce092a3f4'
+          CHUNK=1048576
+          MAX_ATTEMPTS=3
+          TIMEOUT=90
+          RETRY_DELAY=3
+          EXPECTED_RANGES=18
+          ROOT=Path(os.environ['F45_ROOT'])
+
+          class ProtocolReject(Exception): pass
+          class NetworkHold(Exception): pass
+
+          def get_small(url):
+              req=urllib.request.Request(url,headers={'User-Agent':'AI-Innovative-Research-Engine/F45'})
+              with urllib.request.urlopen(req,timeout=90) as r:
+                  return r.read()
+
+          def fetch_range(url,start,end,total):
+              expected_len=end-start+1
+              errors=[]
+              for attempt in range(1,MAX_ATTEMPTS+1):
+                  try:
+                      req=urllib.request.Request(url,headers={
+                          'User-Agent':'AI-Innovative-Research-Engine/F45',
+                          'Range':f'bytes={start}-{end}',
+                          'Accept-Encoding':'identity',
+                      })
+                      with urllib.request.urlopen(req,timeout=TIMEOUT) as r:
+                          status=getattr(r,'status',None) or r.getcode()
+                          cr=r.headers.get('Content-Range')
+                          if status!=206:
+                              raise ProtocolReject(f'HTTP status {status} for range {start}-{end}; expected 206')
+                          expected_cr=f'bytes {start}-{end}/{total}'
+                          if cr!=expected_cr:
+                              raise ProtocolReject(f'Content-Range {cr!r}; expected {expected_cr!r}')
+                          data=r.read()
+                      if len(data)!=expected_len:
+                          raise ProtocolReject(f'body length {len(data)} for range {start}-{end}; expected {expected_len}')
+                      return data,attempt,errors
+                  except ProtocolReject:
+                      raise
+                  except Exception as e:
+                      errors.append(f'attempt_{attempt}:{type(e).__name__}:{e}')
+                      if attempt<MAX_ATTEMPTS:
+                          time.sleep(RETRY_DELAY)
+              raise NetworkHold(f'range {start}-{end} exhausted attempts: '+' | '.join(errors))
+
+          gate='HOLD_F45_SOURCE_OR_NETWORK'
+          reasons=[]
+          meta_summary={}
+          chunk_diag=[]
+          final={}
+          member_matches=[]
+          try:
+              meta=json.loads(get_small(f'https://data.nist.gov/od/id/{DSID}?format=nerdm').decode('utf-8'))
+              version=str(meta.get('version'))
+              comps=[c for c in meta.get('components',[]) if c.get('filepath')==EXPECTED_PATH]
+              meta_summary={'version':version,'component_count':len(comps)}
+              if version!=EXPECTED_VERSION:
+                  raise NetworkHold(f'NERDm version drift: {version}')
+              if len(comps)!=1:
+                  raise NetworkHold(f'component count drift: {len(comps)}')
+              comp=comps[0]
+              nerdm_size=comp.get('size')
+              nerdm_sha=(comp.get('checksum') or {}).get('hash')
+              url=comp.get('downloadURL')
+              meta_summary.update({'filepath':comp.get('filepath'),'nerdm_size':nerdm_size,'nerdm_sha256':nerdm_sha,'download_url_present':bool(url)})
+              if nerdm_size!=EXPECTED_SIZE or nerdm_sha!=EXPECTED_SHA or not url:
+                  raise NetworkHold('NERDm component identity drift')
+
+              ranges=[]
+              s=0
+              while s<EXPECTED_SIZE:
+                  e=min(s+CHUNK-1,EXPECTED_SIZE-1)
+                  ranges.append((s,e)); s=e+1
+              if len(ranges)!=EXPECTED_RANGES:
+                  raise RuntimeError(f'internal range count {len(ranges)} != {EXPECTED_RANGES}')
+
+              out=ROOT/'RHF_Command.zip'
+              with out.open('wb') as fh:
+                  for idx,(start,end) in enumerate(ranges,1):
+                      data,attempt,prior=fetch_range(url,start,end,EXPECTED_SIZE)
+                      fh.write(data)
+                      chunk_diag.append({
+                          'index':idx,'start':start,'end':end,
+                          'expected_bytes':end-start+1,'received_bytes':len(data),
+                          'attempt_used':attempt,'prior_errors':prior,
+                          'chunk_sha256':hashlib.sha256(data).hexdigest(),
+                      })
+
+              raw=out.read_bytes()
+              got_size=len(raw); got_sha=hashlib.sha256(raw).hexdigest()
+              final={'reconstructed_size':got_size,'reconstructed_sha256':got_sha,'expected_size':EXPECTED_SIZE,'expected_sha256':EXPECTED_SHA}
+              if got_size!=EXPECTED_SIZE:
+                  raise ProtocolReject(f'reconstructed size {got_size} != {EXPECTED_SIZE}')
+              if got_sha!=EXPECTED_SHA:
+                  raise ProtocolReject(f'reconstructed sha256 {got_sha} != frozen SHA')
+              try:
+                  with zipfile.ZipFile(io.BytesIO(raw)) as z:
+                      z.testzip()
+                      rx=re.compile(r'(?:^|/)RHF_P01_layer0001\.csv$',re.I)
+                      member_matches=[n for n in z.namelist() if rx.search(n)]
+              except Exception as e:
+                  raise ProtocolReject(f'ZIP integrity failure: {type(e).__name__}: {e}')
+              if len(member_matches)!=1:
+                  raise ProtocolReject(f'P01 member count {len(member_matches)} != 1')
+              gate='PASS_F45_CHECKSUM_PRESERVING_RANGE_INGRESS'
+          except ProtocolReject as e:
+              gate='REJECT_F45_RANGE_PROTOCOL_NOT_SUPPORTED'
+              reasons.append(f'{type(e).__name__}: {e}')
+          except NetworkHold as e:
+              gate='HOLD_F45_SOURCE_OR_NETWORK'
+              reasons.append(f'{type(e).__name__}: {e}')
+          except Exception as e:
+              gate='HOLD_F45_SOURCE_OR_NETWORK'
+              reasons.append(f'{type(e).__name__}: {e}')
+
+          lines=['---','id: AMBENCH-F45-RESULT','type: source-ingress-qualification-result','created: 2026-09-03','incremental_monetary_cost_usd: 0','---','','# AMBENCH-F45 Result — Checksum-Preserving Resumable Source Ingress','# AMBENCH-F45 결과 — Checksum 보존 Resumable Source Ingress','',f'**Final gate / 최종 gate: `{gate}`**','', '## Frozen source identity / 고정 source identity','```json',json.dumps(meta_summary,indent=2,sort_keys=True),'```','', '## Frozen transfer geometry / 고정 전송 구조',f'- chunk size: `{CHUNK}` bytes',f'- expected ranges: `{EXPECTED_RANGES}`',f'- acquired ranges: `{len(chunk_diag)}`',f'- max attempts per range: `{MAX_ATTEMPTS}`',f'- read timeout per attempt: `{TIMEOUT}` s',f'- retry delay: `{RETRY_DELAY}` s','', '## Chunk diagnostics / Chunk 진단','```json',json.dumps(chunk_diag,indent=2,sort_keys=True),'```','', '## Reconstruction / 재구성','```json',json.dumps(final,indent=2,sort_keys=True),'```','',f'- P01 member matches: `{member_matches}`','']
+          if reasons:
+              lines += ['## HOLD/REJECT reasons / HOLD·REJECT 사유','']+[f'- {r}' for r in reasons]+['']
+          lines += ['## Boundary / 경계','', 'This gate qualifies source transport only. No simulator was built or run and no representation/path-order/performance inference is authorized. The transient reconstructed archive is not committed or uploaded as an artifact.','']
+          Path('research/AMBENCH-F45').mkdir(parents=True,exist_ok=True)
+          Path('research/AMBENCH-F45/RESULT.md').write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          print(gate)
+          print(json.dumps(meta_summary,indent=2))
+          print(json.dumps(final,indent=2))
+          PY
+
+      - name: Persist F45 result
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git pull --rebase origin main
+          git add research/AMBENCH-F45/RESULT.md
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'record AMBENCH-F45 range ingress result'
+          git push
+
+  terminal_recorder:
+    if: ${{ always() }}
+    needs: ingress
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Persist fail-closed F45 result if normal result missing
+        shell: bash
+        env:
+          JOB_RESULT: ${{ needs.ingress.result }}
+        run: |
+          set -euo pipefail
+          if [ -f research/AMBENCH-F45/RESULT.md ]; then exit 0; fi
+          mkdir -p research/AMBENCH-F45
+          cat > research/AMBENCH-F45/RESULT.md <<EOF
+          ---
+          id: AMBENCH-F45-RESULT
+          type: source-ingress-qualification-result
+          created: 2026-09-03
+          incremental_monetary_cost_usd: 0
+          ---
+
+          # AMBENCH-F45 Terminal Fail-Closed Result
+          # AMBENCH-F45 Terminal Fail-Closed 결과
+
+          **Final gate / 최종 gate: \`HOLD_F45_SOURCE_OR_NETWORK\`**
+
+          The preregistered F45 job did not persist a normal result. GitHub job result: \`${JOB_RESULT}\`.
+
+          No source-protocol qualification or scientific inference is authorized from this terminal record.
+          EOF
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git pull --rebase origin main
+          git add research/AMBENCH-F45/RESULT.md
+          git commit -m 'record AMBENCH-F45 terminal source hold'
+          git push
