@@ -1,0 +1,333 @@
+name: US MINERAL E01 preregistered experiment
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/us-mineral-e01-run.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  e01:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run Stage A then conditional Stage B under frozen E01 contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, math, os, re, shutil, urllib.request, zipfile
+          from collections import Counter, defaultdict
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          ROOT = Path(os.environ['GITHUB_WORKSPACE'])
+          OUTDIR = ROOT / 'research/US-MINERAL-E01'
+          OUTDIR.mkdir(parents=True, exist_ok=True)
+          MANIFEST = OUTDIR / 'SOURCE_MANIFEST.md'
+          RESULT = OUTDIR / 'RESULT.md'
+          TMP = ROOT / '.tmp-us-mineral-e01'
+          if TMP.exists(): shutil.rmtree(TMP)
+          TMP.mkdir(parents=True)
+          UA = {'User-Agent': 'AI-Innovative-Research-Engine/US-MINERAL-E01'}
+
+          # Frozen universe and exact 2023 HTS10 mapping from F01.
+          MINERAL_CODES = {
+              'Antimony': ['2825800000','8110100000','8110200000','8110900000'],
+              'Barite': ['2511101000','2511105000'],
+              'Beryllium': ['2825901000','7405006030','7409901030','7409905030','7409909030','8112120000','8112130000','8112190000'],
+              'Palladium': ['7110210000','7110290000'],
+              'Phosphate': ['2510100000','2510200000','2835250000','2835260000','3103110000','3103190000','3105300000','3105400010','3105400050'],
+              'Potash': ['2834210000','3104200010','3104200050','3104300000','3104900100'],
+              'Rhodium': ['7110310000','7110390000'],
+              'Tellurium': ['2804500020'],
+          }
+          CODE_TO_MINERAL = {}
+          for mineral, codes in MINERAL_CODES.items():
+              for code in codes:
+                  if code in CODE_TO_MINERAL:
+                      raise RuntimeError(f'frozen mapping collision: {code}')
+                  CODE_TO_MINERAL[code] = mineral
+
+          def sha256_file(path):
+              h = hashlib.sha256()
+              with open(path, 'rb') as f:
+                  for chunk in iter(lambda: f.read(1024*1024), b''):
+                      h.update(chunk)
+              return h.hexdigest()
+
+          def download(url, dest):
+              req = urllib.request.Request(url, headers=UA)
+              with urllib.request.urlopen(req, timeout=180) as r, open(dest, 'wb') as w:
+                  status = getattr(r, 'status', 200)
+                  headers = dict(r.headers)
+                  while True:
+                      chunk = r.read(1024*1024)
+                      if not chunk: break
+                      w.write(chunk)
+              return status, headers
+
+          manifest_rows = []
+          local_files = []
+          stage_a_errors = []
+          mapped_counts = Counter()
+          monthly_counts = defaultdict(Counter)
+          seen_full = set()
+
+          # STAGE A: download/hash and parse identity bytes only (positions 1-28).
+          for month in range(1, 13):
+              mm = f'{month:02d}'
+              url = f'https://www.census.gov/trade/downloads/2023/Merch/im_m/IMDB23{mm}.ZIP'
+              zpath = TMP / f'IMDB23{mm}.ZIP'
+              access_time = datetime.now(timezone.utc).isoformat()
+              try:
+                  status, headers = download(url, zpath)
+              except Exception as e:
+                  stage_a_errors.append(f'2023-{mm} download failed: {type(e).__name__}: {e}')
+                  continue
+              zip_sha = sha256_file(zpath)
+              try:
+                  with zipfile.ZipFile(zpath) as zf:
+                      candidates = [n for n in zf.namelist() if Path(n).name.casefold() == 'imp_detl.txt']
+                      if len(candidates) != 1:
+                          stage_a_errors.append(f'2023-{mm}: expected exactly one IMP_DETL.TXT, found {candidates}')
+                          continue
+                      member = candidates[0]
+                      info = zf.getinfo(member)
+                      mh = hashlib.sha256()
+                      month_seen = set()
+                      mapped_month = 0
+                      with zf.open(member, 'r') as f:
+                          for line_no, raw in enumerate(f, 1):
+                              mh.update(raw)
+                              # Identity-only projection. Do not access bytes 179-193 here.
+                              core = raw[:28].decode('ascii', 'strict')
+                              commodity = core[0:10]
+                              mineral = CODE_TO_MINERAL.get(commodity)
+                              if mineral is None:
+                                  continue
+                              mapped_month += 1
+                              cty_code = core[10:14]
+                              cty_subco = core[14:16]
+                              dist_entry = core[16:18]
+                              dist_unlad = core[18:20]
+                              rate_prov = core[20:22]
+                              year = core[22:26]
+                              mon = core[26:28]
+                              mandatory = {
+                                  'commodity': commodity, 'cty_code': cty_code,
+                                  'dist_entry': dist_entry, 'dist_unlad': dist_unlad,
+                                  'year': year, 'month': mon,
+                              }
+                              bad = [k for k,v in mandatory.items() if not re.fullmatch(r'\d+', v)]
+                              if bad:
+                                  stage_a_errors.append(f'2023-{mm} line {line_no}: malformed mandatory identity fields {bad}')
+                                  continue
+                              if year != '2023' or mon != mm:
+                                  stage_a_errors.append(f'2023-{mm} line {line_no}: source year/month {year}-{mon}')
+                              key = (commodity, cty_code, cty_subco, dist_entry, dist_unlad, rate_prov, year, mon)
+                              if key in seen_full:
+                                  stage_a_errors.append(f'2023-{mm}: repeated raw full key detected for mapped commodity {commodity}')
+                              else:
+                                  seen_full.add(key)
+                              month_seen.add(mineral)
+                              mapped_counts[mineral] += 1
+                              monthly_counts[mm][mineral] += 1
+                      member_sha = mh.hexdigest()
+                      manifest_rows.append((mm, status, headers.get('Content-Type',''), zpath.stat().st_size, zip_sha, member, info.file_size, member_sha, mapped_month))
+                      local_files.append((mm, zpath, member))
+              except Exception as e:
+                  stage_a_errors.append(f'2023-{mm} ZIP/member parse failed: {type(e).__name__}: {e}')
+
+          if len(manifest_rows) != 12:
+              stage_a_errors.append(f'exact 12 carrier/member snapshots required; got {len(manifest_rows)}')
+          for mineral in MINERAL_CODES:
+              if mapped_counts[mineral] <= 0:
+                  stage_a_errors.append(f'{mineral}: no published mapped record in full 2023 window')
+
+          stage_a_pass = not stage_a_errors
+
+          mlines = [
+              '---',
+              'id: US-MINERAL-E01-SOURCE-MANIFEST',
+              'type: outcome-blind-stage-a-source-manifest',
+              'created: 2026-09-04',
+              f'stage_a_pass: {str(stage_a_pass).lower()}',
+              'primary_values_parsed_in_stage_a: false',
+              'incremental_monetary_cost_usd: 0',
+              '---','',
+              '# US-MINERAL-E01 Stage A Source Manifest / Stage A 소스 매니페스트','',
+              '## Contract / 계약','',
+              '- Frozen period: `2023-01` through `2023-12`.','- Frozen universe: `Antimony, Barite, Beryllium, Palladium, Phosphate, Potash, Rhodium, Tellurium`.','- Stage A parsed only fixed-width identity positions `1-28`; `gen_val_mo` positions `179-193` were not interpreted during Stage A.','',
+              '## Source snapshots / 소스 스냅샷','',
+              '| Month | HTTP | Content-Type | ZIP bytes | ZIP SHA-256 | Member | Member bytes | Member SHA-256 | Frozen mapped rows |',
+              '|---|---:|---|---:|---|---|---:|---|---:|',
+          ]
+          for mm,status,ct,zbytes,zsha,member,mbytes,msha,n in manifest_rows:
+              mlines.append(f'| 2023-{mm} | {status} | `{ct}` | {zbytes} | `{zsha}` | `{member}` | {mbytes} | `{msha}` | {n} |')
+          mlines += ['', '## Frozen-universe structural counts / 고정 universe 구조 count','', '| Mineral | Mapped rows | Months with mapped rows |','|---|---:|---:|']
+          for mineral in MINERAL_CODES:
+              nmonths = sum(1 for mm in [f'{m:02d}' for m in range(1,13)] if monthly_counts[mm][mineral] > 0)
+              mlines.append(f'| {mineral} | {mapped_counts[mineral]} | {nmonths} |')
+          mlines += ['', '## Stage A gate / Stage A 게이트','']
+          if stage_a_pass:
+              mlines += ['**`PASS_E01_STAGE_A_SOURCE_IDENTITY_CARDINALITY`**','','All 12 official carrier/member snapshots were pinned; mapped identities parsed; no repeated frozen raw full key was detected; every frozen mineral has at least one published mapped record in the 2023 window.']
+          else:
+              mlines += ['**`HOLD_E01_SOURCE_OR_NUMERICAL_INTEGRITY`**','','Stage B was not authorized. Errors:'] + [f'- {e}' for e in stage_a_errors]
+          mlines += ['', 'Incremental monetary cost remained **0 USD**.']
+          MANIFEST.write_text('\n'.join(mlines)+'\n', encoding='utf-8')
+
+          # STAGE B: only after Stage A PASS, interpret gen_val_mo positions 179-193.
+          stage_b_errors = []
+          totals = Counter()
+          by_country = defaultdict(Counter)
+          by_unlad = defaultdict(Counter)
+          by_entry = defaultdict(Counter)
+          by_joint = defaultdict(Counter)
+
+          if stage_a_pass:
+              for mm, zpath, member in local_files:
+                  try:
+                      with zipfile.ZipFile(zpath) as zf, zf.open(member, 'r') as f:
+                          for line_no, raw in enumerate(f, 1):
+                              if len(raw.rstrip(b'\r\n')) < 193:
+                                  stage_b_errors.append(f'2023-{mm} line {line_no}: record shorter than gen_val_mo endpoint')
+                                  continue
+                              commodity = raw[0:10].decode('ascii','strict')
+                              mineral = CODE_TO_MINERAL.get(commodity)
+                              if mineral is None:
+                                  continue
+                              cty_code = raw[10:14].decode('ascii','strict')
+                              dist_entry = raw[16:18].decode('ascii','strict')
+                              dist_unlad = raw[18:20].decode('ascii','strict')
+                              sval = raw[178:193].decode('ascii','strict').strip()
+                              if not re.fullmatch(r'\d+', sval or ''):
+                                  stage_b_errors.append(f'2023-{mm} line {line_no}: non-numeric/blank gen_val_mo for {commodity}')
+                                  continue
+                              value = int(sval)
+                              if value < 0:
+                                  stage_b_errors.append(f'2023-{mm} line {line_no}: negative gen_val_mo')
+                                  continue
+                              totals[mineral] += value
+                              by_country[mineral][cty_code] += value
+                              by_unlad[mineral][dist_unlad] += value
+                              by_entry[mineral][dist_entry] += value
+                              by_joint[mineral][(cty_code,dist_unlad)] += value
+                  except Exception as e:
+                      stage_b_errors.append(f'2023-{mm} Stage B parse failed: {type(e).__name__}: {e}')
+              for mineral in MINERAL_CODES:
+                  if totals[mineral] <= 0:
+                      stage_b_errors.append(f'{mineral}: annual mapped gen_val_mo total is not positive')
+
+          def hhi(counter, total):
+              return sum((v/total)**2 for v in counter.values()) if total > 0 else float('nan')
+          def top_share(counter, total):
+              if total <= 0 or not counter: return (None, float('nan'))
+              k,v = max(counter.items(), key=lambda kv: kv[1])
+              return k, v/total
+          def avg_ranks(vals):
+              order = sorted(range(len(vals)), key=lambda i: vals[i])
+              ranks = [0.0]*len(vals)
+              p=0
+              while p < len(vals):
+                  q=p+1
+                  while q < len(vals) and vals[order[q]] == vals[order[p]]: q += 1
+                  r=(p+1+q)/2.0
+                  for j in range(p,q): ranks[order[j]]=r
+                  p=q
+              return ranks
+          def pearson(x,y):
+              mx=sum(x)/len(x); my=sum(y)/len(y)
+              num=sum((a-mx)*(b-my) for a,b in zip(x,y))
+              dx=sum((a-mx)**2 for a in x); dy=sum((b-my)**2 for b in y)
+              if dx<=0 or dy<=0: return float('nan')
+              return num/math.sqrt(dx*dy)
+
+          metrics = {}
+          gate = 'HOLD_E01_SOURCE_OR_NUMERICAL_INTEGRITY'
+          if stage_a_pass and not stage_b_errors:
+              for mineral in MINERAL_CODES:
+                  total = totals[mineral]
+                  hc = hhi(by_country[mineral], total)
+                  hu = hhi(by_unlad[mineral], total)
+                  he = hhi(by_entry[mineral], total)
+                  hj = hhi(by_joint[mineral], total)
+                  ccode, cshare = top_share(by_country[mineral], total)
+                  dcode, dshare = top_share(by_unlad[mineral], total)
+                  metrics[mineral] = {
+                      'H_country': hc, 'H_unlad': hu, 'D': min(hc,hu),
+                      'H_entry': he, 'H_joint': hj,
+                      'top_country_code': ccode, 'top_country_share': cshare,
+                      'top_unlad_code': dcode, 'top_unlad_share': dshare,
+                      'n_country': len(by_country[mineral]), 'n_unlad': len(by_unlad[mineral]),
+                  }
+              K = sum(1 for x in metrics.values() if x['D'] >= 0.25)
+              if K >= 2: gate = 'PASS_E01_REPLICATED_DUAL_TRADE_VALUE_CONCENTRATION'
+              elif K == 1: gate = 'PARTIAL_E01_SINGLE_DUAL_TRADE_VALUE_CONCENTRATION'
+              else: gate = 'NO_E01_DUAL_TRADE_VALUE_CONCENTRATION'
+              xs=[metrics[m]['H_country'] for m in MINERAL_CODES]
+              ys=[metrics[m]['H_unlad'] for m in MINERAL_CODES]
+              rho=pearson(avg_ranks(xs),avg_ranks(ys))
+          else:
+              K = None
+              rho = None
+
+          rlines = [
+              '---','id: US-MINERAL-E01-RESULT','type: controlled-cross-agency-experiment-result','created: 2026-09-04','issue: 75',f'final_gate: {gate}',f'stage_a_pass: {str(stage_a_pass).lower()}',f'stage_b_pass: {str(stage_a_pass and not stage_b_errors).lower()}','incremental_monetary_cost_usd: 0','---','',
+              '# US-MINERAL-E01 Result — 2023 Critical-Mineral Source × Unlading-District Dual Trade-Value Concentration','',
+              '## Final gate / 최종 판정','',f'**`{gate}`**','',
+              '## Frozen design / 고정 설계','',
+              '- Universe: all eight prospectively F01-qualified minerals.','- Period: all 12 months of 2023.','- Weight: Census `gen_val_mo` (General Imports, Total Value).','- Axes: country of origin and district of unlading.','- Per-mineral dual floor: `D = min(H_country, H_unlad)`.','- Materiality heuristic: `D >= 0.25`.','- Replication PASS: at least two of eight minerals cross the dual threshold.','',
+              '## Integrity / 무결성','',
+              f'- Stage A: **{"PASS" if stage_a_pass else "HOLD"}**',
+              f'- Stage B numerical integrity: **{"PASS" if stage_a_pass and not stage_b_errors else "HOLD/NOT RUN"}**',
+              '- Raw trade rows are not persisted in this result; source ZIP/member hashes are in `SOURCE_MANIFEST.md`.','',
+          ]
+          if stage_a_errors:
+              rlines += ['### Stage A errors',''] + [f'- {e}' for e in stage_a_errors] + ['']
+          if stage_b_errors:
+              rlines += ['### Stage B errors',''] + [f'- {e}' for e in stage_b_errors] + ['']
+          if metrics:
+              rlines += ['## Primary and frozen secondary results / 1차 및 고정 2차 결과','',
+                         '| Mineral | H_country | H_unlad | D=min | Dual ≥0.25? | Top country code/share | Top unlading district/share | H_entry | H_joint | #countries | #unlading districts |',
+                         '|---|---:|---:|---:|---|---|---|---:|---:|---:|---:|']
+              for mineral in MINERAL_CODES:
+                  x=metrics[mineral]
+                  rlines.append(f"| {mineral} | {x['H_country']:.6f} | {x['H_unlad']:.6f} | {x['D']:.6f} | {'YES' if x['D']>=0.25 else 'NO'} | `{x['top_country_code']}` / {x['top_country_share']:.6f} | `{x['top_unlad_code']}` / {x['top_unlad_share']:.6f} | {x['H_entry']:.6f} | {x['H_joint']:.6f} | {x['n_country']} | {x['n_unlad']} |")
+              rlines += ['', f'- Replicated dual-threshold count `K`: **{K} / 8**', f'- Spearman rank association `H_country` vs `H_unlad`: **{rho:.6f}**' if math.isfinite(rho) else '- Spearman rank association: `undefined (constant ranks)`','']
+              if gate.startswith('PASS_'):
+                  interpretation = 'At least two prospectively selected minerals show material published general-import trade-value concentration on both the foreign-source and U.S. unlading-district axes under the frozen project heuristic.'
+              elif gate.startswith('PARTIAL_'):
+                  interpretation = 'Exactly one prospectively selected mineral crosses both frozen concentration thresholds; the preregistered replication requirement is not met.'
+              else:
+                  interpretation = 'No prospectively selected mineral crosses both frozen concentration thresholds.'
+              rlines += ['## Interpretation / 해석','',interpretation,'']
+          rlines += [
+              '## Claim boundary / 주장 경계','',
+              'This result concerns **published mapped general-import trade-value concentration** only. It does not establish physical mineral-content/tonnage concentration, causal disruption probability, inventory adequacy, transaction-level port routing, or policy/investment superiority.','',
+              '## Stop rule / 중단 규칙','',
+              'No same-branch retuning, mineral substitution, alternate year, alternate threshold or HS6-port rescue is authorized after this outcome exposure. Return to mandatory mission-level review.','',
+              'Incremental monetary cost remained **0 USD**.'
+          ]
+          RESULT.write_text('\n'.join(rlines)+'\n', encoding='utf-8')
+          print(f'STAGE_A_PASS={stage_a_pass}')
+          print(f'FINAL_GATE={gate}')
+          print(f'K={K}')
+          print(f'SPEARMAN={rho}')
+          PY
+
+      - name: Commit manifest and result
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-MINERAL-E01/SOURCE_MANIFEST.md research/US-MINERAL-E01/RESULT.md
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'record preregistered US-MINERAL-E01 result'
+          git push
