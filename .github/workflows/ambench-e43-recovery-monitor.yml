@@ -1,0 +1,74 @@
+name: AMBENCH E43 recovery terminal monitor
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/ambench-e43-recovery-monitor.yml'
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 27
+    steps:
+      - uses: actions/checkout@v4
+      - name: Poll recovery workflow terminal state
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p research/AMBENCH-E43
+          python - <<'PY'
+          import json, os, time, urllib.request
+          from pathlib import Path
+          repo=os.environ['GITHUB_REPOSITORY']; token=os.environ['GH_TOKEN']
+          workflow='ambench-e43-recovery.yml'; target_sha='0740c055041d1b589c70e07c5292bf21ed451bbc'
+          h={'Authorization':f'Bearer {token}','Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28','User-Agent':'AI-Innovative-Research-Engine/E43-recovery-monitor'}
+          def get(url):
+              req=urllib.request.Request(url,headers=h)
+              with urllib.request.urlopen(req,timeout=60) as r: return json.loads(r.read().decode())
+          base=f'https://api.github.com/repos/{repo}'
+          target=None
+          for _ in range(75):
+              runs=get(f'{base}/actions/workflows/{workflow}/runs?per_page=10').get('workflow_runs',[])
+              for r in runs:
+                  if r.get('head_sha')==target_sha:
+                      target=r; break
+              if target and target.get('status')=='completed': break
+              time.sleep(20)
+          if target is None:
+              lines=['**RECOVERY_MONITOR_NO_TARGET_RUN_FOUND**']
+              meta={}
+              jobs=[]
+          else:
+              meta=target
+              jobs=get(f'{base}/actions/runs/{target["id"]}/jobs?per_page=100').get('jobs',[])
+              lines=[]
+          out=['---','id: AMBENCH-E43-RECOVERY-MONITOR','type: recovery-terminal-diagnostic','created: 2026-09-03','experiment_contract_changed: false','incremental_monetary_cost_usd: 0','---','','# AMBENCH-E43 Recovery Monitor / Recovery 실행 모니터','']
+          if target:
+              out += [f'- run_id: `{meta.get("id")}`',f'- status: `{meta.get("status")}`',f'- conclusion: `{meta.get("conclusion")}`',f'- head_sha: `{meta.get("head_sha")}`',f'- updated_at: `{meta.get("updated_at")}`','']
+              for j in jobs:
+                  out += [f'## {j.get("name")}',f'- conclusion: `{j.get("conclusion")}`']
+                  for s in j.get('steps',[]): out.append(f'- step `{s.get("number")}` — {s.get("name")}: `{s.get("conclusion")}`')
+                  out.append('')
+              out.append('**RECOVERY_MONITOR_TERMINAL**' if meta.get('status')=='completed' else '**RECOVERY_MONITOR_CAP_REACHED_BEFORE_TERMINAL**')
+          else:
+              out += lines
+          out.append('')
+          Path('research/AMBENCH-E43/RECOVERY_MONITOR.md').write_text('\n'.join(out),encoding='utf-8')
+          PY
+      - name: Persist monitor
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git pull --rebase origin main
+          git add research/AMBENCH-E43/RECOVERY_MONITOR.md
+          git commit -m 'record AMBENCH-E43 recovery terminal monitor'
+          git push
