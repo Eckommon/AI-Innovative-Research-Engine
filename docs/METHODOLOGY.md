@@ -8,7 +8,22 @@
 **English**  
 The engine converts public/research data into testable innovation candidates through a controlled evidence pipeline. The higher-value target is not merely a useful dataset, but a relationship among datasets that supports a new prediction, optimization, stress test, benchmark, decision tool, or industrial insight.
 
+### Mission Anchor / 목적 고정
+
+The methodology optimizes for **mission-level information gain**, not completion of a single branch. A dataset, archive, simulator, or execution route is a means, not the purpose. / 방법론은 특정 branch 완주가 아니라 **미션 수준 정보이득**을 최적화한다. 데이터셋·archive·simulator·실행경로는 수단이지 목적이 아니다.
+
+Mandatory durable anchor: `context/MEM-054-MISSION-ANCHOR.md`. / 의무 고정기억: `MEM-054`.
+
 ## 2. Official Pipeline / 공식 파이프라인
+
+### Stage 0 — Portfolio / Mission-ROI Selection / 포트폴리오·목적 ROI 선정
+Before opening or continuing a research branch, compare its expected mission-level information value against credible alternatives. / 연구 branch를 열거나 계속하기 전에 기대 미션 정보가치를 대체 후보와 비교한다.
+
+Minimum questions:
+- Is the target a scientific/innovation uncertainty or mainly a tooling problem? / 과학·혁신 불확실성인가, 주로 tooling 문제인가?
+- Is the blocked route uniquely necessary? / 막힌 경로가 유일하게 필요한가?
+- What higher-IPS alternatives are available? / 더 높은 IPS 대안은 무엇인가?
+- What has this branch produced since the last portfolio review? / 최근 portfolio review 이후 새 과학 증거가 무엇인가?
 
 ### Stage 1 — Source Discovery / 소스 탐색
 권위 있는 데이터 발행기관·카탈로그를 국가·지역·기관·도메인별로 식별한다. / Identify authoritative data publishers and catalogs by jurisdiction, agency, region, and domain.
@@ -57,6 +72,9 @@ Experiment classes / 실험 유형: prediction / 예측, classification / 분류
 
 Minimum result / 최소 결과: research ID, datasets, hypothesis, experiment design, result, evidence class, limitations, practical utility, novelty assessment, next action, final state.
 
+### Stage 9 — Portfolio Return / 포트폴리오 복귀
+Every completed or held branch returns to Stage 0 before a new descendant is opened when the previous result was `HOLD`, `REJECTED`, runtime/source-access failure, or when no new scientific evidence was produced. / `HOLD`, `REJECTED`, runtime/source-access 실패 또는 새 과학 증거가 없는 branch는 새 descendant를 열기 전에 Stage 0로 복귀한다.
+
 ## 3. Research Material Discovery Gate / 연구 소재 탐색 게이트
 
 `AMBENCH-001` 이후 대규모 확장을 하기 전에, 엔진은 연구 소재를 다음 두 축에서 정기적으로 탐색한다. / Before broad scaling after `AMBENCH-001`, the engine periodically scans two topic tracks:
@@ -78,6 +96,8 @@ Process Conditions / 공정 조건
 
 이 패턴은 `X_process + X_measurement → Y_quality` 같은 명시적 검증 구조를 지원한다. 엔진은 단일 데이터 또는 데이터 조합으로 이와 유사한 입력–측정–결과 구조를 만들 수 있는 대상을 우선 탐색한다.  
 This pattern supports explicit test mappings such as `X_process + X_measurement → Y_quality`. The engine preferentially searches for datasets—or combinations—that can construct similarly explicit input–measurement–outcome structures.
+
+NIST AM Bench is a reference/calibration pattern, not the project mission itself. / NIST AM Bench는 기준·보정 패턴이며 프로젝트 목적 자체가 아니다.
 
 ## 5. Evidence, Novelty, Utility Separation / 증거·신규성·실용성 분리
 
@@ -105,10 +125,51 @@ DISCOVERED / 발견
 → FEASIBILITY_TEST / 실행가능성 검증
 → EXPERIMENT / 실험
 → VALIDATED / REJECTED / INCONCLUSIVE / HOLD
+→ PORTFOLIO_RETURN when required / 필요 시 포트폴리오 복귀
 ```
 
 AI가 그럴듯한 아이디어를 만들었다는 이유만으로 승격하지 않는다. / No candidate advances solely because an AI-generated idea sounds plausible.
 
-## 8. Language Compliance / 언어 준수
+## 8. MISSION-ROI / Branch-Stop Gate / 목적-ROI·Branch 중단 게이트
+
+This gate is mandatory after `HOLD`, `REJECT`, runtime failure, source-access failure, or repeated feasibility-only descendants. / `HOLD`, `REJECT`, runtime·source-access 실패 또는 반복 feasibility descendant 이후 의무 적용한다.
+
+Record five answers:
+
+1. **Scientific information gain** — What scientific/innovation uncertainty will the next gate resolve?
+2. **Route uniqueness** — Is the blocked source/route uniquely necessary to the project-level claim?
+3. **Portfolio alternative** — What credible higher-IPS or more direct candidate could be pursued instead?
+4. **Infrastructure streak** — How many consecutive descendants produced only tooling/runtime/source-access evidence?
+5. **Stop-loss** — What validated or uniquely valuable claim would actually be lost by stopping now?
+
+### Default stop rule / 기본 중단 규칙
+
+If:
+- the next gate is primarily tooling/infrastructure;
+- the route is not uniquely mission-critical;
+- a credible alternative exists; and
+- **>=2 consecutive infrastructure/runtime/source-transfer descendants** have produced no new scientific evidence,
+
+then the default disposition is:
+
+**`HOLD_BRANCH / ARCHIVE_ROUTE → RETURN_TO_PORTFOLIO`**.
+
+A technically possible workaround alone is not sufficient justification for a new research ID. / 기술적으로 가능한 우회방법 자체는 새 연구 ID를 열 충분한 사유가 아니다.
+
+### Required override rationale / 예외 계속 진행 근거
+
+A descendant may continue only if at least one is documented:
+- uniquely necessary source/route for a high-value claim;
+- no credible independent alternative;
+- clearly superior expected mission-level information value;
+- explicit user priority to finish the branch.
+
+## 9. Reusable Source Fixture Review / 반복 source fixture 검토
+
+Transient raw-data handling remains the default where appropriate, but if a small, licensed, stable source member is repeatedly reacquired across descendants, a separate governance decision may qualify a provenance-bound minimal fixture or immutable reusable representation. / raw-data transient 원칙은 유지하되, 작고 라이선스가 명확한 동일 source member를 반복 재다운로드하는 경우 별도 거버넌스 결정으로 provenance-bound minimal fixture를 검토할 수 있다.
+
+This must be a portfolio/infrastructure design decision, not a post-hoc rescue of a failed experiment. / 이는 실패 실험의 사후구제가 아니라 별도 포트폴리오·인프라 설계 결정이어야 한다.
+
+## 10. Language Compliance / 언어 준수
 
 공식 산출물은 `LANG-001` (`docs/LANGUAGE_POLICY.md`)을 따른다. / Official artifacts comply with `LANG-001` in `docs/LANGUAGE_POLICY.md`.
