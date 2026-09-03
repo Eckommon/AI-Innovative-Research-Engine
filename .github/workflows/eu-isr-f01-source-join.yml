@@ -1,0 +1,176 @@
+name: EU-ISR-F01 bounded facility-climate join preflight
+
+on:
+  push:
+    paths:
+      - '.github/workflows/eu-isr-f01-source-join.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run frozen EEA to NASA POWER join preflight
+        shell: bash
+        run: |
+          python - <<'PY'
+          import hashlib
+          import json
+          import pathlib
+          import urllib.parse
+          import urllib.request
+          from datetime import datetime, timezone
+
+          OUT = pathlib.Path('research/EU-ISR-F01/SOURCE_PREFLIGHT.md')
+          OUT.parent.mkdir(parents=True, exist_ok=True)
+
+          eea_base = 'https://air.discomap.eea.europa.eu/arcgis/rest/services/Air/IED_SiteMap/MapServer/0/query'
+          eea_params = {
+              'where': '1=1',
+              'orderByFields': 'OBJECTID ASC',
+              'resultRecordCount': '1',
+              'returnGeometry': 'true',
+              'outSR': '4326',
+              'f': 'json',
+              'outFields': 'OBJECTID,x_4258,y_4258,Site_reporting_year,siteName,InspireSiteId,countryCode,eprtr_sectors,eea_activities',
+          }
+          eea_url = eea_base + '?' + urllib.parse.urlencode(eea_params)
+
+          def fetch_json(url, timeout=60):
+              req = urllib.request.Request(url, headers={'User-Agent': 'AI-Innovative-Research-Engine/1.0'})
+              with urllib.request.urlopen(req, timeout=timeout) as r:
+                  status = getattr(r, 'status', 200)
+                  data = r.read()
+              return status, data, json.loads(data.decode('utf-8'))
+
+          checks = []
+          details = {}
+          gate = None
+
+          try:
+              eea_status, eea_bytes, eea = fetch_json(eea_url, 60)
+              details['eea_http_status'] = eea_status
+              details['eea_response_sha256'] = hashlib.sha256(eea_bytes).hexdigest()
+              feats = eea.get('features') or []
+              checks.append(('EEA query returns exactly one deterministic feature', len(feats) == 1))
+              if len(feats) != 1:
+                  gate = 'PARTIAL_EU_ISR_METADATA_SCHEMA_READY__FEATURE_SAMPLE_PENDING'
+                  raise RuntimeError(f'expected one EEA feature, got {len(feats)}')
+
+              feat = feats[0]
+              attrs = feat.get('attributes') or {}
+              geom = feat.get('geometry') or {}
+              required = ['OBJECTID', 'Site_reporting_year', 'InspireSiteId', 'countryCode']
+              for key in required:
+                  checks.append((f'EEA {key} non-null', attrs.get(key) not in (None, '')))
+              lon = geom.get('x')
+              lat = geom.get('y')
+              valid_wgs84 = isinstance(lon, (int, float)) and isinstance(lat, (int, float)) and -180 <= lon <= 180 and -90 <= lat <= 90
+              checks.append(('EEA geometry returned in valid WGS84 bounds via outSR=4326', valid_wgs84))
+              if not valid_wgs84 or not all(v for _, v in checks[-5:]):
+                  gate = 'HOLD_EU_ISR_SPATIAL_OR_TEMPORAL_SEMANTICS_GAP'
+                  raise RuntimeError('EEA identity/geometry qualification failed')
+
+              canonical_feature = json.dumps({'attributes': attrs, 'geometry': geom}, sort_keys=True, separators=(',', ':')).encode()
+              details['eea_selected_feature_sha256'] = hashlib.sha256(canonical_feature).hexdigest()
+              details['eea_reporting_year_present'] = True
+              details['eea_country_code_present'] = True
+              details['eea_inspire_site_id_present'] = True
+              details['eea_wgs84_coordinate_valid'] = True
+
+              power_base = 'https://power.larc.nasa.gov/api/temporal/daily/point'
+              power_params = {
+                  'parameters': 'T2M_MAX,T2M_MIN,PRECTOTCORR,WS10M',
+                  'community': 'AG',
+                  'longitude': f'{lon:.8f}',
+                  'latitude': f'{lat:.8f}',
+                  'start': '20240101',
+                  'end': '20240103',
+                  'format': 'JSON',
+                  'time-standard': 'UTC',
+              }
+              power_url = power_base + '?' + urllib.parse.urlencode(power_params)
+              power_status, power_bytes, power = fetch_json(power_url, 90)
+              details['power_http_status'] = power_status
+              details['power_response_sha256'] = hashlib.sha256(power_bytes).hexdigest()
+
+              header = power.get('header') or {}
+              param = ((power.get('properties') or {}).get('parameter') or {})
+              expected_params = ['T2M_MAX', 'T2M_MIN', 'PRECTOTCORR', 'WS10M']
+              expected_dates = {'20240101', '20240102', '20240103'}
+              details['power_parameters_present'] = sorted([p for p in expected_params if p in param])
+              details['power_time_standard_reported'] = header.get('time_standard') or header.get('time-standard') or 'NOT_REPORTED'
+
+              for p in expected_params:
+                  checks.append((f'NASA POWER parameter {p} present', p in param))
+                  if p in param:
+                      keys = set(str(k) for k in param[p].keys())
+                      checks.append((f'NASA POWER {p} covers frozen 3 dates', expected_dates.issubset(keys)))
+
+              time_report = str(details['power_time_standard_reported']).upper()
+              if time_report != 'NOT_REPORTED':
+                  checks.append(('NASA POWER response reports UTC time standard', 'UTC' in time_report))
+              else:
+                  checks.append(('NASA POWER request explicitly froze UTC even if header omits it', True))
+
+              # Shared-grid/pseudoreplication rule is preregistered; F01 only verifies route mechanics.
+              details['raw_coordinates_emitted'] = False
+              details['meteorological_values_emitted'] = False
+
+              if all(v for _, v in checks):
+                  gate = 'PASS_EU_ISR_FACILITY_CLIMATE_JOIN_READY'
+              elif gate is None:
+                  gate = 'HOLD_EU_ISR_SPATIAL_OR_TEMPORAL_SEMANTICS_GAP'
+
+          except Exception as e:
+              details['exception_type'] = type(e).__name__
+              details['exception_message'] = str(e)[:500]
+              if gate is None:
+                  gate = 'HOLD_EU_ISR_SPATIAL_OR_TEMPORAL_SEMANTICS_GAP'
+
+          lines = []
+          lines += ['---', 'id: EU-ISR-F01-SOURCE-PREFLIGHT', 'type: source-join-preflight', 'created: 2026-09-03', f'gate: {gate}', 'incremental_monetary_cost_usd: 0', '---', '']
+          lines += ['# EU-ISR-F01 Source Preflight / Source 사전검증', '']
+          lines += [f'**Gate / 게이트:** `{gate}`', '']
+          lines += ['## Frozen route / 고정 경로', '']
+          lines += ['- EEA official `IED_SiteMap` layer 0; deterministic first `OBJECTID ASC` feature.', '- EEA service-side `outSR=4326` from documented layer CRS EPSG:3857.', '- NASA POWER Daily Point API, `2024-01-01..2024-01-03`, `time-standard=UTC`.', '- Fixed fields: `T2M_MAX,T2M_MIN,PRECTOTCORR,WS10M`.', '- No raw facility coordinate or meteorological numerical value is written to the repository.', '']
+          lines += ['## Checks / 검증', '']
+          if checks:
+              lines += ['| Check / 검증 | Result |', '|---|---|']
+              for name, ok in checks:
+                  lines.append(f'| {name} | {"PASS" if ok else "FAIL"} |')
+          else:
+              lines.append('- No semantic check completed before the access failure.')
+          lines += ['', '## Reproducibility diagnostics / 재현 진단', '']
+          for k in sorted(details):
+              v = details[k]
+              if isinstance(v, list):
+                  v = ', '.join(v)
+              lines.append(f'- `{k}`: `{v}`')
+          lines += ['', '## Claim boundary / 주장 경계', '', 'A PASS proves only that one official EEA point feature can be deterministically transformed/requested as WGS84 and used to construct a bounded NASA POWER meteorological point request with fixed time semantics. It does not establish facility-scale local-weather accuracy, climate causality, emissions sensitivity, or a risk ranking.', '', 'Facilities mapped to the same POWER source grid cell must be treated as sharing climate exposure in any later experiment; they are not independent meteorological measurements.', '', 'Incremental monetary cost remained **0 USD**.', '']
+          OUT.write_text('\n'.join(lines), encoding='utf-8')
+
+          # Exit zero so the terminal result is always committed; scientific gate is authoritative.
+          print(gate)
+          PY
+
+      - name: Commit durable preflight result
+        shell: bash
+        run: |
+          if git diff --quiet -- research/EU-ISR-F01/SOURCE_PREFLIGHT.md && git ls-files --error-unmatch research/EU-ISR-F01/SOURCE_PREFLIGHT.md >/dev/null 2>&1; then
+            echo 'No result change'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/EU-ISR-F01/SOURCE_PREFLIGHT.md
+          git commit -m 'record EU-ISR-F01 bounded source join preflight'
+          git push
