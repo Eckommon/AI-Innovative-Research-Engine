@@ -1,0 +1,470 @@
+name: UK-GRID-E01 frozen SCOTEX stress-cost experiment
+
+on:
+  push:
+    paths:
+      - '.github/workflows/uk-grid-e01-scotex-stress-cost.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  experiment:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Stage A — frozen date/cardinality gate only
+        id: stage_a
+        shell: bash
+        run: |
+          python - <<'PY'
+          import collections
+          import datetime as dt
+          import hashlib
+          import json
+          import pathlib
+          import urllib.parse
+          import urllib.request
+
+          DA_ID = '38a18ec1-9e40-465d-93fb-301e80fd1352'
+          TC_ID = 'c730b788-4328-43dc-9f84-27fd3adeda59'
+          BASE = 'https://api.neso.energy/api/3/action/datastore_search_sql'
+          START = dt.date(2026, 4, 1)
+          END = dt.date(2026, 7, 31)
+          EXPECTED_DATES = [START + dt.timedelta(days=i) for i in range((END - START).days + 1)]
+          EXPECTED_SET = {d.isoformat() for d in EXPECTED_DATES}
+          OUT = pathlib.Path('stage_a.json')
+
+          def fetch_sql(sql, timeout=90):
+              url = BASE + '?' + urllib.parse.urlencode({'sql': sql})
+              req = urllib.request.Request(url, headers={'User-Agent': 'AI-Innovative-Research-Engine/1.0'})
+              with urllib.request.urlopen(req, timeout=timeout) as r:
+                  status = getattr(r, 'status', 200)
+                  body = r.read()
+              obj = json.loads(body.decode('utf-8'))
+              if status != 200 or obj.get('success') is not True:
+                  raise RuntimeError(f'CKAN SQL request failed: status={status} success={obj.get("success")}')
+              return status, body, obj
+
+          def parse_date(v):
+              s = str(v).strip()
+              if len(s) >= 10 and s[4] == '-' and s[7] == '-':
+                  return dt.date.fromisoformat(s[:10]).isoformat()
+              for fmt in ('%m/%d/%Y %H:%M','%m/%d/%Y','%d/%m/%Y %H:%M','%d/%m/%Y'):
+                  try:
+                      return dt.datetime.strptime(s, fmt).date().isoformat()
+                  except ValueError:
+                      pass
+              raise ValueError(f'unparseable date: {s!r}')
+
+          diag = {
+              'stage': 'A',
+              'numerical_flow_limit_cost_requested': False,
+              'expected_date_count': 122,
+              'expected_dayahead_rows': 5856,
+              'expected_halfhours_per_date': 48,
+              'expected_cost_rows': 122,
+          }
+          checks = []
+          passed = False
+          try:
+              da_sql = (
+                  f'SELECT "Date (GMT/BST)" FROM "{DA_ID}" '
+                  f'WHERE "Constraint Group" = \'SCOTEX\' '
+                  f'AND "Date (GMT/BST)" >= \'2026-04-01\' '
+                  f'AND "Date (GMT/BST)" < \'2026-08-01\' '
+                  f'ORDER BY "Date (GMT/BST)"'
+              )
+              tc_sql = (
+                  f'SELECT "Settlement Date" FROM "{TC_ID}" '
+                  f'WHERE "Constraint Group" = \'SCOTEX\' '
+                  f'AND "Settlement Date" >= \'2026-04-01\' '
+                  f'AND "Settlement Date" < \'2026-08-01\' '
+                  f'ORDER BY "Settlement Date"'
+              )
+              da_status, da_body, da_obj = fetch_sql(da_sql)
+              tc_status, tc_body, tc_obj = fetch_sql(tc_sql)
+              diag['dayahead_identifier_http_status'] = da_status
+              diag['thermalcost_identifier_http_status'] = tc_status
+              diag['dayahead_identifier_response_sha256'] = hashlib.sha256(da_body).hexdigest()
+              diag['thermalcost_identifier_response_sha256'] = hashlib.sha256(tc_body).hexdigest()
+
+              da_records = da_obj.get('result', {}).get('records', [])
+              tc_records = tc_obj.get('result', {}).get('records', [])
+
+              per_day = collections.defaultdict(list)
+              for r in da_records:
+                  raw = r.get('Date (GMT/BST)')
+                  if raw in (None, ''):
+                      continue
+                  d = parse_date(raw)
+                  per_day[d].append(str(raw).strip())
+
+              cost_dates = []
+              for r in tc_records:
+                  raw = r.get('Settlement Date')
+                  if raw in (None, ''):
+                      continue
+                  cost_dates.append(parse_date(raw))
+              cost_counts = collections.Counter(cost_dates)
+
+              da_date_set = set(per_day)
+              tc_date_set = set(cost_counts)
+              row_counts = {d: len(v) for d, v in per_day.items()}
+              unique_counts = {d: len(set(v)) for d, v in per_day.items()}
+
+              checks = [
+                  ('exact 122 day-ahead dates', da_date_set == EXPECTED_SET),
+                  ('exact 5,856 day-ahead structural rows', len(da_records) == 5856),
+                  ('exactly 48 day-ahead rows per date', da_date_set == EXPECTED_SET and all(row_counts.get(d) == 48 for d in EXPECTED_SET)),
+                  ('48 unique day-ahead timestamps per date', da_date_set == EXPECTED_SET and all(unique_counts.get(d) == 48 for d in EXPECTED_SET)),
+                  ('no duplicate day-ahead datetime', len(da_records) == len({x for vals in per_day.values() for x in vals})),
+                  ('exact 122 thermal-cost dates', tc_date_set == EXPECTED_SET),
+                  ('exact 122 thermal-cost structural rows', len(tc_records) == 122),
+                  ('one explicit thermal-cost record per date', tc_date_set == EXPECTED_SET and all(cost_counts.get(d) == 1 for d in EXPECTED_SET)),
+              ]
+              diag['dayahead_structural_row_count'] = len(da_records)
+              diag['dayahead_unique_date_count'] = len(da_date_set)
+              diag['dayahead_per_day_row_count_set'] = sorted(set(row_counts.values())) if row_counts else []
+              diag['dayahead_per_day_unique_timestamp_count_set'] = sorted(set(unique_counts.values())) if unique_counts else []
+              diag['thermalcost_structural_row_count'] = len(tc_records)
+              diag['thermalcost_unique_date_count'] = len(tc_date_set)
+              diag['thermalcost_per_date_count_set'] = sorted(set(cost_counts.values())) if cost_counts else []
+              passed = all(ok for _, ok in checks)
+          except Exception as e:
+              diag['exception_type'] = type(e).__name__
+              diag['exception_message'] = str(e)[:500]
+              passed = False
+
+          result = {
+              'pass': passed,
+              'gate_if_stop': None if passed else 'HOLD_E01_SOURCE_CARDINALITY',
+              'checks': checks,
+              'diagnostics': diag,
+          }
+          OUT.write_text(json.dumps(result, indent=2, sort_keys=True), encoding='utf-8')
+          print('STAGE_A_PASS' if passed else 'STAGE_A_HOLD')
+          PY
+          PASS=$(python -c "import json; print(str(json.load(open('stage_a.json'))['pass']).lower())")
+          echo "pass=$PASS" >> "$GITHUB_OUTPUT"
+
+      - name: Stage B — frozen numerical query and analysis
+        if: steps.stage_a.outputs.pass == 'true'
+        shell: bash
+        run: |
+          python - <<'PY'
+          import datetime as dt
+          import hashlib
+          import json
+          import math
+          import pathlib
+          import statistics
+          import urllib.parse
+          import urllib.request
+
+          DA_ID = '38a18ec1-9e40-465d-93fb-301e80fd1352'
+          TC_ID = 'c730b788-4328-43dc-9f84-27fd3adeda59'
+          BASE = 'https://api.neso.energy/api/3/action/datastore_search_sql'
+          START = dt.date(2026, 4, 1)
+          END = dt.date(2026, 7, 31)
+          EXPECTED_DATES = [(START + dt.timedelta(days=i)).isoformat() for i in range((END - START).days + 1)]
+          OUT = pathlib.Path('analysis.json')
+
+          def fetch_sql(sql, timeout=90):
+              url = BASE + '?' + urllib.parse.urlencode({'sql': sql})
+              req = urllib.request.Request(url, headers={'User-Agent': 'AI-Innovative-Research-Engine/1.0'})
+              with urllib.request.urlopen(req, timeout=timeout) as r:
+                  status = getattr(r, 'status', 200)
+                  body = r.read()
+              obj = json.loads(body.decode('utf-8'))
+              if status != 200 or obj.get('success') is not True:
+                  raise RuntimeError(f'CKAN SQL request failed: status={status} success={obj.get("success")}')
+              return status, body, obj
+
+          def parse_date(v):
+              s = str(v).strip()
+              if len(s) >= 10 and s[4] == '-' and s[7] == '-':
+                  return dt.date.fromisoformat(s[:10]).isoformat()
+              for fmt in ('%m/%d/%Y %H:%M','%m/%d/%Y','%d/%m/%Y %H:%M','%d/%m/%Y'):
+                  try:
+                      return dt.datetime.strptime(s, fmt).date().isoformat()
+                  except ValueError:
+                      pass
+              raise ValueError(f'unparseable date: {s!r}')
+
+          def finite_float(v, name):
+              x = float(v)
+              if not math.isfinite(x):
+                  raise ValueError(f'non-finite {name}')
+              return x
+
+          def average_ranks(values):
+              n = len(values)
+              order = sorted(range(n), key=lambda i: values[i])
+              ranks = [0.0] * n
+              p = 0
+              while p < n:
+                  q = p + 1
+                  while q < n and values[order[q]] == values[order[p]]:
+                      q += 1
+                  avg = ((p + 1) + q) / 2.0
+                  for j in range(p, q):
+                      ranks[order[j]] = avg
+                  p = q
+              return ranks
+
+          def pearson(x, y):
+              mx = sum(x) / len(x)
+              my = sum(y) / len(y)
+              dx = [v - mx for v in x]
+              dy = [v - my for v in y]
+              den = math.sqrt(sum(v*v for v in dx) * sum(v*v for v in dy))
+              if den == 0:
+                  raise ValueError('undefined correlation: constant ranked series')
+              return sum(a*b for a,b in zip(dx,dy)) / den
+
+          def spearman(x, y):
+              return pearson(average_ranks(x), average_ranks(y))
+
+          def cliffs_delta(high, low):
+              gt = 0
+              lt = 0
+              for a in high:
+                  for b in low:
+                      if a > b:
+                          gt += 1
+                      elif a < b:
+                          lt += 1
+              return (gt - lt) / (len(high) * len(low))
+
+          extraction_utc = dt.datetime.now(dt.timezone.utc).isoformat()
+          diag = {
+              'stage': 'B',
+              'extraction_utc': extraction_utc,
+              'resource_dayahead': DA_ID,
+              'resource_thermalcost': TC_ID,
+              'window': '2026-04-01..2026-07-31',
+              'independent_day_count_expected': 122,
+          }
+          metrics = {}
+          gate = 'HOLD_E01_NUMERICAL_INTEGRITY'
+          try:
+              da_sql = (
+                  f'SELECT "Date (GMT/BST)", "Limit (MW)", "Flow (MW)" FROM "{DA_ID}" '
+                  f'WHERE "Constraint Group" = \'SCOTEX\' '
+                  f'AND "Date (GMT/BST)" >= \'2026-04-01\' '
+                  f'AND "Date (GMT/BST)" < \'2026-08-01\' '
+                  f'ORDER BY "Date (GMT/BST)"'
+              )
+              tc_sql = (
+                  f'SELECT "Settlement Date", "Daily Cost (GBP)" FROM "{TC_ID}" '
+                  f'WHERE "Constraint Group" = \'SCOTEX\' '
+                  f'AND "Settlement Date" >= \'2026-04-01\' '
+                  f'AND "Settlement Date" < \'2026-08-01\' '
+                  f'ORDER BY "Settlement Date"'
+              )
+              da_status, da_body, da_obj = fetch_sql(da_sql)
+              tc_status, tc_body, tc_obj = fetch_sql(tc_sql)
+              diag['dayahead_numerical_http_status'] = da_status
+              diag['thermalcost_numerical_http_status'] = tc_status
+              diag['dayahead_numerical_response_sha256'] = hashlib.sha256(da_body).hexdigest()
+              diag['thermalcost_numerical_response_sha256'] = hashlib.sha256(tc_body).hexdigest()
+
+              da_records = da_obj.get('result', {}).get('records', [])
+              tc_records = tc_obj.get('result', {}).get('records', [])
+              if len(da_records) != 5856 or len(tc_records) != 122:
+                  raise ValueError(f'numerical cardinality drift: day_ahead={len(da_records)} cost={len(tc_records)}')
+
+              by_day = {d: [] for d in EXPECTED_DATES}
+              seen_ts = set()
+              for r in da_records:
+                  ts = str(r.get('Date (GMT/BST)')).strip()
+                  d = parse_date(ts)
+                  if d not in by_day:
+                      raise ValueError('day-ahead date outside frozen set')
+                  if ts in seen_ts:
+                      raise ValueError('duplicate day-ahead datetime')
+                  seen_ts.add(ts)
+                  lim = finite_float(r.get('Limit (MW)'), 'Limit')
+                  flow = finite_float(r.get('Flow (MW)'), 'Flow')
+                  if lim <= 0:
+                      raise ValueError('non-positive Limit')
+                  by_day[d].append((flow, lim))
+              if any(len(by_day[d]) != 48 for d in EXPECTED_DATES):
+                  raise ValueError('day-ahead per-date cardinality drift')
+
+              costs = {}
+              for r in tc_records:
+                  d = parse_date(r.get('Settlement Date'))
+                  if d not in by_day or d in costs:
+                      raise ValueError('cost date outside frozen set or duplicated')
+                  c = finite_float(r.get('Daily Cost (GBP)'), 'Daily Cost')
+                  if c < 0:
+                      raise ValueError('negative Daily Cost')
+                  costs[d] = c
+              if set(costs) != set(EXPECTED_DATES):
+                  raise ValueError('thermal-cost date set drift')
+
+              stress = [max(flow / lim for flow, lim in by_day[d]) for d in EXPECTED_DATES]
+              cost = [costs[d] for d in EXPECTED_DATES]
+              if any(not math.isfinite(x) for x in stress + cost):
+                  raise ValueError('non-finite derived series')
+
+              rho_obs = spearman(stress, cost)
+              shifted_rhos = []
+              n = len(cost)
+              for k in range(n):
+                  shifted = cost[k:] + cost[:k]
+                  shifted_rhos.append(spearman(stress, shifted))
+              p_circ = sum(1 for r in shifted_rhos if r >= rho_obs) / n
+
+              if rho_obs >= 0.30 and p_circ <= 0.05:
+                  gate = 'PASS_E01_SCOTEX_STRESS_COST_SIGNAL'
+              elif rho_obs > 0:
+                  gate = 'PARTIAL_E01_DIRECTIONAL_ONLY'
+              else:
+                  gate = 'NO_E01_MATERIAL_DIRECTIONAL_RELATION'
+
+              ordered = sorted(zip(stress, EXPECTED_DATES, cost), key=lambda x: (x[0], x[1]))
+              low_cost = [x[2] for x in ordered[:30]]
+              high_cost = [x[2] for x in ordered[-30:]]
+              metrics = {
+                  'rho_obs': rho_obs,
+                  'p_circ': p_circ,
+                  'circular_shift_count': n,
+                  'days_stress_gt_1': sum(1 for x in stress if x > 1),
+                  'stress_min': min(stress),
+                  'stress_median': statistics.median(stress),
+                  'stress_max': max(stress),
+                  'cost_min_gbp': min(cost),
+                  'cost_median_gbp': statistics.median(cost),
+                  'cost_max_gbp': max(cost),
+                  'low_stress_quartile_n': len(low_cost),
+                  'high_stress_quartile_n': len(high_cost),
+                  'low_stress_quartile_median_cost_gbp': statistics.median(low_cost),
+                  'high_stress_quartile_median_cost_gbp': statistics.median(high_cost),
+                  'high_minus_low_quartile_median_cost_gbp': statistics.median(high_cost) - statistics.median(low_cost),
+                  'cliffs_delta_high_vs_low_cost': cliffs_delta(high_cost, low_cost),
+              }
+              diag['numerical_day_ahead_row_count'] = len(da_records)
+              diag['numerical_cost_row_count'] = len(tc_records)
+              diag['independent_day_count'] = n
+              diag['raw_observations_persisted'] = False
+          except Exception as e:
+              diag['exception_type'] = type(e).__name__
+              diag['exception_message'] = str(e)[:500]
+              gate = 'HOLD_E01_NUMERICAL_INTEGRITY'
+
+          OUT.write_text(json.dumps({'gate': gate, 'metrics': metrics, 'diagnostics': diag}, indent=2, sort_keys=True), encoding='utf-8')
+          print(gate)
+          PY
+
+      - name: Persist frozen result summary
+        if: always()
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import pathlib
+
+          stage_a = json.loads(pathlib.Path('stage_a.json').read_text(encoding='utf-8')) if pathlib.Path('stage_a.json').exists() else {
+              'pass': False,
+              'gate_if_stop': 'HOLD_E01_SOURCE_CARDINALITY',
+              'checks': [],
+              'diagnostics': {'exception_message': 'stage_a.json missing'}
+          }
+          if stage_a.get('pass') and pathlib.Path('analysis.json').exists():
+              analysis = json.loads(pathlib.Path('analysis.json').read_text(encoding='utf-8'))
+              gate = analysis.get('gate', 'HOLD_E01_NUMERICAL_INTEGRITY')
+              metrics = analysis.get('metrics', {})
+              bdiag = analysis.get('diagnostics', {})
+          elif stage_a.get('pass'):
+              gate = 'HOLD_E01_NUMERICAL_INTEGRITY'
+              metrics = {}
+              bdiag = {'exception_message': 'Stage A passed but Stage B result missing'}
+          else:
+              gate = 'HOLD_E01_SOURCE_CARDINALITY'
+              metrics = {}
+              bdiag = {'numerical_query_executed': False}
+
+          out = pathlib.Path('research/UK-GRID-E01/RESULT.md')
+          out.parent.mkdir(parents=True, exist_ok=True)
+          lines = [
+              '---',
+              'id: UK-GRID-E01-RESULT',
+              'type: controlled-cross-dataset-experiment-result',
+              'created: 2026-09-03',
+              f'gate: {gate}',
+              'issue: 70',
+              'incremental_monetary_cost_usd: 0',
+              '---','',
+              '# UK-GRID-E01 Result — SCOTEX Stress × Thermal Cost',
+              '# UK-GRID-E01 결과 — SCOTEX Stress × Thermal Cost','',
+              f'**Final gate / 최종 게이트:** `{gate}`','',
+              '## Frozen contract / 고정 계약','',
+              '- Boundary: `SCOTEX` (selected outcome-blind).',
+              '- Window: `2026-04-01` → `2026-07-31`, exactly 122 calendar days.',
+              '- Predictor: daily maximum of signed `Flow / Limit` across exactly 48 half-hours.',
+              '- Outcome: explicit same-day SCOTEX `Daily Cost (GBP)`.',
+              '- Primary statistic: Spearman rho plus all-122 circular-shift one-sided temporal-alignment p-value.',
+              '- PASS threshold: `rho >= 0.30` and `p_circ <= 0.05`.','',
+              '## Stage A — structural gate / 구조 gate','',
+              f'- Stage A pass: `{stage_a.get("pass")}`',
+          ]
+          for name, ok in stage_a.get('checks', []):
+              lines.append(f'- {name}: `{"PASS" if ok else "FAIL"}`')
+          lines += ['', '### Stage A diagnostics / Stage A 진단','']
+          for k,v in sorted(stage_a.get('diagnostics', {}).items()):
+              lines.append(f'- `{k}`: `{v}`')
+
+          lines += ['', '## Primary and secondary aggregate results / 1차·2차 집계 결과','']
+          if metrics:
+              for k,v in metrics.items():
+                  if isinstance(v, float):
+                      lines.append(f'- `{k}`: `{v:.12g}`')
+                  else:
+                      lines.append(f'- `{k}`: `{v}`')
+          else:
+              lines.append('- Numerical aggregate metrics: `NOT_AVAILABLE_UNDER_FINAL_GATE`')
+
+          lines += ['', '### Stage B diagnostics / Stage B 진단','']
+          for k,v in sorted(bdiag.items()):
+              lines.append(f'- `{k}`: `{v}`')
+
+          lines += [
+              '', '## Interpretation boundary / 해석 경계','',
+              'This experiment tests a bounded temporal operational association between source-defined day-ahead SCOTEX boundary stress and same-day realized SCOTEX thermal-constraint cost. It does not establish causality, isolate Scottish wind as a sole driver, equate every operational Limit with one immutable circuit rating, or generalize to other boundaries/years/systems.','',
+              'Raw half-hour/day observations are not persisted in this public result. Exact numerical-query response hashes and extraction timestamp are retained when Stage B executes.','',
+              '## Portfolio rule / 포트폴리오 규칙','',
+              'Under `MEM-054` and `DEC-093`, E01 closes after this single frozen execution regardless of PASS/PARTIAL/NO/HOLD. The next step is Stage 0 Mission-ROI portfolio review, not automatic same-branch retuning.','',
+              'Incremental monetary cost remained **0 USD**.',''
+          ]
+          out.write_text('\n'.join(lines), encoding='utf-8')
+          print(gate)
+          PY
+
+      - name: Commit durable result
+        if: always()
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/UK-GRID-E01/RESULT.md
+          if git diff --cached --quiet; then
+            echo 'No result change'
+            exit 0
+          fi
+          git commit -m 'record frozen UK-GRID-E01 SCOTEX stress-cost result'
+          git pull --rebase origin main
+          git push
+
+      - name: Confirm COST-001 boundary
+        if: always()
+        run: |
+          echo 'Standard public-repository GitHub-hosted runner only.'
+          echo 'No paid API, paid runner, GPU runner, artifact upload, or billable external service used.'
