@@ -1,0 +1,429 @@
+name: US MINERAL F01 mapping identifiability gate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/us-mineral-f01-mapping-identifiability.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  mapping-identifiability:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Freeze prospective support-qualified mineral subset without trade outcomes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib
+          import re
+          import urllib.request
+          import urllib.error
+          import xml.etree.ElementTree as ET
+          from collections import defaultdict, Counter
+          from pathlib import Path
+          import os
+
+          OUT = Path(os.environ['GITHUB_WORKSPACE']) / 'research/US-MINERAL-F01/MAPPING_IDENTIFIABILITY.md'
+          OUT.parent.mkdir(parents=True, exist_ok=True)
+
+          UA = {'User-Agent':'AI-Innovative-Research-Engine/US-MINERAL-F01 mapping-identifiability'}
+          USGS_XML='https://pubs.usgs.gov/of/2025/1047/ofr20251047.XML'
+          CENSUS_2023_IMPORT_CODES='https://www.census.gov/foreign-trade/schedules/b/2023/imp-code.txt'
+          CENSUS_IMP_LAYOUT='https://www.census.gov/foreign-trade/reference/products/layouts/imdb.html'
+          CENSUS_PORT_LAYOUT='https://www.census.gov/foreign-trade/reference/products/layouts/dporths6i.html'
+          CENSUS_2023_MERCH_ZIP='https://www.census.gov/trade/downloads/2023/Merch/im_m/IMDB2301.ZIP'
+          CENSUS_2023_PORT_ZIP='https://www.census.gov/trade/downloads/2023/Port/im_hs6_m/PORTHS6MM2301.ZIP'
+
+          FINAL60 = [
+            'Aluminum','Antimony','Arsenic','Barite','Beryllium','Bismuth','Boron','Cerium','Cesium','Chromium','Cobalt','Copper',
+            'Dysprosium','Erbium','Europium','Fluorspar','Gadolinium','Gallium','Germanium','Graphite','Hafnium','Holmium','Indium','Iridium',
+            'Lanthanum','Lead','Lithium','Lutetium','Magnesium','Manganese','Metallurgical coal','Neodymium','Nickel','Niobium','Palladium',
+            'Phosphate','Platinum','Potash','Praseodymium','Rhenium','Rhodium','Rubidium','Ruthenium','Samarium','Scandium','Silicon','Silver',
+            'Tantalum','Tellurium','Terbium','Thulium','Tin','Titanium','Tungsten','Uranium','Vanadium','Ytterbium','Yttrium','Zinc','Zirconium'
+          ]
+
+          MULTISTAGE = {
+            'Aluminum':['Alumina','Aluminum','Bauxite'],
+            'Chromium':['Chromite','Chromium chemicals','Chromium ferroalloys','Chromium metal'],
+            'Cobalt':['Cobalt chemicals','Cobalt metal'],
+            'Copper':['Copper, mined','Copper, refined'],
+            'Fluorspar':['Fluorspar, acidspar','Fluorspar, metspar'],
+            'Graphite':['Graphite, natural','Graphite, synthetic'],
+            'Manganese':['Manganese alloys','Manganese dioxide','Manganese metal','Manganese ore','Manganese sulfate (high purity)'],
+            'Nickel':['Nickel, mined','Nickel, primary refined'],
+            'Silicon':['Silicon ferroalloys','Silicon metal'],
+            'Titanium':['Titanium ferroalloys','Titanium metal','Titanium mineral concentrates','Titanium pigment','Titanium sponge'],
+            'Zinc':['Zinc, mined','Zinc, smelted'],
+            'Magnesium':['Magnesium compounds','Magnesium metal'],
+          }
+
+          RARE_EARTHS = [
+            'Cerium','Dysprosium','Erbium','Europium','Gadolinium','Holmium','Lanthanum','Lutetium','Neodymium','Praseodymium','Samarium','Terbium','Thulium','Ytterbium','Yttrium'
+          ]
+
+          # One-to-one lexical alias only. This does not aggregate supply-chain stages or forms.
+          CANONICAL_ALIAS = {'Phosphate':'Phosphates'}
+
+          def get(url, method='GET', timeout=90):
+              req=urllib.request.Request(url, headers=UA, method=method)
+              with urllib.request.urlopen(req, timeout=timeout) as r:
+                  b=r.read() if method!='HEAD' else b''
+                  return b, getattr(r,'status',200), dict(r.headers)
+
+          def local(tag):
+              return tag.split('}')[-1]
+
+          def text(el):
+              return ' '.join(''.join(el.itertext()).split())
+
+          # ---------- USGS Appendix 2 ----------
+          xml, xml_status, _ = get(USGS_XML)
+          xml_sha = hashlib.sha256(xml).hexdigest()
+          root = ET.fromstring(xml)
+
+          tables = {}
+          for tw in root.iter():
+              if local(tw.tag) != 'table-wrap':
+                  continue
+              label=''
+              caption=''
+              for x in tw.iter():
+                  if local(x.tag)=='label' and not label:
+                      label=text(x)
+                  elif local(x.tag)=='caption' and not caption:
+                      caption=text(x)
+              rows=[]
+              for tr in tw.iter():
+                  if local(tr.tag)!='tr':
+                      continue
+                  cells=[]
+                  for c in list(tr):
+                      if local(c.tag) in ('td','th'):
+                          cells.append(text(c))
+                  if cells:
+                      rows.append(cells)
+              if label:
+                  tables[label]=(caption,rows)
+
+          t21=t23=None
+          for label,(cap,rows) in tables.items():
+              compact=label.lower().replace(' ','')
+              if '2.1' in compact:
+                  t21=(label,cap,rows)
+              elif '2.3' in compact:
+                  t23=(label,cap,rows)
+
+          def parse_mapping(table):
+              if not table:
+                  return []
+              _,_,rows=table
+              current=None
+              records=[]
+              for cells in rows:
+                  first=(cells[0] if cells else '').strip()
+                  if first and not re.fullmatch(r'[\d.\-–—]+', first) and not any(k in first.lower() for k in ['mineral commodity','hts code','u.s. trade code','china']):
+                      current=first
+                  joined=' | '.join(cells)
+                  codes=re.findall(r'(?<!\d)(\d{6,10})(?!\d)', joined)
+                  if current and codes:
+                      records.append({'unit':current,'code':codes[0],'row':joined})
+              return records
+
+          m21=parse_mapping(t21)
+          m23=parse_mapping(t23)
+          all_records=m21+m23
+
+          units21=sorted(set(r['unit'] for r in m21))
+          units23=sorted(set(r['unit'] for r in m23))
+          unit_to_raw=defaultdict(set)
+          for r in all_records:
+              unit_to_raw[r['unit']].add(r['code'])
+
+          unitvalue_units=set(r['unit'] for r in all_records if 'unit value' in r['row'].lower())
+
+          # ---------- Census 2023 official import HTS concordance ----------
+          imp_code_bytes, imp_code_status, _ = get(CENSUS_2023_IMPORT_CODES)
+          imp_code_sha=hashlib.sha256(imp_code_bytes).hexdigest()
+          imp_code_text=imp_code_bytes.decode('latin-1','ignore')
+          hts10=[]
+          for line in imp_code_text.splitlines():
+              c=line[:10].strip()
+              if re.fullmatch(r'\d{10}', c):
+                  hts10.append(c)
+          hts10=sorted(set(hts10))
+          hts10_set=set(hts10)
+          by6=defaultdict(set)
+          by8=defaultdict(set)
+          for c in hts10:
+              by6[c[:6]].add(c)
+              by8[c[:8]].add(c)
+
+          def expand(raw):
+              if len(raw)==10:
+                  return {raw} if raw in hts10_set else set(), 'exact'
+              if len(raw)==8:
+                  return set(by8.get(raw,set())), 'prefix8'
+              if len(raw)==6:
+                  return set(by6.get(raw,set())), 'prefix6'
+              return set(), 'invalid-length'
+
+          expanded_records=[]
+          unit_to_hts10=defaultdict(set)
+          unit_unmatched=defaultdict(set)
+          unit_modes=defaultdict(Counter)
+          hts10_to_units=defaultdict(set)
+
+          for r in all_records:
+              matches,mode=expand(r['code'])
+              unit_modes[r['unit']][mode]+=1
+              if not matches:
+                  unit_unmatched[r['unit']].add(r['code'])
+              for c in matches:
+                  unit_to_hts10[r['unit']].add(c)
+                  hts10_to_units[c].add(r['unit'])
+                  expanded_records.append((r['unit'],r['code'],c,mode))
+
+          shared_hts10={c:sorted(units) for c,units in hts10_to_units.items() if len(units)>1}
+          unit_shared=defaultdict(set)
+          for c,units in shared_hts10.items():
+              for u in units:
+                  unit_shared[u].add(c)
+
+          # ---------- Final-60 prospective classification ----------
+          units_casefold={u.casefold():u for u in units21+units23}
+          rows=[]
+          support=[]
+
+          for mineral in FINAL60:
+              method_unit=None
+              status=None
+              reason=None
+
+              # Rule 1: establish whether an Appendix-2 mapping exists at all.
+              if mineral in MULTISTAGE:
+                  present=[u for u in MULTISTAGE[mineral] if u in unit_to_raw]
+                  if not present:
+                      status='EXCLUDE_R1_NO_APPENDIX2_MAPPING'
+                      reason='No Appendix-2 mapping found for the final-list mineral family.'
+                  else:
+                      # Rule 2 includes magnesium's explicitly separate chains.
+                      status='EXCLUDE_R2_MULTISTAGE_OR_MULTIFORM_FAMILY'
+                      reason='Appendix 2 represents this final-list mineral through multiple stages/forms; no arbitrary family aggregation.'
+              elif mineral in RARE_EARTHS:
+                  if mineral not in unit_to_raw:
+                      status='EXCLUDE_R1_NO_APPENDIX2_MAPPING'
+                      reason='No Appendix-2 mapping found.'
+                  else:
+                      status='EXCLUDE_R3_RARE_EARTH_SPECIAL_DISAGGREGATION'
+                      reason='Appendix 2 applies special rare-earth allocation/disaggregation; excluded from simple Census route.'
+              else:
+                  exact=units_casefold.get(mineral.casefold())
+                  alias=CANONICAL_ALIAS.get(mineral)
+                  if exact:
+                      method_unit=exact
+                  elif alias and alias in unit_to_raw:
+                      method_unit=alias
+                  else:
+                      status='EXCLUDE_R1_NO_APPENDIX2_MAPPING'
+                      reason='No one-to-one Appendix-2 methodology unit mapping.'
+
+                  if method_unit:
+                      # Rule 4: any expanded 2023 HTS10 used by another Appendix-2 commodity unit excludes the unit.
+                      if unit_shared.get(method_unit):
+                          status='EXCLUDE_R4_SHARED_2023_HTS10'
+                          reason='At least one 2023 HTS10 is shared with another Appendix-2 commodity unit after exact/prefix expansion.'
+                      # Rule 5: unit-value allocation dependence excludes the unit.
+                      elif method_unit in unitvalue_units:
+                          status='EXCLUDE_R5_TRANSACTION_UNIT_VALUE_ALLOCATION'
+                          reason='Appendix-2 row text invokes transaction unit-value allocation/scrap rule.'
+                      # Rule 6: all raw import code patterns must resolve to official 2023 HTS10 codes.
+                      elif unit_unmatched.get(method_unit):
+                          status='EXCLUDE_R6_2023_HTS_VINTAGE_UNRESOLVED'
+                          reason='One or more Appendix-2 import code patterns do not resolve to the official Census 2023 HTS10 concordance.'
+                      elif not unit_to_hts10.get(method_unit):
+                          status='EXCLUDE_R6_2023_HTS_VINTAGE_UNRESOLVED'
+                          reason='No resolved 2023 HTS10 codes remain.'
+                      else:
+                          status='SUPPORT_QUALIFIED_IMP_DETL_2023'
+                          reason='One-to-one methodology unit; no shared expanded HTS10; no unit-value allocation; 2023 HTS10 mapping resolved.'
+                          support.append((mineral,method_unit))
+
+              rows.append((mineral,method_unit,status,reason))
+
+          # ---------- Rule 7: HS6 port identity preservation ----------
+          port_support=[]
+          port_diag={}
+          for mineral,unit in support:
+              mapped=set(unit_to_hts10[unit])
+              hs6s=sorted(set(c[:6] for c in mapped))
+              failures=[]
+              for h in hs6s:
+                  full=set(by6.get(h,set()))
+                  mine={c for c in mapped if c.startswith(h)}
+                  if mine != full:
+                      failures.append((h,len(mine),len(full)))
+              ok=(len(failures)==0 and bool(hs6s))
+              port_diag[mineral]=(ok,hs6s,failures)
+              if ok:
+                  port_support.append((mineral,unit))
+
+          # ---------- Snapshot/hash plan; HEAD only, no trade rows ----------
+          imp_layout, imp_layout_status, _ = get(CENSUS_IMP_LAYOUT)
+          port_layout, port_layout_status, _ = get(CENSUS_PORT_LAYOUT)
+
+          def head(url):
+              try:
+                  _,status,h=get(url,method='HEAD',timeout=60)
+                  return status,h.get('Content-Type'),h.get('Content-Length')
+              except urllib.error.HTTPError as e:
+                  return e.code,e.headers.get('Content-Type'),e.headers.get('Content-Length')
+              except Exception as e:
+                  return 'ERROR',type(e).__name__,None
+
+          merch_head=head(CENSUS_2023_MERCH_ZIP)
+          port_head=head(CENSUS_2023_PORT_ZIP)
+
+          status_counts=Counter(s for _,_,s,_ in rows)
+
+          # ---------- Report ----------
+          lines=[
+            '---',
+            'id: US-MINERAL-F01-MAPPING-IDENTIFIABILITY',
+            'type: prospective-support-qualification',
+            'created: 2026-09-04',
+            'outcome_concentration_computed: false',
+            'trade_rows_opened: false',
+            'census_reference_data_only: true',
+            'incremental_monetary_cost_usd: 0',
+            '---','',
+            '# US-MINERAL-F01 Mapping Identifiability / 매핑 식별성 판정','',
+            '## 1. Exposure boundary / 노출 경계','',
+            '- No Census `IMP_DETL` or port trade rows were downloaded or opened.',
+            '- No country/district/port concentration, HHI, top-share, ranking, correlation or regression was computed.',
+            '- The only Census data file opened in this gate is the **2023 import commodity concordance (`imp-code.txt`)**, a classification/reference file containing valid 10-digit HTS codes and descriptions.',
+            '',
+            '## 2. Frozen prospective rules / 사전 고정 규칙','',
+            'Applied in this order, before any concentration outcome:',
+            '1. Exclude final-60 minerals with no one-to-one Appendix-2 mapping support.',
+            '2. Do not aggregate Appendix-2 multi-stage/multi-form supply-chain families; exclude them from the mineral-level unit.',
+            '3. Exclude the 15 rare-earth elements from the simple Census route because Appendix 2 uses special rare-earth disaggregation/allocation.',
+            '4. Exclude a methodology unit if any **expanded 2023 10-digit HTS** is shared with another Appendix-2 commodity unit.',
+            '5. Exclude a methodology unit if Appendix-2 row semantics invoke transaction **unit value** allocation/scrap splitting.',
+            '6. For the remainder, freeze Appendix import code → official **Census 2023 HTS10** mapping as exact (10-digit) or prefix expansion (6/8-digit). Any unresolved code excludes the unit for this vintage.',
+            '7. Permit actual-port HS6 analysis only where the mineral mapping covers **all valid 2023 HTS10 children of every HS6 used by the mineral**, so collapsing to HS6 does not admit unrelated HTS10 siblings.',
+            '',
+            'One lexical normalization is registered: final-list `Phosphate` → Appendix-2 methodology unit `Phosphates`. This is a one-to-one singular/plural alias, not a supply-chain aggregation.',
+            '',
+            '## 3. Source snapshots / 소스 스냅샷','',
+            f'- USGS OFR 2025-1047 XML status: `{xml_status}`; SHA-256: `{xml_sha}`',
+            f'- Census 2023 import concordance status: `{imp_code_status}`; valid 10-digit HTS codes parsed: **{len(hts10)}**; SHA-256: `{imp_code_sha}`',
+            f'- Census `IMP_DETL` layout status: `{imp_layout_status}`; SHA-256: `{hashlib.sha256(imp_layout).hexdigest()}`',
+            f'- Census Port HS6 Imports layout status: `{port_layout_status}`; SHA-256: `{hashlib.sha256(port_layout).hexdigest()}`',
+            f'- Jan-2023 Merchandise ZIP HEAD: status `{merch_head[0]}`, content-type `{merch_head[1]}`, content-length `{merch_head[2]}`',
+            f'- Jan-2023 Port HS6 ZIP HEAD: status `{port_head[0]}`, content-type `{port_head[1]}`, content-length `{port_head[2]}`',
+            '',
+            '## 4. Final-60 prospective classification / 최종 60개 사전 분류','',
+            '| Final mineral | Appendix-2 unit | Decision | Reason |',
+            '|---|---|---|---|',
+          ]
+
+          for mineral,unit,status,reason in rows:
+              lines.append(f'| {mineral} | {unit or "—"} | `{status}` | {reason} |')
+
+          lines += ['', '### Decision counts / 판정 수','']
+          for k,v in sorted(status_counts.items()):
+              lines.append(f'- `{k}`: **{v}**')
+
+          lines += ['', '## 5. `IMP_DETL` 2023 support-qualified subset / 2023 지원 적격 subset','']
+          lines.append(f'Prospectively qualified minerals: **{len(support)} / 60**')
+          lines.append('')
+          lines.append('`' + ', '.join(m for m,_ in support) + '`' if support else '`NONE`')
+          lines += ['', '| Mineral | Appendix unit | Raw Appendix import code(s) | 2023 HTS10 count | Mapping mode(s) |', '|---|---|---|---:|---|']
+          for mineral,unit in support:
+              raws=sorted(unit_to_raw[unit])
+              modes=', '.join(f'{k}:{v}' for k,v in sorted(unit_modes[unit].items()))
+              lines.append(f'| {mineral} | {unit} | {", ".join(raws)} | {len(unit_to_hts10[unit])} | {modes} |')
+
+          lines += ['', '### Frozen 2023 HTS10 mapping / 고정 2023 HTS10 매핑','']
+          for mineral,unit in support:
+              lines.append(f'#### {mineral} ← `{unit}`')
+              for raw in sorted(unit_to_raw[unit]):
+                  matches,mode=expand(raw)
+                  lines.append(f'- `{raw}` ({mode}) → `{", ".join(sorted(matches))}`')
+              lines.append('')
+
+          lines += ['## 6. Shared-code and unit-value exclusions / 공유코드 및 unit-value 제외','']
+          shared_final=[]
+          uv_final=[]
+          for mineral,unit,status,_ in rows:
+              if status=='EXCLUDE_R4_SHARED_2023_HTS10':
+                  shared_final.append((mineral,unit,sorted(unit_shared.get(unit,set()))))
+              elif status=='EXCLUDE_R5_TRANSACTION_UNIT_VALUE_ALLOCATION':
+                  uv_final.append((mineral,unit))
+          lines.append(f'- final-list units excluded by expanded 2023 HTS10 sharing: **{len(shared_final)}**')
+          for mineral,unit,codes in shared_final:
+              examples=[]
+              for c in codes[:12]:
+                  examples.append(f'{c}→{shared_hts10[c]}')
+              lines.append(f'  - {mineral} / `{unit}`: ' + '; '.join(examples))
+          lines.append(f'- final-list units excluded by transaction unit-value semantics: **{len(uv_final)}**')
+          for mineral,unit in uv_final:
+              lines.append(f'  - {mineral} / `{unit}`')
+
+          lines += ['', '## 7. HS6 actual-port identifiability / HS6 실제 항만 식별성','']
+          lines.append(f'HS6-preserving subset: **{len(port_support)} / {len(support)}** of the `IMP_DETL` support-qualified minerals.')
+          lines.append('')
+          lines.append('`' + ', '.join(m for m,_ in port_support) + '`' if port_support else '`NONE`')
+          lines += ['', '| Mineral | HS6 preserved? | HS6 set | Failure diagnostic |', '|---|---|---|---|']
+          for mineral,unit in support:
+              ok,hs6s,failures=port_diag[mineral]
+              fail='—' if not failures else '; '.join(f'{h}: mapped {a} / all-2023 {b}' for h,a,b in failures)
+              lines.append(f'| {mineral} | {"YES" if ok else "NO"} | {", ".join(hs6s)} | {fail} |')
+
+          unresolved=[]
+          for mineral,unit,status,_ in rows:
+              if status=='EXCLUDE_R6_2023_HTS_VINTAGE_UNRESOLVED' and unit:
+                  unresolved.append((mineral,unit,sorted(unit_unmatched.get(unit,set()))))
+
+          lines += ['', '## 8. Vintage-resolution diagnostics / vintage 해소 진단','']
+          lines.append(f'- support-qualified units with unresolved 2023 codes: **{sum(1 for _,u in support if unit_unmatched.get(u))}**')
+          lines.append(f'- excluded final-list units due specifically to unresolved 2023 code patterns: **{len(unresolved)}**')
+          for mineral,unit,codes in unresolved:
+              lines.append(f'  - {mineral} / `{unit}` unmatched: `{codes}`')
+
+          lines += ['', '## 9. Gate interpretation / 게이트 해석','']
+          if support and not unresolved:
+              lines.append('**`MAPPING_IDENTIFIABILITY_QUALIFIED_FOR_F01_FINAL_GATE`**')
+              lines.append('')
+              lines.append('A non-empty, prospectively defined mineral subset is deterministically representable in Census 2023 `IMP_DETL` at HTS10 grain without family aggregation, rare-earth reconstruction, shared expanded HTS10 attribution, or transaction unit-value allocation. The final F01 PASS/PARTIAL/HOLD/REJECT decision may now be applied against the frozen README contract.')
+          elif support:
+              lines.append('**`MAPPING_IDENTIFIABILITY_PARTIAL_VINTAGE_EXCEPTION`**')
+              lines.append('')
+              lines.append('A support subset exists, but at least one otherwise eligible final-list unit has unresolved 2023 HTS code compatibility and must be considered explicitly at the final F01 gate.')
+          else:
+              lines.append('**`MAPPING_IDENTIFIABILITY_FAILED_NO_SUPPORT_SUBSET`**')
+              lines.append('')
+              lines.append('No final-list mineral remains identifiable under the pre-outcome rules; F01 cannot PASS as framed.')
+
+          lines += ['', 'Incremental monetary cost remained **0 USD**. Standard GitHub-hosted Actions on this public repository were used; no paid data source, API credential, large runner, or commercial concordance was used.']
+
+          OUT.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          PY
+
+      - name: Commit mapping-identifiability report
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-MINERAL-F01/MAPPING_IDENTIFIABILITY.md
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'record US-MINERAL-F01 mapping identifiability'
+          git push
