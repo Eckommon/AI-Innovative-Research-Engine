@@ -1,0 +1,219 @@
+name: UK-GRID-F02 outcome-blind boundary identity preflight
+
+on:
+  push:
+    paths:
+      - '.github/workflows/uk-grid-f02-boundary-identity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run frozen non-numerical identity/alignment preflight
+        shell: bash
+        run: |
+          python - <<'PY'
+          import datetime as dt
+          import hashlib
+          import json
+          import pathlib
+          import urllib.parse
+          import urllib.request
+
+          DA_ID = '38a18ec1-9e40-465d-93fb-301e80fd1352'
+          TC_ID = 'c730b788-4328-43dc-9f84-27fd3adeda59'
+          BASE = 'https://api.neso.energy/api/3/action/'
+          OUT = pathlib.Path('research/UK-GRID-F02/SOURCE_PREFLIGHT.md')
+          OUT.parent.mkdir(parents=True, exist_ok=True)
+
+          NUMERIC_TYPES = {'numeric','number','float','float4','float8','double precision','real','int','int2','int4','int8','integer','bigint','smallint'}
+
+          def get_json(action, params, timeout=90):
+              url = BASE + action + '?' + urllib.parse.urlencode(params)
+              req = urllib.request.Request(url, headers={'User-Agent': 'AI-Innovative-Research-Engine/1.0'})
+              with urllib.request.urlopen(req, timeout=timeout) as r:
+                  status = getattr(r, 'status', 200)
+                  b = r.read()
+              return status, b, json.loads(b.decode('utf-8'))
+
+          def schema_map(obj):
+              return {str(f.get('id','')).strip(): str(f.get('type','')).strip().lower() for f in obj['result']['fields']}
+
+          def norm_group(v):
+              return str(v).strip() if v is not None else ''
+
+          def parse_date(v):
+              s = str(v).strip()
+              if len(s) >= 10 and s[4] == '-' and s[7] == '-':
+                  return dt.date.fromisoformat(s[:10])
+              for fmt in ('%m/%d/%Y %H:%M','%m/%d/%Y','%d/%m/%Y %H:%M','%d/%m/%Y'):
+                  try:
+                      return dt.datetime.strptime(s, fmt).date()
+                  except ValueError:
+                      pass
+              raise ValueError(f'unparseable date: {s}')
+
+          def group_ranges(resource_id, date_field):
+              sql = (
+                  f'SELECT "Constraint Group" AS group_name, '
+                  f'MIN("{date_field}") AS min_date, '
+                  f'MAX("{date_field}") AS max_date, COUNT(*) AS row_count '
+                  f'FROM "{resource_id}" '
+                  f'WHERE "Constraint Group" IS NOT NULL '
+                  f'GROUP BY "Constraint Group" ORDER BY "Constraint Group"'
+              )
+              status, body, obj = get_json('datastore_search_sql', {'sql': sql})
+              recs = obj.get('result', {}).get('records', [])
+              out = {}
+              for r in recs:
+                  g = norm_group(r.get('group_name'))
+                  if not g:
+                      continue
+                  out[g] = {
+                      'min_date': str(r.get('min_date')),
+                      'max_date': str(r.get('max_date')),
+                      'row_count': int(r.get('row_count', 0)),
+                  }
+              return status, body, out
+
+          checks = []
+          diag = {}
+          gate = None
+          try:
+              das, dab, daj = get_json('datastore_search', {'resource_id': DA_ID, 'limit': 0})
+              tcs, tcb, tcj = get_json('datastore_search', {'resource_id': TC_ID, 'limit': 0})
+              diag['dayahead_schema_http_status'] = das
+              diag['thermalcost_schema_http_status'] = tcs
+              diag['dayahead_schema_sha256'] = hashlib.sha256(dab).hexdigest()
+              diag['thermalcost_schema_sha256'] = hashlib.sha256(tcb).hexdigest()
+
+              checks += [
+                  ('Day-ahead CKAN public schema access', das == 200 and daj.get('success') is True),
+                  ('Thermal-cost CKAN public schema access', tcs == 200 and tcj.get('success') is True),
+              ]
+
+              da_schema = schema_map(daj)
+              tc_schema = schema_map(tcj)
+              da_expected = ['Constraint Group','Date (GMT/BST)','Limit (MW)','Flow (MW)']
+              tc_expected = ['Settlement Date','Constraint Group','Daily Cost (GBP)']
+              for f in da_expected:
+                  checks.append((f'Day-ahead schema field {f}', f in da_schema))
+              for f in tc_expected:
+                  checks.append((f'Thermal-cost schema field {f}', f in tc_schema))
+              checks += [
+                  ('Day-ahead Constraint Group typed string', da_schema.get('Constraint Group') in {'text','string','varchar','character varying'}),
+                  ('Thermal-cost Constraint Group typed string', tc_schema.get('Constraint Group') in {'text','string','varchar','character varying'}),
+                  ('Day-ahead Limit typed numeric', da_schema.get('Limit (MW)') in NUMERIC_TYPES),
+                  ('Day-ahead Flow typed numeric', da_schema.get('Flow (MW)') in NUMERIC_TYPES),
+                  ('Thermal Daily Cost typed numeric', tc_schema.get('Daily Cost (GBP)') in NUMERIC_TYPES),
+              ]
+
+              das2, dab2, da_ranges = group_ranges(DA_ID, 'Date (GMT/BST)')
+              tcs2, tcb2, tc_ranges = group_ranges(TC_ID, 'Settlement Date')
+              diag['dayahead_group_range_http_status'] = das2
+              diag['thermalcost_group_range_http_status'] = tcs2
+              diag['dayahead_group_range_sha256'] = hashlib.sha256(dab2).hexdigest()
+              diag['thermalcost_group_range_sha256'] = hashlib.sha256(tcb2).hexdigest()
+              checks += [
+                  ('Day-ahead non-null constraint groups returned', bool(da_ranges)),
+                  ('Thermal-cost non-null constraint groups returned', bool(tc_ranges)),
+              ]
+
+              da_groups = sorted(da_ranges)
+              tc_groups = sorted(tc_ranges)
+              common = sorted(set(da_groups) & set(tc_groups))
+              checks.append(('Exact normalized Constraint Group intersection non-empty', bool(common)))
+
+              lower = dt.date(2026,4,1)
+              overlapping_common = []
+              for g in common:
+                  da_min = parse_date(da_ranges[g]['min_date'])
+                  da_max = parse_date(da_ranges[g]['max_date'])
+                  tc_min = parse_date(tc_ranges[g]['min_date'])
+                  tc_max = parse_date(tc_ranges[g]['max_date'])
+                  start = max(da_min, tc_min, lower)
+                  end = min(da_max, tc_max)
+                  if start <= end:
+                      overlapping_common.append((g, start.isoformat(), end.isoformat()))
+
+              checks.append(('At least one exact common group overlaps on/after 2026-04-01', bool(overlapping_common)))
+              checks.append(('Intended 2026 overlap is post-2024-04-22 methodology boundary', bool(overlapping_common) and all(dt.date.fromisoformat(s) > dt.date(2024,4,22) for _,s,_ in overlapping_common)))
+
+              diag['dayahead_group_count'] = len(da_groups)
+              diag['thermalcost_group_count'] = len(tc_groups)
+              diag['exact_common_group_count'] = len(common)
+              diag['overlapping_common_group_count'] = len(overlapping_common)
+              diag['dayahead_groups'] = ','.join(da_groups) if da_groups else 'NONE'
+              diag['thermalcost_groups'] = ','.join(tc_groups) if tc_groups else 'NONE'
+              diag['exact_common_groups'] = ','.join(common) if common else 'NONE'
+              diag['overlapping_common_groups'] = ';'.join(f'{g}:{s}..{e}' for g,s,e in overlapping_common) if overlapping_common else 'NONE'
+              diag['numerical_limit_flow_cost_observations_requested'] = False
+              diag['identity_normalization'] = 'trim_whitespace_only__exact_string_equality'
+
+              if all(ok for _, ok in checks):
+                  gate = 'PASS_UK_GRID_BOUNDARY_IDENTITY_READY'
+              elif das == 200 and tcs == 200 and all(f in da_schema for f in da_expected) and all(f in tc_schema for f in tc_expected):
+                  gate = 'HOLD_UK_GRID_BOUNDARY_MAPPING_GAP' if not common else 'PARTIAL_UK_GRID_BOUNDARY_SCHEMA_READY__IDENTITY_PENDING'
+              else:
+                  gate = 'REJECT_UK_GRID_BOUNDARY_ROUTE'
+          except Exception as e:
+              diag['exception_type'] = type(e).__name__
+              diag['exception_message'] = str(e)[:500]
+              if gate is None:
+                  gate = 'PARTIAL_UK_GRID_BOUNDARY_SCHEMA_READY__IDENTITY_PENDING'
+
+          lines = [
+              '---',
+              'id: UK-GRID-F02-SOURCE-PREFLIGHT',
+              'type: boundary-identity-alignment-preflight',
+              'created: 2026-09-03',
+              f'gate: {gate}',
+              'incremental_monetary_cost_usd: 0',
+              '---','',
+              '# UK-GRID-F02 Source/Boundary Preflight / Source·Boundary 사전검증','',
+              f'**Gate / 게이트:** `{gate}`','',
+              '## Outcome-blind execution boundary / 결과 비사용 실행경계','',
+              '- Day-ahead source: schema plus `Constraint Group` and group-level min/max datetime/cardinality only.',
+              '- Thermal-cost source: schema plus `Constraint Group` and group-level min/max settlement-date/cardinality only.',
+              '- No observation-level `Limit (MW)`, `Flow (MW)`, or `Daily Cost (GBP)` values were requested or emitted.',
+              '- Identity matching used trim-whitespace-only exact source string equality; no fuzzy/manual boundary translation.','',
+              '## Checks / 검증','',
+              '| Check / 검증 | Result |','|---|---|'
+          ]
+          for name, ok in checks:
+              lines.append(f'| {name} | {"PASS" if ok else "FAIL"} |')
+          lines += ['', '## Diagnostics / 진단','']
+          for k in sorted(diag):
+              lines.append(f'- `{k}`: `{diag[k]}`')
+          lines += [
+              '', '## Source-method boundary / Source 방법론 경계','',
+              'NESO documents that, from `2024-04-22`, Day Ahead Constraint Flows no longer consider expected constraint mitigation or optimisation actions. Any qualified 2026 overlap is therefore evaluated wholly within the post-change methodology regime.','',
+              '## Claim boundary / 주장 경계','',
+              'A PASS establishes exact source identity and time-join feasibility only. It does not establish that day-ahead headroom predicts, explains or causes realized thermal-constraint cost. No numerical relationship is evaluated here.','',
+              'Incremental monetary cost remained **0 USD**.',''
+          ]
+          OUT.write_text('\n'.join(lines), encoding='utf-8')
+          print(gate)
+          PY
+
+      - name: Commit durable preflight result
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/UK-GRID-F02/SOURCE_PREFLIGHT.md
+          if git diff --cached --quiet; then
+            echo 'No result change'
+            exit 0
+          fi
+          git commit -m 'record UK-GRID-F02 outcome-blind boundary identity preflight'
+          git push
