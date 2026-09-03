@@ -1,0 +1,326 @@
+name: US GRID F01 source-semantic preflight
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/us-grid-f01-source-preflight.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  source-preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Inspect LBNL queue and EIA BA identity semantics without relationship outcomes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, io, json, os, re, urllib.request, urllib.error, zipfile
+          import xml.etree.ElementTree as ET
+          from collections import Counter, defaultdict
+          from pathlib import Path
+          from datetime import datetime, timezone
+
+          ROOT=Path(os.environ['GITHUB_WORKSPACE'])
+          OUT=ROOT/'research/US-GRID-F01/SOURCE_PREFLIGHT.md'
+          TMP=ROOT/'.tmp-us-grid-f01'; TMP.mkdir(exist_ok=True)
+          UA={'User-Agent':'AI-Innovative-Research-Engine/US-GRID-F01 source-semantic-preflight'}
+
+          LBNL='https://eta-publications.lbl.gov/sites/default/files/2026-05/lbnl_ix_queue_data_file_thru2025.xlsx'
+          EIA861='https://www.eia.gov/electricity/data/eia861/zip/f8612025er.zip'
+          EIA_MANIFEST='https://www.eia.gov/opendata/bulk/manifest.txt'
+          EIA_RTO_PAGE='https://www.eia.gov/opendata/browser/electricity/rto'
+
+          def get(url, timeout=180):
+              req=urllib.request.Request(url,headers=UA)
+              with urllib.request.urlopen(req,timeout=timeout) as r:
+                  b=r.read(); return b,getattr(r,'status',200),dict(r.headers),r.geturl()
+          def head(url, timeout=60):
+              req=urllib.request.Request(url,headers=UA,method='HEAD')
+              with urllib.request.urlopen(req,timeout=timeout) as r:
+                  return getattr(r,'status',200),dict(r.headers),r.geturl()
+          def sha(b): return hashlib.sha256(b).hexdigest()
+          def norm(s): return re.sub(r'[^a-z0-9]+','',str(s).casefold())
+
+          # Minimal XLSX reader using standard library. Reads only selected rows/cells.
+          NS='{http://schemas.openxmlformats.org/spreadsheetml/2006/main}'
+          REL='{http://schemas.openxmlformats.org/officeDocument/2006/relationships}'
+          PKG='{http://schemas.openxmlformats.org/package/2006/relationships}'
+          def colnum(ref):
+              m=re.match(r'([A-Z]+)',ref or '')
+              if not m: return None
+              n=0
+              for c in m.group(1): n=n*26+ord(c)-64
+              return n
+          class Xlsx:
+              def __init__(self,b):
+                  self.z=zipfile.ZipFile(io.BytesIO(b))
+                  self.shared=[]
+                  if 'xl/sharedStrings.xml' in self.z.namelist():
+                      root=ET.fromstring(self.z.read('xl/sharedStrings.xml'))
+                      for si in root.findall(NS+'si'):
+                          self.shared.append(''.join(t.text or '' for t in si.iter(NS+'t')))
+                  wb=ET.fromstring(self.z.read('xl/workbook.xml'))
+                  relroot=ET.fromstring(self.z.read('xl/_rels/workbook.xml.rels'))
+                  relmap={x.attrib['Id']:x.attrib['Target'] for x in relroot.findall(PKG+'Relationship')}
+                  self.sheets=[]
+                  for s in wb.find(NS+'sheets'):
+                      name=s.attrib['name']; rid=s.attrib[REL+'id']; target=relmap[rid]
+                      if target.startswith('/'): path=target.lstrip('/')
+                      else: path='xl/'+target.lstrip('/')
+                      path=re.sub(r'xl/\.\./','',path)
+                      self.sheets.append((name,path))
+              def rows(self,path,max_rows=None,selected_cols=None):
+                  root=ET.fromstring(self.z.read(path))
+                  data=root.find('.//'+NS+'sheetData')
+                  if data is None: return
+                  count=0
+                  for row in data.findall(NS+'row'):
+                      count+=1
+                      if max_rows and count>max_rows: break
+                      vals={}
+                      for c in row.findall(NS+'c'):
+                          idx=colnum(c.attrib.get('r'))
+                          if selected_cols and idx not in selected_cols: continue
+                          typ=c.attrib.get('t'); v=c.find(NS+'v')
+                          if typ=='inlineStr':
+                              isel=c.find(NS+'is'); val=''.join(t.text or '' for t in isel.iter(NS+'t')) if isel is not None else ''
+                          elif v is None: val=''
+                          elif typ=='s':
+                              try: val=self.shared[int(v.text)]
+                              except: val=''
+                          else: val=v.text or ''
+                          vals[idx]=val
+                      yield vals
+              def row_count(self,path):
+                  root=ET.fromstring(self.z.read(path))
+                  data=root.find('.//'+NS+'sheetData')
+                  return len(data.findall(NS+'row')) if data is not None else 0
+
+          errors=[]
+          # LBNL exact workbook snapshot
+          lbnl_b,l_status,l_hdr,l_final=get(LBNL)
+          lx=Xlsx(lbnl_b)
+          sheets=[n for n,_ in lx.sheets]
+          sheet_rows={n:lx.row_count(p) for n,p in lx.sheets}
+
+          # preview first rows to locate project and codebook sheets
+          previews={}
+          for name,path in lx.sheets:
+              rr=[]
+              for row in lx.rows(path,max_rows=8):
+                  rr.append([row.get(i,'') for i in range(1,max(row.keys(),default=0)+1)])
+              previews[name]=rr
+          codebook_candidates=[]; project_candidates=[]
+          for name,rows in previews.items():
+              blob=' '.join(str(x) for r in rows for x in r).casefold()
+              n=name.casefold()
+              if 'codebook' in n or 'dictionary' in n or ('description' in blob and ('field' in blob or 'column' in blob)):
+                  codebook_candidates.append(name)
+              if ('project' in n or 'queue' in n or 'data'==n.strip()) and sheet_rows[name]>100:
+                  project_candidates.append(name)
+          # fallback: largest non-summary sheet for project data
+          if not project_candidates:
+              project_candidates=[max(sheet_rows,key=sheet_rows.get)] if sheet_rows else []
+          project_sheet=project_candidates[0] if project_candidates else None
+          codebook_sheet=codebook_candidates[0] if codebook_candidates else None
+
+          # Project headers: pick first row with >=8 nonblank cells among first 12.
+          project_headers=[]; header_row_num=None; project_path=None
+          if project_sheet:
+              project_path=dict(lx.sheets)[project_sheet]
+              for rn,row in enumerate(lx.rows(project_path,max_rows=12),1):
+                  non=[(i,v) for i,v in sorted(row.items()) if str(v).strip()]
+                  if len(non)>=8:
+                      project_headers=non; header_row_num=rn; break
+          header_by_col={i:str(v).strip() for i,v in project_headers}
+
+          # Codebook semantic rows, bounded to first 400 rows; no project outcomes.
+          cb_rows=[]
+          if codebook_sheet:
+              cb_path=dict(lx.sheets)[codebook_sheet]
+              for row in lx.rows(cb_path,max_rows=400):
+                  vals=[str(row.get(i,'')).strip() for i in range(1,max(row.keys(),default=0)+1)]
+                  if any(vals): cb_rows.append(vals)
+          semantic_hits=[]
+          for vals in cb_rows:
+              blob=' | '.join(vals)
+              if re.search(r'operator|region|balanc|queue|interconnection request|commercial operation|\bCOD\b|withdraw|status|date|milestone',blob,re.I):
+                  semantic_hits.append(blob)
+
+          # Identify identity/status/date columns by header semantics; collect only vocab/cardinality, no durations.
+          identity_cols={i:h for i,h in header_by_col.items() if re.search(r'operator|region|balanc|utility|iso|rto',h,re.I)}
+          status_cols={i:h for i,h in header_by_col.items() if re.search(r'status|withdraw',h,re.I)}
+          date_cols={i:h for i,h in header_by_col.items() if re.search(r'date|request|commercial|operation|\bCOD\b|online|withdraw',h,re.I)}
+          value_sets={i:set() for i in identity_cols}
+          status_sets={i:set() for i in status_cols}
+          duplicate_id_diagnostic='NOT_EVALUATED_NO_CLEAR_ID_COLUMN'
+          id_cols={i:h for i,h in header_by_col.items() if re.search(r'project.*id|queue.*id|request.*id|^id$',h,re.I)}
+          ids_seen=set(); dup_ids=0; data_rows=0
+          if project_path and header_row_num:
+              selected=set(identity_cols)|set(status_cols)|set(id_cols)
+              for rn,row in enumerate(lx.rows(project_path,selected_cols=selected),1):
+                  if rn<=header_row_num: continue
+                  data_rows+=1
+                  for i in identity_cols:
+                      v=str(row.get(i,'')).strip()
+                      if v: value_sets[i].add(v)
+                  for i in status_cols:
+                      v=str(row.get(i,'')).strip()
+                      if v: status_sets[i].add(v)
+                  if len(id_cols)==1:
+                      i=next(iter(id_cols)); v=str(row.get(i,'')).strip()
+                      if v:
+                          if v in ids_seen: dup_ids+=1
+                          else: ids_seen.add(v)
+              if len(id_cols)==1:
+                  duplicate_id_diagnostic=f'clear ID `{next(iter(id_cols.values()))}`; duplicate nonblank IDs={dup_ids}'
+
+          # Determine whether IR and COD semantics appear in codebook/header; freeze outcome only if both explicit.
+          combined_sem='\n'.join(list(header_by_col.values())+semantic_hits)
+          ir_present=bool(re.search(r'interconnection request|\bIR\b|request date|queue date',combined_sem,re.I))
+          cod_present=bool(re.search(r'commercial operation|\bCOD\b|operational date|online date',combined_sem,re.I))
+          frozen_outcome='IR_TO_COD_DURATION' if ir_present and cod_present else 'UNRESOLVED_DIRECT_DURATION_SEMANTICS'
+
+          # EIA bulk manifest identity
+          em_b,em_status,em_hdr,em_final=get(EIA_MANIFEST)
+          try: em=json.loads(em_b.decode('utf-8-sig'))
+          except Exception as e:
+              errors.append(f'EIA manifest JSON parse failed: {e}'); em=None
+          target_entries=[]
+          def walk(x):
+              if isinstance(x,dict):
+                  blob=' '.join(str(x.get(k,'')) for k in ['title','data_set','description','identifier'])
+                  if 'U.S. Electric System Operating Data' in blob and ('2019' in blob or 'Operating Data' in blob): target_entries.append(x)
+                  for v in x.values(): walk(v)
+              elif isinstance(x,list):
+                  for v in x: walk(v)
+          if em is not None: walk(em)
+          # dedupe entries by accessURL/title
+          uniq=[]; seen=set()
+          for e in target_entries:
+              k=(e.get('accessURL'),e.get('title'),e.get('identifier'))
+              if k not in seen: seen.add(k); uniq.append(e)
+          target_entries=uniq
+          target=target_entries[0] if target_entries else {}
+          eia_asset_url=target.get('accessURL') or ''
+          asset_head=None
+          if eia_asset_url:
+              try: asset_head=head(eia_asset_url)
+              except Exception as e: errors.append(f'EIA target asset HEAD failed: {type(e).__name__}: {e}')
+          else:
+              errors.append('EIA current operating-data target entry/accessURL not found in manifest')
+
+          # Supporting current official BA taxonomy: 2025 EIA-861 early release, list of BAs/states.
+          e861_b,e861_status,e861_hdr,e861_final=get(EIA861)
+          z861=zipfile.ZipFile(io.BytesIO(e861_b))
+          e861_names=z861.namelist()
+          ba_files=[n for n in e861_names if 'balanc' in Path(n).name.casefold() and n.casefold().endswith('.xlsx')]
+          eia_ba_records=[]; eia_ba_names=set(); eia_ba_codes=set(); ba_headers=[]
+          if ba_files:
+              bb=z861.read(ba_files[0]); bx=Xlsx(bb)
+              # use largest sheet
+              bname,bpath=max(bx.sheets,key=lambda np: bx.row_count(np[1]))
+              hdr=None; hr=None
+              for rn,row in enumerate(bx.rows(bpath,max_rows=12),1):
+                  vals=[(i,str(v).strip()) for i,v in sorted(row.items()) if str(v).strip()]
+                  if len(vals)>=3 and any('balanc' in v.casefold() for _,v in vals): hdr=vals;hr=rn;break
+              if hdr:
+                  ba_headers=hdr; hb={i:v for i,v in hdr}
+                  namecols=[i for i,h in hb.items() if 'balanc' in h.casefold() and 'name' in h.casefold()]
+                  codecols=[i for i,h in hb.items() if 'balanc' in h.casefold() and ('code' in h.casefold() or 'id' in h.casefold())]
+                  statecols=[i for i,h in hb.items() if 'state' in h.casefold()]
+                  sel=set(namecols+codecols+statecols)
+                  for rn,row in enumerate(bx.rows(bpath,selected_cols=sel),1):
+                      if rn<=hr: continue
+                      names=[str(row.get(i,'')).strip() for i in namecols if str(row.get(i,'')).strip()]
+                      codes=[str(row.get(i,'')).strip() for i in codecols if str(row.get(i,'')).strip()]
+                      states=[str(row.get(i,'')).strip() for i in statecols if str(row.get(i,'')).strip()]
+                      if names or codes:
+                          for n in names:eia_ba_names.add(n)
+                          for c in codes:eia_ba_codes.add(c)
+                          eia_ba_records.append((names,codes,states))
+          else:
+              errors.append(f'No balancing-authority XLSX found in EIA-861 ZIP; names sample={e861_names[:20]}')
+
+          # Conservative direct mapping diagnostic only: normalized exact identity to current EIA name/code.
+          lbnl_identity_values=sorted(set(v for s in value_sets.values() for v in s))
+          eia_name_norm={norm(n):n for n in eia_ba_names if norm(n)}
+          eia_code_norm={norm(c):c for c in eia_ba_codes if norm(c)}
+          exact_matches=[]; unmatched=[]; ambiguous=[]
+          for v in lbnl_identity_values:
+              nv=norm(v); hits=[]
+              if nv in eia_name_norm: hits.append(('name',eia_name_norm[nv]))
+              if nv in eia_code_norm: hits.append(('code',eia_code_norm[nv]))
+              # exact normalized only; no fuzzy/territory inference.
+              unique=[]
+              for h in hits:
+                  if h not in unique: unique.append(h)
+              if len(unique)==1: exact_matches.append((v,unique[0]))
+              elif len(unique)>1: ambiguous.append((v,unique))
+              else: unmatched.append(v)
+
+          # Gate remains semantic: exact matches alone qualify only if identity column is truly operator/BA-like.
+          mapping_ratio=(len(exact_matches)/len(lbnl_identity_values)) if lbnl_identity_values else 0.0
+          lines=['---','id: US-GRID-F01-SOURCE-PREFLIGHT','type: source-semantic-preflight','created: 2026-09-04','relationship_outcome_computed: false','eia_operating_values_opened: false','incremental_monetary_cost_usd: 0','---','',
+                 '# US-GRID-F01 Source Preflight / 소스 사전검증','',
+                 '## Exposure boundary / 노출 경계','',
+                 '- No queue-duration-by-operator result was computed.','- No EIA demand/generation/interchange operating values were opened for relationship analysis.','- Only source files, workbook/codebook semantics, operator/status vocabularies, BA identity reference data, hashes and mapping cardinality diagnostics were inspected.','',
+                 '## A. LBNL Queued Up 2026 workbook / LBNL workbook','',
+                 f'- exact URL: `{LBNL}`',f'- HTTP: `{l_status}`',f'- final URL: `{l_final}`',f'- bytes: **{len(lbnl_b)}**',f'- SHA-256: `{sha(lbnl_b)}`',f'- sheets ({len(sheets)}): `{sheets}`','',
+                 '### Sheet row cardinality / sheet row 수','']
+          for n in sheets: lines.append(f'- `{n}`: **{sheet_rows[n]}** rows')
+          lines += ['',f'- selected project sheet candidate: `{project_sheet}`',f'- selected codebook sheet candidate: `{codebook_sheet}`',f'- project data rows after header: **{data_rows}**',f'- duplicate-ID diagnostic: {duplicate_id_diagnostic}','',
+                    '### Project headers / project header','']
+          lines += [f'- column {i}: `{h}`' for i,h in project_headers]
+          lines += ['', '### Codebook semantic hits / codebook 관련 semantics','']
+          lines += [f'- {x}' for x in semantic_hits[:80]] or ['- none detected']
+          lines += ['', '### Identity/status vocabulary / identity·status vocabulary','']
+          for i,h in identity_cols.items(): lines.append(f'- identity `{h}`: **{len(value_sets[i])}** unique → `{sorted(value_sets[i])}`')
+          for i,h in status_cols.items(): lines.append(f'- status `{h}`: **{len(status_sets[i])}** unique → `{sorted(status_sets[i])}`')
+          lines += ['', '### Direct outcome semantic diagnostic / 직접 outcome semantics','',f'- IR/request semantic present: **{ir_present}**',f'- COD/commercial-operation semantic present: **{cod_present}**',f'- prospective priority outcome status: **`{frozen_outcome}`**','',
+                    '## B. EIA public identity routes / EIA 공개 identity 경로','',
+                    f'- EIA bulk manifest URL: `{EIA_MANIFEST}`',f'- HTTP: `{em_status}`',f'- final URL: `{em_final}`',f'- manifest SHA-256: `{sha(em_b)}`',f'- current operating-data target entries detected: **{len(target_entries)}**','']
+          for e in target_entries[:5]:
+              lines.append(f"- title=`{e.get('title')}` identifier=`{e.get('identifier')}` last_updated=`{e.get('last_updated')}` accessURL=`{e.get('accessURL')}`")
+          if asset_head:
+              st,hh,fu=asset_head; lines += [f'- target asset HEAD: `{st}`; final URL `{fu}`; content-type `{hh.get("Content-Type")}`; content-length `{hh.get("Content-Length")}`']
+          lines += ['', '### Supporting EIA-861 2025 early-release BA identity snapshot / 보조 BA identity','',
+                    f'- ZIP URL: `{EIA861}`',f'- HTTP: `{e861_status}`',f'- ZIP SHA-256: `{sha(e861_b)}`',f'- ZIP members: `{e861_names}`',f'- balancing-authority file candidate(s): `{ba_files}`',f'- parsed BA records: **{len(eia_ba_records)}**',f'- unique BA names: **{len(eia_ba_names)}**',f'- unique BA codes: **{len(eia_ba_codes)}**',f'- BA headers: `{ba_headers}`','',
+                    '## C. Conservative operator/BA exact-identity diagnostic / 보수적 exact identity 진단','',
+                    f'- LBNL identity values across detected operator/region-like columns: **{len(lbnl_identity_values)}**',f'- exact normalized EIA name/code matches: **{len(exact_matches)}**',f'- unmatched: **{len(unmatched)}**',f'- ambiguous exact matches: **{len(ambiguous)}**',f'- exact-match ratio: **{mapping_ratio:.6f}**','',
+                    '### Exact matches','']
+          lines += [f'- `{a}` → `{b}` `{c}`' for a,(b,c) in exact_matches] or ['- none']
+          lines += ['', '### Unmatched LBNL identities',''] + ([f'- `{x}`' for x in unmatched] or ['- none'])
+          if ambiguous: lines += ['', '### Ambiguous exact identities','']+[f'- `{a}` → `{b}`' for a,b in ambiguous]
+          lines += ['', '## D. Interpretation / 해석','']
+          if frozen_outcome=='IR_TO_COD_DURATION':
+              lines.append('- The official LBNL workbook/codebook exposes source semantics sufficient to prospectively prioritize IR→COD elapsed duration for completed projects, without calculating any duration distribution in F01.')
+          else:
+              lines.append('- A direct IR→COD outcome was not automatically frozen by this parser; codebook semantics require explicit review before final F01 gate.')
+          if lbnl_identity_values:
+              lines.append('- Exact-name/code matching is a conservative diagnostic only. Unmatched identities are **not** fuzzy-matched, state-mapped, or service-territory inferred in this preflight.')
+          lines += ['', '## E. Errors / bounded unresolved diagnostics','']
+          lines += [f'- {e}' for e in errors] if errors else ['- none']
+          lines += ['', '## F. Next gate / 다음 gate','', '**`CONTINUE_US_GRID_F01_IDENTITY_ADJUDICATION`**','',
+                    'Before PASS/PARTIAL/HOLD/REJECT, adjudicate unmatched identity semantics using only explicit LBNL/EIA source definitions or a prospectively documented one-to-one alias rule. Do not open EIA operating values or queue-vs-grid relationship outcomes to make that decision.','',
+                    'Incremental monetary cost remained **0 USD**.']
+          OUT.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          PY
+
+      - name: Commit sanitized source preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-GRID-F01/SOURCE_PREFLIGHT.md
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'record US-GRID-F01 source-semantic preflight'
+          git push
