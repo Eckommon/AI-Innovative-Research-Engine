@@ -1,0 +1,217 @@
+name: US MINERAL F01 source-semantic preflight
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/us-mineral-f01-source-preflight.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  source-preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Qualify USGS mapping and Census static-file contracts without trade outcomes
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, re, urllib.request, urllib.error, xml.etree.ElementTree as ET
+          from collections import Counter, defaultdict
+          from pathlib import Path
+          import os
+
+          OUT = Path(os.environ['GITHUB_WORKSPACE']) / 'research/US-MINERAL-F01/SOURCE_PREFLIGHT.md'
+          OUT.parent.mkdir(parents=True, exist_ok=True)
+          UA = {'User-Agent':'AI-Innovative-Research-Engine/US-MINERAL-F01 source-semantic-preflight'}
+
+          USGS_XML='https://pubs.usgs.gov/of/2025/1047/ofr20251047.XML'
+          USGS_FINAL='https://www.usgs.gov/programs/mineral-resources-program/science/about-2025-list-critical-minerals'
+          CENSUS_LAYOUT='https://www.census.gov/foreign-trade/reference/products/layouts/imdb.html'
+          CENSUS_PORT_LAYOUT='https://www.census.gov/foreign-trade/reference/products/layouts/dporths6i.html'
+          CENSUS_PRODUCTS='https://www.census.gov/foreign-trade/data/dataproducts.html'
+          CENSUS_MERCH_ZIP='https://www.census.gov/trade/downloads/2026/Merch/im_m/IMDB2601.ZIP'
+          CENSUS_PORT_ZIP='https://www.census.gov/trade/downloads/2026/Port/im_hs6_m/PORTHS6MM2601.ZIP'
+
+          FINAL60 = [
+            'Aluminum','Antimony','Arsenic','Barite','Beryllium','Bismuth','Boron','Cerium','Cesium','Chromium','Cobalt','Copper',
+            'Dysprosium','Erbium','Europium','Fluorspar','Gadolinium','Gallium','Germanium','Graphite','Hafnium','Holmium','Indium','Iridium',
+            'Lanthanum','Lead','Lithium','Lutetium','Magnesium','Manganese','Metallurgical coal','Neodymium','Nickel','Niobium','Palladium',
+            'Phosphate','Platinum','Potash','Praseodymium','Rhenium','Rhodium','Rubidium','Ruthenium','Samarium','Scandium','Silicon','Silver',
+            'Tantalum','Tellurium','Terbium','Thulium','Tin','Titanium','Tungsten','Uranium','Vanadium','Ytterbium','Yttrium','Zinc','Zirconium'
+          ]
+
+          def get(url, method='GET', timeout=60):
+              req=urllib.request.Request(url, headers=UA, method=method)
+              with urllib.request.urlopen(req, timeout=timeout) as r:
+                  b=r.read() if method!='HEAD' else b''
+                  return b, getattr(r,'status',200), dict(r.headers)
+
+          def local(tag): return tag.split('}')[-1]
+          def text(el): return ' '.join(''.join(el.itertext()).split())
+
+          xml, xml_status, xml_headers = get(USGS_XML)
+          xml_sha=hashlib.sha256(xml).hexdigest()
+          root=ET.fromstring(xml)
+
+          tables={}
+          for tw in root.iter():
+              if local(tw.tag)!='table-wrap': continue
+              label=''
+              caption=''
+              for x in tw.iter():
+                  if local(x.tag)=='label' and not label: label=text(x)
+                  elif local(x.tag)=='caption' and not caption: caption=text(x)
+              rows=[]
+              for tr in tw.iter():
+                  if local(tr.tag)!='tr': continue
+                  cells=[]
+                  for c in list(tr):
+                      if local(c.tag) in ('td','th'):
+                          cells.append(text(c))
+                  if cells: rows.append(cells)
+              if label: tables[label]=(caption,rows)
+
+          labels=sorted(tables)
+          t21=None; t22=None; t23=None
+          for label,(cap,rows) in tables.items():
+              lab=label.lower().replace(' ','')
+              if '2.1' in lab: t21=(label,cap,rows)
+              if '2.2' in lab: t22=(label,cap,rows)
+              if '2.3' in lab: t23=(label,cap,rows)
+
+          def parse_mapping(table):
+              if not table: return [], []
+              label,cap,rows=table
+              current=None; records=[]; previews=[]
+              for cells in rows:
+                  previews.append(cells[:6])
+                  first=(cells[0] if cells else '').strip()
+                  # A new mineral row begins with a non-numeric first cell that is not a table header.
+                  if first and not re.fullmatch(r'[\d.\-–—]+',first) and not any(k in first.lower() for k in ['mineral commodity','hts code','u.s. trade code','china']):
+                      current=first
+                  joined=' | '.join(cells)
+                  codes=re.findall(r'(?<!\d)(\d{6,10})(?!\d)', joined)
+                  if current and codes:
+                      # For Table 2.1 the first code in row text is the import HTS code.
+                      # For Table 2.3 the first code is the U.S. trade code.
+                      records.append((current,codes[0],joined))
+              return records, previews[:12]
+
+          m21,p21=parse_mapping(t21)
+          m23,p23=parse_mapping(t23)
+          units21=sorted(set(m for m,_,_ in m21))
+          units23=sorted(set(m for m,_,_ in m23))
+          codes21=sorted(set(c for _,c,_ in m21))
+          codes23=sorted(set(c for _,c,_ in m23))
+
+          # Identify mapping complexity purely from Appendix-2 text, not trade outcomes.
+          all_records=m21+m23
+          code_to_units=defaultdict(set)
+          for m,c,_ in all_records: code_to_units[c].add(m)
+          shared_codes=sorted((c, sorted(v)) for c,v in code_to_units.items() if len(v)>1)
+          unitvalue_units=sorted(set(m for m,c,row in all_records if 'unit value' in row.lower()))
+          lengths=Counter(len(c) for _,c,_ in all_records)
+
+          # Simple exact-name coverage only; no inferred family aggregation here.
+          method_units=set(x.casefold() for x in units21+units23)
+          exact_final=[m for m in FINAL60 if m.casefold() in method_units]
+          no_exact=[m for m in FINAL60 if m.casefold() not in method_units]
+
+          # Known final-list families whose methodology explicitly uses multiple stages/forms.
+          multistage_families=['Aluminum','Chromium','Cobalt','Copper','Graphite','Fluorspar','Manganese','Nickel','Silicon','Titanium','Zinc']
+          split_chain=['Magnesium']
+          rare_earths=['Cerium','Dysprosium','Erbium','Europium','Gadolinium','Holmium','Lanthanum','Lutetium','Neodymium','Praseodymium','Samarium','Terbium','Thulium','Ytterbium','Yttrium']
+
+          # Census contract pages: hash only and verify required static field names in page text.
+          census_layout, cl_status, _ = get(CENSUS_LAYOUT)
+          census_port, cp_status, _ = get(CENSUS_PORT_LAYOUT)
+          census_products, cprod_status, _ = get(CENSUS_PRODUCTS)
+          cl_text=census_layout.decode('utf-8','ignore').lower()
+          cp_text=census_port.decode('utf-8','ignore').lower()
+          req_detail=['10-digit harmonized tariff schedule','country code','district of entry','district of unlading','statistical year','statistical month','general imports, total value']
+          req_port=['6-digit harmonized','country code','port of unlading code','statistical year','statistical month','general imports, total value','vessel shipping weight']
+          detail_fields_ok=all(x in cl_text for x in req_detail)
+          port_fields_ok=all(x in cp_text for x in req_port)
+
+          head_results=[]
+          for name,url in [('Merchandise Trade Imports Jan-2026 ZIP',CENSUS_MERCH_ZIP),('Port Imports HS6 Jan-2026 ZIP',CENSUS_PORT_ZIP)]:
+              try:
+                  _,status,h=get(url,method='HEAD',timeout=45)
+                  head_results.append((name,status,h.get('Content-Length'),h.get('Content-Type'),url))
+              except urllib.error.HTTPError as e:
+                  head_results.append((name,e.code,e.headers.get('Content-Length'),e.headers.get('Content-Type'),url))
+              except Exception as e:
+                  head_results.append((name,'ERROR',None,type(e).__name__,url))
+
+          lines=[
+            '---','id: US-MINERAL-F01-SOURCE-PREFLIGHT','type: source-semantic-preflight','created: 2026-09-04',
+            'outcome_concentration_computed: false','trade_rows_opened: false','incremental_monetary_cost_usd: 0','---','',
+            '# US-MINERAL-F01 Source Preflight / 소스 사전검증','',
+            '## Exposure boundary / 노출 경계','',
+            '- No Census trade-row values were downloaded or opened.','- No mineral/country/district/port concentration was calculated.','- No HHI, top-share, ranking, correlation or regression was calculated.','',
+            '## A. Authoritative universe / 공식 universe','',
+            '- frozen universe: Final 2025 U.S. List of Critical Minerals','- frozen universe count: **60**','- source: `https://www.usgs.gov/programs/mineral-resources-program/science/about-2025-list-critical-minerals`','',
+            '## B. USGS Appendix-2 mapping contract / USGS Appendix 2 mapping 계약','',
+            f'- source XML: `{USGS_XML}`', f'- HTTP status: `{xml_status}`', f'- SHA-256: `{xml_sha}`',
+            '- publication: OFR 2025-1047, version 2.0 (2026 revision)','- Appendix 2 states imports use U.S. HTS codes and includes assumed mineral/element content plus comments/assumptions.','',
+            f'- discovered table labels containing Appendix structures: `{[x for x in labels if "2." in x][:12]}`',
+            f'- Table 2.1 parsed mapping records: **{len(m21)}**',f'- Table 2.1 unique methodology commodity units: **{len(units21)}**',f'- Table 2.1 unique import codes: **{len(codes21)}**',
+            f'- Table 2.3 parsed U.S.-trade-code records for rare-earth section: **{len(m23)}**',f'- Table 2.3 unique rare-earth commodity units: **{len(units23)}**',f'- Table 2.3 unique U.S. trade codes: **{len(codes23)}**',
+            f'- import/U.S.-trade code lengths observed: `{dict(sorted(lengths.items()))}`',
+            f'- codes shared across >1 parsed methodology unit: **{len(shared_codes)}**',
+            f'- methodology units whose mapping row text explicitly invokes a `unit value` rule: **{len(unitvalue_units)}**','',
+            '### Exact-name coverage diagnostic / 정확 명칭 coverage 진단','',
+            f'- final-60 names with an exact case-insensitive methodology-unit name: **{len(exact_final)} / 60**',
+            f'- final-60 names without exact one-name methodology match: `{no_exact}`','',
+            'This exact-name diagnostic is intentionally conservative and is **not** a final support subset. It avoids silently merging supply-chain stages.','',
+            '### Source-declared family complexity / source가 명시한 family 복잡성','',
+            f'- final mineral families represented by multiple methodology stages/forms: `{multistage_families}`',
+            f'- separately treated magnesium chains: `{split_chain}`',
+            f'- final-list rare earths requiring the special Appendix-2 rare-earth treatment: `{rare_earths}`','',
+            'The OFR methods explicitly state that 31 of the 84 assessed commodity units represent different stages/forms of 11 mineral supply chains, while magnesium compounds and magnesium metal are separate supply chains. Rare-earth imports also use special disaggregation rules.','',
+            '### Parsed unit names / 파싱된 unit 이름','',
+            f'- Table 2.1 units: `{units21}`',
+            f'- Table 2.3 units: `{units23}`','',
+            '### Shared-code diagnostic / 공유 code 진단','',
+          ]
+          for c,units in shared_codes[:30]: lines.append(f'- `{c}` → `{units}`')
+          if not shared_codes: lines.append('- none detected by exact parsed code identity')
+          lines += ['', '### Unit-value-rule units / unit-value rule unit', '', f'`{unitvalue_units}`','',
+            '## C. Census public static-file contract / Census 공개 정적 파일 계약','',
+            f'- merchandise record-layout HTTP: `{cl_status}`; SHA-256: `{hashlib.sha256(census_layout).hexdigest()}`',
+            f'- port-HS6 record-layout HTTP: `{cp_status}`; SHA-256: `{hashlib.sha256(census_port).hexdigest()}`',
+            f'- data-products page HTTP: `{cprod_status}`; SHA-256: `{hashlib.sha256(census_products).hexdigest()}`',
+            f'- `IMP_DETL` required identity-field contract detected: **{"YES" if detail_fields_ok else "NO"}**',
+            f'- `Port Imports HS6` required identity-field contract detected: **{"YES" if port_fields_ok else "NO"}**','',
+            '- `IMP_DETL.TXT` identity grain: 10-digit HTS × 4-digit country × 2-digit entry district × 2-digit unlading district × year × month, with quantity/value and mode-specific value/weight fields.',
+            '- `DPORTHS6I<YY><MM>.TXT` identity grain: 6-digit HS × 4-digit country × 4-digit port-of-unlading (district+port) × year × month, with total/mode-specific value and shipping weight.','',
+            '### Static ZIP route existence / 정적 ZIP 경로 존재','']
+          for name,status,cl,ct,url in head_results:
+              lines.append(f'- {name}: status `{status}`, content-length `{cl}`, content-type `{ct}`, URL `{url}`')
+
+          lines += ['', '## D. Preflight interpretation / 사전검증 해석','',
+            '- Census provides both a **10-digit HTS + district** route and a **6-digit HS + actual port-of-unlading** route without requiring an API key.','- The central identifiability problem is therefore not Census availability; it is whether each final critical-mineral research unit can be prospectively represented at 10-digit and/or 6-digit code grain without unsupported family merging, mixed-code allocation, or rare-earth reconstruction.','- No concentration result has been used to make this determination.','',
+            '## E. Next source-semantic gate / 다음 source-semantic gate','',
+            '**`CONTINUE_F01_MAPPING_IDENTIFIABILITY`**','',
+            'Before PASS/PARTIAL/HOLD/REJECT, define a prospective support rule from Appendix-2 semantics only. At minimum, distinguish:','1. simple single-chain codes that can be represented directly;','2. multi-stage mineral families;','3. special rare-earth allocations;','4. shared/mixed codes requiring transaction-unit-value allocation;','5. whether 6-digit aggregation preserves or destroys mineral identity.','',
+            'Incremental monetary cost remained **0 USD**.'
+          ]
+          OUT.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          PY
+
+      - name: Commit sanitized preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-MINERAL-F01/SOURCE_PREFLIGHT.md
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'record US-MINERAL-F01 source-semantic preflight'
+          git push
