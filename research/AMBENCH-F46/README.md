@@ -2,25 +2,32 @@
 id: AMBENCH-F46
 type: source-ingress-resume-qualification-gate
 created: 2026-09-03
-status: PREREGISTERED
+status: DORMANT__NOT_ACTIVE__REQUIRES_REAUTHORIZATION
 predecessor: AMBENCH-F45
 source_dataset: mds2-2507
 incremental_monetary_cost_usd: 0
 capability_status: SHARED-INTERNAL-CANDIDATE
+superseded_execution_authority_by: DEC-093
 ---
 
 # AMBENCH-F46 — Persistent Partial-File Resume Ingress Qualification
 # AMBENCH-F46 — Persistent Partial-File Resume Ingress 자격검증
 
+> **Current disposition / 현재 상태:** `DORMANT__NOT_ACTIVE__REQUIRES_REAUTHORIZATION`
+>
+> `DEC-093` supersedes the automatic execution authorization previously inherited from `DEC-092`. This document is preserved as a technical preregistration draft only. Do **not** create an Issue, workflow, download, or descendant from F46 unless a future `MISSION-ROI` review establishes mission-level necessity or the user explicitly prioritizes this branch.
+
 ## Purpose / 목적
 
-F44 whole-object fetching sometimes received multi-megabyte prefixes before failure, while F45's frozen explicit 1 MiB Range request never completed. F46 tests a distinct source-only transfer strategy: retain the bytes successfully written by a failed whole-object transfer and explicitly resume the same output file on the next bounded attempt.
+F44 whole-object fetching sometimes received multi-megabyte prefixes before failure, while F45's frozen explicit 1 MiB Range request never completed. F46 was designed to test a distinct source-only transfer strategy: retain the bytes successfully written by a failed whole-object transfer and explicitly resume the same output file on the next bounded attempt.
+
+Following the 2026-09-03 root research-process audit, this transport problem is classified as a **route dependency rather than a mission dependency**. Therefore the protocol below is retained for reproducibility but is not active research.
 
 No simulator is built or run. No P01 numerical contents, MP_Stats, representation equivalence, path-order performance or physical measurement outcome is analyzed.
 
 ## Frozen source identity / 고정 source identity
 
-Official NIST NERDm must reproduce:
+If reauthorized in the future, official NIST NERDm must reproduce:
 - dataset `mds2-2507`;
 - version `1.0.1`;
 - exactly one component `RHF_Command.zip`;
@@ -32,7 +39,7 @@ Successful final reconstruction must open as ZIP and contain exactly one member 
 
 ## Frozen transfer protocol / 고정 transfer protocol
 
-Use the standard public GitHub Ubuntu runner and its installed curl, recording `curl --version` in the result.
+If and only if separately reauthorized, use the standard public GitHub Ubuntu runner and its installed curl, recording `curl --version` in the result.
 
 One persistent local file is used for all attempts.
 
@@ -59,8 +66,6 @@ Rules:
 - no adaptive timeout, attempt count, alternate curl flags, parallelism, pre-split ranges, alternate endpoint/mirror/proxy/VPN, or paid transfer/storage;
 - workflow hard cap: `12 min`.
 
-The outer loop is chosen prospectively because curl documentation specifies that `--continue-at -` determines the resume offset from the output file. Curl built-in retry is deliberately excluded because curl documentation warns that failed output data may be reset before a retry; F46 explicitly tests persistence across separate invocations.
-
 ## Frozen per-attempt diagnostics / 고정 attempt 진단
 
 Before and after each invocation persist only:
@@ -86,8 +91,6 @@ After each invocation:
 5. other non-zero codes with incomplete file are transport failures and may proceed to the next frozen attempt;
 6. after attempt 5, incomplete file => HOLD.
 
-The exact final size/SHA is authoritative regardless of the last curl return code: if the complete expected byte count and checksum were written before a connection-close error, the final object is considered source-complete only after ZIP/P01 validation also passes.
-
 ## Frozen gates / 고정 gate
 
 ### `PASS_F46_PERSISTENT_RESUME_INGRESS`
@@ -99,11 +102,9 @@ Deterministic incompatibility/integrity failure occurs: non-monotonic/truncated 
 ### `HOLD_F46_SOURCE_OR_NETWORK`
 NERDm identity cannot be verified, the 12-minute workflow cap is reached, or five frozen attempts end with an incomplete file without deterministic resume-protocol evidence.
 
-## Claim boundary / 주장 경계
+## Reauthorization gate / 재승인 게이트
 
-A PASS qualifies only this source-ingress method for the exact NIST component on the observed standard runner. It does not establish F44 representation equivalence or any path-order/performance/physical claim.
-
-A PASS may support a separately authorized minimal P01 fixture or newly numbered representation-equivalence experiment. F44/F45 remain closed historical HOLDs.
+Before any execution, a new decision must answer the `MEM-054 / DEC-093` Mission-ROI questions and explicitly explain why this route is more valuable than returning to a higher-value portfolio candidate.
 
 ## Cost / 비용
 
