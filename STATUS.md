@@ -1,18 +1,18 @@
 ---
-checkpoint_id: CHK-20260904-PORTFOLIO-R04-REQUIRED
-active_issue: null
-active_research: PORTFOLIO-R04
-last_completed_issue: 75
-last_completed_research: US-MINERAL-E01
-last_decision: DEC-106
+checkpoint_id: CHK-20260904-US-GRID-F01-ACTIVE
+active_issue: 77
+active_research: US-GRID-F01
+last_completed_issue: 76
+last_completed_research: PORTFOLIO-R04
+last_decision: DEC-107
 updated: 2026-09-04
 ---
 
 # Project Status / 프로젝트 상태
 
 **Project / 프로젝트:** AI-Innovative-Research-Engine / AI 기반 혁신 탐색 연구 엔진  
-**State / 상태:** `MISSION_ANCHOR_FIXED__US_MINERAL_E01_PASS__MANDATORY_PORTFOLIO_RETURN`  
-**Active Work Queue / 활성 작업 큐:** Open the mandatory Stage 0 `PORTFOLIO-R04` mission-level review before authorizing any new numerical descendant.
+**State / 상태:** `MISSION_ANCHOR_FIXED__PORTFOLIO_R04_COMPLETE__US_GRID_F01_ACTIVE`  
+**Active Work Queue / 활성 작업 큐:** Issue #77 `US-GRID-F01 — LBNL Queued Up Operator/Region × EIA-930 Balancing-Authority Identity & Bottleneck-Outcome Feasibility`.
 
 ## Fixed Mission / 고정 목적
 
@@ -20,77 +20,66 @@ Discover and validate **new, falsifiable, reproducible and practically useful in
 
 ## Last completed work / 마지막 완료 작업
 
-Issue #75 / `US-MINERAL-E01` completed as:
-
+### US-MINERAL-E01
+Issue #75 completed as:
 **`PASS_E01_REPLICATED_DUAL_TRADE_VALUE_CONCENTRATION`**.
 
-Frozen experiment:
-- universe: `Antimony, Barite, Beryllium, Palladium, Phosphate, Potash, Rhodium, Tellurium`;
-- period: all 12 months of 2023;
-- source: Census monthly Merchandise Trade Imports `IMP_DETL.TXT`;
-- weight: `gen_val_mo` = General Imports, Total Value;
-- axes: country of origin × district of unlading;
-- statistic: `D=min(H_country,H_unlad)`;
-- materiality heuristic: `D>=0.25`;
-- replication PASS: `K>=2`.
+Primary preregistered result:
+- `K=5/8` prospectively qualified minerals crossed the dual country-origin × district-of-unlading trade-value HHI threshold;
+- result interpretation is limited to published mapped general-import trade-value concentration.
 
-Execution integrity:
-- Stage A source/identity/cardinality: PASS;
-- Stage B numerical integrity: PASS;
-- all 12 official ZIPs and `IMP_DETL` members SHA-256 pinned;
-- no repeated frozen raw full key detected;
-- no post-outcome mineral/window/geography/threshold changes.
+No same-branch retuning is automatically authorized under `DEC-106`.
 
-Observed primary result:
-- `K=5/8`;
-- threshold-crossing minerals: `Antimony, Beryllium, Palladium, Potash, Rhodium`;
-- non-crossing: `Barite, Phosphate, Tellurium`.
+### PORTFOLIO-R04
+Issue #76 completed as:
+**`SELECT_C_US_001_US_GRID_BOTTLENECK_INTELLIGENCE`**.
 
-Frozen secondary descriptive:
-- Spearman `H_country` vs `H_unlad`: `-0.523810` across the eight minerals.
-
-Interpretation remains limited to **published mapped general-import trade-value concentration**. It does not establish physical tonnage concentration, causal disruption risk, inventory adequacy, transaction-level physical routing, or policy/investment superiority.
+Portfolio ranking /40:
+1. `C-US-001 U.S. Grid Bottleneck Intelligence` — 38 SELECT;
+2. `C-EU-001 Cross-National Grid Stress` — 34;
+3. `C-EU-004 Industrial Site Climate Risk` — 32;
+4. `C-JP-001 Port Weather–Throughput Stress` — 32;
+5. `C-US-003R continuation` — 31;
+6. `C-SG-001 Maritime Activity × Weather Regime` — 31.
 
 Durable records:
-- `research/US-MINERAL-E01/README.md`;
-- `research/US-MINERAL-E01/SOURCE_MANIFEST.md`;
-- `research/US-MINERAL-E01/RESULT.md`;
-- `registry/CLM-125.md`;
-- `registry/DEC-106.md`;
-- Actions run `33792100836`.
+- `research/PORTFOLIO-R04/RESULT.md`;
+- `registry/DEC-107.md`;
+- Issue #76 completed.
 
-Incremental monetary cost: **0 USD**.
+## Active F01 authorization / 활성 F01 승인 범위
 
-## Mandatory stop / 의무 중단
+`US-GRID-F01` is **source-semantic / join feasibility only**.
 
-Do not automatically run:
-- HS6 port-of-unlading extension;
-- alternate concentration threshold;
-- alternate year/window;
-- mineral substitution;
-- district-of-entry primary replacement;
-- same-branch tuning or policy/investment ranking.
+Frozen LBNL source:
+- Queued Up 2026 edition;
+- project-level XLSX through end-2025;
+- workbook codebook/data dictionary;
+- exact official XLSX candidate recorded in `research/US-GRID-F01/README.md`.
 
-The critical-mineral branch must now compete again against other mission candidates under Stage 0.
+Frozen EIA source family:
+- Form EIA-930;
+- public Open Data bulk route;
+- `U.S. Electric System Operating Data (2019-present)`;
+- do not provision an API key merely for convenience.
+
+F01 may inspect identities, codebook semantics, status/date vocabulary, non-outcome cardinality, mapping cardinality, hashes and version metadata.
+
+F01 may **not** compute:
+- queue-duration differences by operator/BA;
+- EIA operating stress by matched operator;
+- queue-vs-grid correlations/regressions;
+- operator/system rankings;
+- causal effects;
+- policy/investment rankings.
 
 ## Exact next action / 정확한 다음 행동
 
-Open `PORTFOLIO-R04` and re-rank the mission portfolio using:
-1. novelty/new information from completed research;
-2. direct structural-bottleneck relevance;
-3. cross-dataset/cross-agency relationship value;
-4. falsifiability and independent-unit quality;
-5. practical intervention utility;
-6. source accessibility and zero-cost feasibility;
-7. diminishing-return risk from continued work on the same branch.
-
-Preserved prior fallback order entering review:
-- `C-US-001 U.S. Grid Bottleneck Intelligence` — strongest prior fallback;
-- `C-EU-001 Cross-National Grid Stress`;
-- `C-EU-004 Industrial Site Climate Risk` — existing join PASS asset;
-- `C-JP-001`;
-- `C-SG-001`.
-
-`C-US-003R` now enters the same review as a **validated-result branch**, not as an automatic continuation winner.
+1. Confirm State Integrity for `CHK-20260904-US-GRID-F01-ACTIVE`.
+2. Freeze and hash the exact LBNL Queued Up 2026 workbook; inspect project sheet + codebook semantics only.
+3. Freeze EIA bulk manifest and target EIA-930 asset identity; inspect balancing-authority identity metadata without queue-vs-grid outcome analysis.
+4. Determine deterministic queue operator/region ↔ EIA BA mapping/support rule.
+5. Freeze one direct project-level queue bottleneck outcome and bounded prospective cohort from source semantics only.
+6. Persist F01 result with PASS/PARTIAL/HOLD/REJECT and apply the branch-stop rule.
 
 Incremental monetary cost remains **0 USD**. Any potentially billable work requires explicit prior user approval.
