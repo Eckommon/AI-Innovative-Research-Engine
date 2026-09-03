@@ -1,0 +1,48 @@
+name: AMBENCH F45 completion monitor
+
+on:
+  workflow_run:
+    workflows: ['AMBENCH F45 checksum-preserving range ingress']
+    types: [completed]
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  record:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Record F45 terminal status
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          RUN_STATUS: ${{ github.event.workflow_run.status }}
+          RUN_CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+          RUN_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,os,urllib.request
+          from pathlib import Path
+          repo=os.environ['GITHUB_REPOSITORY']; rid=os.environ['RUN_ID']; token=os.environ['GH_TOKEN']
+          req=urllib.request.Request(f'https://api.github.com/repos/{repo}/actions/runs/{rid}/jobs?per_page=100',headers={'Authorization':f'Bearer {token}','Accept':'application/vnd.github+json','User-Agent':'AI-Innovative-Research-Engine/F45-monitor'})
+          with urllib.request.urlopen(req,timeout=60) as r: jobs=json.load(r).get('jobs',[])
+          lines=['---','id: AMBENCH-F45-RUN-MONITOR','type: workflow-terminal-diagnostic','created: 2026-09-03','experiment_contract_changed: false','incremental_monetary_cost_usd: 0','---','','# AMBENCH-F45 Run Monitor / 실행 모니터','',f'- run_id: `{rid}`',f'- status: `{os.environ["RUN_STATUS"]}`',f'- conclusion: `{os.environ["RUN_CONCLUSION"]}`',f'- head_sha: `{os.environ["RUN_SHA"]}`','', '## Jobs / Jobs','']
+          for j in jobs:
+              lines += [f'### {j.get("name")}',f'- status: `{j.get("status")}`',f'- conclusion: `{j.get("conclusion")}`']
+              for s in j.get('steps',[]): lines.append(f'- step `{s.get("number")}` — {s.get("name")}: status=`{s.get("status")}`, conclusion=`{s.get("conclusion")}`')
+              lines.append('')
+          Path('research/AMBENCH-F45').mkdir(parents=True,exist_ok=True)
+          Path('research/AMBENCH-F45/RUN_MONITOR.md').write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git pull --rebase origin main
+          git add research/AMBENCH-F45/RUN_MONITOR.md
+          git commit -m 'record AMBENCH-F45 workflow terminal status'
+          git push
