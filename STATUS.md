@@ -1,18 +1,18 @@
 ---
-checkpoint_id: CHK-20260904-US-GRID-F01-ACTIVE
-active_issue: 77
-active_research: US-GRID-F01
-last_completed_issue: 76
-last_completed_research: PORTFOLIO-R04
-last_decision: DEC-107
+checkpoint_id: CHK-20260904-US-GRID-F01-PASS
+active_issue: null
+active_research: US-GRID-E01-PREREGISTRATION
+last_completed_issue: 77
+last_completed_research: US-GRID-F01
+last_decision: DEC-108
 updated: 2026-09-04
 ---
 
 # Project Status / 프로젝트 상태
 
 **Project / 프로젝트:** AI-Innovative-Research-Engine / AI 기반 혁신 탐색 연구 엔진  
-**State / 상태:** `MISSION_ANCHOR_FIXED__PORTFOLIO_R04_COMPLETE__US_GRID_F01_ACTIVE`  
-**Active Work Queue / 활성 작업 큐:** Issue #77 `US-GRID-F01 — LBNL Queued Up Operator/Region × EIA-930 Balancing-Authority Identity & Bottleneck-Outcome Feasibility`.
+**State / 상태:** `MISSION_ANCHOR_FIXED__US_GRID_F01_PASS__E01_PREREGISTRATION_AUTHORIZED`  
+**Active Work Queue / 활성 작업 큐:** outcome-blind `US-GRID-E01` preregistration authorized by `DEC-108`; no numerical relationship execution yet.
 
 ## Fixed Mission / 고정 목적
 
@@ -20,66 +20,66 @@ Discover and validate **new, falsifiable, reproducible and practically useful in
 
 ## Last completed work / 마지막 완료 작업
 
-### US-MINERAL-E01
-Issue #75 completed as:
-**`PASS_E01_REPLICATED_DUAL_TRADE_VALUE_CONCENTRATION`**.
+Issue #77 / `US-GRID-F01` completed as:
 
-Primary preregistered result:
-- `K=5/8` prospectively qualified minerals crossed the dual country-origin × district-of-unlading trade-value HHI threshold;
-- result interpretation is limited to published mapped general-import trade-value concentration.
+**`PASS_US_GRID_QUEUE_BA_JOIN_READY`**.
 
-No same-branch retuning is automatically authorized under `DEC-106`.
+### Frozen source assets
+- LBNL Queued Up 2026 workbook SHA-256:
+  `794582d3281c6a305e9615fcfec3fae9dc85be2165216d33760b677e976a08b6`
+- EIA EBA bulk ZIP SHA-256:
+  `3b80081e3720e0075ca151bd81308cd548b076a436c9136baf8656b507a50bb1`
 
-### PORTFOLIO-R04
-Issue #76 completed as:
-**`SELECT_C_US_001_US_GRID_BOTTLENECK_INTELLIGENCE`**.
+### Frozen identity support
+- LBNL entities: 57
+- qualified deterministic BA mappings: **41**
+- prospectively excluded: **16**
+- qualified 2019–2025 queue-entry rows: **17,453 / 19,794 = 88.173184%**
 
-Portfolio ranking /40:
-1. `C-US-001 U.S. Grid Bottleneck Intelligence` — 38 SELECT;
-2. `C-EU-001 Cross-National Grid Stress` — 34;
-3. `C-EU-004 Industrial Site Climate Risk` — 32;
-4. `C-JP-001 Port Weather–Throughput Stress` — 32;
-5. `C-US-003R continuation` — 31;
-6. `C-SG-001 Maritime Activity × Weather Regime` — 31.
+### Frozen direct outcome construct
+Future primary project outcome:
+**IR→COD elapsed duration**, using LBNL `q_date` and `on_date`.
+
+Prospective completed-project structure:
+- `q_date` 2019-01-01 through 2025-12-31;
+- `q_status=operational`;
+- explicit valid q_date/on_date;
+- on_date <= 2025-12-31;
+- **447 unique projects / 11 EIA BAs**;
+- duplicate/conflicting composite keys: **0**.
+
+No IR→COD duration distribution, BA-duration comparison, EIA operating stress metric, correlation or regression was computed during F01.
 
 Durable records:
-- `research/PORTFOLIO-R04/RESULT.md`;
-- `registry/DEC-107.md`;
-- Issue #76 completed.
+- `research/US-GRID-F01/SOURCE_PREFLIGHT.md`
+- `research/US-GRID-F01/IDENTITY_ADJUDICATION.md`
+- `research/US-GRID-F01/STRUCTURAL_DIAGNOSTIC.md`
+- `research/US-GRID-F01/COHORT_DIAGNOSTIC.md`
+- `research/US-GRID-F01/ALIAS_ADJUDICATION.md`
+- `research/US-GRID-F01/FINAL_SUPPORT_PREFLIGHT.md`
+- `research/US-GRID-F01/EXECUTION_CONTRACT.md`
+- `research/US-GRID-F01/RESULT.md`
+- `registry/CLM-126.md`
+- `registry/DEC-108.md`
+- Issue #77 completed.
 
-## Active F01 authorization / 활성 F01 승인 범위
+## Next authorization / 다음 승인
 
-`US-GRID-F01` is **source-semantic / join feasibility only**.
+`DEC-108` authorizes exactly one immediate next action:
 
-Frozen LBNL source:
-- Queued Up 2026 edition;
-- project-level XLSX through end-2025;
-- workbook codebook/data dictionary;
-- exact official XLSX candidate recorded in `research/US-GRID-F01/README.md`.
+**preregister `US-GRID-E01` outcome-blind.**
 
-Frozen EIA source family:
-- Form EIA-930;
-- public Open Data bulk route;
-- `U.S. Electric System Operating Data (2019-present)`;
-- do not provision an API key merely for convenience.
+Before any numerical EIA value or queue duration is opened, the preregistration must freeze:
+1. one primary EIA-930 operating construct and exact source field(s);
+2. temporal alignment relative to project queue entry;
+3. completeness/missingness rule;
+4. independent analytical unit and nesting;
+5. primary statistic and materiality/inference gate;
+6. confounding/BA fixed-difference treatment;
+7. raw-value minimization.
 
-F01 may inspect identities, codebook semantics, status/date vocabulary, non-outcome cardinality, mapping cardinality, hashes and version metadata.
+Prefer a **pre-entry** operating-state predictor so predictor aggregation does not mechanically depend on the eventual queue duration.
 
-F01 may **not** compute:
-- queue-duration differences by operator/BA;
-- EIA operating stress by matched operator;
-- queue-vs-grid correlations/regressions;
-- operator/system rankings;
-- causal effects;
-- policy/investment rankings.
-
-## Exact next action / 정확한 다음 행동
-
-1. Confirm State Integrity for `CHK-20260904-US-GRID-F01-ACTIVE`.
-2. Freeze and hash the exact LBNL Queued Up 2026 workbook; inspect project sheet + codebook semantics only.
-3. Freeze EIA bulk manifest and target EIA-930 asset identity; inspect balancing-authority identity metadata without queue-vs-grid outcome analysis.
-4. Determine deterministic queue operator/region ↔ EIA BA mapping/support rule.
-5. Freeze one direct project-level queue bottleneck outcome and bounded prospective cohort from source semantics only.
-6. Persist F01 result with PASS/PARTIAL/HOLD/REJECT and apply the branch-stop rule.
+If no defensible low-degree-of-freedom predictor can be specified outcome-blind, return to Stage 0 rather than search across EIA metrics.
 
 Incremental monetary cost remains **0 USD**. Any potentially billable work requires explicit prior user approval.
