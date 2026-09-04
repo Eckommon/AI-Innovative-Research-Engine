@@ -1,0 +1,98 @@
+name: JP PORT E01 Stage A JMA pilot v2
+
+on:
+  push:
+    paths:
+      - ".github/workflows/jp-port-e01-stage-a-pilot-v2.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  pilot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Request preregistered JMA variable with browser session
+        shell: bash
+        run: |
+          python - <<'PY'
+          import urllib.request,urllib.parse,http.cookiejar,json,hashlib,os,re
+          OUT="research/JP-PORT-E01/STAGE_A_PILOT_V2.md"
+          ROOT="https://www.data.jma.go.jp/risk/obsdl/"
+          URL=ROOT+"show/table"
+
+          jar=http.cookiejar.CookieJar()
+          opener=urllib.request.build_opener(urllib.request.HTTPCookieProcessor(jar))
+          hdr={"User-Agent":"Mozilla/5.0","Accept-Language":"ja,en;q=0.8"}
+          rootreq=urllib.request.Request(ROOT,headers=hdr)
+          with opener.open(rootreq,timeout=60) as r:
+              rootraw=r.read()
+          cookies=[(c.name,c.value,c.domain,c.path) for c in jar]
+
+          data={
+            "stationNumList":json.dumps(["s47401"],ensure_ascii=False,separators=(",",":")),
+            "aggrgPeriod":"1",
+            "elementNumList":json.dumps([["302",""]],ensure_ascii=False,separators=(",",":")),
+            "interAnnualType":"1",
+            "ymdList":json.dumps([2019,2019,1,1,1,3],separators=(",",":")),
+            "optionNumList":"[]",
+            "downloadFlag":"true",
+            "rmkFlag":"1",
+            "disconnectFlag":"1",
+            "youbiFlag":"0",
+            "fukenFlag":"0",
+            "kijiFlag":"0",
+            "csvFlag":"1",
+            "jikantaiFlag":"0",
+            "jikantaiList":"[]",
+            "ymdLiteral":"1",
+          }
+          body=urllib.parse.urlencode(data).encode()
+          req=urllib.request.Request(URL,data=body,headers={
+              **hdr,
+              "Content-Type":"application/x-www-form-urlencoded",
+              "Referer":ROOT,
+              "Origin":"https://www.data.jma.go.jp",
+              "Accept":"text/csv,text/plain,application/octet-stream,text/html;q=0.8,*/*;q=0.5"
+          })
+          with opener.open(req,timeout=120) as r:
+              raw=r.read();headers=dict(r.headers);fu=r.geturl()
+          ctype=headers.get("Content-Type","")
+          disp=headers.get("Content-Disposition","")
+          sample=raw[:12000].decode("utf-8","replace")
+          # only diagnostic text, mask possible numeric weather-looking lines
+          diagnostic=[]
+          for ln in sample.splitlines():
+              if any(k in ln for k in ["エラー","選択","データ","地点","項目","期間","CSV","最大風速","稚内","download","table"]):
+                  diagnostic.append(re.sub(r"(?<![A-Za-z])\d+(?:\.\d+)?","<NUM>",ln.strip())[:1500])
+                  if len(diagnostic)>=80:break
+
+          is_html="<html" in sample.lower() or "<!doctype" in sample.lower()
+          lines=["---","id: JP-PORT-E01-STAGE-A-PILOT-V2","created: 2026-09-04",
+                 "relationship_outcome_computed: false","stage: A_PILOT",
+                 "incremental_monetary_cost_usd: 0","---","",
+                 "# JP-PORT-E01 Stage A Pilot V2","",
+                 f"- root bytes SHA-256: {hashlib.sha256(rootraw).hexdigest()}",
+                 f"- session cookies after root: {[(a,'<SET>',d,p) for a,b,d,p in cookies]}",
+                 f"- final URL: {fu}",
+                 f"- content-type: {ctype}",
+                 f"- content-disposition: {disp}",
+                 f"- raw bytes: **{len(raw)}**",
+                 f"- raw SHA-256: {hashlib.sha256(raw).hexdigest()}",
+                 f"- response classified HTML: **{is_html}**","",
+                 "## Sanitized response diagnostics",""]
+          for x in diagnostic:lines.append("- "+x)
+          lines += ["","No cargo data or weather-throughput relationship was accessed.","",
+                    "Incremental monetary cost remained **0 USD**.",""]
+          os.makedirs(os.path.dirname(OUT),exist_ok=True)
+          open(OUT,"w",encoding="utf-8").write("\n".join(lines))
+          PY
+      - name: Commit pilot metadata
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/JP-PORT-E01/STAGE_A_PILOT_V2.md
+          git diff --cached --quiet || git commit -m "record JP-PORT-E01 Stage A JMA pilot v2"
+          git push
