@@ -1,0 +1,99 @@
+name: JP PORT E01 JMA element station metadata probe
+
+on:
+  push:
+    paths:
+      - ".github/workflows/jp-port-e01-jma-element-probe.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Probe JMA element and station selection metadata
+        shell: bash
+        run: |
+          python - <<'PY'
+          import urllib.request, urllib.parse, re, os, hashlib, html
+          OUT="research/JP-PORT-E01/JMA_ELEMENT_STATION_PROBE.md"
+          ROOT="https://www.data.jma.go.jp/risk/obsdl/"
+
+          def post(path,data):
+              b=urllib.parse.urlencode(data).encode()
+              req=urllib.request.Request(
+                  urllib.parse.urljoin(ROOT,path), data=b,
+                  headers={"User-Agent":"Mozilla/5.0","Content-Type":"application/x-www-form-urlencoded"}
+              )
+              with urllib.request.urlopen(req,timeout=60) as r:
+                  return r.read(),r.geturl(),dict(r.headers)
+
+          eb,efu,eh=post("top/element",{"aggrgPeriod":"1"})
+          et=eb.decode("utf-8","replace")
+          # obtain blocks around maximum-wind labels, plus all input metadata in those blocks
+          snippets=[]
+          for key in ["最大風速","日最大風速","風速","風向"]:
+              for m in re.finditer(key,et):
+                  a=max(0,m.start()-1200);z=min(len(et),m.end()+1600)
+                  snippets.append((key,et[a:z]))
+                  if sum(1 for k,_ in snippets if k==key)>=6:break
+
+          # probe one prefecture station page; "01" Hokkaido plus "13" Tokyo
+          station_pages=[]
+          for pd in ["01","13","40"]:
+              try:
+                  sb,sfu,sh=post("top/station",{"pd":pd})
+                  st=sb.decode("utf-8","replace")
+                  # bounded lines containing stid or station div
+                  parts=[]
+                  for ln in st.splitlines():
+                      if "stid" in ln or "station" in ln.lower() or "地点" in ln:
+                          parts.append(ln.strip()[:1400])
+                          if len(parts)>=30:break
+                  station_pages.append((pd,sfu,len(sb),hashlib.sha256(sb).hexdigest(),parts))
+              except Exception as e:
+                  station_pages.append((pd,"ERR",0,"", [repr(e)]))
+
+          # parse input tags around selected element
+          allinputs=re.findall(r'<input[^>]+>',et,re.I)
+          windinputs=[]
+          for tag in allinputs:
+              if any(x in tag for x in ["wind","風","value="]):
+                  # retain if nearby in original appears within 1000 chars of 最大風速
+                  pos=et.find(tag)
+                  nearest=min([abs(pos-m.start()) for m in re.finditer("最大風速",et)] or [999999])
+                  if nearest<2500:
+                      windinputs.append(tag)
+
+          lines=["---","id: JP-PORT-E01-JMA-ELEMENT-STATION-PROBE","created: 2026-09-04",
+                 "weather_values_opened: false","relationship_outcome_computed: false",
+                 "incremental_monetary_cost_usd: 0","---","",
+                 "# JP-PORT-E01 JMA Element/Station Metadata Probe","",
+                 "No weather observation request was submitted.","",
+                 "## Daily element endpoint","",
+                 f"- final URL: {efu}",
+                 f"- bytes: {len(eb)}",
+                 f"- SHA-256: {hashlib.sha256(eb).hexdigest()}","",
+                 "### Maximum-wind snippets",""]
+          for k,s in snippets[:16]:
+              lines += [f"#### key={k}", "- "+re.sub(r"\s+"," ",s)[:2500],""]
+          lines += ["### Candidate input tags near maximum wind",""]
+          for t in windinputs[:80]:lines.append("- "+t)
+          lines += ["","## Station selection endpoint samples",""]
+          for pd,u,n,hs,parts in station_pages:
+              lines += [f"### pd={pd}",f"- URL/result: {u}",f"- bytes: {n}",f"- SHA-256: {hs}"]
+              for p in parts:lines.append("- "+p)
+              lines.append("")
+          os.makedirs(os.path.dirname(OUT),exist_ok=True)
+          open(OUT,"w",encoding="utf-8").write("\n".join(lines))
+          PY
+      - name: Commit probe
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/JP-PORT-E01/JMA_ELEMENT_STATION_PROBE.md
+          git diff --cached --quiet || git commit -m "probe JMA E01 element station metadata"
+          git push
