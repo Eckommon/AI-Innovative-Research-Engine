@@ -1,0 +1,116 @@
+name: JP PORT E01 JMA station crosswalk preflight
+
+on:
+  push:
+    paths:
+      - ".github/workflows/jp-port-e01-jma-station-crosswalk.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  crosswalk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build value-free official station transport-ID crosswalk
+        shell: bash
+        run: |
+          python - <<'PY'
+          import urllib.request,urllib.parse,re,os,html
+          from collections import defaultdict
+          from pathlib import Path
+
+          SUPPORT=Path("research/JP-PORT-F01/SUPPORT_ADJUDICATION.md").read_text(encoding="utf-8")
+          OUT="research/JP-PORT-E01/JMA_STATION_CROSSWALK.md"
+          ROOT="https://www.data.jma.go.jp/risk/obsdl/"
+
+          # frozen station history id/name pairs from F01 mapping table
+          target={}
+          in_table=False
+          for ln in SUPPORT.splitlines():
+              if ln.startswith("| Port | Prefecture | C02 code | JMA station |"):
+                  in_table=True;continue
+              if in_table:
+                  if not ln.startswith("|"):break
+                  if ln.startswith("|---"):continue
+                  c=[x.strip() for x in ln.split("|")]
+                  if len(c)>=7:
+                      st=c[4]
+                      m=re.match(r"(\d+)\s+(.+)",st)
+                      if m:target[m.group(1)]=m.group(2).strip()
+
+          def post(pd):
+              data=urllib.parse.urlencode({"pd":pd}).encode()
+              req=urllib.request.Request(
+                  ROOT+"top/station",data=data,
+                  headers={"User-Agent":"Mozilla/5.0","Content-Type":"application/x-www-form-urlencoded"}
+              )
+              with urllib.request.urlopen(req,timeout=45) as r:return r.read().decode("utf-8","replace")
+
+          # probe all two-digit JMA selection areas; dedupe exact tuples
+          allrows=set()
+          for i in range(100):
+              pd=f"{i:02d}"
+              try:t=post(pd)
+              except Exception:continue
+              # hidden fields appear together inside station div
+              pat=re.compile(
+                  r'name="stid" value="([^"]+)".*?name="stname" value="([^"]+)".*?name="prid" value="([^"]+)".*?name="kansoku" value="([^"]+)"',
+                  re.S
+              )
+              for stid,name,prid,kansoku in pat.findall(t):
+                  allrows.add((stid,html.unescape(name).strip(),prid,kansoku))
+
+          byname=defaultdict(list)
+          for row in sorted(allrows):
+              byname[row[1]].append(row)
+
+          matched={};amb={};missing={}
+          for histid,name in target.items():
+              cand=byname.get(name,[])
+              # stmark/label duplicate is already tuple-deduped; expect one transport id.
+              stids=sorted(set(x[0] for x in cand))
+              if len(stids)==1:
+                  rows=[x for x in cand if x[0]==stids[0]]
+                  matched[histid]=(name,stids[0],rows[0][2],rows[0][3])
+              elif len(stids)>1:
+                  amb[histid]=(name,cand)
+              else:
+                  missing[histid]=name
+
+          lines=["---","id: JP-PORT-E01-JMA-STATION-CROSSWALK","created: 2026-09-04",
+                 "weather_values_opened: false","relationship_outcome_computed: false",
+                 "incremental_monetary_cost_usd: 0","---","",
+                 "# JP-PORT-E01 JMA Station Transport-ID Crosswalk","",
+                 "No weather values were requested. This maps the F01-frozen JMA detailed-history station identity to the official obsdl UI transport ID used in CSV requests.","",
+                 f"- frozen unique JMA history station targets: **{len(target)}**",
+                 f"- unique obsdl station tuples discovered: **{len(allrows)}**",
+                 f"- exact-name unique transport-ID matches: **{len(matched)}**",
+                 f"- ambiguous exact-name transport IDs: **{len(amb)}**",
+                 f"- missing exact names: **{len(missing)}**","",
+                 "## Exact crosswalk","",
+                 "| JMA history station | Name | obsdl stid | obsdl prid | kansoku |","|---|---|---|---|---|"]
+          for hid,(name,stid,prid,kansoku) in sorted(matched.items()):
+              lines.append(f"| {hid} | {name} | {stid} | {prid} | {kansoku} |")
+          if amb:
+              lines += ["","## Ambiguous",""]
+              for hid,v in sorted(amb.items()):lines.append(f"- {hid} {v[0]} -> {v[1]}")
+          if missing:
+              lines += ["","## Missing",""]
+              for hid,name in sorted(missing.items()):lines.append(f"- {hid} {name}")
+          lines += ["","## Gate rule","",
+                    "Stage A may proceed automatically only for station identities with one unique exact-name obsdl transport ID. Any ambiguous/missing station identity must be excluded before weather values; it cannot be resolved using observed weather or cargo outcomes.",
+                    "","Incremental monetary cost remained **0 USD**.",""]
+          os.makedirs(os.path.dirname(OUT),exist_ok=True)
+          open(OUT,"w",encoding="utf-8").write("\n".join(lines))
+          PY
+      - name: Commit crosswalk
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/JP-PORT-E01/JMA_STATION_CROSSWALK.md
+          git diff --cached --quiet || git commit -m "freeze JMA obsdl station crosswalk preflight"
+          git push
