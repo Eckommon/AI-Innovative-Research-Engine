@@ -1,0 +1,240 @@
+name: JP PORT F01 source preflight v2
+
+on:
+  push:
+    paths:
+      - ".github/workflows/jp-port-f01-source-preflight-v2.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install --quiet openpyxl pyshp
+      - name: Inspect official source structures
+        shell: bash
+        run: |
+          python - <<'PY'
+          import io, os, re, csv, zipfile, hashlib, urllib.request, math
+          from pathlib import Path
+          from collections import Counter, defaultdict
+          import openpyxl, shapefile
+
+          OUT="research/JP-PORT-F01/SOURCE_PREFLIGHT.md"
+          ESTAT={
+            2019:"https://www.e-stat.go.jp/stat-search/file-download?fileKind=0&statInfId=000031909819",
+            2020:"https://www.e-stat.go.jp/stat-search/file-download?fileKind=0&statInfId=000031917650",
+            2021:"https://www.e-stat.go.jp/stat-search/file-download?fileKind=0&statInfId=000032059434",
+            2022:"https://www.e-stat.go.jp/stat-search/file-download?fileKind=0&statInfId=000032170294",
+            2023:"https://www.e-stat.go.jp/stat-search/file-download?fileKind=0&statInfId=000040024002",
+            2024:"https://www.e-stat.go.jp/stat-search/file-download?fileKind=0&statInfId=000040146718",
+          }
+          C02="https://nlftp.mlit.go.jp/ksj/gml/data/C02/C02-14/C02-14_GML.zip"
+          JMA_META="https://www.data.jma.go.jp/stats/data/mdrr/chiten/meta/amdmaster.index4"
+
+          def fetch(url,timeout=180):
+              req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0"})
+              with urllib.request.urlopen(req,timeout=timeout) as r:
+                  return r.read(),r.geturl(),dict(r.headers)
+          def sha(b):return hashlib.sha256(b).hexdigest()
+          def norm(s):
+              s=str(s or "").strip()
+              s=s.replace("（","(").replace("）",")").replace("　"," ")
+              s=re.sub(r"\s+","",s)
+              return s
+          def date_num(s):
+              s=str(s or "").strip()
+              if not s:return None
+              if s=="9999-99-99":return 99999999
+              m=re.match(r"(\d{4})-(\d{2})-(\d{2})",s)
+              return int(m.group(1)+m.group(2)+m.group(3)) if m else None
+          def hav(lat1,lon1,lat2,lon2):
+              R=6371.0088
+              p1,p2=math.radians(lat1),math.radians(lat2)
+              dp=math.radians(lat2-lat1);dl=math.radians(lon2-lon1)
+              a=math.sin(dp/2)**2+math.cos(p1)*math.cos(p2)*math.sin(dl/2)**2
+              return 2*R*math.asin(math.sqrt(a))
+
+          lines=["---","id: JP-PORT-F01-SOURCE-PREFLIGHT","type: outcome-blind-source-preflight",
+                 "created: 2026-09-04","relationship_outcome_computed: false","weather_values_opened: false",
+                 "throughput_values_persisted: false","incremental_monetary_cost_usd: 0","---","",
+                 "# JP-PORT-F01 Source Preflight / 소스 사전검증","",
+                 "No weather-throughput relationship, port ranking, weather observation value or throughput magnitude was calculated/persisted.",""]
+
+          # eStat
+          wbs={};year_names={}
+          lines += ["## A. e-Stat mature Port Survey annual port-aggregate workbooks","",
+                    "| Year | Bytes | SHA-256 | Sheets |","|---:|---:|---|---:|"]
+          for y,u in ESTAT.items():
+              b,fu,h=fetch(u)
+              wb=openpyxl.load_workbook(io.BytesIO(b),read_only=True,data_only=True)
+              wbs[y]=wb
+              lines.append(f"| {y} | {len(b)} | {sha(b)} | {len(wb.sheetnames)} |")
+          lines += ["","### Sheet identities",""]
+          for y,wb in wbs.items(): lines.append(f"- {y}: {wb.sheetnames}")
+
+          # text schema and conservative port label extraction
+          port_markers=("港湾名","港名")
+          schema_hits={}
+          for y,wb in wbs.items():
+              names=set();shinfo=[]
+              for sn in wb.sheetnames:
+                  ws=wb[sn]
+                  texts=[]
+                  for row in ws.iter_rows(min_row=1,max_row=min(40,ws.max_row),values_only=True):
+                      tx=[str(v).strip() for v in row if isinstance(v,str) and str(v).strip()]
+                      if tx:texts.extend(tx)
+                  if texts:shinfo.append((sn,texts[:30],ws.max_row,ws.max_column))
+                  for row in ws.iter_rows(min_col=1,max_col=min(8,ws.max_column),values_only=True):
+                      for v in row:
+                          if not isinstance(v,str):continue
+                          t=norm(v)
+                          if 2<=len(t)<=30 and t.endswith("港") and not any(k in t for k in ["入港","出港","港湾調査","港別","港湾統計"]):
+                              names.add(t)
+              year_names[y]=names
+              schema_hits[y]=shinfo
+          common=set.intersection(*(year_names[y] for y in ESTAT))
+          union=set.union(*(year_names[y] for y in ESTAT))
+          lines += ["","### Text/schema diagnostics","",
+                    f"- port-name-like union 2019–2024: **{len(union)}**",
+                    f"- exact normalized port labels present in all six mature workbooks: **{len(common)}**",""]
+          for y in ESTAT:
+              lines.append(f"- {y}: **{len(year_names[y])}** port-name-like labels")
+          lines += ["","#### 2024 first text structures",""]
+          for sn,texts,rn,cn in schema_hits[2024][:10]:
+              lines.append(f"- sheet {sn}: approx {rn}×{cn}; text={texts[:20]}")
+          lines += ["","First 100 six-year-stable port labels:","",", ".join(sorted(common)[:100]),""]
+
+          # C02
+          cb,cfu,ch=fetch(C02)
+          z=zipfile.ZipFile(io.BytesIO(cb))
+          tmp=Path("/tmp/c02");tmp.mkdir(exist_ok=True)
+          z.extractall(tmp)
+          shp=[p for p in tmp.rglob("*.shp") if "PortAndHarbor" in p.name]
+          if not shp:raise RuntimeError("PortAndHarbor shapefile missing")
+          # try encodings
+          sf=None
+          for enc in ("cp932","shift_jis","utf-8"):
+              try:
+                  x=shapefile.Reader(str(shp[0]),encoding=enc)
+                  _=x.records()[0] if len(x)>0 else None
+                  sf=x;break
+              except Exception:pass
+          if sf is None:raise RuntimeError("cannot decode C02 shapefile")
+          fields=[f[0] for f in sf.fields[1:]];fi={n:i for i,n in enumerate(fields)}
+          ports=[]
+          for sr in sf.iterShapeRecords():
+              rec=sr.record;pts=sr.shape.points
+              if not pts:continue
+              name=norm(rec[fi["C02_005"]]) if "C02_005" in fi else ""
+              code=str(rec[fi["C02_004"]]).strip() if "C02_004" in fi else ""
+              lon,lat=pts[0]
+              if name:ports.append((code,name,float(lat),float(lon)))
+          byname=defaultdict(list)
+          for x in ports:byname[x[1]].append(x)
+          exact_ports={n:byname[n][0] for n in common if len(byname.get(n,[]))==1}
+          ambiguous_ports={n:byname[n] for n in common if len(byname.get(n,[]))>1}
+          unmatched_ports=sorted(common-set(byname))
+          lines += ["","## B. MLIT C02 official port-point snapshot","",
+                    f"- URL: {cfu}",
+                    f"- bytes: **{len(cb)}**",
+                    f"- SHA-256: {sha(cb)}",
+                    f"- PortAndHarbor records: **{len(ports)}**",
+                    f"- unique normalized C02 port names: **{len(byname)}**",
+                    f"- six-year-stable e-Stat labels with exactly one C02 point: **{len(exact_ports)}**",
+                    f"- ambiguous C02-name matches: **{len(ambiguous_ports)}**",
+                    f"- unmatched stable e-Stat labels: **{len(unmatched_ports)}**",""]
+          if ambiguous_ports:
+              lines += ["Ambiguous names:",", ".join(sorted(ambiguous_ports)[:100]),""]
+          if unmatched_ports:
+              lines += ["First 100 unmatched:",", ".join(unmatched_ports[:100]),""]
+
+          # JMA detailed station history
+          jb,jfu,jh=fetch(JMA_META)
+          text=None
+          for enc in ("cp932","shift_jis","utf-8-sig","utf-8"):
+              try:
+                  text=jb.decode(enc);break
+              except Exception:pass
+          if text is None:raise RuntimeError("cannot decode JMA amdmaster.index4")
+          rows=list(csv.reader(io.StringIO(text)))
+          valid=[r for r in rows if len(r)>=33]
+          # Format: 0 id,1 kanji, 7 lat,8 lon, 16 precip yes,17 wind yes,18 temp yes, ...,23 humidity, 24 start,25 end,26 old id,27 precip continuity,28 wind continuity...
+          stable=[]
+          for r in valid:
+              try:
+                  sid=r[0].strip();name=r[1].strip()
+                  lat=float(r[7]);lon=float(r[8])
+                  precip=r[16].strip();wind=r[17].strip();temp=r[18].strip()
+                  start=date_num(r[24]);end=date_num(r[25])
+                  pc=r[27].strip();wc=r[28].strip()
+              except Exception:
+                  continue
+              # one metadata segment covering full 2019-2024 window and actual precip+wind instrumentation.
+              if start is not None and end is not None and start<=20190101 and end>=20241231 and precip=="1" and wind=="1":
+                  stable.append((sid,name,lat,lon,start,end,pc,wc,temp))
+          # unique station IDs; if duplicate stable segments for same id, fail ambiguous
+          sb=defaultdict(list)
+          for x in stable:sb[x[0]].append(x)
+          stable_unique={sid:v[0] for sid,v in sb.items() if len(v)==1}
+          stable_amb={sid:v for sid,v in sb.items() if len(v)>1}
+          lines += ["","## C. JMA AMeDAS detailed station-history snapshot","",
+                    f"- URL: {jfu}",
+                    f"- bytes: **{len(jb)}**",
+                    f"- SHA-256: {sha(jb)}",
+                    f"- parsed >=33-field history rows: **{len(valid)}**",
+                    f"- stable 2019–2024 precip+wind metadata segments: **{len(stable)}**",
+                    f"- unique stable station IDs: **{len(stable_unique)}**",
+                    f"- ambiguous multiple stable segments: **{len(stable_amb)}**","",
+                    "Eligibility here means a single JMA metadata-history segment spans the entire 2019-01-01..2024-12-31 period and both precipitation and wind statistics are present. No observation values are opened.",""]
+
+          # distances structural only
+          thresholds=[10,20,30,40,50]
+          distrows=[]
+          for n,p in exact_ports.items():
+              code,_,plat,plon=p
+              ds=[]
+              for sid,s in stable_unique.items():
+                  _,sname,slat,slon,*_=s
+                  ds.append((hav(plat,plon,slat,slon),sid,sname))
+              ds.sort()
+              if ds:distrows.append((n,code,ds[0][0],ds[0][1],ds[0][2],ds[1][0] if len(ds)>1 else None))
+          lines += ["## D. Structural nearest-station support (distance only)","",
+                    "| Max distance | Ports supported | Share of exact C02 ports |","|---:|---:|---:|"]
+          for t in thresholds:
+              k=sum(1 for x in distrows if x[2]<=t)
+              share=k/len(exact_ports) if exact_ports else 0
+              lines.append(f"| {t} km | {k} | {share:.6%} |")
+          # 30km candidate detailed identity only
+          q30=[x for x in distrows if x[2]<=30]
+          lines += ["","### 30-km structural candidate","",
+                    f"- candidate ports: **{len(q30)}** / {len(exact_ports)} exact-C02 ports",
+                    "- nearest-station assignment is deterministic by geodesic distance; exact distance ties are excluded.",
+                    "- 30 km is evaluated as the prospective upper bound because JMA documents ~21 km spacing for the ~840 four-element stations; it is not selected from throughput-weather outcomes.",
+                    "","First 120 candidate identities and distances (non-outcome metadata only):","",
+                    "| Port | C02 code | JMA station | Distance km | Second-nearest km |","|---|---|---|---:|---:|"]
+          for n,code,d,sid,sname,d2 in sorted(q30)[:120]:
+              lines.append(f"| {n} | {code} | {sid} {sname} | {d:.3f} | {d2:.3f} |")
+
+          lines += ["","## E. Prospective implications","",
+                    "- Mature source window candidate is 2019–2024, using annual e-Stat port aggregate workbooks only; current preliminary/partially revised months are excluded.",
+                    "- Future primary throughput family remains total maritime cargo if the next schema adjudication confirms one consistent monthly total field/unit across the frozen files; otherwise F01 must fall back prospectively to vessel arrivals or HOLD.",
+                    "- C02 location is 2014 vintage; only exact normalized one-to-one names appearing in every 2019–2024 mature workbook are eligible. No manual geocoding or alias repair after outcomes.",
+                    "- JMA station eligibility requires one metadata-history segment spanning the whole 2019–2024 window with precipitation+wind statistics present.",
+                    "- A final port→station rule still requires formal adoption of the maximum distance and exact-tie handling after reviewing this structural coverage only.",
+                    "","Incremental monetary cost remained **0 USD**.",""]
+          os.makedirs(os.path.dirname(OUT),exist_ok=True)
+          open(OUT,"w",encoding="utf-8").write("\n".join(lines))
+          PY
+      - name: Commit source preflight
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/JP-PORT-F01/SOURCE_PREFLIGHT.md
+          git diff --cached --quiet || git commit -m "record JP-PORT-F01 source preflight v2"
+          git push
