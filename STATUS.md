@@ -1,69 +1,56 @@
 ---
-checkpoint_id: CHK-20260904-WAVE3-GEO-D01-ACTIVE
-active_issue: 82
-active_research: WAVE3-GEO-D01
-last_completed_issue: 81
-last_completed_research: PORTFOLIO-R06
-last_decision: DEC-113
+checkpoint_id: CHK-20260904-CA-RAIL-F01-ACTIVE
+active_issue: 83
+active_research: CA-RAIL-F01
+last_completed_issue: 82
+last_completed_research: WAVE3-GEO-D01
+last_decision: DEC-114
 updated: 2026-09-04
 ---
 
 # Project Status / 프로젝트 상태
 
 **Project / 프로젝트:** AI-Innovative-Research-Engine / AI 기반 혁신 탐색 연구 엔진  
-**State / 상태:** `MISSION_ANCHOR_FIXED__PORTFOLIO_R06_COMPLETE__WAVE3_GEO_D01_ACTIVE`  
-**Active Work Queue / 활성 작업 큐:** Issue #82 `WAVE3-GEO-D01 — Canada / Australia / OECD-World Bank Relationship Candidate Discovery`.
+**State / 상태:** `MISSION_ANCHOR_FIXED__WAVE3_GEO_D01_COMPLETE__CA_RAIL_F01_ACTIVE`  
+**Active Work Queue / 활성 작업 큐:** Issue #83 `CA-RAIL-F01 — Transport Canada Weekly Terminal-Dwell × ECCC Weather-Station Identity & Join Feasibility`.
 
 ## Fixed Mission / 고정 목적
 
 Discover and validate **new, falsifiable, reproducible and practically useful innovation opportunities or structural bottlenecks from relationships among public/research data**. `MEM-054` remains mandatory.
 
-## Last completed research / 마지막 완료 연구
+## Last completed work / 마지막 완료 작업
 
-`JP-PORT-E01`:
-**`PASS_E01_NEGATIVE_EXTREME_WIND_CARGO_ASSOCIATION`**.
+`WAVE3-GEO-D01` selected:
 
-Preserved association:
-- 10,165 port-months;
-- 143 ports;
-- 126 JMA station clusters;
-- beta per +1 m/s = -0.006292975;
-- 95% CR1 CI [-0.010635888, -0.001950062];
-- descriptive +5 m/s translation ≈ -3.10%;
-- association only, not causal.
+**`C-CA-001 — Canadian Freight Rail Weather–Delay Intelligence`**
 
-## Last portfolio decision / 마지막 포트폴리오 결정
+Frozen next rail outcome family:
+**Average Terminal Dwell Time - Loaded Cars and Intermodal Containers (Hours)**.
 
-`PORTFOLIO-R06` selected:
-**`WAVE3-GEO-D01`**.
+No rail-weather relationship was calculated during discovery.
 
-Reason:
-the current portfolio has multiple reusable validated assets, while immediate same-branch descendants have lower marginal information value or known access/construct constraints.
+## Active F01 scope / 활성 범위
 
-## Active discovery boundary / 활성 탐색 경계
+CA-RAIL-F01 is source-semantic / spatial-temporal feasibility only.
 
-WAVE3-GEO-D01 is small-scope discovery only.
+Source families:
+- Transport Canada TDIH weekly freight rail performance;
+- NRCan CGNDB official place identity;
+- ECCC Historical Climate Data/station metadata.
 
-Primary geographies/sources:
-- Canada;
-- Australia;
-- OECD / World Bank cross-national harmonization.
+F01 may inspect schemas, identities, coordinates, availability, non-outcome cardinality, revision/status fields and hashes.
 
-It must produce:
-- a concise official-source registry;
-- 3–6 concrete relationship candidates;
-- transparent scoring;
-- at most one next F01.
-
-No large download, model or effect-size screening is authorized.
+F01 may **not** compute weather-dwell associations, thresholds, carrier/terminal sensitivity or rankings.
 
 ## Exact next action / 정확한 다음 행동
 
-1. qualify current official access models;
-2. identify direct bottleneck/outcome surfaces;
-3. form concrete cross-source relationships with deterministic join semantics;
-4. screen out generic macro correlations and credential-heavy/opaque routes;
-5. score 3–6 candidates;
-6. select one F01 or `NO_WAVE3_PROMOTION`.
+1. freeze the exact Transport Canada full-dataset download route/hash/schema;
+2. inspect source terminal-area geography and the frozen dwell measure's record grain;
+3. determine weekly/reference-date and value-status/revision semantics;
+4. qualify exact terminal-place tokens against official CGNDB identities;
+5. qualify ECCC station metadata/download mechanics;
+6. freeze a prospective place→station support rule;
+7. determine common mature period and support-qualified terminal universe;
+8. apply PASS/PARTIAL/HOLD/REJECT.
 
 Incremental monetary cost remains **0 USD**.
