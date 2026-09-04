@@ -1,0 +1,292 @@
+name: CA RAIL F01 structural spatial adjudication
+
+on:
+  push:
+    paths:
+      - ".github/workflows/ca-rail-f01-structural-spatial-adjudication.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  adjudicate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install --quiet beautifulsoup4
+      - name: Adjudicate frozen rail stratum and official spatial bridge
+        shell: bash
+        run: |
+          python - <<'PY'
+          import io, os, re, csv, math, zipfile, hashlib, urllib.request, urllib.parse, unicodedata
+          from collections import Counter, defaultdict
+          from datetime import datetime
+          from pathlib import Path
+          from bs4 import BeautifulSoup
+
+          OUT="research/CA-RAIL-F01/STRUCTURAL_SPATIAL_ADJUDICATION.md"
+          RAIL_ZIP="https://tdih-cdit.tc.canada.ca/sites/default/files/ferroviaire-rail.zip"
+          CGNDB="https://geonames.nrcan.gc.ca/search-place-names/search"
+          ECCC_INV="https://collaboration.cmc.ec.gc.ca/cmc/climate/Get_More_Data_Plus_de_donnees/Station%20Inventory%20EN.csv"
+
+          TARGET="Average Terminal Dwell Time - Loaded Cars and Intermodal Containers"
+          START=datetime(2024,1,1)
+          END=datetime(2025,12,31)
+
+          def get(url,timeout=240):
+              req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0"})
+              with urllib.request.urlopen(req,timeout=timeout) as r:
+                  return r.read(),r.geturl(),dict(r.headers)
+          def sha(b):return hashlib.sha256(b).hexdigest()
+          def norm(s):return re.sub(r"\s+"," ",str(s or "").strip())
+          def fold(s):
+              s=unicodedata.normalize("NFKD",norm(s))
+              return "".join(ch for ch in s if not unicodedata.combining(ch)).casefold()
+          def parse_date(s):
+              s=norm(s)
+              for fmt in ("%Y-%m-%d","%Y/%m/%d"):
+                  try:return datetime.strptime(s,fmt)
+                  except:pass
+              return None
+          def hav(lat1,lon1,lat2,lon2):
+              R=6371.0088
+              p1,p2=math.radians(lat1),math.radians(lat2)
+              dp=math.radians(lat2-lat1);dl=math.radians(lon2-lon1)
+              a=math.sin(dp/2)**2+math.cos(p1)*math.cos(p2)*math.sin(dl/2)**2
+              return 2*R*math.asin(math.sqrt(a))
+
+          rb,rfu,rh=get(RAIL_ZIP)
+          z=zipfile.ZipFile(io.BytesIO(rb))
+          members=[
+            "weekly_rail_system_performance_indicators_eng_2024.csv",
+            "weekly_rail_system_performance_indicators_eng_2025.csv",
+          ]
+          rows=[]
+          source_dates=set()
+          for member in members:
+              raw=z.read(member)
+              rdr=csv.DictReader(io.TextIOWrapper(io.BytesIO(raw),encoding="utf-8-sig",newline=""))
+              for r in rdr:
+                  if norm(r["Measure"])!=TARGET:continue
+                  if norm(r["Carrier"]) not in ("CN","CPKC"):continue
+                  geo=norm(r["Geography"])
+                  if not re.match(r"^(CN|CPKC) terminal area, .+$",geo):continue
+                  d=parse_date(r["Reference_Date"])
+                  if not d or not (START<=d<=END):continue
+                  if norm(r["Commodity"])!="Intermodal containers":continue
+                  if norm(r["Car_Type"])!="Not Applicable":continue
+                  if norm(r["Dwell_Time_Range"])!="Not Applicable":continue
+                  if norm(r["Fleet_Status"])!="Not Applicable":continue
+                  if norm(r["Employee_Type"])!="Not Applicable":continue
+                  if norm(r["Segment_Distance_km"])!="0.0":continue
+                  if norm(r["Unit_of_Measure"])!="Hours":continue
+                  if norm(r["Status_of_Value"])!="0 - Available":continue
+                  rows.append({
+                    "date":d.strftime("%Y-%m-%d"),
+                    "carrier":norm(r["Carrier"]),
+                    "geo":geo,
+                    "place":geo.split(",",1)[1].strip(),
+                    "rowid":norm(r["Rowid"]),
+                    "last_updated":norm(r["Last_Updated"]),
+                  })
+                  source_dates.add(d.strftime("%Y-%m-%d"))
+
+          keys=Counter((r["date"],r["carrier"],r["geo"]) for r in rows)
+          dup={k:v for k,v in keys.items() if v>1}
+          terminals=sorted(set((r["carrier"],r["geo"],r["place"]) for r in rows))
+          byterminal=defaultdict(set)
+          for r in rows:
+              byterminal[(r["carrier"],r["geo"],r["place"])].add(r["date"])
+          global_dates=sorted(source_dates)
+          terminal_coverage=[]
+          for t in terminals:
+              dates=byterminal[t]
+              missing=[d for d in global_dates if d not in dates]
+              terminal_coverage.append((t[0],t[1],t[2],len(dates),len(missing),missing[:12]))
+
+          unique_places=sorted(set(t[2] for t in terminals))
+          city={}
+          city_fail={}
+          for place in unique_places:
+              url=CGNDB+"?"+urllib.parse.urlencode({"q":place})
+              b,fu,h=get(url,timeout=60)
+              soup=BeautifulSoup(b,"html.parser")
+              candidates=[]
+              for tr in soup.find_all("tr"):
+                  tds=tr.find_all("td")
+                  cells=[norm(x.get_text(" ",strip=True)) for x in tds]
+                  if len(cells)<5:continue
+                  if fold(cells[0])!=fold(place):continue
+                  if cells[3]!="City" or cells[4]!="Official":continue
+                  a=tds[0].find("a",href=True)
+                  if not a:continue
+                  candidates.append((cells[0],cells[2],urllib.parse.urljoin(fu,a["href"])))
+              cand=[]
+              seen=set()
+              for x in candidates:
+                  if x[2] not in seen:
+                      seen.add(x[2]);cand.append(x)
+              if len(cand)!=1:
+                  city_fail[place]=cand
+                  continue
+              official_name,province,detail_url=cand[0]
+              db,dfu,dh=get(detail_url,timeout=60)
+              dsoup=BeautifulSoup(db,"html.parser")
+              latlon=None
+              key=None
+              for tr in dsoup.find_all("tr"):
+                  cs=[norm(x.get_text(" ",strip=True)) for x in tr.find_all(["th","td"])]
+                  if len(cs)>=2:
+                      if cs[0]=="Key":key=cs[1]
+                      if "Latitude - Longitude (decimal)" in cs[0]:
+                          m=re.search(r"(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)",cs[1])
+                          if m:latlon=(float(m.group(1)),float(m.group(2)))
+              if latlon is None:
+                  tx=dsoup.get_text(" ",strip=True)
+                  m=re.search(r"Latitude\s*-\s*Longitude\s*\(decimal\)\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)",tx)
+                  if m:latlon=(float(m.group(1)),float(m.group(2)))
+              if latlon is None:
+                  city_fail[place]=[("DETAIL_COORDINATE_PARSE_FAIL",province,dfu)]
+                  continue
+              city[place]={
+                  "official_name":official_name,"province":province,"url":dfu,
+                  "key":key or "","lat":latlon[0],"lon":latlon[1],
+                  "detail_sha":sha(db)
+              }
+
+          eb,efu,eh=get(ECCC_INV)
+          etxt=None;eenc=None
+          for enc in ("utf-8-sig","utf-8","cp1252","latin-1"):
+              try:etxt=eb.decode(enc);eenc=enc;break
+              except:pass
+          rawrows=list(csv.reader(io.StringIO(etxt)))
+          header_idx=None
+          header=None
+          for i,row in enumerate(rawrows[:50]):
+              normalized=[norm(x) for x in row]
+              if "Climate ID" in normalized and any("Latitude" in x and "Decimal" in x for x in normalized):
+                  header_idx=i;header=normalized;break
+          if header_idx is None:
+              raise RuntimeError(f"ECCC header not found in first 50 rows: {rawrows[:10]}")
+          eccc=[]
+          for row in rawrows[header_idx+1:]:
+              if not any(norm(x) for x in row):continue
+              rr=list(row)+[""]*(len(header)-len(row))
+              d={header[j]:norm(rr[j]) for j in range(len(header))}
+              eccc.append(d)
+          def field(pred):
+              hits=[h for h in header if pred(h)]
+              if len(hits)!=1:
+                  raise RuntimeError(f"Field resolution failed {hits}; header={header}")
+              return hits[0]
+          f_name=field(lambda h:h=="Station Name")
+          f_clim=field(lambda h:h=="Climate ID")
+          f_lat=field(lambda h:"Latitude" in h and "Decimal" in h)
+          f_lon=field(lambda h:"Longitude" in h and "Decimal" in h)
+          f_dfirst=field(lambda h:h=="DLY First Year")
+          f_dlast=field(lambda h:h=="DLY Last Year")
+          stations=[]
+          for r in eccc:
+              try:
+                  lat=float(r[f_lat]);lon=float(r[f_lon])
+                  a=int(float(r[f_dfirst]));b=int(float(r[f_dlast]))
+              except:continue
+              if a<=2024 and b>=2025 and r[f_clim]:
+                  stations.append((r[f_clim],r[f_name],lat,lon,a,b))
+          sb=defaultdict(list)
+          for s in stations:sb[s[0]].append(s)
+          stable={cid:v[0] for cid,v in sb.items() if len(v)==1}
+          amb_station={cid:v for cid,v in sb.items() if len(v)>1}
+
+          mapped=[]
+          for place,c in city.items():
+              ds=sorted((hav(c["lat"],c["lon"],s[2],s[3]),cid,s[1],s[2],s[3],s[4],s[5])
+                        for cid,s in stable.items())
+              if ds:
+                  mapped.append((place,c,ds[0],ds[1] if len(ds)>1 else None))
+          thresholds=[10,20,30,50,75]
+          support={}
+          for t in thresholds:
+              support[t]=sum(1 for place,c,d1,d2 in mapped if d1[0]<=t and (d2 is None or abs(d2[0]-d1[0])>0.01))
+
+          lines=[
+            "---",
+            "id: CA-RAIL-F01-STRUCTURAL-SPATIAL-ADJUDICATION",
+            "type: outcome-blind-structural-spatial-adjudication",
+            "created: 2026-09-04",
+            "relationship_outcome_computed: false",
+            "weather_values_opened: false",
+            "rail_dwell_magnitudes_persisted: false",
+            "incremental_monetary_cost_usd: 0",
+            "---","",
+            "# CA-RAIL-F01 Structural / Spatial Adjudication","",
+            "No dwell magnitude, weather observation or rail-weather association is persisted.","",
+            "## A. Frozen intermodal-dwell structural panel","",
+            "- period: **2024-01-01 through 2025-12-31**",
+            "- carriers: **CN, CPKC only**",
+            "- commodity: **Intermodal containers**",
+            "- status: **0 - Available**",
+            f"- source rows under frozen stratum: **{len(rows)}**",
+            f"- unique carrier-terminal-week keys: **{len(keys)}**",
+            f"- duplicate keys: **{len(dup)}**",
+            f"- unique carrier-terminal series: **{len(terminals)}**",
+            f"- unique source reference dates: **{len(global_dates)}**",
+            f"- date range: **{global_dates[0] if global_dates else 'NA'} .. {global_dates[-1] if global_dates else 'NA'}**","",
+            "### Per-terminal coverage","",
+            "| Carrier | Terminal geography | Place token | Rows | Missing vs global dates | First missing examples |",
+            "|---|---|---|---:|---:|---|"
+          ]
+          for x in terminal_coverage:
+              lines.append(f"| {x[0]} | {x[1]} | {x[2]} | {x[3]} | {x[4]} | {', '.join(x[5])} |")
+          lines += ["","## B. CGNDB City/Official identity","",
+                    f"- unique place tokens: **{len(unique_places)}**",
+                    f"- unique City + Official matches with coordinates: **{len(city)}**",
+                    f"- unresolved place tokens: **{len(city_fail)}**","",
+                    "| Source token | Official name | Province | CGNDB key | Latitude | Longitude |",
+                    "|---|---|---|---|---:|---:|"]
+          for p,c in sorted(city.items()):
+              lines.append(f"| {p} | {c['official_name']} | {c['province']} | {c['key']} | {c['lat']:.7f} | {c['lon']:.7f} |")
+          if city_fail:
+              lines += ["","### Unresolved CGNDB place tokens",""]
+              for p,v in city_fail.items():lines.append(f"- {p}: {v}")
+
+          lines += ["","## C. ECCC station-inventory contract","",
+                    f"- inventory URL: {efu}",
+                    f"- bytes: **{len(eb)}**",
+                    f"- SHA-256: {sha(eb)}",
+                    f"- metadata/header row index (1-based): **{header_idx+1}**",
+                    f"- fields: {header}",
+                    f"- parsed station rows: **{len(eccc)}**",
+                    f"- daily-coverage candidate rows spanning 2024–2025: **{len(stations)}**",
+                    f"- unique Climate IDs with one coordinate row: **{len(stable)}**",
+                    f"- ambiguous duplicated Climate IDs: **{len(amb_station)}**","",
+                    "## D. Official-city → ECCC daily-coverage station structural support","",
+                    "| Max distance | Supported city tokens | Share of resolved cities |",
+                    "|---:|---:|---:|"]
+          for t in thresholds:
+              den=len(city)
+              lines.append(f"| {t} km | {support[t]} | {(support[t]/den if den else 0):.6%} |")
+          lines += ["","### Nearest eligible stations","",
+                    "| City | Climate ID | Station | Distance km | Daily first year | Daily last year | Second-nearest km |",
+                    "|---|---|---|---:|---:|---:|---:|"]
+          for place,c,d1,d2 in sorted(mapped):
+              lines.append(f"| {place} | {d1[1]} | {d1[2]} | {d1[0]:.3f} | {d1[5]} | {d1[6]} | {(d2[0] if d2 else float('nan')):.3f} |")
+
+          lines += ["","## E. Prospective implications","",
+                    "- Intermodal-container dwell yields a source-defined single row per carrier-terminal-week when the frozen dimensions are applied; no commodity averaging is required.",
+                    "- 2024–2025 remains a frozen preliminary Transport Canada snapshot, not a claim of final historical values.",
+                    "- CGNDB matching permits accent-insensitive exact linguistic equivalence and requires City + Official; no fuzzy geocoding.",
+                    "- ECCC station support is based only on station inventory, coordinates and daily availability years; no weather values are opened.",
+                    "- A final station-distance cap must be adopted from this structural coverage before any weather values.",
+                    "","Incremental monetary cost remained **0 USD**.",""]
+          Path(OUT).write_text("\n".join(lines),encoding="utf-8")
+          PY
+      - name: Commit adjudication
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/CA-RAIL-F01/STRUCTURAL_SPATIAL_ADJUDICATION.md
+          git diff --cached --quiet || git commit -m "adjudicate CA rail structural spatial support"
+          git push
