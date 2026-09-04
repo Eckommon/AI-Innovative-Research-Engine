@@ -1,0 +1,81 @@
+name: JP PORT E01 JMA request-contract probe
+
+on:
+  push:
+    paths:
+      - ".github/workflows/jp-port-e01-jma-request-probe.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Recover official JMA CSV request contract without weather values
+        shell: bash
+        run: |
+          python - <<'PY'
+          import urllib.request, urllib.parse, re, os, hashlib
+          from html.parser import HTMLParser
+
+          ROOT="https://www.data.jma.go.jp/risk/obsdl/"
+          OUT="research/JP-PORT-E01/JMA_REQUEST_CONTRACT_PROBE.md"
+
+          def get(url):
+              req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0"})
+              with urllib.request.urlopen(req,timeout=60) as r:
+                  return r.read(),r.geturl(),dict(r.headers)
+
+          html,fu,h=get(ROOT)
+          text=html.decode("utf-8","replace")
+          srcs=re.findall(r'<script[^>]+src=["\']([^"\']+)["\']',text,re.I)
+          hrefs=re.findall(r'<link[^>]+href=["\']([^"\']+)["\']',text,re.I)
+          jsurls=[]
+          for s in srcs:
+              u=urllib.parse.urljoin(ROOT,s)
+              if u not in jsurls:jsurls.append(u)
+
+          hits=[]
+          jsmeta=[]
+          for u in jsurls:
+              try:
+                  b,jfu,jh=get(u)
+              except Exception as e:
+                  jsmeta.append((u,"ERR",str(e)))
+                  continue
+              t=b.decode("utf-8","replace")
+              jsmeta.append((jfu,len(b),hashlib.sha256(b).hexdigest()))
+              for pat in ["show/table","downloadFlag","stationNumList","elementNumList","aggrgPeriod","csvFlag","ymdList","optionNumList","ajax","XMLHttpRequest"]:
+                  if pat in t:
+                      # bounded snippets around occurrences
+                      for m in re.finditer(re.escape(pat),t):
+                          a=max(0,m.start()-500);z=min(len(t),m.end()+900)
+                          hits.append((jfu,pat,t[a:z].replace("\n"," ")[:1600]))
+                          if sum(1 for x in hits if x[0]==jfu and x[1]==pat)>=5:break
+
+          lines=["---","id: JP-PORT-E01-JMA-REQUEST-CONTRACT-PROBE","created: 2026-09-04",
+                 "weather_values_opened: false","relationship_outcome_computed: false",
+                 "incremental_monetary_cost_usd: 0","---","",
+                 "# JP-PORT-E01 JMA Request Contract Probe","",
+                 "This probe inspected only official page/JavaScript request mechanics. It did not submit a weather-data request.","",
+                 f"- root final URL: {fu}",
+                 f"- root HTML SHA-256: {hashlib.sha256(html).hexdigest()}","",
+                 "## Script assets",""]
+          for x in jsmeta:
+              lines.append(f"- {x}")
+          lines += ["","## Request-contract snippets",""]
+          for u,p,s in hits:
+              lines += [f"### {p} in {u}",f"- {s}",""]
+          os.makedirs(os.path.dirname(OUT),exist_ok=True)
+          open(OUT,"w",encoding="utf-8").write("\n".join(lines))
+          PY
+      - name: Commit probe
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/JP-PORT-E01/JMA_REQUEST_CONTRACT_PROBE.md
+          git diff --cached --quiet || git commit -m "probe JMA official CSV request contract"
+          git push
