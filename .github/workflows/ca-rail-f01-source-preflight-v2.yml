@@ -1,0 +1,217 @@
+name: CA RAIL F01 source preflight v2
+
+on:
+  push:
+    paths:
+      - ".github/workflows/ca-rail-f01-source-preflight-v2.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install --quiet beautifulsoup4
+      - name: Inspect annual rail target place and ECCC structures
+        shell: bash
+        run: |
+          python - <<'PY'
+          import io,os,re,csv,zipfile,hashlib,urllib.request,urllib.parse
+          from collections import Counter,defaultdict
+          from bs4 import BeautifulSoup
+          from pathlib import Path
+
+          OUT="research/CA-RAIL-F01/SOURCE_PREFLIGHT.md"
+          RAIL_PAGE="https://tdih-cdit.tc.canada.ca/en/rail-2023"
+          RAIL_ZIP="https://tdih-cdit.tc.canada.ca/sites/default/files/ferroviaire-rail.zip"
+          ECCC_INV="https://collaboration.cmc.ec.gc.ca/cmc/climate/Get_More_Data_Plus_de_donnees/Station%20Inventory%20EN.csv"
+          CGNDB="https://geonames.nrcan.gc.ca/search-place-names/search"
+          TARGET="Average Terminal Dwell Time - Loaded Cars and Intermodal Containers"
+
+          def get(url,timeout=240):
+              req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0"})
+              with urllib.request.urlopen(req,timeout=timeout) as r:
+                  return r.read(),r.geturl(),dict(r.headers)
+          def sha(b): return hashlib.sha256(b).hexdigest()
+          def norm(s): return re.sub(r"\s+"," ",str(s or "").strip())
+          def decode_bytes(b):
+              for e in ("utf-8-sig","utf-8","cp1252","latin-1"):
+                  try:return b.decode(e),e
+                  except:pass
+              raise RuntimeError("decode failed")
+
+          page,purl,ph=get(RAIL_PAGE)
+          zb,zurl,zh=get(RAIL_ZIP)
+          z=zipfile.ZipFile(io.BytesIO(zb))
+          eng=sorted([n for n in z.namelist() if "weekly_rail_system_performance_indicators_eng_" in n.lower()])
+          if len(eng)!=4: raise RuntimeError(f"Expected four annual English CSVs, got {eng}")
+
+          expected_fields=['Reference_Date','Carrier_SortId','Carrier','Measure_SortId','Measure','Unit_of_Measure','Geography_SortId','Geography','Segment_Distance_km','Commodity_SortId','Commodity','Car_Type_SortId','Car_Type','Dwell_Time_Range_SortId','Dwell_Time_Range','Fleet_Status_SortId','Fleet_Status','Employee_Type_SortId','Employee_Type','Measure_Value','Status_of_Value','Rowid','Coordinate_Dimension','Coordinate_Sort','Last_Updated']
+
+          target_rows=0;terminal_rows=0
+          terminal_geos=Counter();carriers=Counter();dates=[]
+          statuses=Counter();units=Counter();car_types=Counter();commodities=Counter();dwell=Counter();employees=Counter();fleet=Counter();segmentdist=Counter()
+          combo=Counter();year_counts=Counter();last_updated=defaultdict(set)
+          numeric=0;blank=0
+          structural_identity=Counter()
+          member_hashes=[]
+
+          for name in eng:
+              raw=z.read(name)
+              member_hashes.append((name,len(raw),sha(raw)))
+              txt=io.TextIOWrapper(io.BytesIO(raw),encoding="utf-8-sig",newline="")
+              rdr=csv.DictReader(txt)
+              if rdr.fieldnames!=expected_fields:
+                  raise RuntimeError(f"Schema drift {name}: {rdr.fieldnames}")
+              ym=re.search(r"(20\d{2})\.csv$",name)
+              source_year=ym.group(1) if ym else "?"
+              for row in rdr:
+                  if norm(row["Measure"])!=TARGET:continue
+                  target_rows+=1;year_counts[source_year]+=1
+                  geo=norm(row["Geography"])
+                  if not re.match(r"^(CN|CPKC|BNSF) terminal area, .+$",geo):continue
+                  terminal_rows+=1
+                  terminal_geos[geo]+=1
+                  carriers[norm(row["Carrier"])]+=1
+                  dates.append(norm(row["Reference_Date"]))
+                  statuses[norm(row["Status_of_Value"])]+=1
+                  units[norm(row["Unit_of_Measure"])]+=1
+                  car_types[norm(row["Car_Type"])]+=1
+                  commodities[norm(row["Commodity"])]+=1
+                  dwell[norm(row["Dwell_Time_Range"])]+=1
+                  employees[norm(row["Employee_Type"])]+=1
+                  fleet[norm(row["Fleet_Status"])]+=1
+                  segmentdist[norm(row["Segment_Distance_km"])]+=1
+                  last_updated[source_year].add(norm(row["Last_Updated"]))
+                  dims=(norm(row["Car_Type"]),norm(row["Commodity"]),norm(row["Dwell_Time_Range"]),norm(row["Employee_Type"]),norm(row["Fleet_Status"]),norm(row["Unit_of_Measure"]),norm(row["Status_of_Value"]))
+                  combo[dims]+=1
+                  ident=(norm(row["Reference_Date"]),norm(row["Carrier"]),geo,*dims)
+                  structural_identity[ident]+=1
+                  v=norm(row["Measure_Value"])
+                  if not v:blank+=1
+                  else:
+                      try:float(v);numeric+=1
+                      except:blank+=1
+
+          dup=sum(v>1 for v in structural_identity.values())
+          maxdup=max(structural_identity.values()) if structural_identity else 0
+          places=sorted({g.split(",",1)[1].strip() for g in terminal_geos})
+
+          # Candidate canonical aggregate dimension exists only if exact source row is available.
+          canonical=("Total (All equipment types)","Not Applicable","Not Applicable","Not Applicable","Not Applicable","Hours","0 - Available")
+          canonical_count=combo[canonical]
+          canonical_key=Counter()
+          if canonical_count:
+              # rescan only canonical for per carrier-terminal-week uniqueness
+              for name in eng:
+                  raw=z.read(name)
+                  rdr=csv.DictReader(io.TextIOWrapper(io.BytesIO(raw),encoding="utf-8-sig",newline=""))
+                  for row in rdr:
+                      if norm(row["Measure"])!=TARGET:continue
+                      geo=norm(row["Geography"])
+                      if not re.match(r"^(CN|CPKC|BNSF) terminal area, .+$",geo):continue
+                      dims=(norm(row["Car_Type"]),norm(row["Commodity"]),norm(row["Dwell_Time_Range"]),norm(row["Employee_Type"]),norm(row["Fleet_Status"]),norm(row["Unit_of_Measure"]),norm(row["Status_of_Value"]))
+                      if dims==canonical:
+                          canonical_key[(norm(row["Reference_Date"]),norm(row["Carrier"]),geo)]+=1
+
+          # CGNDB exact-name structural probe and detail-link capture.
+          cgn=[]
+          for place in places:
+              url=CGNDB+"?"+urllib.parse.urlencode({"q":place})
+              try:
+                  b,fu,h=get(url,timeout=60)
+                  soup=BeautifulSoup(b,"html.parser")
+                  exact=[]
+                  for tr in soup.find_all("tr"):
+                      tds=tr.find_all("td")
+                      cells=[norm(x.get_text(" ",strip=True)) for x in tds]
+                      if len(cells)>=4 and cells[0].casefold()==place.casefold():
+                          a=tds[0].find("a",href=True) if tds else None
+                          exact.append({"cells":cells[:6],"href":urllib.parse.urljoin(fu,a["href"]) if a else ""})
+                  cgn.append((place,len(exact),exact[:8]))
+              except Exception as e:
+                  cgn.append((place,-1,[{"error":repr(e)}]))
+
+          # ECCC inventory structure.
+          eb,efu,eh=get(ECCC_INV)
+          etxt,eenc=decode_bytes(eb)
+          erdr=csv.DictReader(io.StringIO(etxt))
+          efields=erdr.fieldnames or []
+          ecnt=0
+          for _ in erdr: ecnt+=1
+
+          lines=["---","id: CA-RAIL-F01-SOURCE-PREFLIGHT","type: outcome-blind-source-preflight",
+                 "created: 2026-09-04","relationship_outcome_computed: false","weather_values_opened: false",
+                 "rail_dwell_magnitudes_persisted: false","incremental_monetary_cost_usd: 0","---","",
+                 "# CA-RAIL-F01 Source Preflight","",
+                 "No weather observations or rail-weather relationship were computed. Target dwell magnitudes were not persisted.","",
+                 "## A. Transport Canada frozen source","",
+                 f"- page: {purl}",f"- page SHA-256: `{sha(page)}`",
+                 f"- ZIP: {zurl}",f"- ZIP bytes: **{len(zb)}**",f"- ZIP SHA-256: `{sha(zb)}`","",
+                 "### Annual English members","",
+                 "| Member | Bytes | SHA-256 |","|---|---:|---|"]
+          for n,b,h in member_hashes:lines.append(f"| {n} | {b} | {h} |")
+          lines += ["","- schema identical across 2023–2026: **YES**",
+                    f"- exact 25-column schema: {expected_fields}","",
+                    "## B. Frozen target outcome structure","",
+                    f"- target: **{TARGET}**",
+                    f"- target rows, all geographies/dimensions: **{target_rows}**",
+                    f"- target rows on carrier-specific terminal areas: **{terminal_rows}**",
+                    f"- annual target counts: {dict(year_counts)}",
+                    f"- unique terminal-area labels: **{len(terminal_geos)}**",
+                    f"- unique place tokens: **{len(places)}**",
+                    f"- reference-date range among terminal-area target rows: **{min(dates) if dates else 'NA'} .. {max(dates) if dates else 'NA'}**",
+                    f"- carriers: {dict(carriers)}",
+                    f"- units: {dict(units)}",
+                    f"- statuses: {dict(statuses)}",
+                    f"- car types: {dict(car_types)}",
+                    f"- commodities: {dict(commodities)}",
+                    f"- dwell ranges: {dict(dwell)}",
+                    f"- employee types: {dict(employees)}",
+                    f"- fleet status: {dict(fleet)}",
+                    f"- segment distance: {dict(segmentdist)}",
+                    f"- Last_Updated distinct values by source year: { {y:sorted(v) for y,v in last_updated.items()} }",
+                    f"- numeric target cells: **{numeric}**",
+                    f"- blank/non-numeric target cells: **{blank}**",
+                    f"- duplicate full structural identities: **{dup}**; max multiplicity **{maxdup}**","",
+                    "### Terminal-area geography labels",""]
+          for g,n in sorted(terminal_geos.items()):lines.append(f"- {g}: {n}")
+          lines += ["","### Target dimension combinations","",
+                    "| Car type | Commodity | Dwell range | Employee | Fleet | Unit | Status | Rows |",
+                    "|---|---|---|---|---|---|---|---:|"]
+          for d,n in combo.most_common():
+              lines.append("| "+" | ".join(d)+f" | {n} |")
+          lines += ["","### Prospective aggregate-row diagnostic","",
+                    f"- candidate dimensions: {canonical}",
+                    f"- matching rows: **{canonical_count}**",
+                    f"- unique carrier-terminal-week keys: **{len(canonical_key)}**",
+                    f"- duplicate candidate carrier-terminal-week keys: **{sum(v>1 for v in canonical_key.values())}**",
+                    f"- max candidate key multiplicity: **{max(canonical_key.values()) if canonical_key else 0}**","",
+                    "This diagnostic does not yet adopt the aggregate row; it only checks whether the source itself exposes a deterministic total-equipment row.","",
+                    "## C. NRCan CGNDB exact-name structural probe","",
+                    "| Place token | Exact-name result rows | Exact result metadata |","|---|---:|---|"]
+          for p,n,e in cgn:lines.append(f"| {p} | {n} | {str(e)[:1800]} |")
+          lines += ["","## D. ECCC station inventory","",
+                    f"- URL: {efu}",f"- bytes: **{len(eb)}**",f"- SHA-256: `{sha(eb)}`",
+                    f"- encoding: {eenc}",f"- data rows: **{ecnt}**",f"- fields: {efields}","",
+                    "## E. Immediate gate status","",
+                    "- Transport Canada full ZIP/file snapshot and annual schema are reproducible.",
+                    "- The target measure and carrier-specific terminal-area labels are source-defined.",
+                    "- The source includes value-status and Last_Updated fields, allowing a prospective revision/maturity contract.",
+                    "- Exact terminal-week record identity depends on adopting one source-defined aggregate dimension combination; the canonical total-equipment diagnostic above informs that decision without using weather outcomes.",
+                    "- CGNDB exact-name metadata and ECCC inventory now determine whether a deterministic spatial bridge can be frozen.",
+                    "","No F01 final PASS/PARTIAL/HOLD is declared in this file alone.","",
+                    "Incremental monetary cost remained **0 USD**.",""]
+          Path(OUT).write_text("\n".join(lines),encoding="utf-8")
+          PY
+      - name: Commit preflight
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/CA-RAIL-F01/SOURCE_PREFLIGHT.md
+          git diff --cached --quiet || git commit -m "record CA-RAIL-F01 source preflight v2"
+          git push
