@@ -1,0 +1,82 @@
+name: JP PORT F01 C02 and JMA URL probe
+
+on:
+  push:
+    paths:
+      - ".github/workflows/jp-port-f01-url-probe.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Probe official download routes
+        shell: bash
+        run: |
+          python - <<'PY'
+          import urllib.request, urllib.error, hashlib, os, re
+          from html.parser import HTMLParser
+
+          OUT="research/JP-PORT-F01/URL_PROBE.md"
+          PAGE="https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-C02-v3_2.html"
+          CANDS=[
+            "https://nlftp.mlit.go.jp/ksj/gml/data/C02/C02-2014/C02-14_GML.zip",
+            "https://nlftp.mlit.go.jp/ksj/gml/data/C02/C02-14/C02-14_GML.zip",
+            "https://nlftp.mlit.go.jp/ksj/gml/data/C02/C02-14_GML.zip",
+            "https://nlftp.mlit.go.jp/ksj/gml/data/C02/C02-2014/C02-14.zip",
+          ]
+          JMA=[
+            "https://www.jma.go.jp/jma/kishou/know/amedas/ame_master.zip",
+          ]
+          def req(url, method="GET", read=0):
+              r=urllib.request.Request(url,method=method,headers={"User-Agent":"Mozilla/5.0"})
+              try:
+                  with urllib.request.urlopen(r,timeout=60) as x:
+                      b=x.read(read) if read else b""
+                      return {"ok":True,"status":x.status,"url":x.geturl(),"type":x.headers.get("Content-Type"),"length":x.headers.get("Content-Length"),"sample":b}
+              except Exception as e:
+                  return {"ok":False,"error":repr(e)}
+
+          page=req(PAGE,"GET",read=500000)
+          text=page.get("sample",b"").decode("utf-8","replace") if page.get("ok") else ""
+          snippets=[]
+          for line in text.splitlines():
+              if "C02-14" in line or "download" in line.lower():
+                  snippets.append(line.strip()[:3000])
+
+          lines=["---","id: JP-PORT-F01-URL-PROBE","created: 2026-09-04",
+                 "relationship_outcome_computed: false","weather_values_opened: false",
+                 "incremental_monetary_cost_usd: 0","---","",
+                 "# JP-PORT-F01 Official URL Probe","",
+                 "## C02 metadata page","",
+                 f"- page result: { {k:v for k,v in page.items() if k!='sample'} }",
+                 f"- page SHA-256: {hashlib.sha256(page.get('sample',b'')).hexdigest() if page.get('ok') else 'NA'}",
+                 "","### Relevant raw HTML snippets",""]
+          for s in snippets[:120]: lines.append(f"- {s}")
+          lines += ["","## Candidate C02 download routes","",
+                    "| URL | HEAD/GET result |","|---|---|"]
+          for u in CANDS:
+              h=req(u,"HEAD")
+              if not h.get("ok"):
+                  h=req(u,"GET",read=32)
+              lines.append(f"| {u} | { {k:v for k,v in h.items() if k!='sample'} } |")
+          lines += ["","## JMA station-list route","",
+                    "| URL | result |","|---|---|"]
+          for u in JMA:
+              h=req(u,"HEAD")
+              if not h.get("ok"): h=req(u,"GET",read=32)
+              lines.append(f"| {u} | { {k:v for k,v in h.items() if k!='sample'} } |")
+          os.makedirs(os.path.dirname(OUT),exist_ok=True)
+          open(OUT,"w",encoding="utf-8").write("\n".join(lines))
+          PY
+      - name: Commit probe
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/JP-PORT-F01/URL_PROBE.md
+          git diff --cached --quiet || git commit -m "record JP-PORT-F01 official URL probe"
+          git push
