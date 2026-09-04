@@ -1,0 +1,211 @@
+name: JP PORT F01 corrected support adjudication
+
+on:
+  push:
+    paths:
+      - ".github/workflows/jp-port-f01-support-adjudication.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  support:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install --quiet openpyxl pyshp
+      - name: Compute outcome-blind port-station support
+        shell: bash
+        run: |
+          python - <<'PY'
+          import io,os,re,csv,zipfile,hashlib,urllib.request,math
+          from pathlib import Path
+          from collections import defaultdict,Counter
+          from datetime import datetime,timedelta
+          import openpyxl, shapefile
+
+          OUT="research/JP-PORT-F01/SUPPORT_ADJUDICATION.md"
+          ESTAT={
+            2019:"https://www.e-stat.go.jp/stat-search/file-download?fileKind=0&statInfId=000031909819",
+            2020:"https://www.e-stat.go.jp/stat-search/file-download?fileKind=0&statInfId=000031917650",
+            2021:"https://www.e-stat.go.jp/stat-search/file-download?fileKind=0&statInfId=000032059434",
+            2022:"https://www.e-stat.go.jp/stat-search/file-download?fileKind=0&statInfId=000032170294",
+            2023:"https://www.e-stat.go.jp/stat-search/file-download?fileKind=0&statInfId=000040024002",
+            2024:"https://www.e-stat.go.jp/stat-search/file-download?fileKind=0&statInfId=000040146718",
+          }
+          C02="https://nlftp.mlit.go.jp/ksj/gml/data/C02/C02-14/C02-14_GML.zip"
+          JMA="https://www.data.jma.go.jp/stats/data/mdrr/chiten/meta/amdmaster.index4"
+          START=datetime(2019,1,1);END=datetime(2024,12,31)
+
+          def get(u):
+              req=urllib.request.Request(u,headers={"User-Agent":"Mozilla/5.0"})
+              with urllib.request.urlopen(req,timeout=180) as r:return r.read()
+          def norm(s):
+              s=str(s or "").strip().replace("（","(").replace("）",")").replace("　","")
+              return re.sub(r"\s+","",s)
+          def stem(s):
+              s=norm(s)
+              return s[:-1] if s.endswith("港") else s
+          def dt(s):
+              s=str(s or "").strip()
+              if s=="9999-99-99":return datetime(9999,12,31)
+              try:return datetime.strptime(s,"%Y-%m-%d")
+              except:return None
+          def hav(a,b,c,d):
+              R=6371.0088;p1=math.radians(a);p2=math.radians(c)
+              dp=math.radians(c-a);dl=math.radians(d-b)
+              q=math.sin(dp/2)**2+math.cos(p1)*math.cos(p2)*math.sin(dl/2)**2
+              return 2*R*math.asin(math.sqrt(q))
+
+          yearly={}
+          for y,u in ESTAT.items():
+              b=get(u)
+              wb=openpyxl.load_workbook(io.BytesIO(b),read_only=True,data_only=True)
+              ws=wb["海上出入貨物"]
+              ports={}
+              for row in ws.iter_rows(min_row=8,values_only=True):
+                  pref=norm(row[0] if len(row)>0 else "")
+                  name=norm(row[2] if len(row)>2 else "")
+                  typ=norm(row[3] if len(row)>3 else "")
+                  if pref and pref!="合計" and name and typ=="計":
+                      ports[name]=pref
+              yearly[y]=ports
+          stable=set.intersection(*(set(yearly[y]) for y in ESTAT))
+          pref_consistent={n for n in stable if len({yearly[y][n] for y in ESTAT})==1}
+
+          cb=get(C02)
+          z=zipfile.ZipFile(io.BytesIO(cb))
+          tmp=Path("/tmp/c02a");tmp.mkdir(exist_ok=True);z.extractall(tmp)
+          shp=[p for p in tmp.rglob("*.shp") if "PortAndHarbor" in p.name][0]
+          sf=None
+          for enc in ("cp932","shift_jis","utf-8"):
+              try:
+                  cand=shapefile.Reader(str(shp),encoding=enc)
+                  _=cand.records()[0]
+                  sf=cand
+                  break
+              except Exception:
+                  pass
+          if sf is None:
+              raise RuntimeError("Cannot decode C02 shapefile")
+          fields=[f[0] for f in sf.fields[1:]]
+          ix={n:i for i,n in enumerate(fields)}
+          c02=defaultdict(list)
+          for sr in sf.iterShapeRecords():
+              if not sr.shape.points:continue
+              name=stem(sr.record[ix["C02_005"]])
+              code=str(sr.record[ix["C02_004"]]).strip()
+              lon,lat=sr.shape.points[0]
+              if name:c02[name].append((code,float(lat),float(lon)))
+          exact={n:c02[n][0] for n in pref_consistent if len(c02.get(n,[]))==1}
+          amb={n:c02[n] for n in pref_consistent if len(c02.get(n,[]))>1}
+          no_c02=sorted(pref_consistent-set(c02))
+
+          jb=get(JMA)
+          rr=list(csv.reader(io.StringIO(jb.decode("cp932"))))[2:]
+          hist=defaultdict(list)
+          for r in rr:
+              if len(r)!=33:continue
+              try:
+                  sid=r[0].strip();name=r[1].strip();lat=float(r[7]);lon=float(r[8])
+                  ps=r[16].strip();ws=r[17].strip();st=dt(r[23]);en=dt(r[24])
+                  pdisc=r[26].strip();wdisc=r[27].strip()
+              except Exception:
+                  continue
+              if sid and st and en:
+                  hist[sid].append((st,en,name,lat,lon,ps,ws,pdisc,wdisc))
+
+          stable_st={}
+          reject=Counter()
+          for sid,segs in hist.items():
+              segs=sorted(segs)
+              ov=[s for s in segs if s[1]>=START and s[0]<=END]
+              if not ov:continue
+              cursor=START
+              ok=True
+              coords=set()
+              for s in ov:
+                  st,en,name,lat,lon,ps,ws,pd,wd=s
+                  a=max(st,START);b=min(en,END)
+                  if a>cursor:
+                      ok=False;reject["gap"]+=1;break
+                  if ps!="1" or ws!="1":
+                      ok=False;reject["instrument_absent"]+=1;break
+                  coords.add((round(lat,3),round(lon,3)))
+                  if st>START and (pd!="0" or wd!="0"):
+                      ok=False;reject["stat_disconnect"]+=1;break
+                  if b>=cursor:cursor=b+timedelta(days=1)
+              if ok and cursor<=END:
+                  ok=False;reject["incomplete_end"]+=1
+              if ok and len(coords)!=1:
+                  ok=False;reject["coordinate_change"]+=1
+              if ok:
+                  name=ov[-1][2];lat,lon=next(iter(coords))
+                  stable_st[sid]=(name,lat,lon)
+
+          rows=[]
+          tie_eps=0.01
+          for pn,(code,plat,plon) in exact.items():
+              ds=sorted((hav(plat,plon,lat,lon),sid,name) for sid,(name,lat,lon) in stable_st.items())
+              if not ds:continue
+              tied=len(ds)>1 and abs(ds[1][0]-ds[0][0])<=tie_eps
+              rows.append((pn,code,yearly[2024][pn],ds[0][0],ds[0][1],ds[0][2],ds[1][0] if len(ds)>1 else None,tied))
+          thresholds=[10,20,30,40]
+          q30=[r for r in rows if r[3]<=30 and not r[7]]
+
+          lines=["---","id: JP-PORT-F01-SUPPORT-ADJUDICATION","type: outcome-blind-support-adjudication",
+                 "created: 2026-09-04","relationship_outcome_computed: false","weather_values_opened: false",
+                 "incremental_monetary_cost_usd: 0","---","",
+                 "# JP-PORT-F01 Corrected Support Adjudication","",
+                 "## A. Mature e-Stat port identity","",
+                 f"- 2019–2024 exact port-name intersection from 海上出入貨物, D=計: **{len(stable)}**",
+                 f"- prefecture-consistent across all six years: **{len(pref_consistent)}**",
+                 f"- annual port counts: { {y:len(yearly[y]) for y in ESTAT} }","",
+                 "## B. C02 one-to-one location bridge","",
+                 f"- C02 SHA-256: {hashlib.sha256(cb).hexdigest()}",
+                 f"- unique one-to-one matched stable ports after stripping terminal 港 from C02 names: **{len(exact)}**",
+                 f"- ambiguous C02 stem matches: **{len(amb)}**",
+                 f"- unmatched e-Stat stable ports: **{len(no_c02)}**",""]
+          if amb:lines+=["Ambiguous stems:",", ".join(sorted(amb)),""]
+          if no_c02:lines+=["Unmatched:",", ".join(no_c02),""]
+          lines += ["## C. JMA stable 2019–2024 station universe","",
+                    f"- JMA amdmaster SHA-256: {hashlib.sha256(jb).hexdigest()}",
+                    f"- station IDs with full 2019–2024 coverage, precip+wind instruments, no precip/wind statistical disconnect, and unchanged 0.001-degree coordinates: **{len(stable_st)}**",
+                    f"- rejection diagnostics: {dict(reject)}","",
+                    "## D. Nearest-station structural support","",
+                    "| Max port-to-station distance | Supported ports | Share of one-to-one C02 ports |","|---:|---:|---:|"]
+          for t in thresholds:
+              k=sum(1 for r in rows if r[3]<=t and not r[7])
+              share=(k/len(exact)) if exact else 0
+              lines.append(f"| {t} km | {k} | {share:.6%} |")
+          lines += ["","## E. Prospective rule adopted","",
+                    "**Maximum distance: 30 km.**","",
+                    "Basis: JMA documents approximately 21 km spacing for the roughly 840 stations observing precipitation plus wind, temperature and humidity. The 30-km cap is fixed before any weather-throughput relationship and is not tuned to effect size.","",
+                    "Rules:",
+                    "1. e-Stat port name must occur in all mature 2019–2024 cargo workbooks with consistent prefecture.",
+                    "2. C02 stem match, removing only a terminal 港, must be exactly one-to-one.",
+                    "3. JMA station must satisfy the full-period stability rule above.",
+                    "4. Assign the geodesically nearest eligible JMA station only when distance is at most 30 km.",
+                    "5. A nearest-station tie within 0.01 km is excluded rather than manually resolved.",
+                    "6. No unmatched port, renamed port, coordinate-repaired port or farther station may be added after outcomes.","",
+                    f"### Final prospective support-qualified ports: **{len(q30)}**","",
+                    "| Port | Prefecture | C02 code | JMA station | Distance km | Second-nearest km |","|---|---|---|---|---:|---:|"]
+          for pn,code,pref,d,sid,sname,d2,tie in sorted(q30):
+              lines.append(f"| {pn} | {pref} | {code} | {sid} {sname} | {d:.3f} | {d2:.3f} |")
+          lines += ["","## F. Outcome family semantic status","",
+                    "- 海上出入貨物 schema is stable at monthly grain: row 6 exposes 合計/輸出/輸入/移出/移入; row 7 unit is トン数; each port has a D=計 total row.",
+                    "- Future primary throughput outcome is prospectively frozen as monthly total maritime cargo: port 計 row and monthly 合計 column, subject to the execution contract's freight-ton interpretation and missing/revision rules.",
+                    "- No cargo magnitude was analyzed for port-weather relationships in this adjudication.","",
+                    "Incremental monetary cost remained **0 USD**.",""]
+          os.makedirs(os.path.dirname(OUT),exist_ok=True)
+          open(OUT,"w",encoding="utf-8").write("\n".join(lines))
+          PY
+      - name: Commit support adjudication
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/JP-PORT-F01/SUPPORT_ADJUDICATION.md
+          git diff --cached --quiet || git commit -m "record JP-PORT-F01 corrected support adjudication"
+          git push
