@@ -50,11 +50,11 @@ No dwell magnitude, weather observation or rail-weather association is persisted
 | CPKC | CPKC terminal area, Vancouver | Vancouver | 105 | 0 |  |
 | CPKC | CPKC terminal area, Winnipeg | Winnipeg | 105 | 0 |  |
 
-## B. CGNDB City/Official identity
+## B. CGNDB Official / CITY-City identity
 
 - unique place tokens: **15**
-- unique City + Official matches with coordinates: **14**
-- unresolved place tokens: **1**
+- unique Official + CITY-City matches with coordinates: **15**
+- unresolved place tokens: **0**
 
 | Source token | Official name | Province | CGNDB key | Latitude | Longitude |
 |---|---|---|---|---:|---:|
@@ -62,6 +62,7 @@ No dwell magnitude, weather observation or rail-weather association is persisted
 | Edmonton | Edmonton | Alberta | IACMP | 53.5344445 | -113.4902778 |
 | Kamloops | Kamloops | British Columbia | JAFNW | 50.6758330 | -120.3394440 |
 | Lethbridge | Lethbridge | Alberta | IADGP | 49.6936111 | -112.8419444 |
+| Montreal | Montréal | Quebec | EHHUN | 45.5088220 | -73.5540770 |
 | Moose Jaw | Moose Jaw | Saskatchewan | HALTS | 50.3934194 | -105.5519522 |
 | Prince George | Prince George | British Columbia | JBLVS | 53.9130560 | -122.7452780 |
 | Prince Rupert | Prince Rupert | British Columbia | JCNWW | 54.3127780 | -130.3252780 |
@@ -72,10 +73,6 @@ No dwell magnitude, weather observation or rail-weather association is persisted
 | Toronto | Toronto | Ontario | FEUZB | 43.7417000 | -79.3733000 |
 | Vancouver | Vancouver | British Columbia | JBRIK | 49.2611110 | -123.1138890 |
 | Winnipeg | Winnipeg | Manitoba | GBEIN | 49.8844440 | -97.1463890 |
-
-### Unresolved CGNDB place tokens
-
-- Montreal: []
 
 ## C. ECCC station-inventory contract
 
@@ -93,11 +90,11 @@ No dwell magnitude, weather observation or rail-weather association is persisted
 
 | Max distance | Supported city tokens | Share of resolved cities |
 |---:|---:|---:|
-| 10 km | 12 | 85.714286% |
-| 20 km | 13 | 92.857143% |
-| 30 km | 13 | 92.857143% |
-| 50 km | 13 | 92.857143% |
-| 75 km | 13 | 92.857143% |
+| 10 km | 13 | 86.666667% |
+| 20 km | 14 | 93.333333% |
+| 30 km | 14 | 93.333333% |
+| 50 km | 14 | 93.333333% |
+| 75 km | 14 | 93.333333% |
 
 ### Nearest eligible stations
 
@@ -107,6 +104,7 @@ No dwell magnitude, weather observation or rail-weather association is persisted
 | Edmonton | 3012209 | EDMONTON BLATCHFORD | 4.414 | 1996 | 2026 | 25.655 |
 | Kamloops | 1163842 | KAMLOOPS AUT | 7.576 | 2006 | 2026 | 8.239 |
 | Lethbridge | 3033892 | LETHBRIDGE CDA 2 | 4.512 | 2004 | 2026 | 5.223 |
+| Montreal | 7024745 | MCTAVISH | 2.246 | 1994 | 2026 | 10.521 |
 | Moose Jaw | 4015322 | MOOSE JAW CS | 7.103 | 1998 | 2026 | 62.628 |
 | Prince George | 1096454 | PRINCE GEORGE MASSEY AUTO | 3.270 | 2018 | 2026 | 5.558 |
 | Prince Rupert | 1066488 | PRINCE RUPERT MONT CIRC | 2.425 | 1959 | 2026 | 7.863 |
@@ -122,7 +120,7 @@ No dwell magnitude, weather observation or rail-weather association is persisted
 
 - Intermodal-container dwell yields a source-defined single row per carrier-terminal-week when the frozen dimensions are applied; no commodity averaging is required.
 - 2024–2025 remains a frozen preliminary Transport Canada snapshot, not a claim of final historical values.
-- CGNDB matching permits accent-insensitive exact linguistic equivalence and requires City + Official; no fuzzy geocoding.
+- CGNDB matching permits accent-insensitive exact linguistic equivalence and requires Status=Official + Concise Term=CITY-City; no fuzzy geocoding.
 - ECCC station support is based only on station inventory, coordinates and daily availability years; no weather values are opened.
 - A final station-distance cap must be adopted from this structural coverage before any weather values.
 
