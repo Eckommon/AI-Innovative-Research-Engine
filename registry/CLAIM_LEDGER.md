@@ -52,6 +52,8 @@
 
 | `CLM-130` | Under outcome-blind prospective rules, the Transport Canada 2024–2025 CN/CPKC intermodal-container terminal-dwell source supports a deterministic panel of 19 carrier-terminal series and 1,995 carrier-terminal-week keys, each linked through an official CGNDB city identity to one prospectively selected ECCC station; final support-key SHA-256 `454bce3a77510cedbe4ff0f81cdc561500ec40462396e63f6f36ef8ebaf361e7`. / 결과 비사용 사전규칙으로 19개 carrier-terminal series·1,995개 terminal-week key를 공식 CGNDB city→ECCC station으로 결정론적으로 연결할 수 있다. | `OBSERVED/DERIVED/VALIDATED` | `V3_REPRODUCED_SOURCE_SEMANTICS` | `research/CA-RAIL-F01/RESULT.md`; `registry/CLM-130.md`; Issue #83 | 2026-09-04 | active |
 
+| `CLM-131` | Under the frozen CA-RAIL-E01 source contract, only 1,143/1,470 ECCC station-weeks (77.755102%) satisfy the preregistered 7/7 daily Minimum Temperature rule; Prince Rupert and Lethbridge have zero numeric Min Temp support under the frozen station identities and Prince George has 86 qualified weeks, so the experiment cannot proceed to Stage B without prohibited redesign. / 고정 CA-RAIL-E01 source 계약에서 7/7 최저기온 완전성을 만족하는 station-week가 77.755102%에 그쳐 Stage B 진행이 불가하다. | `OBSERVED/DERIVED/VALIDATED` | `V3_PREREGISTERED_SOURCE_INTEGRITY` | `research/CA-RAIL-E01/STAGE_A_SOURCE_MANIFEST.md`; `registry/CLM-131.md`; Issue #84 | 2026-09-04 | active-source-hold |
+
 ## Rule / 규칙
 
 - New material claims should receive a stable ID when they influence scoring, promotion, HOLD/REJECT decisions, or downstream experiments. / 점수·승격·HOLD/REJECT·후속 실험에 영향을 주는 중요 주장은 안정적 ID 부여.
