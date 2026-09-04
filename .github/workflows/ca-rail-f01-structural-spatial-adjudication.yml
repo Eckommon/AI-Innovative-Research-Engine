@@ -181,7 +181,7 @@ jobs:
               if len(hits)!=1:
                   raise RuntimeError(f"Field resolution failed {hits}; header={header}")
               return hits[0]
-          f_name=field(lambda h:h=="Station Name")
+          f_name=field(lambda h:h in ("Station Name","Name"))
           f_clim=field(lambda h:h=="Climate ID")
           f_lat=field(lambda h:"Latitude" in h and "Decimal" in h)
           f_lon=field(lambda h:"Longitude" in h and "Decimal" in h)
