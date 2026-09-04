@@ -1,0 +1,146 @@
+name: US GRID F01 prospective cohort diagnostic
+
+on:
+  push:
+    paths:
+      - ".github/workflows/us-grid-f01-cohort-diagnostic.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  cohort:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install --quiet openpyxl
+      - name: Evaluate structural cohort only
+        shell: bash
+        run: |
+          python - <<'PY'
+          import io, os, urllib.request
+          from collections import defaultdict, Counter
+          from datetime import datetime, date
+          import openpyxl
+
+          URL="https://eta-publications.lbl.gov/sites/default/files/2026-05/lbnl_ix_queue_data_file_thru2025.xlsx"
+          OUT="research/US-GRID-F01/COHORT_DIAGNOSTIC.md"
+          # Conservative outcome-blind BA attribution candidates. Final admission is adjudicated in prose evidence.
+          BA={
+            "AEC":"AECI","APS":"AZPS","Avista":"AVA","BPA":"BPAT",
+            "CAISO":"CISO","CPUD":"CHPD","Dominion":"SCEG","EPE":"EPE",
+            "ERCOT":"ERCO","FPL":"FPL","GrantPUD":"GCPD","IID":"IID",
+            "IP":"IPCO","ISO-NE":"ISNE","JEA":"JEA","LADWP":"LDWP",
+            "LGE-KU":"LGEE","MISO":"MISO","NVE":"NEVP","NWMT":"NWMT",
+            "NYISO":"NYIS","PGE":"PGE","PJM":"PJM","PNM":"PNM",
+            "PSCo":"PSCO","PSE":"PSEI","S-C":"SC","SEC":"SEC",
+            "SMUD":"BANC","SOCO":"SOCO","SPP":"SWPP","SRP":"SRP",
+            "SRP_ANPP":"SRP","SRP_Gila":"SRP","SRP_PV-PC":"SRP","SRP_SWV":"SRP",
+            "TEC":"TEC","TEP":"TEPC","TPU":"TPWR","TVA":"TVA",
+            "WAPA-DSW":"WALC","WAPA-IS":"WAUW","WAPA-RM":"WACM","WAPA-SN":"BANC"
+          }
+          EXCLUDED=["BHCT","BHP","CLPT","CSU","Duke","GTC","MPC","N-C","OUC","PRPA","PacifiCorp","TSGT","WAPA-MPP"]
+
+          def get(url):
+              req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0"})
+              with urllib.request.urlopen(req,timeout=120) as r:return r.read()
+          def dt(v):
+              if isinstance(v,datetime): return v
+              if isinstance(v,date): return datetime(v.year,v.month,v.day)
+              if v is None or str(v).strip()=="" or str(v)=="None": return None
+              s=str(v).strip()
+              for f in ("%Y-%m-%d %H:%M:%S","%Y-%m-%d"):
+                  try:return datetime.strptime(s,f)
+                  except:pass
+              return None
+
+          wb=openpyxl.load_workbook(io.BytesIO(get(URL)),read_only=True,data_only=True)
+          ws=wb["03. Complete Queue Data"]
+          hr=None; hs=None
+          for i,row in enumerate(ws.iter_rows(min_row=1,max_row=10,values_only=True),1):
+              vals=[str(x).strip() if x is not None else "" for x in row]
+              if "q_id" in vals and "entity" in vals: hr=i; hs=vals; break
+          ix={h:i for i,h in enumerate(hs) if h}
+          cols=["q_id","entity","q_status","q_date","on_date","wd_date","ia_date"]
+          rows=[]
+          for row in ws.iter_rows(min_row=hr+1,values_only=True):
+              if not any(x is not None for x in row): continue
+              r={c:(row[ix[c]] if ix[c]<len(row) else None) for c in cols}
+              if str(r["entity"] or "").strip(): rows.append(r)
+
+          start=datetime(2019,1,1); end=datetime(2025,12,31,23,59,59)
+          entered=[r for r in rows if (dt(r["q_date"]) and start<=dt(r["q_date"])<=end)]
+          admitted_entered=[r for r in entered if str(r["entity"]).strip() in BA]
+          completed=[r for r in admitted_entered if str(r["q_status"]).strip()=="operational" and dt(r["on_date"]) and dt(r["on_date"])<=end]
+          invalid_order=[r for r in completed if dt(r["on_date"])<dt(r["q_date"])]
+
+          # duplicate structural checks inside completed common-period cohort
+          groups=defaultdict(list)
+          for r in completed:
+              groups[(str(r["entity"]).strip(),str(r["q_id"]).strip())].append(r)
+          dups={k:v for k,v in groups.items() if len(v)>1}
+          sem=["q_status","q_date","on_date","wd_date","ia_date"]
+          exact=0; conflict=0
+          confent=Counter()
+          for k,rs in dups.items():
+              full={tuple(str(r[c]) for c in cols) for r in rs}
+              ss={tuple(str(r[c]) for c in sem) for r in rs}
+              if len(full)==1: exact+=1
+              if len(ss)>1:
+                  conflict+=1; confent[k[0]]+=1
+
+          # deterministic collapse rule: exact duplicate rows collapse; conflicting keys excluded.
+          conflict_keys={k for k,rs in dups.items() if len({tuple(str(r[c]) for c in sem) for r in rs})>1}
+          unique={}
+          for r in completed:
+              k=(str(r["entity"]).strip(),str(r["q_id"]).strip())
+              if k in conflict_keys: continue
+              unique.setdefault(k,r)
+          byba=Counter(BA[k[0]] for k in unique)
+          byent=Counter(k[0] for k in unique)
+
+          lines=["---","id: US-GRID-F01-COHORT-DIAGNOSTIC","type: outcome-blind-prospective-cohort-diagnostic",
+                 "created: 2026-09-04","relationship_outcome_computed: false","eia_operating_values_opened: false",
+                 "incremental_monetary_cost_usd: 0","---","",
+                 "# US-GRID-F01 Prospective 2019–2025 Cohort Diagnostic","",
+                 "## Frozen structural cohort candidate","",
+                 "- queue-entry date: **2019-01-01 through 2025-12-31**",
+                 "- completion status candidate: source `q_status = operational` with explicit `on_date <= 2025-12-31`",
+                 "- reason: entire project interval must begin no earlier than the frozen EIA-930 2019-present bulk family.",
+                 "- no elapsed-duration statistic was computed.","",
+                 "## Cardinality","",
+                 f"- all LBNL rows with q_date in 2019–2025: **{len(entered)}**",
+                 f"- rows in conservative BA-attribution candidate set: **{len(admitted_entered)}**",
+                 f"- operational rows with explicit on_date by 2025-12-31: **{len(completed)}**",
+                 f"- invalid on_date < q_date rows: **{len(invalid_order)}**",
+                 f"- duplicate composite-key groups inside completed cohort: **{len(dups)}**",
+                 f"- exact duplicate groups: **{exact}**",
+                 f"- semantic-conflict groups: **{conflict}**",
+                 f"- unique completed project keys after exact-collapse/conflict-exclusion: **{len(unique)}**","",
+                 "## Prospective BA project cardinality","",
+                 "| EIA BA code | Unique completed project keys |","|---|---:|"]
+          for ba,n in byba.most_common():
+              lines.append(f"| `{ba}` | {n} |")
+          lines += ["","## Prospective LBNL entity project cardinality","",
+                    "| LBNL entity | EIA BA candidate | Unique completed project keys |","|---|---|---:|"]
+          for ent,n in sorted(byent.items(), key=lambda x:(BA[x[0]],x[0])):
+              lines.append(f"| `{ent}` | `{BA[ent]}` | {n} |")
+          lines += ["","## Excluded identity candidates at this stage","",
+                    ", ".join(f"`{x}`" for x in EXCLUDED),"",
+                    "These exclusions are identity-semantic, not result-based. They may not be reintroduced after relationship outcomes without a new mission-level authorization.","",
+                    "## Duplicate rule candidate","",
+                    "1. Exact duplicate rows with identical source fields may collapse to one source record.",
+                    "2. Any `entity+q_id` key with conflicting `q_status/q_date/on_date/wd_date/ia_date` is excluded prospectively; no preferred row is chosen.",
+                    "3. If conflicts remain material inside the frozen cohort, F01 must HOLD rather than select a favorable record.",
+                    "","Incremental monetary cost remained **0 USD**.",""]
+          os.makedirs(os.path.dirname(OUT),exist_ok=True)
+          open(OUT,"w",encoding="utf-8").write("\n".join(lines))
+          PY
+      - name: Commit cohort diagnostic
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/US-GRID-F01/COHORT_DIAGNOSTIC.md
+          git diff --cached --quiet || git commit -m "record US-GRID-F01 prospective cohort diagnostic"
+          git push
