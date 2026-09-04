@@ -181,7 +181,11 @@ jobs:
                       if len(vals)>=reqdays:
                           monthly_wind[(hid,ym)]=max(vals)
 
-          # Frozen MLIT cargo extraction.
+          # Frozen MLIT cargo extraction using the pre-relationship schema adjudication.
+          def norm_header(x):
+              s=str(x or "").strip().replace("　","")
+              return re.sub(r"\\s+","",s)
+
           cargo={}
           mlit_manifest=[]
           for year,(url,expected) in ESTAT.items():
@@ -193,24 +197,53 @@ jobs:
                   raise RuntimeError(f"MLIT hash drift {year}: {hs}")
               wb=openpyxl.load_workbook(io.BytesIO(b),read_only=True,data_only=True)
               ws=wb["海上出入貨物"]
-              # Exactly 12 monthly total-cargo columns: row6=合計, row7=トン数.
-              total_cols=[]
-              for col in range(5,ws.max_column+1):
-                  if str(ws.cell(6,col).value or "").strip()=="合計" and str(ws.cell(7,col).value or "").strip()=="トン数":
-                      total_cols.append(col)
-              if len(total_cols)!=12:
-                  raise RuntimeError(f"MLIT monthly total column count {year}: {len(total_cols)}")
-              rows={}
-              for ri in range(8,ws.max_row+1):
-                  name=str(ws.cell(ri,3).value or "").strip()
-                  typ=str(ws.cell(ri,4).value or "").strip()
+
+              # Deterministically locate the port header row in the frozen 2019 legacy / 2020-2024 layouts.
+              hrows=[
+                  ri for ri in range(1,16)
+                  if norm_header(ws.cell(ri,3).value)=="港湾" and norm_header(ws.cell(ri,4).value)=="種別"
+              ]
+              if len(hrows)!=1:
+                  raise RuntimeError(f"MLIT header-row ambiguity {year}: {hrows}")
+              h=hrows[0]
+
+              # Within h-2..h, exactly one row must contain 12 monthly 合計 labels.
+              candidates=[]
+              for rr in range(max(1,h-2),h+1):
+                  cols=[col for col in range(5,ws.max_column+1) if norm_header(ws.cell(rr,col).value)=="合計"]
+                  if len(cols)==12:
+                      candidates.append((rr,cols))
+              if len(candidates)!=1:
+                  raise RuntimeError(f"MLIT monthly-label ambiguity {year}: {[(r,len(cols)) for r,cols in candidates]}")
+              label_row,total_cols=candidates[0]
+
+              # Require ton-unit evidence without changing the frozen outcome semantics.
+              header_ton=sum(1 for col in total_cols if norm_header(ws.cell(h,col).value)=="トン数")
+              pre_strings=[
+                  norm_header(ws.cell(rr,col).value)
+                  for rr in range(1,h+1)
+                  for col in range(1,ws.max_column+1)
+                  if isinstance(ws.cell(rr,col).value,str)
+              ]
+              legacy_unit=any(("単位" in s and "トン" in s) for s in pre_strings)
+              if not (header_ton==12 or legacy_unit):
+                  raise RuntimeError(f"MLIT ton-unit evidence missing {year}")
+
+              port_rows={}
+              for ri in range(h+1,ws.max_row+1):
+                  name=norm_header(ws.cell(ri,3).value)
+                  typ=norm_header(ws.cell(ri,4).value)
                   if name and typ=="計":
-                      if name in rows:raise RuntimeError(f"Duplicate total row {year} {name}")
-                      rows[name]=ri
+                      if name in port_rows:
+                          raise RuntimeError(f"Duplicate total row {year} {name}")
+                      port_rows[name]=ri
+
+              missing_ports=[port for port in panel_ports if port not in port_rows]
+              if missing_ports:
+                  raise RuntimeError(f"Missing frozen port total rows {year}: {missing_ports}")
+
               for port in panel_ports:
-                  if port not in rows:
-                      continue
-                  ri=rows[port]
+                  ri=port_rows[port]
                   for month,col in enumerate(total_cols,1):
                       v=ws.cell(ri,col).value
                       if v is None or str(v).strip()=="":
@@ -220,7 +253,13 @@ jobs:
                       except Exception:
                           continue
                       cargo[(port,f"{year:04d}-{month:02d}")]=fv
-              mlit_manifest.append({"year":year,"bytes":len(b),"sha256":hs,"monthly_total_cols":len(total_cols)})
+
+              mlit_manifest.append({
+                  "year":year,"bytes":len(b),"sha256":hs,
+                  "header_row":h,"monthly_label_row":label_row,
+                  "monthly_total_cols":len(total_cols),
+                  "unit_evidence":"12x ton-count header" if header_ton==12 else "legacy unit: ton"
+              })
 
           # Realized Stage-B rows must be a subset of frozen Stage-A keys.
           rows=[]
@@ -354,6 +393,8 @@ jobs:
                     "| Year | Bytes | SHA-256 | Monthly total columns |","|---:|---:|---|---:|"]
           for x in mlit_manifest:
               lines.append(f"| {x['year']} | {x['bytes']} | {x['sha256']} | {x['monthly_total_cols']} |")
+          lines += ["",
+                    "MLIT parser followed the outcome-blind schema adjudication in `research/JP-PORT-E01/MLIT_SCHEMA_ADJUDICATION.md`; 2019 legacy layout and 2020–2024 current layout were distinguished by header identity, not cargo-weather outcomes."]
           lines += ["","## Runtime","",
                     f"- Python: {sys.version.split()[0]}",
                     f"- platform: {platform.platform()}",
