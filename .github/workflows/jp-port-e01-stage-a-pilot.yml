@@ -1,0 +1,94 @@
+name: JP PORT E01 Stage A JMA pilot
+
+on:
+  push:
+    paths:
+      - ".github/workflows/jp-port-e01-stage-a-pilot.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  pilot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Request one preregistered JMA variable pilot
+        shell: bash
+        run: |
+          python - <<'PY'
+          import urllib.request,urllib.parse,json,hashlib,os,csv,io,re
+          OUT="research/JP-PORT-E01/STAGE_A_PILOT.md"
+          URL="https://www.data.jma.go.jp/risk/obsdl/show/table"
+          data={
+            "stationNumList":json.dumps(["s47401"],ensure_ascii=False),
+            "aggrgPeriod":"1",
+            "elementNumList":json.dumps([["302",""]],ensure_ascii=False),
+            "interAnnualType":"1",
+            "ymdList":json.dumps([2019,2019,1,1,1,3]),
+            "optionNumList":json.dumps([]),
+            "downloadFlag":"true",
+            "rmkFlag":"1",
+            "disconnectFlag":"1",
+            "youbiFlag":"0",
+            "fukenFlag":"0",
+            "kijiFlag":"0",
+            "csvFlag":"1",
+            "jikantaiFlag":"0",
+            "jikantaiList":json.dumps([]),
+            "ymdLiteral":"1",
+          }
+          body=urllib.parse.urlencode(data).encode()
+          req=urllib.request.Request(URL,data=body,headers={
+            "User-Agent":"Mozilla/5.0",
+            "Content-Type":"application/x-www-form-urlencoded",
+            "Referer":"https://www.data.jma.go.jp/risk/obsdl/"
+          })
+          with urllib.request.urlopen(req,timeout=120) as r:
+              raw=r.read();headers=dict(r.headers);fu=r.geturl()
+          # decode only to inspect schema. Do not persist numeric values.
+          txt=None;enc=None
+          for e in ("cp932","shift_jis","utf-8-sig","utf-8"):
+              try:txt=raw.decode(e);enc=e;break
+              except:pass
+          if txt is None:raise RuntimeError("CSV decode failed")
+          rows=list(csv.reader(io.StringIO(txt)))
+          sanitized=[]
+          for i,row in enumerate(rows[:12]):
+              out=[]
+              for cell in row:
+                  s=str(cell)
+                  # Preserve labels/date/quality structure but mask numeric measurement magnitude.
+                  if re.fullmatch(r"-?\d+(?:\.\d+)?",s.strip()) and i>=3:
+                      out.append("<NUM>")
+                  else:out.append(s)
+              sanitized.append(out)
+          lines=["---","id: JP-PORT-E01-STAGE-A-PILOT","created: 2026-09-04",
+                 "relationship_outcome_computed: false","stage: A_PILOT",
+                 "incremental_monetary_cost_usd: 0","---","",
+                 "# JP-PORT-E01 Stage A Pilot","",
+                 "- preregistered variable only: JMA daily maximum wind speed, element 302",
+                 "- station: frozen Wakkanai transport ID s47401",
+                 "- dates: 2019-01-01..2019-01-03",
+                 f"- final URL: {fu}",
+                 f"- HTTP content-type: {headers.get('Content-Type')}",
+                 f"- content-disposition: {headers.get('Content-Disposition')}",
+                 f"- raw bytes: **{len(raw)}**",
+                 f"- raw SHA-256: {hashlib.sha256(raw).hexdigest()}",
+                 f"- decoded encoding: {enc}",
+                 f"- CSV rows: **{len(rows)}**","",
+                 "## Sanitized schema preview",""]
+          for r in sanitized:lines.append("- "+repr(r))
+          lines += ["","No port cargo was read and no weather-throughput relationship was calculated.","",
+                    "Incremental monetary cost remained **0 USD**.",""]
+          os.makedirs(os.path.dirname(OUT),exist_ok=True)
+          open(OUT,"w",encoding="utf-8").write("\n".join(lines))
+          PY
+      - name: Commit pilot metadata
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/JP-PORT-E01/STAGE_A_PILOT.md
+          git diff --cached --quiet || git commit -m "record JP-PORT-E01 Stage A JMA pilot"
+          git push
