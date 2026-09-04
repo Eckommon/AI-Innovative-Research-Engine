@@ -44,6 +44,8 @@
 
 | `CLM-126` | A prospectively support-qualified LBNL Queued Up 2026 `entity+q_id` project universe can be deterministically mapped to EIA-930 balancing authorities: 41/57 entities qualified, preserving 17,453/19,794 (88.173184%) 2019–2025 queue-entry rows; the source-defined completed-project construct contains 447 unique projects across 11 BAs with zero duplicate/conflicting keys. / 결과 비사용 사전 규칙으로 41/57 entity를 EIA-930 BA에 결정론적으로 매핑할 수 있고 2019–2025 진입 row의 88.173184%를 보존하며, 완료-project 구조는 447개/11 BA이고 중복·충돌이 0이다. | `OBSERVED/DERIVED/VALIDATED` | `V3_REPRODUCED_SOURCE_SEMANTICS` | `research/US-GRID-F01/RESULT.md`; `registry/CLM-126.md`; Issue #77 | 2026-09-04 | active |
 
+| `CLM-127` | Under outcome-blind structural rules for an immediate BA-year descendant (>=3 completed projects per BA-year and >=2 qualifying years per BA), the 2021–2023 candidate collapses to only ERCO 2021/2022/2023: 3 cells, 91 projects, so replicated cross-BA E01 support is too sparse. / 즉시 BA-year 후속설계의 결과 비사용 구조규칙을 적용하면 ERCO 3개 셀·91개 프로젝트만 남아 replicated cross-BA E01 지지가 부족하다. | `OBSERVED/DERIVED` | `V3_REPRODUCED_STRUCTURAL_CARDINALITY` | `research/US-GRID-F01/E01_CELL_PREFLIGHT.md`; `registry/CLM-127.md` | 2026-09-04 | active-structural-limit |
+
 ## Rule / 규칙
 
 - New material claims should receive a stable ID when they influence scoring, promotion, HOLD/REJECT decisions, or downstream experiments. / 점수·승격·HOLD/REJECT·후속 실험에 영향을 주는 중요 주장은 안정적 ID 부여.
