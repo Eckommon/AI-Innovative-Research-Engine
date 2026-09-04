@@ -107,55 +107,44 @@ jobs:
               terminal_coverage.append((t[0],t[1],t[2],len(dates),len(missing),missing[:12]))
 
           unique_places=sorted(set(t[2] for t in terminals))
+          CGNDB_KEYS={
+              "Calgary":"IAKID","Edmonton":"IACMP","Kamloops":"JAFNW","Lethbridge":"IADGP",
+              "Montreal":"EHHUN","Moose Jaw":"HALTS","Prince George":"JBLVS","Prince Rupert":"JCNWW",
+              "Red Deer":"IAEJS","Sarnia":"FEARV","Saskatoon":"HAHJJ","Thunder Bay":"FCWFX",
+              "Toronto":"FEUZB","Vancouver":"JBRIK","Winnipeg":"GBEIN",
+          }
+          if set(unique_places)!=set(CGNDB_KEYS):
+              raise RuntimeError(f"Unexpected place-token universe: {unique_places}")
           city={}
           city_fail={}
           for place in unique_places:
-              url=CGNDB+"?"+urllib.parse.urlencode({"q":place})
-              b,fu,h=get(url,timeout=60)
-              soup=BeautifulSoup(b,"html.parser")
-              candidates=[]
-              for tr in soup.find_all("tr"):
-                  tds=tr.find_all("td")
-                  cells=[norm(x.get_text(" ",strip=True)) for x in tds]
-                  if len(cells)<5:continue
-                  if fold(cells[0])!=fold(place):continue
-                  if cells[3]!="City" or cells[4]!="Official":continue
-                  a=tds[0].find("a",href=True)
-                  if not a:continue
-                  candidates.append((cells[0],cells[2],urllib.parse.urljoin(fu,a["href"])))
-              cand=[]
-              seen=set()
-              for x in candidates:
-                  if x[2] not in seen:
-                      seen.add(x[2]);cand.append(x)
-              if len(cand)!=1:
-                  city_fail[place]=cand
-                  continue
-              official_name,province,detail_url=cand[0]
+              key=CGNDB_KEYS[place]
+              detail_url="https://geonames.nrcan.gc.ca/search-place-names/unique?id="+key
               db,dfu,dh=get(detail_url,timeout=60)
               dsoup=BeautifulSoup(db,"html.parser")
-              latlon=None
-              key=None
+              meta={}
               for tr in dsoup.find_all("tr"):
                   cs=[norm(x.get_text(" ",strip=True)) for x in tr.find_all(["th","td"])]
                   if len(cs)>=2:
-                      if cs[0]=="Key":key=cs[1]
-                      if "Latitude - Longitude (decimal)" in cs[0]:
-                          m=re.search(r"(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)",cs[1])
-                          if m:latlon=(float(m.group(1)),float(m.group(2)))
-              if latlon is None:
-                  tx=dsoup.get_text(" ",strip=True)
-                  m=re.search(r"Latitude\s*-\s*Longitude\s*\(decimal\)\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)",tx)
-                  if m:latlon=(float(m.group(1)),float(m.group(2)))
-              if latlon is None:
-                  city_fail[place]=[("DETAIL_COORDINATE_PARSE_FAIL",province,dfu)]
-                  continue
-              city[place]={
-                  "official_name":official_name,"province":province,"url":dfu,
-                  "key":key or "","lat":latlon[0],"lon":latlon[1],
+                      meta[cs[0]]=cs[1]
+              official_name=meta.get("Name","")
+              status=meta.get("Status","")
+              concise=meta.get("Concise Term","")
+              generic=meta.get("Generic Term","")
+              province=meta.get("Province/Territory","")
+              key_seen=meta.get("Key","")
+              rawcoord=meta.get("Latitude - Longitude (decimal)","")
+              m=re.search(r"(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)",rawcoord)
+              latlon=(float(m.group(1)),float(m.group(2))) if m else None
+              ok=(fold(official_name)==fold(place) and status=="Official" and concise=="CITY-City" and key_seen==key and latlon is not None)
+              rec={
+                  "official_name":official_name,"province":province,"url":dfu,"key":key_seen,
+                  "status":status,"concise":concise,"generic":generic,
+                  "lat":latlon[0] if latlon else None,"lon":latlon[1] if latlon else None,
                   "detail_sha":sha(db)
               }
-
+              if ok: city[place]=rec
+              else: city_fail[place]=rec
           eb,efu,eh=get(ECCC_INV)
           etxt=None;eenc=None
           for enc in ("utf-8-sig","utf-8","cp1252","latin-1"):
@@ -240,9 +229,9 @@ jobs:
           ]
           for x in terminal_coverage:
               lines.append(f"| {x[0]} | {x[1]} | {x[2]} | {x[3]} | {x[4]} | {', '.join(x[5])} |")
-          lines += ["","## B. CGNDB City/Official identity","",
+          lines += ["","## B. CGNDB Official / CITY-City identity","",
                     f"- unique place tokens: **{len(unique_places)}**",
-                    f"- unique City + Official matches with coordinates: **{len(city)}**",
+                    f"- unique Official + CITY-City matches with coordinates: **{len(city)}**",
                     f"- unresolved place tokens: **{len(city_fail)}**","",
                     "| Source token | Official name | Province | CGNDB key | Latitude | Longitude |",
                     "|---|---|---|---|---:|---:|"]
@@ -277,7 +266,7 @@ jobs:
           lines += ["","## E. Prospective implications","",
                     "- Intermodal-container dwell yields a source-defined single row per carrier-terminal-week when the frozen dimensions are applied; no commodity averaging is required.",
                     "- 2024–2025 remains a frozen preliminary Transport Canada snapshot, not a claim of final historical values.",
-                    "- CGNDB matching permits accent-insensitive exact linguistic equivalence and requires City + Official; no fuzzy geocoding.",
+                    "- CGNDB matching permits accent-insensitive exact linguistic equivalence and requires Status=Official + Concise Term=CITY-City; no fuzzy geocoding.",
                     "- ECCC station support is based only on station inventory, coordinates and daily availability years; no weather values are opened.",
                     "- A final station-distance cap must be adopted from this structural coverage before any weather values.",
                     "","Incremental monetary cost remained **0 USD**.",""]
