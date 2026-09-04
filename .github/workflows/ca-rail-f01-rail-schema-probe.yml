@@ -1,0 +1,64 @@
+name: CA RAIL F01 rail CSV schema probe
+
+on:
+  push:
+    paths:
+      - ".github/workflows/ca-rail-f01-rail-schema-probe.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Probe annual English CSV schema
+        shell: bash
+        run: |
+          python - <<'PY'
+          import io,zipfile,urllib.request,hashlib,csv,os
+          from pathlib import Path
+
+          U="https://tdih-cdit.tc.canada.ca/sites/default/files/ferroviaire-rail.zip"
+          req=urllib.request.Request(U,headers={"User-Agent":"Mozilla/5.0"})
+          with urllib.request.urlopen(req,timeout=180) as r:
+              b=r.read();fu=r.geturl()
+          z=zipfile.ZipFile(io.BytesIO(b))
+          lines=["---","id: CA-RAIL-F01-RAIL-SCHEMA-PROBE","created: 2026-09-04",
+                 "relationship_outcome_computed: false","incremental_monetary_cost_usd: 0","---","",
+                 "# CA-RAIL-F01 Rail CSV Schema Probe","",
+                 f"- ZIP final URL: {fu}",f"- ZIP bytes: **{len(b)}**",f"- ZIP SHA-256: `{hashlib.sha256(b).hexdigest()}`",""]
+          for name in z.namelist():
+              if "eng_" not in name.lower():continue
+              raw=z.read(name)
+              txt=None;enc=None
+              for e in ("utf-8-sig","utf-8","cp1252","latin-1"):
+                  try:txt=raw.decode(e);enc=e;break
+                  except:pass
+              sample=txt[:10000]
+              try:dialect=csv.Sniffer().sniff(sample,delimiters=",;\t|")
+              except:dialect=csv.excel
+              rdr=csv.reader(io.StringIO(txt),dialect)
+              rows=[]
+              for i,row in enumerate(rdr):
+                  rows.append(row)
+                  if i>=2:break
+              lines += [f"## {name}",
+                        f"- bytes: {len(raw)}",
+                        f"- SHA-256: `{hashlib.sha256(raw).hexdigest()}`",
+                        f"- encoding: {enc}",
+                        f"- delimiter repr: {repr(dialect.delimiter)}",
+                        f"- row1 fields ({len(rows[0]) if rows else 0}): {rows[0] if rows else []}",
+                        f"- row2 field count: {len(rows[1]) if len(rows)>1 else 0}",
+                        ""]
+          Path("research/CA-RAIL-F01/RAIL_SCHEMA_PROBE.md").write_text("\n".join(lines),encoding="utf-8")
+          PY
+      - name: Commit probe
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/CA-RAIL-F01/RAIL_SCHEMA_PROBE.md
+          git diff --cached --quiet || git commit -m "probe CA rail annual CSV schema"
+          git push
