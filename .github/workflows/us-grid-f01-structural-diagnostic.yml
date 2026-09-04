@@ -1,0 +1,183 @@
+name: US GRID F01 structural alias and duplicate diagnostic
+
+on:
+  push:
+    paths:
+      - ".github/workflows/us-grid-f01-structural-diagnostic.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Python dependency
+        run: python -m pip install --quiet openpyxl
+
+      - name: Run source-semantic structural diagnostic
+        shell: bash
+        run: |
+          python - <<'PY'
+          import io, os, re, json, zipfile, hashlib, urllib.request
+          from collections import defaultdict, Counter
+          import openpyxl
+
+          OUT="research/US-GRID-F01/STRUCTURAL_DIAGNOSTIC.md"
+          LBNL_URL="https://eta-publications.lbl.gov/sites/default/files/2026-05/lbnl_ix_queue_data_file_thru2025.xlsx"
+          EIA861_URL="https://www.eia.gov/electricity/data/eia861/zip/f8612025er.zip"
+
+          def get(url):
+              req=urllib.request.Request(url, headers={"User-Agent":"Mozilla/5.0"})
+              with urllib.request.urlopen(req, timeout=120) as r:
+                  return r.read()
+
+          def norm(s):
+              return re.sub(r"[^a-z0-9]+","",str(s or "").lower())
+
+          lbnl=get(LBNL_URL)
+          lsha=hashlib.sha256(lbnl).hexdigest()
+          wb=openpyxl.load_workbook(io.BytesIO(lbnl), read_only=True, data_only=True)
+          ws=wb["03. Complete Queue Data"]
+
+          header_row=None
+          headers=[]
+          for ridx,row in enumerate(ws.iter_rows(min_row=1,max_row=10,values_only=True), start=1):
+              vals=[str(x).strip() if x is not None else "" for x in row]
+              if "q_id" in vals and "entity" in vals:
+                  header_row=ridx; headers=vals; break
+          if not header_row:
+              raise RuntimeError("header not found")
+          idx={h:i for i,h in enumerate(headers) if h}
+          need=["q_id","q_status","q_date","on_date","wd_date","ia_date","region","utility","entity",
+                "project_name","project_type","type_clean","mw_1","mw_2","mw_3"]
+          for k in need:
+              if k not in idx: raise RuntimeError(f"missing {k}")
+
+          records=[]
+          entity_regions=defaultdict(set)
+          entity_utils=defaultdict(Counter)
+          for row in ws.iter_rows(min_row=header_row+1, values_only=True):
+              if not any(v is not None for v in row): continue
+              rec={k: row[idx[k]] if idx[k] < len(row) else None for k in need}
+              ent=str(rec["entity"] or "").strip()
+              if not ent: continue
+              reg=str(rec["region"] or "").strip()
+              util=str(rec["utility"] or "").strip()
+              entity_regions[ent].add(reg)
+              if util: entity_utils[ent][util]+=1
+              records.append(rec)
+
+          # EIA-861 BA identity
+          zbytes=get(EIA861_URL)
+          zsha=hashlib.sha256(zbytes).hexdigest()
+          z=zipfile.ZipFile(io.BytesIO(zbytes))
+          member=[n for n in z.namelist() if "Balancing_Authority" in n][0]
+          ewb=openpyxl.load_workbook(io.BytesIO(z.read(member)), read_only=True, data_only=True)
+          ews=ewb[ewb.sheetnames[0]]
+          hrow=None; eh=[]
+          for ridx,row in enumerate(ews.iter_rows(min_row=1,max_row=15,values_only=True), start=1):
+              vals=[str(x).strip() if x is not None else "" for x in row]
+              if "BA Code" in vals and "Balancing Authority Name" in vals:
+                  hrow=ridx; eh=vals; break
+          if not hrow: raise RuntimeError("EIA BA header not found")
+          eidx={h:i for i,h in enumerate(eh) if h}
+          bas={}
+          for row in ews.iter_rows(min_row=hrow+1, values_only=True):
+              code=str(row[eidx["BA Code"]] or "").strip()
+              name=str(row[eidx["Balancing Authority Name"]] or "").strip()
+              if code and name: bas[code]=name
+          byname=defaultdict(list)
+          for c,n in bas.items(): byname[norm(n)].append(c)
+
+          # source-defined ISO/RTO aliases supported by EIA naming/code semantics
+          iso_alias={"CAISO":"CISO","ERCOT":"ERCO","ISO-NE":"ISNE","NYISO":"NYIS","SPP":"SWPP"}
+
+          # utility-name exact evidence; source codebook says utility same as entity in non-ISO/RTO BAs
+          rows=[]
+          for ent in sorted(entity_regions):
+              exact=[]
+              if ent in bas: exact=[ent]
+              elif norm(ent) in byname: exact=byname[norm(ent)]
+              util_hits=set()
+              for u in entity_utils[ent]:
+                  for c in byname.get(norm(u),[]): util_hits.add(c)
+              iso=[iso_alias[ent]] if ent in iso_alias and iso_alias[ent] in bas else []
+              rows.append((ent, sorted(entity_regions[ent]), entity_utils[ent], exact, sorted(util_hits), iso))
+
+          # duplicate composite-key diagnostics
+          groups=defaultdict(list)
+          for r in records:
+              groups[(str(r["entity"]).strip(), str(r["q_id"]).strip())].append(r)
+          dups={k:v for k,v in groups.items() if len(v)>1}
+          semantic=["q_status","q_date","on_date","wd_date","ia_date"]
+          full_cols=need
+          exact_full=0; semantic_consistent=0; semantic_conflict=0
+          conflict_entities=Counter()
+          conflict_examples=[]
+          for k,rs in dups.items():
+              fullset={tuple(str(r[c]) for c in full_cols) for r in rs}
+              semset={tuple(str(r[c]) for c in semantic) for r in rs}
+              if len(fullset)==1: exact_full+=1
+              if len(semset)==1:
+                  semantic_consistent+=1
+              else:
+                  semantic_conflict+=1
+                  conflict_entities[k[0]]+=1
+                  if len(conflict_examples)<20:
+                      conflict_examples.append((k, len(rs), sorted(semset)))
+
+          lines=[]
+          lines += ["---","id: US-GRID-F01-STRUCTURAL-DIAGNOSTIC","type: source-semantic-structural-diagnostic",
+                    "created: 2026-09-04","relationship_outcome_computed: false","eia_operating_values_opened: false",
+                    "incremental_monetary_cost_usd: 0","---","",
+                    "# US-GRID-F01 Structural Alias & Duplicate Diagnostic","",
+                    "## Source snapshots","",
+                    f"- LBNL workbook SHA-256: \`{lsha}\`",
+                    f"- EIA-861 early-release ZIP SHA-256: \`{zsha}\`",
+                    f"- project rows parsed: **{len(records)}**",
+                    f"- unique LBNL entities: **{len(entity_regions)}**",
+                    f"- EIA BA code/name pairs: **{len(bas)}**","",
+                    "## Entity structural evidence","",
+                    "| LBNL entity | Region(s) | Distinct utility values | Top utility value(s) | Exact entity→EIA | Utility-name exact EIA candidate(s) | ISO/RTO source alias |",
+                    "|---|---|---:|---|---|---|---|"]
+          for ent,regs,utils,exact,uh,iso in rows:
+              tops=", ".join([f"{u} ({n})" for u,n in utils.most_common(4)])
+              lines.append(f"| \`{ent}\` | {', '.join(regs)} | {len(utils)} | {tops} | {', '.join(exact) or '—'} | {', '.join(uh) or '—'} | {', '.join(iso) or '—'} |")
+          lines += ["","## Composite \`entity+q_id\` duplicate diagnostic","",
+                    f"- duplicate key groups: **{len(dups)}**",
+                    f"- exact full-row duplicate groups: **{exact_full}**",
+                    f"- outcome-semantic-consistent duplicate groups: **{semantic_consistent}**",
+                    f"- outcome-semantic-conflicting duplicate groups: **{semantic_conflict}**",
+                    "",
+                    "Outcome-semantic fields compared only for structural integrity: \`q_status, q_date, on_date, wd_date, ia_date\`. No elapsed-duration distribution or BA comparison was computed.",
+                    ""]
+          if conflict_entities:
+              lines += ["### Entities with conflicting duplicate keys",""]
+              for e,n in conflict_entities.most_common():
+                  lines.append(f"- \`{e}\`: {n} conflicting composite-key groups")
+          if conflict_examples:
+              lines += ["","### Bounded conflict examples",""]
+              for (e,q),n,ss in conflict_examples:
+                  lines.append(f"- \`{e}+{q}\` rows={n}; semantic variants={ss}")
+          lines += ["","## Interpretation boundary","",
+                    "- Utility-name exact matching is diagnostic evidence only; it does not authorize fuzzy or geography-based mapping.",
+                    "- ISO/RTO alias candidates are limited to the five explicit abbreviation/code differences listed in the workflow and supported by EIA naming/code semantics.",
+                    "- Any entity with multiple EIA BA candidates remains non-identifiable unless an explicit source-backed one-direction rule is documented before relationship outcomes.",
+                    "- Duplicate-key conflicts are structural only and must be resolved prospectively; no queue-duration result was computed.",
+                    "",
+                    "Incremental monetary cost remained **0 USD**.",""]
+          os.makedirs(os.path.dirname(OUT),exist_ok=True)
+          open(OUT,"w",encoding="utf-8").write("\n".join(lines))
+          PY
+
+      - name: Commit structural diagnostic
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/US-GRID-F01/STRUCTURAL_DIAGNOSTIC.md
+          git diff --cached --quiet || git commit -m "record US-GRID-F01 structural alias duplicate diagnostic"
+          git push
