@@ -1,0 +1,123 @@
+name: CA RAIL F01 final key manifest
+
+on:
+  push:
+    paths:
+      - ".github/workflows/ca-rail-f01-final-key-manifest.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  manifest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build final support key manifest
+        shell: bash
+        run: |
+          python - <<'PY'
+          import io,csv,re,zipfile,hashlib,urllib.request
+          from datetime import datetime
+          from collections import Counter
+          from pathlib import Path
+
+          URL="https://tdih-cdit.tc.canada.ca/sites/default/files/ferroviaire-rail.zip"
+          TARGET="Average Terminal Dwell Time - Loaded Cars and Intermodal Containers"
+          EXCLUDE_GEO="CPKC terminal area, Thunder Bay"
+          START=datetime(2024,1,1)
+          END=datetime(2025,12,31)
+
+          def norm(x): return re.sub(r"\s+"," ",str(x or "").strip())
+          def parse_date(s):
+              for fmt in ("%Y-%m-%d","%Y/%m/%d"):
+                  try:return datetime.strptime(norm(s),fmt)
+                  except:pass
+              return None
+
+          req=urllib.request.Request(URL,headers={"User-Agent":"Mozilla/5.0"})
+          with urllib.request.urlopen(req,timeout=240) as r:
+              b=r.read();final_url=r.geturl()
+
+          z=zipfile.ZipFile(io.BytesIO(b))
+          keys=[]
+          terminals=set()
+          for member in [
+              "weekly_rail_system_performance_indicators_eng_2024.csv",
+              "weekly_rail_system_performance_indicators_eng_2025.csv",
+          ]:
+              rdr=csv.DictReader(io.TextIOWrapper(io.BytesIO(z.read(member)),encoding="utf-8-sig",newline=""))
+              for row in rdr:
+                  if norm(row["Measure"])!=TARGET: continue
+                  if norm(row["Carrier"]) not in ("CN","CPKC"): continue
+                  geo=norm(row["Geography"])
+                  if not re.match(r"^(CN|CPKC) terminal area, .+$",geo): continue
+                  d=parse_date(row["Reference_Date"])
+                  if d is None or not (START<=d<=END): continue
+                  if norm(row["Commodity"])!="Intermodal containers": continue
+                  if norm(row["Car_Type"])!="Not Applicable": continue
+                  if norm(row["Dwell_Time_Range"])!="Not Applicable": continue
+                  if norm(row["Fleet_Status"])!="Not Applicable": continue
+                  if norm(row["Employee_Type"])!="Not Applicable": continue
+                  if norm(row["Segment_Distance_km"])!="0.0": continue
+                  if norm(row["Unit_of_Measure"])!="Hours": continue
+                  if norm(row["Status_of_Value"])!="0 - Available": continue
+                  if geo==EXCLUDE_GEO: continue
+                  date=d.strftime("%Y-%m-%d")
+                  carrier=norm(row["Carrier"])
+                  keys.append((date,carrier,geo))
+                  terminals.add((carrier,geo))
+
+          counts=Counter(keys)
+          if any(v!=1 for v in counts.values()):
+              raise RuntimeError("Duplicate final key")
+          keys=sorted(counts)
+          if len(terminals)!=19:
+              raise RuntimeError(f"Expected 19 series, got {len(terminals)}")
+          if len(keys)!=1995:
+              raise RuntimeError(f"Expected 1995 keys, got {len(keys)}")
+
+          csv_text="Reference_Date,Carrier,Geography\n"+"\n".join(",".join(k) for k in keys)+"\n"
+          Path("research/CA-RAIL-F01/FINAL_SUPPORT_KEYS.csv").write_text(csv_text,encoding="utf-8")
+          key_hash=hashlib.sha256(csv_text.encode("utf-8")).hexdigest()
+
+          lines=[
+              "---",
+              "id: CA-RAIL-F01-FINAL-SUPPORT-PREFLIGHT",
+              "type: outcome-blind-final-support-preflight",
+              "created: 2026-09-04",
+              "relationship_outcome_computed: false",
+              "weather_values_opened: false",
+              "rail_dwell_magnitudes_persisted: false",
+              "incremental_monetary_cost_usd: 0",
+              "---","",
+              "# CA-RAIL-F01 Final Support Preflight","",
+              f"- rail ZIP final URL: {final_url}",
+              f"- rail ZIP SHA-256: {hashlib.sha256(b).hexdigest()}",
+              "- frozen period: 2024-01-01 through 2025-12-31",
+              "- frozen carriers: CN and CPKC",
+              "- frozen commodity: Intermodal containers",
+              "- frozen measure: Average Terminal Dwell Time - Loaded Cars and Intermodal Containers",
+              "- source status: 0 - Available",
+              "- final spatial rule: Official + CITY-City place identity, nearest eligible ECCC daily station <=20 km, <=0.01 km nearest/second tie excluded",
+              "- excluded spatially ambiguous series: CPKC terminal area, Thunder Bay",
+              f"- final carrier-terminal series: {len(terminals)}",
+              f"- final carrier-terminal-week keys: {len(keys)}",
+              f"- final support-key CSV SHA-256: {key_hash}",
+              "",
+              "No rail dwell magnitude or weather observation was persisted.",
+              "",
+              "Incremental monetary cost remained 0 USD.",
+              ""
+          ]
+          Path("research/CA-RAIL-F01/FINAL_SUPPORT_PREFLIGHT.md").write_text("\n".join(lines),encoding="utf-8")
+          PY
+      - name: Commit final support manifest
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/CA-RAIL-F01/FINAL_SUPPORT_PREFLIGHT.md research/CA-RAIL-F01/FINAL_SUPPORT_KEYS.csv
+          git diff --cached --quiet || git commit -m "record CA-RAIL-F01 final support manifest"
+          git push
