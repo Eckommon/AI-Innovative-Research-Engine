@@ -50,6 +50,8 @@
 
 | `CLM-129` | In the preregistered 2019–2024 Japan port panel (10,165 port-months, 143 ports, 126 JMA station clusters), monthly maximum of quality-8 daily maximum wind is negatively associated with log1p monthly total maritime cargo after port and year-month fixed effects: beta=-0.006292975 per +1 m/s, CR1 95% CI [-0.010635888,-0.001950062], p=0.004853; +5 m/s descriptive translation ≈ -3.10%. / 사전등록 일본 항만 패널에서 월별 극대풍속은 항만·연월 고정효과 후 월 총화물 log1p와 유의한 음의 연관성을 보였다. | `OBSERVED/DERIVED/VALIDATED` | `V3_PREREGISTERED_REPRODUCED_PANEL` | `research/JP-PORT-E01/RESULT.md`; `registry/CLM-129.md`; Issue #80 | 2026-09-04 | active-association |
 
+| `CLM-130` | Under outcome-blind prospective rules, the Transport Canada 2024–2025 CN/CPKC intermodal-container terminal-dwell source supports a deterministic panel of 19 carrier-terminal series and 1,995 carrier-terminal-week keys, each linked through an official CGNDB city identity to one prospectively selected ECCC station; final support-key SHA-256 `454bce3a77510cedbe4ff0f81cdc561500ec40462396e63f6f36ef8ebaf361e7`. / 결과 비사용 사전규칙으로 19개 carrier-terminal series·1,995개 terminal-week key를 공식 CGNDB city→ECCC station으로 결정론적으로 연결할 수 있다. | `OBSERVED/DERIVED/VALIDATED` | `V3_REPRODUCED_SOURCE_SEMANTICS` | `research/CA-RAIL-F01/RESULT.md`; `registry/CLM-130.md`; Issue #83 | 2026-09-04 | active |
+
 ## Rule / 규칙
 
 - New material claims should receive a stable ID when they influence scoring, promotion, HOLD/REJECT decisions, or downstream experiments. / 점수·승격·HOLD/REJECT·후속 실험에 영향을 주는 중요 주장은 안정적 ID 부여.
