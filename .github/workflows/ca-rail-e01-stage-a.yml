@@ -1,0 +1,334 @@
+name: CA RAIL E01 Stage A weather integrity
+
+on:
+  push:
+    paths:
+      - ".github/workflows/ca-rail-e01-stage-a.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  stage-a:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Execute frozen ECCC Min Temp source and completeness gate
+        shell: bash
+        run: |
+          python - <<'PY'
+          import csv, io, re, time, math, hashlib, urllib.request, urllib.parse
+          from pathlib import Path
+          from collections import Counter, defaultdict
+          from datetime import datetime, timedelta, timezone
+
+          INV_URL="https://collaboration.cmc.ec.gc.ca/cmc/climate/Get_More_Data_Plus_de_donnees/Station%20Inventory%20EN.csv"
+          BULK_URL="https://climate.weather.gc.ca/climate_data/bulk_data_e.html"
+          EXPECTED_INV_SHA="72751e152ba3206f74bbff6eac689ea209d93cab7b26428519088f72bbf38a1c"
+          EXPECTED_KEYS_SHA="454bce3a77510cedbe4ff0f81cdc561500ec40462396e63f6f36ef8ebaf361e7"
+
+          STRUCT=Path("research/CA-RAIL-F01/STRUCTURAL_SPATIAL_ADJUDICATION.md")
+          KEYS=Path("research/CA-RAIL-F01/FINAL_SUPPORT_KEYS.csv")
+          OUT=Path("research/CA-RAIL-E01/STAGE_A_SOURCE_MANIFEST.md")
+          WEEK_OUT=Path("research/CA-RAIL-E01/STAGE_A_STATION_WEEK_ELIGIBILITY.csv")
+
+          def get(url, timeout=180):
+              req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0"})
+              with urllib.request.urlopen(req,timeout=timeout) as r:
+                  return r.read(),r.geturl(),dict(r.headers)
+
+          def sha(b): return hashlib.sha256(b).hexdigest()
+          def norm(x): return str(x or "").strip()
+          def decode_csv_bytes(b):
+              for enc in ("utf-8-sig","utf-8","cp1252","latin-1"):
+                  try: return b.decode(enc),enc
+                  except UnicodeDecodeError: pass
+              raise RuntimeError("Unable to decode ECCC CSV")
+
+          # Verify frozen parent support-key file.
+          key_bytes=KEYS.read_bytes()
+          key_sha=sha(key_bytes)
+          if key_sha!=EXPECTED_KEYS_SHA:
+              raise RuntimeError(f"F01 support-key SHA drift: {key_sha}")
+
+          with KEYS.open("r",encoding="utf-8",newline="") as f:
+              key_rows=list(csv.DictReader(f))
+          frozen_weeks=sorted({r["Reference_Date"] for r in key_rows})
+          if len(frozen_weeks)!=105:
+              raise RuntimeError(f"Expected 105 frozen weeks, got {len(frozen_weeks)}")
+          if frozen_weeks[0]!="2024-01-01" or frozen_weeks[-1]!="2025-12-29":
+              raise RuntimeError(f"Unexpected week boundary: {frozen_weeks[0]}..{frozen_weeks[-1]}")
+
+          # Parse the F01 outcome-blind station table and exclude the prospectively rejected Thunder Bay station.
+          txt=STRUCT.read_text(encoding="utf-8")
+          section=txt.split("### Nearest eligible stations",1)[1].split("## E.",1)[0]
+          stations={}
+          for line in section.splitlines():
+              if not line.startswith("|") or line.startswith("|---") or "Climate ID" in line:
+                  continue
+              c=[x.strip() for x in line.split("|")]
+              if len(c)<9: continue
+              city=c[1]; climate_id=c[2]; station_name=c[3]
+              if city=="Thunder Bay": continue
+              stations[climate_id]={"city":city,"station_name":station_name}
+          if len(stations)!=14:
+              raise RuntimeError(f"Expected 14 frozen Climate IDs, got {len(stations)}: {stations}")
+          if len(set(stations))!=14:
+              raise RuntimeError("Frozen Climate ID duplication")
+
+          # Re-open the exact F01-frozen ECCC inventory and require byte identity.
+          inv_raw,inv_final,inv_headers=get(INV_URL)
+          inv_sha=sha(inv_raw)
+          if inv_sha!=EXPECTED_INV_SHA:
+              raise RuntimeError(f"ECCC station inventory drift: {inv_sha}")
+
+          inv_text,inv_enc=decode_csv_bytes(inv_raw)
+          inv_rows=list(csv.reader(io.StringIO(inv_text)))
+          hi=None; header=None
+          for i,row in enumerate(inv_rows[:50]):
+              rr=[norm(x) for x in row]
+              if "Climate ID" in rr and "Station ID" in rr and "DLY First Year" in rr and "DLY Last Year" in rr:
+                  hi=i; header=rr; break
+          if hi is None:
+              raise RuntimeError("ECCC station inventory header not found")
+
+          inv_by_climate=defaultdict(list)
+          for row in inv_rows[hi+1:]:
+              if not any(norm(x) for x in row): continue
+              padded=list(row)+[""]*(len(header)-len(row))
+              d={header[j]:norm(padded[j]) for j in range(len(header))}
+              cid=d.get("Climate ID","")
+              if cid:
+                  inv_by_climate[cid].append(d)
+
+          # Deterministically resolve 14 Climate IDs to one Station ID.
+          station_contract={}
+          for cid,meta in sorted(stations.items()):
+              matches=inv_by_climate.get(cid,[])
+              if len(matches)!=1:
+                  raise RuntimeError(f"Climate ID {cid} inventory cardinality {len(matches)}")
+              r=matches[0]
+              sid=norm(r.get("Station ID",""))
+              if sid.endswith(".0") and sid[:-2].isdigit(): sid=sid[:-2]
+              if not sid:
+                  raise RuntimeError(f"Climate ID {cid} has blank Station ID")
+              try:
+                  fy=int(float(r["DLY First Year"])); ly=int(float(r["DLY Last Year"]))
+              except Exception:
+                  raise RuntimeError(f"Climate ID {cid} invalid daily coverage years")
+              if not (fy<=2024 and ly>=2025):
+                  raise RuntimeError(f"Climate ID {cid} lost frozen daily coverage: {fy}..{ly}")
+              station_contract[cid]={
+                  "city":meta["city"],"station_name":meta["station_name"],
+                  "station_id":sid,"daily_first":fy,"daily_last":ly,
+                  "inventory_name":r.get("Name","")
+              }
+
+          extraction_time=datetime.now(timezone.utc).replace(microsecond=0).isoformat()
+          source_manifest=[]
+          valid_dates=defaultdict(set)
+          invalid_flag_counts=defaultdict(Counter)
+          parsed_date_counts=Counter()
+          numeric_min_counts=Counter()
+
+          # Download only daily files for calendar years 2024 and 2025.
+          for cid,meta in sorted(station_contract.items()):
+              sid=meta["station_id"]
+              for year in (2024,2025):
+                  params={
+                      "format":"csv",
+                      "stationID":sid,
+                      "Year":str(year),
+                      "Month":"1",
+                      "Day":"1",
+                      "timeframe":"2",
+                      "submit":"Download Data",
+                  }
+                  req_url=BULK_URL+"?"+urllib.parse.urlencode(params)
+                  raw,final_url,heads=get(req_url,timeout=180)
+                  text,enc=decode_csv_bytes(raw)
+                  rows=list(csv.reader(io.StringIO(text)))
+                  if not rows:
+                      raise RuntimeError(f"Empty ECCC daily response {cid}/{year}")
+
+                  # Find the actual CSV header.
+                  hidx=None; h=None
+                  for i,row in enumerate(rows[:20]):
+                      rr=[norm(x) for x in row]
+                      if "Date/Time" in rr and "Min Temp (°C)" in rr and "Min Temp Flag" in rr:
+                          hidx=i; h=rr; break
+                  if hidx is None:
+                      sample=" | ".join(",".join(r[:8]) for r in rows[:5])
+                      raise RuntimeError(f"ECCC daily schema not found {cid}/{year}: {sample[:1000]}")
+
+                  dict_rows=[]
+                  for row in rows[hidx+1:]:
+                      if not any(norm(x) for x in row): continue
+                      padded=list(row)+[""]*(len(h)-len(row))
+                      dict_rows.append({h[j]:norm(padded[j]) for j in range(len(h))})
+
+                  response_cids=set()
+                  response_dates=[]
+                  flag_counts=Counter()
+                  numeric_count=0
+                  for r in dict_rows:
+                      rcid=r.get("Climate ID","")
+                      if rcid: response_cids.add(rcid)
+                      ds=r.get("Date/Time","")
+                      try:
+                          d=datetime.strptime(ds[:10],"%Y-%m-%d").date()
+                      except Exception:
+                          continue
+                      if d.year!=year: continue
+                      response_dates.append(d)
+                      v=r.get("Min Temp (°C)","")
+                      flag=r.get("Min Temp Flag","").strip().upper()
+                      if flag: flag_counts[flag]+=1
+                      is_numeric=False
+                      if v!="":
+                          try:
+                              float(v); is_numeric=True
+                          except ValueError:
+                              is_numeric=False
+                      if is_numeric: numeric_count+=1
+                      if is_numeric and flag not in {"M","N","Y"}:
+                          valid_dates[cid].add(d)
+
+                  if response_cids and response_cids!={cid}:
+                      raise RuntimeError(f"ECCC daily Climate ID mismatch {cid}/{year}: {response_cids}")
+
+                  source_manifest.append({
+                      "climate_id":cid,"city":meta["city"],"station_id":sid,
+                      "station_name":meta["inventory_name"] or meta["station_name"],
+                      "year":year,"request_url":req_url,"final_url":final_url,
+                      "bytes":len(raw),"sha256":sha(raw),"encoding":enc,
+                      "rows":len(dict_rows),"date_rows":len(response_dates),
+                      "numeric_min_temp":numeric_count,
+                      "flag_counts":dict(flag_counts),
+                      "content_type":heads.get("Content-Type","")
+                  })
+                  parsed_date_counts[(cid,year)]=len(response_dates)
+                  numeric_min_counts[(cid,year)]=numeric_count
+                  invalid_flag_counts[cid].update(flag_counts)
+                  time.sleep(1)
+
+          # Apply the preregistered 7/7 Monday-Sunday completeness rule.
+          week_rows=[]
+          per_station_eligible=Counter()
+          total_eligible=0
+          for cid,meta in sorted(station_contract.items()):
+              for ws in frozen_weeks:
+                  monday=datetime.strptime(ws,"%Y-%m-%d").date()
+                  days=[monday+timedelta(days=i) for i in range(7)]
+                  # Existing preregistration limits acquisition to calendar years 2024-2025.
+                  in_window=[d for d in days if 2024<=d.year<=2025]
+                  valid=sum(1 for d in in_window if d in valid_dates[cid])
+                  eligible=(valid==7)
+                  if eligible:
+                      total_eligible+=1
+                      per_station_eligible[cid]+=1
+                  reason=""
+                  if not eligible:
+                      if len(in_window)<7:
+                          reason="CALENDAR_WINDOW_BOUNDARY"
+                      else:
+                          reason="MIN_TEMP_INCOMPLETE_OR_INVALID"
+                  week_rows.append({
+                      "Climate_ID":cid,
+                      "Station_ID":meta["station_id"],
+                      "City":meta["city"],
+                      "Week_Start":ws,
+                      "Valid_Days":valid,
+                      "Eligible":"YES" if eligible else "NO",
+                      "Reason":reason
+                  })
+
+          total_possible=len(station_contract)*len(frozen_weeks)
+          overall_share=total_eligible/total_possible if total_possible else 0.0
+          station_floor_ok=all(per_station_eligible[cid]>=90 for cid in station_contract)
+          gate=(
+              "PASS_CA_RAIL_E01_STAGE_A_WEATHER_SOURCE_INTEGRITY"
+              if len(station_contract)==14 and overall_share>=0.90 and station_floor_ok
+              else "HOLD_CA_RAIL_E01_WEATHER_SOURCE_INTEGRITY"
+          )
+
+          WEEK_OUT.parent.mkdir(parents=True,exist_ok=True)
+          with WEEK_OUT.open("w",encoding="utf-8",newline="") as f:
+              w=csv.DictWriter(f,fieldnames=["Climate_ID","Station_ID","City","Week_Start","Valid_Days","Eligible","Reason"])
+              w.writeheader(); w.writerows(week_rows)
+          week_sha=sha(WEEK_OUT.read_bytes())
+
+          lines=[
+              "---",
+              "id: CA-RAIL-E01-STAGE-A-SOURCE-MANIFEST",
+              "type: preregistered-weather-source-integrity-result",
+              "created: 2026-09-04",
+              f"stage_a_gate: {gate}",
+              "rail_dwell_relationship_computed: false",
+              "rail_dwell_magnitudes_opened: false",
+              "primary_weather_variable_opened: true",
+              "alternate_weather_variables_opened: false",
+              "incremental_monetary_cost_usd: 0",
+              "---","",
+              "# CA-RAIL-E01 Stage A Source / Completeness Manifest","",
+              f"## Stage A gate: **{gate}**","",
+              "Stage A opened only the preregistered ECCC daily Minimum Temperature field and its flag for source/completeness qualification. No Transport Canada dwell magnitude was parsed for association analysis, and no weather-dwell statistic was computed.","",
+              "## A. Frozen parent identity","",
+              f"- F01 support-key SHA-256: {key_sha}",
+              f"- frozen reporting weeks: **{len(frozen_weeks)}**",
+              f"- frozen ECCC Climate IDs: **{len(station_contract)}**",
+              "- weather acquisition calendar years: **2024 and 2025 only**",
+              "- final 2025-12-29 reporting week is structurally ineligible because it extends into 2026, which is outside the preregistered acquisition window.","",
+              "## B. Frozen ECCC station inventory","",
+              f"- URL: {inv_final}",
+              f"- bytes: **{len(inv_raw)}**",
+              f"- SHA-256: {inv_sha}",
+              f"- encoding: {inv_enc}",
+              f"- Stage-A extraction timestamp UTC: {extraction_time}","",
+              "| Climate ID | Station ID | City | Inventory station | DLY first | DLY last |",
+              "|---|---:|---|---|---:|---:|"
+          ]
+          for cid,m in sorted(station_contract.items()):
+              lines.append(f"| {cid} | {m['station_id']} | {m['city']} | {m['inventory_name']} | {m['daily_first']} | {m['daily_last']} |")
+
+          lines += ["","## C. Raw ECCC daily-response manifest","",
+                    "Only 2024 and 2025 daily files were requested. Hashes below identify the exact Stage-A weather snapshot.","",
+                    "| Climate ID | Station ID | Year | Bytes | SHA-256 | Parsed date rows | Numeric Min Temp | Min Temp flag counts |",
+                    "|---|---:|---:|---:|---|---:|---:|---|"]
+          for x in source_manifest:
+              lines.append(f"| {x['climate_id']} | {x['station_id']} | {x['year']} | {x['bytes']} | {x['sha256']} | {x['date_rows']} | {x['numeric_min_temp']} | {x['flag_counts']} |")
+
+          lines += ["","## D. Preregistered 7/7 station-week completeness","",
+                    f"- possible station-weeks: **{total_possible}**",
+                    f"- eligible 7/7 station-weeks: **{total_eligible}**",
+                    f"- eligible share: **{overall_share:.6%}**",
+                    f"- required overall share: **>=90%**",
+                    f"- per-station minimum requirement: **>=90 qualified weeks**",
+                    f"- all stations satisfy per-station floor: **{'YES' if station_floor_ok else 'NO'}**","",
+                    "| Climate ID | City | Qualified weeks / 105 |",
+                    "|---|---|---:|"]
+          for cid,m in sorted(station_contract.items()):
+              lines.append(f"| {cid} | {m['city']} | {per_station_eligible[cid]} |")
+
+          lines += ["","## E. Eligibility manifest","",
+                    f"- file: research/CA-RAIL-E01/STAGE_A_STATION_WEEK_ELIGIBILITY.csv",
+                    f"- SHA-256: {week_sha}",
+                    "- fields contain station/week identity, valid-day count and eligibility only; no Min Temp magnitude is persisted.","",
+                    "## F. Stage-B authorization","",
+                    ("Stage A PASS. Stage B may proceed only under the already frozen E01 model and must re-pin or reproduce the exact ECCC Stage-A response hashes before using weather magnitudes."
+                     if gate.startswith("PASS")
+                     else
+                     "Stage A HOLD. Stage B is not authorized and the weather variable, station universe or completeness rule may not be changed to rescue this E01."),
+                    "","Incremental monetary cost remained **0 USD**.",""]
+
+          OUT.write_text("\n".join(lines),encoding="utf-8")
+          PY
+      - name: Commit Stage A manifest
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/CA-RAIL-E01/STAGE_A_SOURCE_MANIFEST.md research/CA-RAIL-E01/STAGE_A_STATION_WEEK_ELIGIBILITY.csv
+          git diff --cached --quiet || git commit -m "execute CA-RAIL-E01 Stage A weather integrity"
+          git push
