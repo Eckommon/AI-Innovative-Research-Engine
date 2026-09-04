@@ -1,0 +1,113 @@
+name: US GRID E01 BA-year cell preflight
+
+on:
+  push:
+    paths:
+      - ".github/workflows/us-grid-e01-cell-structure.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  cells:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install --quiet openpyxl
+      - name: Count BA-year cells without durations
+        shell: bash
+        run: |
+          python - <<'PY'
+          import io, os, urllib.request
+          from collections import Counter, defaultdict
+          from datetime import datetime, date
+          import openpyxl
+
+          URL="https://eta-publications.lbl.gov/sites/default/files/2026-05/lbnl_ix_queue_data_file_thru2025.xlsx"
+          OUT="research/US-GRID-F01/E01_CELL_PREFLIGHT.md"
+          BA={
+            "AEC":"AECI","APS":"AZPS","Avista":"AVA","BPA":"BPAT","CAISO":"CISO",
+            "CPUD":"CHPD","Dominion":"SCEG","EPE":"EPE","ERCOT":"ERCO","FPL":"FPL",
+            "GrantPUD":"GCPD","IID":"IID","IP":"IPCO","ISO-NE":"ISNE","JEA":"JEA",
+            "LADWP":"LDWP","LGE-KU":"LGEE","MISO":"MISO","NWMT":"NWMT","NYISO":"NYIS",
+            "PGE":"PGE","PJM":"PJM","PNM":"PNM","PSCo":"PSCO","PSE":"PSEI","S-C":"SC",
+            "SEC":"SEC","SMUD":"BANC","SOCO":"SOCO","SPP":"SWPP","SRP":"SRP",
+            "SRP_ANPP":"SRP","SRP_Gila":"SRP","SRP_PV-PC":"SRP","SRP_SWV":"SRP",
+            "TEC":"TEC","TEP":"TEPC","TPU":"TPWR","TVA":"TVA","WAPA-DSW":"WALC",
+            "WAPA-RM":"WACM"
+          }
+          def get(url):
+              req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0"})
+              with urllib.request.urlopen(req,timeout=120) as r:return r.read()
+          def dt(v):
+              if isinstance(v,datetime):return v
+              if isinstance(v,date):return datetime(v.year,v.month,v.day)
+              if v is None:return None
+              s=str(v).strip()
+              for f in ("%Y-%m-%d %H:%M:%S","%Y-%m-%d"):
+                  try:return datetime.strptime(s,f)
+                  except:pass
+              return None
+
+          wb=openpyxl.load_workbook(io.BytesIO(get(URL)),read_only=True,data_only=True)
+          ws=wb["03. Complete Queue Data"]
+          hr=0; hs=[]
+          for i,row in enumerate(ws.iter_rows(min_row=1,max_row=10,values_only=True),1):
+              vals=[str(x).strip() if x is not None else "" for x in row]
+              if "q_id" in vals and "entity" in vals:hr=i;hs=vals;break
+          ix={h:i for i,h in enumerate(hs) if h}
+          seen=set(); cells=Counter()
+          for row in ws.iter_rows(min_row=hr+1,values_only=True):
+              e=str(row[ix["entity"]] or "").strip()
+              qid=str(row[ix["q_id"]] or "").strip()
+              if e not in BA:continue
+              q=dt(row[ix["q_date"]]); o=dt(row[ix["on_date"]])
+              st=str(row[ix["q_status"]] or "").strip()
+              if not q or not o or st!="operational" or o<q or o>datetime(2025,12,31,23,59,59):continue
+              if not (2021<=q.year<=2023):continue
+              k=(e,qid)
+              if k in seen:continue
+              seen.add(k)
+              cells[(BA[e],q.year)]+=1
+
+          qual={k:n for k,n in cells.items() if n>=3}
+          ba_years=defaultdict(list)
+          for (ba,y),n in qual.items():ba_years[ba].append((y,n))
+          retained={ba:ys for ba,ys in ba_years.items() if len(ys)>=2}
+          retained_cells={(ba,y):n for ba,ys in retained.items() for y,n in ys}
+
+          lines=["---","id: US-GRID-E01-CELL-PREFLIGHT","type: outcome-blind-ba-year-cell-preflight",
+                 "created: 2026-09-04","queue_duration_computed: false","eia_operating_values_opened: false",
+                 "incremental_monetary_cost_usd: 0","---","",
+                 "# US-GRID-E01 BA × Queue-Entry-Year Structural Preflight","",
+                 "Window inspected structurally: **2021–2023**. No elapsed duration or EIA operating value was calculated.","",
+                 "## All BA-year completed-project counts","",
+                 "| BA | q_year | Completed project keys | >=3? |","|---|---:|---:|---|"]
+          for (ba,y),n in sorted(cells.items()):
+              lines.append(f"| `{ba}` | {y} | {n} | {'YES' if n>=3 else 'NO'} |")
+          lines += ["","## Frozen candidate support rule diagnostic","",
+                    "- BA-year cell requires **>=3** completed project keys.",
+                    "- BA requires **>=2 qualifying BA-year cells** so the primary analysis can use within-BA variation rather than pure cross-BA level differences.",
+                    f"- qualifying cells before >=2-year BA rule: **{len(qual)}**",
+                    f"- BAs with >=2 qualifying years: **{len(retained)}**",
+                    f"- final structural candidate cells: **{len(retained_cells)}**",
+                    f"- final structural candidate projects: **{sum(retained_cells.values())}**","",
+                    "### Retained BA-year cells","",
+                    "| BA | q_year | Projects |","|---|---:|---:|"]
+          for (ba,y),n in sorted(retained_cells.items()):
+              lines.append(f"| `{ba}` | {y} | {n} |")
+          lines += ["","## Interpretation","",
+                    "This is a source/cardinality gate only. The >=3-project and >=2-year rules are prospective anti-pseudoreplication rules, not result-driven filters.",
+                    "If this structure is too sparse for a bounded within-BA experiment, E01 should not be forced; return to Stage 0 rather than loosen filters after outcomes.",
+                    "","Incremental monetary cost remained **0 USD**.",""]
+          os.makedirs(os.path.dirname(OUT),exist_ok=True)
+          open(OUT,"w",encoding="utf-8").write("\n".join(lines))
+          PY
+      - name: Commit cell preflight
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/US-GRID-F01/E01_CELL_PREFLIGHT.md
+          git diff --cached --quiet || git commit -m "record US-GRID-E01 BA-year cell preflight"
+          git push
