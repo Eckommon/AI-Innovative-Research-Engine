@@ -1,0 +1,59 @@
+name: JP PORT E01 JMA payload-shape probe
+
+on:
+  push:
+    paths:
+      - ".github/workflows/jp-port-e01-jma-payload-probe.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract official JS payload construction functions
+        shell: bash
+        run: |
+          python - <<'PY'
+          import urllib.request,re,hashlib,os
+          U="https://www.data.jma.go.jp/risk/obsdl/web/js/top.2.1.js"
+          OUT="research/JP-PORT-E01/JMA_PAYLOAD_SHAPE.md"
+          req=urllib.request.Request(U,headers={"User-Agent":"Mozilla/5.0"})
+          with urllib.request.urlopen(req,timeout=60) as r:b=r.read()
+          t=b.decode("utf-8","replace")
+          def func(name):
+              m=re.search(r"function\s+"+re.escape(name)+r"\s*\([^)]*\)\s*\{",t)
+              if not m:return ""
+              i=m.start();p=t.find("{",m.start());depth=0
+              for j in range(p,len(t)):
+                  if t[j]=="{":depth+=1
+                  elif t[j]=="}":
+                      depth-=1
+                      if depth==0:return t[i:j+1]
+              return ""
+          names=["addElementList","changePeriod","setform","getNum","getErrMseg"]
+          lines=["---","id: JP-PORT-E01-JMA-PAYLOAD-SHAPE","created: 2026-09-04",
+                 "weather_values_opened: false","relationship_outcome_computed: false",
+                 "incremental_monetary_cost_usd: 0","---","",
+                 "# JP-PORT-E01 JMA Payload Shape","",
+                 f"- JS SHA-256: {hashlib.sha256(b).hexdigest()}",""]
+          for n in names:
+              f=func(n)
+              lines += [f"## {n}", "~~~javascript", f[:12000], "~~~",""]
+          # exact form creation block around downloadFlag true
+          pos=t.find("createForm(form, 'stationNumList'")
+          if pos>=0:
+              lines += ["## CSV form construction","~~~javascript",t[max(0,pos-1000):pos+5000],"~~~"]
+          os.makedirs(os.path.dirname(OUT),exist_ok=True)
+          open(OUT,"w",encoding="utf-8").write("\n".join(lines))
+          PY
+      - name: Commit payload shape
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/JP-PORT-E01/JMA_PAYLOAD_SHAPE.md
+          git diff --cached --quiet || git commit -m "freeze JMA obsdl payload shape"
+          git push
