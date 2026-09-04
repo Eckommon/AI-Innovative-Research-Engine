@@ -48,6 +48,8 @@
 
 | `CLM-128` | Across mature 2019–2024 MLIT port-level maritime-cargo workbooks, 160 port identities are stable in every year. Applying the prospective one-to-one C02 terminal-港 normalization, full-period JMA precipitation+wind/location continuity, and a frozen 30 km nearest-station cap yields 149 deterministically mapped ports using 131 unique JMA stations. / 2019–2024 MLIT 성숙 자료의 160개 안정 항만 중 C02 one-to-one 및 JMA 연속성·30km 규칙을 적용하면 149개 항만이 131개 JMA 관측소에 결정론적으로 매핑된다. | `OBSERVED/DERIVED/VALIDATED` | `V3_REPRODUCED_SOURCE_SEMANTICS` | `research/JP-PORT-F01/RESULT.md`; `registry/CLM-128.md`; Issue #79 | 2026-09-04 | active |
 
+| `CLM-129` | In the preregistered 2019–2024 Japan port panel (10,165 port-months, 143 ports, 126 JMA station clusters), monthly maximum of quality-8 daily maximum wind is negatively associated with log1p monthly total maritime cargo after port and year-month fixed effects: beta=-0.006292975 per +1 m/s, CR1 95% CI [-0.010635888,-0.001950062], p=0.004853; +5 m/s descriptive translation ≈ -3.10%. / 사전등록 일본 항만 패널에서 월별 극대풍속은 항만·연월 고정효과 후 월 총화물 log1p와 유의한 음의 연관성을 보였다. | `OBSERVED/DERIVED/VALIDATED` | `V3_PREREGISTERED_REPRODUCED_PANEL` | `research/JP-PORT-E01/RESULT.md`; `registry/CLM-129.md`; Issue #80 | 2026-09-04 | active-association |
+
 ## Rule / 규칙
 
 - New material claims should receive a stable ID when they influence scoring, promotion, HOLD/REJECT decisions, or downstream experiments. / 점수·승격·HOLD/REJECT·후속 실험에 영향을 주는 중요 주장은 안정적 ID 부여.
