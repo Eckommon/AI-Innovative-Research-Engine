@@ -1,0 +1,215 @@
+name: JP PORT F01 source preflight
+
+on:
+  push:
+    paths:
+      - ".github/workflows/jp-port-f01-source-preflight.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install --quiet openpyxl beautifulsoup4 pyshp
+      - name: Inspect official source structures without weather-throughput outcomes
+        shell: bash
+        run: |
+          python - <<'PY'
+          import io, os, re, csv, zipfile, hashlib, urllib.request
+          from pathlib import Path
+          from bs4 import BeautifulSoup
+          import openpyxl
+          import shapefile
+
+          OUT="research/JP-PORT-F01/SOURCE_PREFLIGHT.md"
+          ESTAT={
+            2019:"https://www.e-stat.go.jp/stat-search/file-download?fileKind=0&statInfId=000031909819",
+            2020:"https://www.e-stat.go.jp/stat-search/file-download?fileKind=0&statInfId=000031917650",
+            2021:"https://www.e-stat.go.jp/stat-search/file-download?fileKind=0&statInfId=000032059434",
+            2022:"https://www.e-stat.go.jp/stat-search/file-download?fileKind=0&statInfId=000032170294",
+            2023:"https://www.e-stat.go.jp/stat-search/file-download?fileKind=0&statInfId=000040024002",
+            2024:"https://www.e-stat.go.jp/stat-search/file-download?fileKind=0&statInfId=000040146718",
+          }
+          C02_PAGE="https://nlftp.mlit.go.jp/ksj/gml/datalist/KsjTmplt-C02-v3_2.html"
+          JMA_PAGE="https://www.jma.go.jp/jma/kishou/know/amedas/kaisetsu.html"
+
+          def fetch(url, timeout=180):
+              req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0"})
+              with urllib.request.urlopen(req,timeout=timeout) as r:
+                  return r.read(), r.geturl(), dict(r.headers)
+
+          def sha(b): return hashlib.sha256(b).hexdigest()
+          def resolve(base,href):
+              from urllib.parse import urljoin
+              return urljoin(base,href)
+
+          lines=["---","id: JP-PORT-F01-SOURCE-PREFLIGHT","type: outcome-blind-source-preflight",
+                 "created: 2026-09-04","relationship_outcome_computed: false",
+                 "weather_values_opened: false","incremental_monetary_cost_usd: 0","---","",
+                 "# JP-PORT-F01 Source Preflight / 소스 사전검증","",
+                 "## Exposure boundary / 노출 경계","",
+                 "- No weather-throughput relationship was calculated.",
+                 "- No JMA observation values were requested.",
+                 "- MLIT workbook numeric throughput cells were not persisted; only workbook/sheet/text-schema and port-identity structure were inspected.",
+                 ""]
+
+          lines += ["## A. e-Stat / MLIT 港別集計値 final annual files","",
+                    "| Year | Final URL | Bytes | SHA-256 | Sheets |","|---:|---|---:|---|---:|"]
+          wbs={}
+          for y,u in ESTAT.items():
+              b,fu,h=fetch(u)
+              try:
+                  wb=openpyxl.load_workbook(io.BytesIO(b),read_only=True,data_only=True)
+              except Exception as e:
+                  raise RuntimeError(f"{y} workbook parse failed {e}, content-type={h.get('Content-Type')}")
+              wbs[y]=wb
+              lines.append(f"| {y} | {fu} | {len(b)} | {sha(b)} | {len(wb.sheetnames)} |")
+          lines += ["","### Sheet names / sheet 명",""]
+          for y,wb in wbs.items():
+              lines.append(f"- **{y}**: {wb.sheetnames}")
+          lines += ["","### Text-only schema/header inspection / 텍스트 구조 점검",""]
+          for y in (2019,2024):
+              wb=wbs[y]
+              lines.append(f"#### {y}")
+              for s in wb.sheetnames[:8]:
+                  ws=wb[s]
+                  hits=[]
+                  for row in ws.iter_rows(min_row=1,max_row=min(ws.max_row,30),values_only=True):
+                      txt=[str(v).strip() for v in row if isinstance(v,str) and str(v).strip()]
+                      if txt: hits.append(" | ".join(txt[:14]))
+                      if len(hits)>=12: break
+                  lines.append(f"- sheet {s} dimensions≈{ws.max_row}×{ws.max_column}")
+                  for htxt in hits[:8]:
+                      lines.append(f"  - {htxt[:900]}")
+              lines.append("")
+
+          peryear={}
+          for y,wb in wbs.items():
+              names=set()
+              for s in wb.sheetnames:
+                  ws=wb[s]
+                  for row in ws.iter_rows(min_col=1,max_col=min(6,ws.max_column),values_only=True):
+                      for v in row:
+                          if isinstance(v,str):
+                              t=re.sub(r"\s+","",v)
+                              if 2<=len(t)<=24 and (t.endswith("港") or "港（" in t or "港(" in t):
+                                  names.add(t)
+              peryear[y]=names
+          common=set.intersection(*(peryear[y] for y in sorted(peryear))) if peryear else set()
+          union=set.union(*(peryear[y] for y in sorted(peryear))) if peryear else set()
+          lines += ["## B. Port-identity textual stability / 항만명 구조 안정성","",
+                    f"- heuristic text-only port-name union across 2019–2024: **{len(union)}**",
+                    f"- exact text-name intersection present in every 2019–2024 workbook: **{len(common)}**",""]
+          for y in sorted(peryear):
+              lines.append(f"- {y}: {len(peryear[y])} candidate port-name labels")
+          lines += ["","First 80 common text labels (identity diagnostics only):","",
+                    ", ".join(sorted(common)[:80]),""]
+
+          page,purl,ph=fetch(C02_PAGE)
+          ps=BeautifulSoup(page,"html.parser")
+          cands=[]
+          for a in ps.find_all("a"):
+              href=a.get("href") or ""
+              text=a.get_text(" ",strip=True)
+              if "C02-14_GML.zip" in href or "C02-14_GML.zip" in text:
+                  cands.append(resolve(C02_PAGE,href))
+          for a in ps.find_all("a"):
+              href=a.get("href") or ""
+              if "C02-14" in href and ".zip" in href:
+                  u=resolve(C02_PAGE,href)
+                  if u not in cands:cands.append(u)
+          lines += ["## C. MLIT National Land Numerical Information C02 port-location source","",
+                    f"- metadata page SHA-256: {sha(page)}",
+                    f"- detected C02-14 download candidates: {cands}",""]
+          if not cands:
+              raise RuntimeError("C02-14 download URL not found from official page")
+          cb,cfu,ch=fetch(cands[0])
+          lines += [f"- frozen C02 bytes: **{len(cb)}**",
+                    f"- frozen C02 SHA-256: {sha(cb)}",
+                    f"- final URL: {cfu}"]
+          z=zipfile.ZipFile(io.BytesIO(cb))
+          lines.append(f"- ZIP members: {z.namelist()}")
+          tmp=Path("/tmp/c02"); tmp.mkdir(exist_ok=True)
+          z.extractall(tmp)
+          shps=list(tmp.rglob("*.shp"))
+          portshp=[p for p in shps if "PortAndHarbor" in p.name]
+          if not portshp: portshp=shps[:1]
+          if not portshp: raise RuntimeError("no C02 shapefile")
+          sf=shapefile.Reader(str(portshp[0]),encoding="shift_jis")
+          fields=[f[0] for f in sf.fields[1:]]
+          lines += [f"- point shapefile: {portshp[0].name}",
+                    f"- fields: {fields}",
+                    f"- records: **{len(sf)}**"]
+          fi={n:i for i,n in enumerate(fields)}
+          ports=[]
+          for sr in sf.iterShapeRecords():
+              rec=sr.record
+              name=str(rec[fi["C02_005"]]).strip() if "C02_005" in fi else ""
+              code=str(rec[fi["C02_004"]]).strip() if "C02_004" in fi else ""
+              pts=sr.shape.points
+              if name and pts:
+                  lon,lat=pts[0][0],pts[0][1]
+                  ports.append((code,name,lat,lon))
+          lines += [f"- parsed port points with name+coordinate: **{len(ports)}**",
+                    f"- unique C02 port names: **{len(set(x[1] for x in ports))}**",""]
+          c02names=set(x[1] for x in ports)
+          exact_common=sorted(common & c02names)
+          lines += [f"- exact text match: stable 2019–2024 e-Stat label ∩ C02 port name: **{len(exact_common)}**",
+                    "First 80 exact matches:",
+                    ", ".join(exact_common[:80]),""]
+
+          jb,jurl,jh=fetch(JMA_PAGE)
+          js=BeautifulSoup(jb,"html.parser")
+          zips=[]
+          for a in js.find_all("a"):
+              text=a.get_text(" ",strip=True)
+              href=a.get("href") or ""
+              if ("地域気象観測所一覧" in text and "ZIP" in text.upper()) or ("amedas" in href.lower() and href.lower().endswith(".zip")):
+                  zips.append((text,resolve(JMA_PAGE,href)))
+          seen=set(); zips2=[]
+          for x in zips:
+              if x[1] not in seen:
+                  seen.add(x[1]); zips2.append(x)
+          lines += ["## D. JMA station metadata source / JMA 관측소 메타데이터","",
+                    f"- JMA AMeDAS page SHA-256: {sha(jb)}",
+                    f"- detected station-list ZIP links: {zips2[:8]}",""]
+          if not zips2: raise RuntimeError("no JMA station ZIP found")
+          sb,sfu,sh=fetch(zips2[0][1])
+          lines += [f"- frozen latest station ZIP bytes: **{len(sb)}**",
+                    f"- frozen latest station ZIP SHA-256: {sha(sb)}",
+                    f"- final URL: {sfu}"]
+          sz=zipfile.ZipFile(io.BytesIO(sb))
+          lines.append(f"- ZIP members: {sz.namelist()}")
+          for n in sz.namelist():
+              raw=sz.read(n)
+              text=None
+              for enc in ("utf-8-sig","cp932","shift_jis"):
+                  try:
+                      text=raw.decode(enc); break
+                  except Exception:
+                      pass
+              if text is None: continue
+              sample=text.splitlines()[:8]
+              lines += [f"### member {n} text preview"] + [f"- {x[:1000]}" for x in sample]
+
+          lines += ["","## E. Prospective spatial-join status / 사전 공간조인 상태","",
+                    "- C02 provides official port points with C02 port codes/names, but the current official C02 vintage is 2014.",
+                    "- Therefore C02 coordinates may be admitted only for port identities that match mature e-Stat port identities under a frozen normalization rule; unmatched/renamed ports must not be manually geocoded.",
+                    "- JMA station-list and station-history metadata are required to freeze station coordinates and homogeneity handling before any nearest-station assignment.",
+                    "- No distance threshold or support-qualified subset is declared PASS in this first preflight; those require the parsed JMA station-coordinate schema.",
+                    "","Incremental monetary cost remained **0 USD**.",""]
+          os.makedirs(os.path.dirname(OUT),exist_ok=True)
+          open(OUT,"w",encoding="utf-8").write("\n".join(lines))
+          PY
+      - name: Commit source preflight
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/JP-PORT-F01/SOURCE_PREFLIGHT.md
+          git diff --cached --quiet || git commit -m "record JP-PORT-F01 source preflight"
+          git push
