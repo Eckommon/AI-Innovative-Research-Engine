@@ -1,0 +1,315 @@
+name: JP PORT E01 Stage A v2 source integrity
+
+on:
+  push:
+    paths:
+      - ".github/workflows/jp-port-e01-stage-a-v2.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  stage-a:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install --quiet openpyxl
+      - name: Execute preregistered Stage A with bounded JMA batches
+        shell: bash
+        run: |
+          python - <<'PY'
+          import urllib.request,urllib.parse,http.cookiejar,urllib.error,json,hashlib,os,re,csv,io,time,math,calendar
+          from pathlib import Path
+          from collections import defaultdict,Counter
+          import openpyxl
+
+          ROOT="https://www.data.jma.go.jp/risk/obsdl/index.php"
+          SHOW="https://www.data.jma.go.jp/risk/obsdl/show/table"
+          CROSS=Path("research/JP-PORT-E01/JMA_STATION_CROSSWALK.md").read_text(encoding="utf-8")
+          SUPPORT=Path("research/JP-PORT-F01/SUPPORT_ADJUDICATION.md").read_text(encoding="utf-8")
+          OUT="research/JP-PORT-E01/STAGE_A_SOURCE_MANIFEST.md"
+          KEYS="research/JP-PORT-E01/STAGE_A_PANEL_KEYS.csv"
+          RAWDIR=Path("/tmp/jp-port-e01-jma-raw")
+          RAWDIR.mkdir(exist_ok=True)
+          ESTAT={
+            2019:("https://www.e-stat.go.jp/stat-search/file-download?fileKind=0&statInfId=000031909819","c9b52effc6939080290f9cd2d1eaad894769d5a0af8f5c268bd18dce5218bebf"),
+            2020:("https://www.e-stat.go.jp/stat-search/file-download?fileKind=0&statInfId=000031917650","9ee04b6f968fa475f004c7e397cb74303d6bd3498972ef040c12f3414b1fbe46"),
+            2021:("https://www.e-stat.go.jp/stat-search/file-download?fileKind=0&statInfId=000032059434","de510a1510a178a9dc3d3d0dce9ed5ea8da165929ccb0d381458f2005571dd68"),
+            2022:("https://www.e-stat.go.jp/stat-search/file-download?fileKind=0&statInfId=000032170294","f5e1402c0fba0afa2b8a74f8e463638c9dc6ef141ed9c08355f39125b6fa61c4"),
+            2023:("https://www.e-stat.go.jp/stat-search/file-download?fileKind=0&statInfId=000040024002","4670b2ac230cae5b2bdc6a50ae03c72001137ca24b9c023a6f90e28e77156d04"),
+            2024:("https://www.e-stat.go.jp/stat-search/file-download?fileKind=0&statInfId=000040146718","830c2173b19f9ea106596e043730bd93616dafe93ef0c6a385d633335cef0200"),
+          }
+
+          def fetch(url,timeout=180):
+              req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0"})
+              with urllib.request.urlopen(req,timeout=timeout) as r:
+                  return r.read()
+
+          # exact transport crosswalk
+          cross={}
+          inx=False
+          for ln in CROSS.splitlines():
+              if ln.startswith("| JMA history station | Name | obsdl stid |"):
+                  inx=True;continue
+              if inx:
+                  if not ln.startswith("|"):break
+                  if ln.startswith("|---"):continue
+                  c=[x.strip() for x in ln.split("|")]
+                  if len(c)>=7 and c[1].isdigit():
+                      cross[c[1]]={"name":c[2],"stid":c[3],"prid":c[4],"kansoku":c[5]}
+
+          ambiguous=set()
+          ina=False
+          for ln in CROSS.splitlines():
+              if ln.strip()=="## Ambiguous":ina=True;continue
+              if ina:
+                  if ln.startswith("## "):break
+                  m=re.match(r"- (\d+) ",ln)
+                  if m:ambiguous.add(m.group(1))
+
+          ports=[]
+          tab=False
+          for ln in SUPPORT.splitlines():
+              if ln.startswith("| Port | Prefecture | C02 code | JMA station |"):
+                  tab=True;continue
+              if tab:
+                  if not ln.startswith("|"):break
+                  if ln.startswith("|---"):continue
+                  c=[x.strip() for x in ln.split("|")]
+                  if len(c)>=7:
+                      m=re.match(r"(\d+)\s+(.+)",c[4])
+                      if m:
+                          ports.append({"port":c[1],"pref":c[2],"c02":c[3],"histid":m.group(1),"station_name":m.group(2),"distance":c[5]})
+          eligible_ports=[p for p in ports if p["histid"] in cross]
+          excluded_transport=[p for p in ports if p["histid"] not in cross]
+
+          # Revalidate MLIT hashes and one total row per E01-eligible port/year.
+          mlit_integrity=[]
+          for year,(url,expected) in ESTAT.items():
+              b=fetch(url)
+              hs=hashlib.sha256(b).hexdigest()
+              if hs!=expected:
+                  raise RuntimeError(f"MLIT hash drift {year}: {hs}")
+              wb=openpyxl.load_workbook(io.BytesIO(b),read_only=True,data_only=True)
+              ws=wb["海上出入貨物"]
+              counts=Counter()
+              for row in ws.iter_rows(min_row=8,values_only=True):
+                  name=str(row[2] or "").strip() if len(row)>2 else ""
+                  typ=str(row[3] or "").strip() if len(row)>3 else ""
+                  if name and typ=="計":
+                      counts[name]+=1
+              bad={p["port"]:counts[p["port"]] for p in eligible_ports if counts[p["port"]]!=1}
+              if bad:
+                  raise RuntimeError(f"MLIT port-total row uniqueness fail {year}: {bad}")
+              mlit_integrity.append((year,len(b),hs,len(counts)))
+
+          jar=http.cookiejar.CookieJar()
+          opener=urllib.request.build_opener(urllib.request.HTTPCookieProcessor(jar))
+          ua={"User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
+          with opener.open(urllib.request.Request(ROOT,headers=ua),timeout=60) as r:
+              rootraw=r.read()
+
+          stations=sorted(cross.items(),key=lambda x:int(x[0]))
+          BATCH_SIZE=8
+          batches=[stations[i:i+BATCH_SIZE] for i in range(0,len(stations),BATCH_SIZE)]
+          raw_manifest=[]
+          valid_days=Counter()
+          homogeneity=defaultdict(set)
+
+          def request_batch(bi,batch):
+              stids=[v["stid"] for hid,v in batch]
+              data={
+                "stationNumList":json.dumps(stids,separators=(",",":")),
+                "aggrgPeriod":1,
+                "elementNumList":json.dumps([["302",""]],separators=(",",":")),
+                "interAnnualType":1,
+                "ymdList":json.dumps(["2019","2024","1","12","1","31"],separators=(",",":")),
+                "optionNumList":"[]",
+                "downloadFlag":"true",
+                "rmkFlag":1,
+                "disconnectFlag":1,
+                "youbiFlag":0,
+                "fukenFlag":0,
+                "kijiFlag":0,
+                "huukouFlag":0,
+                "csvFlag":1,
+                "jikantaiFlag":0,
+                "jikantaiList":"[]",
+                "ymdLiteral":1,
+              }
+              body=urllib.parse.urlencode(data).encode()
+              req=urllib.request.Request(SHOW,data=body,headers={**ua,"Content-Type":"application/x-www-form-urlencoded","Referer":ROOT})
+              last=None
+              for attempt in (1,2):
+                  try:
+                      with opener.open(req,timeout=180) as r:
+                          raw=r.read();heads=dict(r.headers)
+                      return raw,heads,attempt
+                  except urllib.error.HTTPError as e:
+                      last=e
+                      if e.code not in (502,503,504) or attempt==2:
+                          raise
+                      time.sleep(15)
+                  except TimeoutError as e:
+                      last=e
+                      if attempt==2: raise
+                      time.sleep(15)
+              raise last
+
+          for bi,batch in enumerate(batches,1):
+              raw,heads,attempt=request_batch(bi,batch)
+              if "application/octet-stream" not in heads.get("Content-Type",""):
+                  raise RuntimeError(f"JMA batch {bi} non-CSV content-type {heads.get('Content-Type')}")
+              hs=hashlib.sha256(raw).hexdigest()
+              raw_path=RAWDIR/f"jma_maxwind_2019_2024_batch_{bi:02d}.csv"
+              raw_path.write_bytes(raw)
+              txt=raw.decode("cp932")
+              rows=list(csv.reader(io.StringIO(txt)))
+              if len(rows)<10:
+                  raise RuntimeError(f"JMA batch {bi} too few rows")
+              expected_cols=1+5*len(batch)
+              if len(rows[2])!=expected_cols:
+                  raise RuntimeError(f"JMA batch {bi} col count {len(rows[2])}!={expected_cols}")
+              for j,(hid,v) in enumerate(batch):
+                  start=1+5*j
+                  names=rows[2][start:start+5]
+                  if any(n!=v["name"] for n in names):
+                      raise RuntimeError(f"JMA batch {bi} station header mismatch {hid}: {names} vs {v['name']}")
+                  elems=rows[3][start:start+5]
+                  if not all("最大風速" in x for x in elems):
+                      raise RuntimeError(f"JMA batch {bi} element header mismatch {hid}: {elems}")
+                  labels=rows[5][start:start+5]
+                  if len(labels)!=5 or "品質情報" not in labels[1] or "品質情報" not in labels[3] or "均質番号" not in labels[4]:
+                      raise RuntimeError(f"JMA batch {bi} metadata header unexpected {hid}: {labels}")
+              for row in rows[6:]:
+                  if not row or not row[0].strip():continue
+                  try:
+                      d=__import__("datetime").datetime.strptime(row[0].strip(),"%Y/%m/%d")
+                  except Exception:
+                      continue
+                  ym=f"{d.year:04d}-{d.month:02d}"
+                  for j,(hid,v) in enumerate(batch):
+                      start=1+5*j
+                      if len(row)<start+5:continue
+                      val=row[start].strip()
+                      q=row[start+1].strip()
+                      hom=row[start+4].strip()
+                      if hom:
+                          homogeneity[hid].add(hom)
+                      if q=="8" and val!="":
+                          valid_days[(hid,ym)]+=1
+              raw_manifest.append({
+                  "batch":bi,
+                  "history_ids":[hid for hid,v in batch],
+                  "obsdl_stids":[v["stid"] for hid,v in batch],
+                  "bytes":len(raw),
+                  "sha256":hs,
+                  "rows":len(rows),
+                  "attempt":attempt,
+              })
+              if bi<len(batches):
+                  time.sleep(5)
+
+          hom_bad={hid:sorted(vals) for hid,vals in homogeneity.items() if len(vals)>1}
+          hom_good={hid for hid,_ in stations if hid not in hom_bad}
+
+          station_month_ok=set()
+          completeness_fail=Counter()
+          for hid in hom_good:
+              for year in range(2019,2025):
+                  for month in range(1,13):
+                      ym=f"{year:04d}-{month:02d}"
+                      reqdays=math.ceil(0.90*calendar.monthrange(year,month)[1])
+                      n=valid_days[(hid,ym)]
+                      if n>=reqdays:
+                          station_month_ok.add((hid,ym))
+                      else:
+                          completeness_fail[hid]+=1
+
+          panel=[]
+          for p in eligible_ports:
+              hid=p["histid"]
+              for year in range(2019,2025):
+                  for month in range(1,13):
+                      ym=f"{year:04d}-{month:02d}"
+                      if (hid,ym) in station_month_ok:
+                          panel.append((p["port"],p["pref"],hid,cross[hid]["stid"],ym))
+          panel.sort()
+
+          os.makedirs(Path(KEYS).parent,exist_ok=True)
+          with open(KEYS,"w",encoding="utf-8",newline="") as f:
+              w=csv.writer(f)
+              w.writerow(["port","prefecture","jma_history_station","jma_obsdl_stid","year_month"])
+              w.writerows(panel)
+          panel_bytes=Path(KEYS).read_bytes()
+
+          unique_panel_ports=len({x[0] for x in panel})
+          unique_panel_stations=len({x[2] for x in panel})
+          unique_months=len({x[4] for x in panel})
+          gate="PASS_E01_STAGE_A_SOURCE_IDENTITY_QUALITY" if panel and unique_panel_stations>=30 and unique_months>=60 else "HOLD_E01_SOURCE_OR_PANEL_INTEGRITY"
+
+          lines=["---","id: JP-PORT-E01-STAGE-A-SOURCE-MANIFEST","created: 2026-09-04",
+                 f"stage_a_gate: {gate}","relationship_outcome_computed: false",
+                 "primary_weather_summary_computed: false","incremental_monetary_cost_usd: 0","---","",
+                 "# JP-PORT-E01 Stage A Source / Identity / Quality Manifest","",
+                 f"## Stage A gate: **{gate}**","",
+                 "Stage A opened only the preregistered JMA daily maximum-wind variable to validate source identity, quality, homogeneity and monthly completeness. It did not compute monthly wind maxima, read cargo magnitudes for relationship analysis, or calculate beta.","",
+                 "## A. MLIT source revalidation","",
+                 "| Year | Bytes | SHA-256 | Port total rows |","|---:|---:|---|---:|"]
+          for y,n,h,c in mlit_integrity:
+              lines.append(f"| {y} | {n} | {h} | {c} |")
+          lines += ["","## B. E01 transport crosswalk","",
+                    f"- F01-qualified port mappings: **{len(ports)}**",
+                    f"- exact one-to-one obsdl station transport identities: **{len(cross)}**",
+                    f"- ambiguous obsdl station names excluded before values: **{len(ambiguous)} station IDs**",
+                    f"- ports retained before quality/completeness: **{len(eligible_ports)}**",
+                    f"- ports excluded because their station transport identity is ambiguous: **{len(excluded_transport)}**",""]
+          if excluded_transport:
+              lines += ["Excluded transport-ambiguous port mappings:",
+                        ", ".join(f"{p['port']}→{p['histid']} {p['station_name']}" for p in excluded_transport),""]
+          lines += ["## C. Raw JMA CSV manifest","",
+                    f"- root-session SHA-256: {hashlib.sha256(rootraw).hexdigest()}",
+                    "- requested element only: 302 最大風速",
+                    "- period per request: 2019-01-01..2024-12-31",
+                    f"- deterministic batch size: **{BATCH_SIZE} stations**",
+                    f"- number of requests: **{len(raw_manifest)}**",
+                    "- 5-second pause between requests",
+                    "- one bounded retry only for HTTP 502/503/504, after 15 seconds","",
+                    "| Batch | History station IDs | obsdl IDs | Bytes | SHA-256 | Rows | Attempt |","|---:|---|---|---:|---|---:|---:|"]
+          for x in raw_manifest:
+              lines.append(f"| {x['batch']} | {' '.join(x['history_ids'])} | {' '.join(x['obsdl_stids'])} | {x['bytes']} | {x['sha256']} | {x['rows']} | {x['attempt']} |")
+          lines += ["","## D. Quality / homogeneity","",
+                    f"- stations requested: **{len(stations)}**",
+                    f"- stations with >1 homogeneity number during 2019–2024: **{len(hom_bad)}**",
+                    f"- stations surviving homogeneity rule: **{len(hom_good)}**",""]
+          if hom_bad:
+              lines += ["Homogeneity-excluded stations:",
+                        ", ".join(f"{hid}:{vals}" for hid,vals in sorted(hom_bad.items())),""]
+          lines += ["## E. 90% monthly completeness","",
+                    f"- eligible station-month keys: **{len(station_month_ok)}**",
+                    f"- station-month failures: **{sum(completeness_fail.values())}**","",
+                    "## F. Frozen eligible panel-key manifest","",
+                    f"- panel-key rows: **{len(panel)}**",
+                    f"- unique ports: **{unique_panel_ports}**",
+                    f"- unique JMA history stations: **{unique_panel_stations}**",
+                    f"- unique year-months: **{unique_months}**",
+                    f"- panel-key file SHA-256: **{hashlib.sha256(panel_bytes).hexdigest()}**",
+                    f"- file: {KEYS}","",
+                    "## Raw cache handoff","",
+                    "The exact raw CSV bytes used for Stage A remain only in the current workflow runner under /tmp and are not committed to the repository. Stage B is not executed by this workflow; a future Stage-B run must explicitly re-pin its own raw inputs or use an approved artifact handoff.",
+                    "","## Stage B authorization","",
+                    ("Stage A PASS. Stage B may compute only the preregistered monthly maximum wind, MLIT log1p cargo outcome, fixed-effects model and frozen gate."
+                     if gate.startswith("PASS") else
+                     "Stage A HOLD. Stage B is not authorized."),
+                    "","Incremental monetary cost remained **0 USD**.",""]
+          Path(OUT).write_text("\n".join(lines),encoding="utf-8")
+          PY
+      - name: Commit Stage A manifest
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/JP-PORT-E01/STAGE_A_SOURCE_MANIFEST.md research/JP-PORT-E01/STAGE_A_PANEL_KEYS.csv
+          git diff --cached --quiet || git commit -m "execute JP-PORT-E01 Stage A v2 source integrity"
+          git push
