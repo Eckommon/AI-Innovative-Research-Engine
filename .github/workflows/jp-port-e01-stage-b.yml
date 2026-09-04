@@ -182,6 +182,7 @@ jobs:
                           monthly_wind[(hid,ym)]=max(vals)
 
           # Frozen MLIT cargo extraction using the pre-relationship schema adjudication.
+          # Runtime-only optimization: sequential iter_rows materialization instead of repeated read-only ws.cell access.
           def norm_header(x):
               s=str(x or "").strip().replace("　","")
               return re.sub(r"\\s+","",s)
@@ -198,41 +199,48 @@ jobs:
               wb=openpyxl.load_workbook(io.BytesIO(b),read_only=True,data_only=True)
               ws=wb["海上出入貨物"]
 
-              # Deterministically locate the port header row in the frozen 2019 legacy / 2020-2024 layouts.
+              # Sequential single pass over the worksheet.
+              sheet_rows=list(ws.iter_rows(values_only=True))
+              if len(sheet_rows)<15:
+                  raise RuntimeError(f"MLIT sheet unexpectedly short {year}")
+
+              def value(ri,ci):
+                  # 1-based row/column access into materialized tuples.
+                  row=sheet_rows[ri-1]
+                  return row[ci-1] if ci-1 < len(row) else None
+
               hrows=[
-                  ri for ri in range(1,16)
-                  if norm_header(ws.cell(ri,3).value)=="港湾" and norm_header(ws.cell(ri,4).value)=="種別"
+                  ri for ri in range(1,min(15,len(sheet_rows))+1)
+                  if norm_header(value(ri,3))=="港湾" and norm_header(value(ri,4))=="種別"
               ]
               if len(hrows)!=1:
                   raise RuntimeError(f"MLIT header-row ambiguity {year}: {hrows}")
               h=hrows[0]
 
-              # Within h-2..h, exactly one row must contain 12 monthly 合計 labels.
               candidates=[]
+              max_cols=max(len(r) for r in sheet_rows[:h])
               for rr in range(max(1,h-2),h+1):
-                  cols=[col for col in range(5,ws.max_column+1) if norm_header(ws.cell(rr,col).value)=="合計"]
+                  cols=[col for col in range(5,max_cols+1) if norm_header(value(rr,col))=="合計"]
                   if len(cols)==12:
                       candidates.append((rr,cols))
               if len(candidates)!=1:
                   raise RuntimeError(f"MLIT monthly-label ambiguity {year}: {[(r,len(cols)) for r,cols in candidates]}")
               label_row,total_cols=candidates[0]
 
-              # Require ton-unit evidence without changing the frozen outcome semantics.
-              header_ton=sum(1 for col in total_cols if norm_header(ws.cell(h,col).value)=="トン数")
-              pre_strings=[
-                  norm_header(ws.cell(rr,col).value)
-                  for rr in range(1,h+1)
-                  for col in range(1,ws.max_column+1)
-                  if isinstance(ws.cell(rr,col).value,str)
-              ]
+              header_ton=sum(1 for col in total_cols if norm_header(value(h,col))=="トン数")
+              pre_strings=[]
+              for rr in range(1,h+1):
+                  for v in sheet_rows[rr-1]:
+                      if isinstance(v,str):
+                          pre_strings.append(norm_header(v))
               legacy_unit=any(("単位" in s and "トン" in s) for s in pre_strings)
               if not (header_ton==12 or legacy_unit):
                   raise RuntimeError(f"MLIT ton-unit evidence missing {year}")
 
               port_rows={}
-              for ri in range(h+1,ws.max_row+1):
-                  name=norm_header(ws.cell(ri,3).value)
-                  typ=norm_header(ws.cell(ri,4).value)
+              for ri in range(h+1,len(sheet_rows)+1):
+                  name=norm_header(value(ri,3))
+                  typ=norm_header(value(ri,4))
                   if name and typ=="計":
                       if name in port_rows:
                           raise RuntimeError(f"Duplicate total row {year} {name}")
@@ -245,7 +253,7 @@ jobs:
               for port in panel_ports:
                   ri=port_rows[port]
                   for month,col in enumerate(total_cols,1):
-                      v=ws.cell(ri,col).value
+                      v=value(ri,col)
                       if v is None or str(v).strip()=="":
                           continue
                       try:
@@ -258,8 +266,10 @@ jobs:
                   "year":year,"bytes":len(b),"sha256":hs,
                   "header_row":h,"monthly_label_row":label_row,
                   "monthly_total_cols":len(total_cols),
-                  "unit_evidence":"12x ton-count header" if header_ton==12 else "legacy unit: ton"
+                  "unit_evidence":"12x ton-count header" if header_ton==12 else "legacy unit: ton",
+                  "access_mode":"iter_rows(values_only=True)"
               })
+              wb.close()
 
           # Realized Stage-B rows must be a subset of frozen Stage-A keys.
           rows=[]
