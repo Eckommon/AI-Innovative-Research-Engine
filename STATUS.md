@@ -1,60 +1,64 @@
 ---
-checkpoint_id: CHK-20260904-PORTFOLIO-R05-ACTIVE
-active_issue: 78
-active_research: PORTFOLIO-R05
-last_completed_issue: 77
-last_completed_research: US-GRID-F01
-last_decision: DEC-109
+checkpoint_id: CHK-20260904-JP-PORT-F01-ACTIVE
+active_issue: 79
+active_research: JP-PORT-F01
+last_completed_issue: 78
+last_completed_research: PORTFOLIO-R05
+last_decision: DEC-110
 updated: 2026-09-04
 ---
 
 # Project Status / 프로젝트 상태
 
 **Project / 프로젝트:** AI-Innovative-Research-Engine / AI 기반 혁신 탐색 연구 엔진  
-**State / 상태:** `MISSION_ANCHOR_FIXED__US_GRID_F01_PASS__E01_STRUCTURAL_HOLD__PORTFOLIO_R05_ACTIVE`  
-**Active Work Queue / 활성 작업 큐:** Issue #78 `PORTFOLIO-R05 — post-US-grid structural HOLD Stage 0 Mission-ROI reselection`.
+**State / 상태:** `MISSION_ANCHOR_FIXED__PORTFOLIO_R05_COMPLETE__JP_PORT_F01_ACTIVE`  
+**Active Work Queue / 활성 작업 큐:** Issue #79 `JP-PORT-F01 — MLIT Port-Month × JMA Weather-Station Deterministic Join Feasibility`.
 
 ## Fixed Mission / 고정 목적
 
 Discover and validate **new, falsifiable, reproducible and practically useful innovation opportunities or structural bottlenecks from relationships among public/research data**. `MEM-054` remains mandatory.
 
-## Preserved U.S.-grid result / 보존 미국 전력망 결과
+## Last completed work / 마지막 완료 작업
 
-`US-GRID-F01` remains:
-
+### US-GRID-F01
+Completed as:
 **`PASS_US_GRID_QUEUE_BA_JOIN_READY`**.
 
-Reusable assets:
-- 41 deterministic LBNL entity → EIA BA mappings;
-- 16 prospective identity exclusions;
-- 17,453/19,794 qualified 2019–2025 queue-entry rows;
-- 447 completed-project structural keys / 11 BAs;
-- exact LBNL and EBA source hashes;
-- source-defined IR→COD construct.
+The deterministic LBNL→EIA BA bridge, 41 qualified entities, 447-project completed structural asset and frozen source hashes remain reusable.
 
-## Descendant stop / 후속 중단
+Immediate replicated cross-BA descendant is held before numerical exposure under `DEC-109` because prospective BA-year support collapses to ERCO-only cells.
 
-`DEC-109` applies:
+### PORTFOLIO-R05
+Issue #78 completed as:
+**`SELECT_C_JP_001_PORT_WEATHER_THROUGHPUT_STRESS`**.
 
-**`HOLD_US_GRID_E01_CROSS_BA_SUPPORT_TOO_SPARSE__RETURN_TO_PORTFOLIO`**.
+Japan and C-EU-001 tied on the current portfolio matrix; Japan won the minimum-operability tie-break because its next source-semantic gate can proceed through current official zero-cost routes without first provisioning ENTSO-E/CDS credentials.
 
-Outcome-blind BA-year structural preflight:
-- cell >=3 completed projects;
-- BA >=2 qualifying years;
-- 2021–2023 candidate leaves only ERCO 2021/2022/2023;
-- final = 3 cells / 91 projects / one BA.
+Durable records:
+- `research/PORTFOLIO-R05/RESULT.md`
+- `registry/DEC-110.md`
+- Issue #78 completed.
 
-No duration magnitude or EIA operating relationship was computed.
+## Active JP-PORT-F01 authorization / 활성 승인 범위
 
-Do not loosen structural rules, select only ERCO, or search multiple EIA predictors merely to force E01.
+JP-PORT-F01 is source-semantic/spatial-temporal feasibility only.
+
+Frozen source families:
+- MLIT Port Survey / e-Stat monthly port-level products;
+- JMA historical observations.
+
+F01 may inspect source identity, port/station identifiers, coordinates, date/unit semantics, revision status, quality/homogeneity flags, structural support counts and hashes.
+
+F01 may **not** calculate port-weather relationships, sensitivity scores, rankings, causal effects or policy/investment conclusions.
 
 ## Exact next action / 정확한 다음 행동
 
-Execute `PORTFOLIO-R05` and re-rank preserved mission candidates using current official-source accessibility and expected new scientific information value.
+1. Freeze exact MLIT/e-Stat port-month source/table/file identity and snapshot.
+2. Qualify stable port identifier, monthly throughput fields, units, final/revision semantics.
+3. Qualify an official port coordinate/location source.
+4. Freeze JMA station identity/coordinate route and daily weather quality semantics.
+5. Determine a prospective deterministic port→station mapping/support rule.
+6. Freeze one direct future throughput outcome family and bounded mature common period.
+7. Persist JP-PORT-F01 PASS/PARTIAL/HOLD/REJECT and apply branch-stop.
 
-Prior leading fallback entering R05:
-`C-EU-001 Cross-National Grid Stress`.
-
-No candidate is selected until R05 closes.
-
-Incremental monetary cost remains **0 USD**.
+Incremental monetary cost remains **0 USD**. Any potentially billable work requires explicit prior user approval.
