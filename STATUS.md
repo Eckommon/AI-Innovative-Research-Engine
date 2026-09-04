@@ -1,18 +1,18 @@
 ---
-checkpoint_id: CHK-20260904-JP-PORT-F01-ACTIVE
-active_issue: 79
-active_research: JP-PORT-F01
-last_completed_issue: 78
-last_completed_research: PORTFOLIO-R05
-last_decision: DEC-110
+checkpoint_id: CHK-20260904-JP-PORT-F01-PASS
+active_issue: null
+active_research: JP-PORT-E01-PREREGISTRATION
+last_completed_issue: 79
+last_completed_research: JP-PORT-F01
+last_decision: DEC-111
 updated: 2026-09-04
 ---
 
 # Project Status / 프로젝트 상태
 
 **Project / 프로젝트:** AI-Innovative-Research-Engine / AI 기반 혁신 탐색 연구 엔진  
-**State / 상태:** `MISSION_ANCHOR_FIXED__PORTFOLIO_R05_COMPLETE__JP_PORT_F01_ACTIVE`  
-**Active Work Queue / 활성 작업 큐:** Issue #79 `JP-PORT-F01 — MLIT Port-Month × JMA Weather-Station Deterministic Join Feasibility`.
+**State / 상태:** `MISSION_ANCHOR_FIXED__JP_PORT_F01_PASS__E01_PREREGISTRATION_AUTHORIZED`  
+**Active Work Queue / 활성 작업 큐:** outcome-blind `JP-PORT-E01` preregistration authorized by `DEC-111`; no weather-throughput numerical execution yet.
 
 ## Fixed Mission / 고정 목적
 
@@ -20,45 +20,62 @@ Discover and validate **new, falsifiable, reproducible and practically useful in
 
 ## Last completed work / 마지막 완료 작업
 
-### US-GRID-F01
-Completed as:
-**`PASS_US_GRID_QUEUE_BA_JOIN_READY`**.
+Issue #79 / `JP-PORT-F01` completed as:
 
-The deterministic LBNL→EIA BA bridge, 41 qualified entities, 447-project completed structural asset and frozen source hashes remain reusable.
+**`PASS_JP_PORT_WEATHER_JOIN_READY`**.
 
-Immediate replicated cross-BA descendant is held before numerical exposure under `DEC-109` because prospective BA-year support collapses to ERCO-only cells.
+### Frozen mature source window
+- MLIT/e-Stat port-month source window: **2019-01 through 2024-12**
+- stable port identities across all six mature workbooks: **160**
+- one-to-one official C02 location matches: **149**
+- prospectively excluded C02 ambiguous/unmatched stable ports: **11**
 
-### PORTFOLIO-R05
-Issue #78 completed as:
-**`SELECT_C_JP_001_PORT_WEATHER_THROUGHPUT_STRESS`**.
+### Frozen JMA support
+- stable 2019–2024 precipitation+wind/location-continuous station IDs: **883**
+- maximum port→station distance: **30 km**
+- final support-qualified ports: **149**
+- unique JMA stations used: **131**
+- 16 JMA stations are shared across 34 port mappings; future inference must account for station-level dependence.
 
-Japan and C-EU-001 tied on the current portfolio matrix; Japan won the minimum-operability tie-break because its next source-semantic gate can proceed through current official zero-cost routes without first provisioning ENTSO-E/CDS credentials.
+### Frozen future throughput family
+**Monthly total maritime cargo**
+- sheet `海上出入貨物`
+- port row `種別=計`
+- monthly subcolumn `合計`
+- source unit label `トン数`
+- preserve MLIT freight-ton semantics.
+
+No JMA weather observation value and no throughput-weather relationship was computed during F01.
 
 Durable records:
-- `research/PORTFOLIO-R05/RESULT.md`
-- `registry/DEC-110.md`
-- Issue #78 completed.
+- `research/JP-PORT-F01/URL_PROBE.md`
+- `research/JP-PORT-F01/SOURCE_PREFLIGHT.md`
+- `research/JP-PORT-F01/SCHEMA_DIAGNOSTIC.md`
+- `research/JP-PORT-F01/SUPPORT_ADJUDICATION.md`
+- `research/JP-PORT-F01/FINAL_SUPPORT_PREFLIGHT.md`
+- `research/JP-PORT-F01/EXECUTION_CONTRACT.md`
+- `research/JP-PORT-F01/RESULT.md`
+- `registry/CLM-128.md`
+- `registry/DEC-111.md`
+- Issue #79 completed.
 
-## Active JP-PORT-F01 authorization / 활성 승인 범위
+## Next authorization / 다음 승인
 
-JP-PORT-F01 is source-semantic/spatial-temporal feasibility only.
+`DEC-111` authorizes exactly one immediate next action:
 
-Frozen source families:
-- MLIT Port Survey / e-Stat monthly port-level products;
-- JMA historical observations.
+**preregister one bounded `JP-PORT-E01` outcome-blind.**
 
-F01 may inspect source identity, port/station identifiers, coordinates, date/unit semantics, revision status, quality/homogeneity flags, structural support counts and hashes.
+Before any numerical JMA observation value is opened for relationship analysis, E01 must freeze:
+1. one primary JMA daily weather element/construct;
+2. one monthly aggregation;
+3. quality/completeness rule;
+4. shared-JMA-station dependence treatment;
+5. throughput transform;
+6. month/year/port controls;
+7. primary statistic/model;
+8. materiality/inference gate;
+9. Stage A raw JMA CSV download/hash procedure.
 
-F01 may **not** calculate port-weather relationships, sensitivity scores, rankings, causal effects or policy/investment conclusions.
-
-## Exact next action / 정확한 다음 행동
-
-1. Freeze exact MLIT/e-Stat port-month source/table/file identity and snapshot.
-2. Qualify stable port identifier, monthly throughput fields, units, final/revision semantics.
-3. Qualify an official port coordinate/location source.
-4. Freeze JMA station identity/coordinate route and daily weather quality semantics.
-5. Determine a prospective deterministic port→station mapping/support rule.
-6. Freeze one direct future throughput outcome family and bounded mature common period.
-7. Persist JP-PORT-F01 PASS/PARTIAL/HOLD/REJECT and apply branch-stop.
+If no scientifically defensible low-degree-of-freedom design can be frozen before values, return to Stage 0 rather than search multiple weather variables or thresholds.
 
 Incremental monetary cost remains **0 USD**. Any potentially billable work requires explicit prior user approval.
