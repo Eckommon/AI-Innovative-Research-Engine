@@ -32,13 +32,14 @@ No additional regressors, lags, leads, interactions, port trends or alternate we
 Estimate beta by Frisch-Waugh-Lovell residualization:
 
 1. construct a design matrix containing:
+   - an intercept;
    - the primary predictor W;
    - port dummy indicators, omitting one reference port;
    - year-month dummy indicators, omitting one reference month;
 2. fit OLS on the eligible rows;
 3. report the coefficient on W.
 
-The choice of omitted dummy categories does not affect beta.
+The intercept is included. The choice of omitted dummy categories does not affect beta.
 
 ## Cluster-robust inference
 
