@@ -1,0 +1,118 @@
+name: US GRID E01 prereg structural maturity preflight
+
+on:
+  push:
+    paths:
+      - ".github/workflows/us-grid-e01-prereg-structure.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  structure:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install --quiet openpyxl
+      - name: Count outcome-blind eligible structures
+        shell: bash
+        run: |
+          python - <<'PY'
+          import io, os, urllib.request
+          from collections import Counter, defaultdict
+          from datetime import datetime, date
+          import openpyxl
+
+          URL="https://eta-publications.lbl.gov/sites/default/files/2026-05/lbnl_ix_queue_data_file_thru2025.xlsx"
+          OUT="research/US-GRID-F01/E01_PREREG_STRUCTURAL_PREFLIGHT.md"
+          BA={
+            "AEC":"AECI","APS":"AZPS","Avista":"AVA","BPA":"BPAT","CAISO":"CISO",
+            "CPUD":"CHPD","Dominion":"SCEG","EPE":"EPE","ERCOT":"ERCO","FPL":"FPL",
+            "GrantPUD":"GCPD","IID":"IID","IP":"IPCO","ISO-NE":"ISNE","JEA":"JEA",
+            "LADWP":"LDWP","LGE-KU":"LGEE","MISO":"MISO","NWMT":"NWMT","NYISO":"NYIS",
+            "PGE":"PGE","PJM":"PJM","PNM":"PNM","PSCo":"PSCO","PSE":"PSEI","S-C":"SC",
+            "SEC":"SEC","SMUD":"BANC","SOCO":"SOCO","SPP":"SWPP","SRP":"SRP",
+            "SRP_ANPP":"SRP","SRP_Gila":"SRP","SRP_PV-PC":"SRP","SRP_SWV":"SRP",
+            "TEC":"TEC","TEP":"TEPC","TPU":"TPWR","TVA":"TVA","WAPA-DSW":"WALC",
+            "WAPA-RM":"WACM"
+          }
+          def get(url):
+              req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0"})
+              with urllib.request.urlopen(req,timeout=120) as r:return r.read()
+          def dt(v):
+              if isinstance(v,datetime):return v
+              if isinstance(v,date):return datetime(v.year,v.month,v.day)
+              if v is None:return None
+              s=str(v).strip()
+              for f in ("%Y-%m-%d %H:%M:%S","%Y-%m-%d"):
+                  try:return datetime.strptime(s,f)
+                  except:pass
+              return None
+
+          wb=openpyxl.load_workbook(io.BytesIO(get(URL)),read_only=True,data_only=True)
+          ws=wb["03. Complete Queue Data"]
+          hr=None; hs=None
+          for i,row in enumerate(ws.iter_rows(min_row=1,max_row=10,values_only=True),1):
+              vals=[str(x).strip() if x is not None else "" for x in row]
+              if "q_id" in vals and "entity" in vals:hr=i;hs=vals;break
+          ix={h:i for i,h in enumerate(hs) if h}
+          cols=["q_id","entity","q_status","q_date","on_date"]
+          items=[]
+          for row in ws.iter_rows(min_row=hr+1,values_only=True):
+              if not any(v is not None for v in row):continue
+              r={c:row[ix[c]] for c in cols}
+              e=str(r["entity"] or "").strip()
+              q=dt(r["q_date"]); o=dt(r["on_date"])
+              if e in BA and q and str(r["q_status"]).strip()=="operational" and o and o>=q and o<=datetime(2025,12,31,23,59,59):
+                  items.append((e,str(r["q_id"]).strip(),BA[e],q,o))
+          # project keys already conflict-free for frozen cohort; count structures only
+          uniq={}
+          for x in items: uniq.setdefault((x[0],x[1]),x)
+          vals=list(uniq.values())
+
+          byyear=Counter(x[3].year for x in vals)
+          byyearba=defaultdict(Counter)
+          for x in vals: byyearba[x[3].year][x[2]]+=1
+
+          windows={
+             "2021-2022":(2021,2022),
+             "2021-2023":(2021,2023),
+             "2021-2024":(2021,2024)
+          }
+          lines=["---","id: US-GRID-E01-PREREG-STRUCTURAL-PREFLIGHT",
+                 "type: outcome-blind-prereg-structural-preflight","created: 2026-09-04",
+                 "queue_duration_computed: false","eia_operating_values_opened: false",
+                 "incremental_monetary_cost_usd: 0","---","",
+                 "# US-GRID-E01 Preregistration Structural Maturity Preflight","",
+                 "No IR→COD elapsed duration was calculated. Only queue-entry year, source status, explicit-date availability and BA cardinality were counted.","",
+                 "## Completed-project structure by queue-entry year","",
+                 "| q_year | Unique completed project keys | # represented BAs |","|---:|---:|---:|"]
+          for y in sorted(byyear):
+              lines.append(f"| {y} | {byyear[y]} | {len(byyearba[y])} |")
+          lines += ["","## Candidate preregistration windows","",
+                    "| Window | Projects | Represented BAs | BAs with >=3 projects |","|---|---:|---:|---:|"]
+          for label,(a,b) in windows.items():
+              xs=[x for x in vals if a<=x[3].year<=b]
+              bc=Counter(x[2] for x in xs)
+              lines.append(f"| {label} | {len(xs)} | {len(bc)} | {sum(v>=3 for v in bc.values())} |")
+          lines += ["","## BA counts for 2021–2022 candidate","",
+                    "| BA | Projects |","|---|---:|"]
+          xs=[x for x in vals if 2021<=x[3].year<=2022]
+          for ba,n in Counter(x[2] for x in xs).most_common():
+              lines.append(f"| `{ba}` | {n} |")
+          lines += ["","## Design implication","",
+                    "- A two-prior-year EIA predictor requires q_date no earlier than 2021 because the frozen EBA family begins in 2019.",
+                    "- Using q_date through 2022 gives every selected project at least three calendar years between the latest queue-entry year and the 2025-12-31 outcome snapshot, while remaining a completed-project construct.",
+                    "- This is a maturity heuristic chosen before any duration magnitude or EIA value is inspected; it is not an official LBNL/EIA correction window.",
+                    "","Incremental monetary cost remained **0 USD**.",""]
+          os.makedirs(os.path.dirname(OUT),exist_ok=True)
+          open(OUT,"w",encoding="utf-8").write("\n".join(lines))
+          PY
+      - name: Commit structural prereg preflight
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/US-GRID-F01/E01_PREREG_STRUCTURAL_PREFLIGHT.md
+          git diff --cached --quiet || git commit -m "record US-GRID-E01 structural prereg preflight"
+          git push
