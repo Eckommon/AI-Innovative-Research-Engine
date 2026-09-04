@@ -1,0 +1,98 @@
+name: JP PORT F01 schema diagnostic
+
+on:
+  push:
+    paths:
+      - ".github/workflows/jp-port-f01-schema-diagnostic.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  diag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m pip install --quiet openpyxl
+      - name: Inspect eStat cells and JMA CSV fields
+        shell: bash
+        run: |
+          python - <<'PY'
+          import io, os, csv, urllib.request, hashlib, openpyxl
+          OUT="research/JP-PORT-F01/SCHEMA_DIAGNOSTIC.md"
+          EU="https://www.e-stat.go.jp/stat-search/file-download?fileKind=0&statInfId=000040146718"
+          JU="https://www.data.jma.go.jp/stats/data/mdrr/chiten/meta/amdmaster.index4"
+          def get(u):
+              r=urllib.request.Request(u,headers={"User-Agent":"Mozilla/5.0"})
+              with urllib.request.urlopen(r,timeout=120) as x:return x.read()
+          eb=get(EU); jb=get(JU)
+          wb=openpyxl.load_workbook(io.BytesIO(eb),read_only=True,data_only=True)
+          lines=["---","id: JP-PORT-F01-SCHEMA-DIAGNOSTIC","created: 2026-09-04",
+                 "relationship_outcome_computed: false","weather_values_opened: false",
+                 "incremental_monetary_cost_usd: 0","---","",
+                 "# JP-PORT-F01 Schema Diagnostic","",
+                 "## A. 2024 e-Stat non-empty cell coordinates (metadata/text only)",""]
+          for sn in ["入港船舶","海上出入貨物"]:
+              ws=wb[sn]
+              lines += ["",f"### Sheet {sn}",""]
+              n=0
+              for row in ws.iter_rows(min_row=1,max_row=min(ws.max_row,220)):
+                  vals=[]
+                  for c in row[:20]:
+                      v=c.value
+                      if v is not None and str(v).strip()!="":
+                          # include values only if string or small integers used as IDs; avoid throughput magnitudes by masking numeric values after row 20
+                          if isinstance(v,str):
+                              val=v.strip().replace("\n"," / ")
+                          elif c.row<=20:
+                              val=repr(v)
+                          else:
+                              val="<NUM>"
+                          vals.append(f"{c.coordinate}={val[:180]}")
+                  if vals:
+                      lines.append("- "+" | ".join(vals))
+                      n+=1
+                  if n>=100:break
+
+          # JMA actual rows and field positions
+          txt=None;encused=None
+          for enc in ("cp932","shift_jis","utf-8-sig","utf-8"):
+              try:txt=jb.decode(enc);encused=enc;break
+              except:pass
+          rows=list(csv.reader(io.StringIO(txt)))
+          lines += ["","## B. JMA amdmaster.index4 actual CSV structure","",
+                    f"- encoding used: {encused}",
+                    f"- bytes SHA-256: {hashlib.sha256(jb).hexdigest()}",
+                    f"- total CSV rows: {len(rows)}",
+                    f"- field-count distribution: {sorted(__import__('collections').Counter(len(r) for r in rows).items())}",""]
+          for i,r in enumerate(rows[:8],1):
+              lines += [f"### Row {i}, fields={len(r)}"]
+              for j,v in enumerate(r):
+                  lines.append(f"- [{j}] {v}")
+          # candidate date-looking field index diagnostics
+          import re
+          dateidx=__import__('collections').Counter()
+          coordidx=__import__('collections').Counter()
+          for r in rows[:500]:
+              for j,v in enumerate(r):
+                  s=v.strip()
+                  if re.fullmatch(r"\d{4}-\d{2}-\d{2}|9999-99-99",s):dateidx[j]+=1
+                  try:
+                      f=float(s)
+                      if 20<=f<=50 or 120<=f<=155:coordidx[j]+=1
+                  except:pass
+          lines += ["","### Candidate field-index diagnostics","",
+                    f"- date-like indices: {dateidx}",
+                    f"- coordinate-like indices: {coordidx}","",
+                    "No throughput or weather observation values were analyzed.",""]
+          os.makedirs(os.path.dirname(OUT),exist_ok=True)
+          open(OUT,"w",encoding="utf-8").write("\n".join(lines))
+          PY
+      - name: Commit diagnostic
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/JP-PORT-F01/SCHEMA_DIAGNOSTIC.md
+          git diff --cached --quiet || git commit -m "record JP-PORT-F01 schema diagnostic"
+          git push
