@@ -1,0 +1,242 @@
+name: US AIR F01 source cardinality preflight
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/us-air-f01-source-cardinality.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  source-cardinality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Inspect BTS identities and NOAA station metadata without outcome or weather values
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import csv, hashlib, html, io, os, re, urllib.parse, urllib.request, zipfile
+          from collections import defaultdict
+          from pathlib import Path
+
+          ROOT=Path(os.environ['GITHUB_WORKSPACE'])
+          OUT=ROOT/'research/US-AIR-F01/SOURCE_CARDINALITY_PREFLIGHT.md'
+          UA={'User-Agent':'AI-Innovative-Research-Engine/US-AIR-F01 source-cardinality-preflight'}
+          BASE='https://transtats.bts.gov'
+          NOAA='https://www.ncei.noaa.gov/oa/local-climatological-data/v2/doc/lcdv2-station-list.txt'
+
+          def get(url, timeout=240):
+              req=urllib.request.Request(url,headers=UA)
+              with urllib.request.urlopen(req,timeout=timeout) as r:
+                  return r.read(), getattr(r,'status',200), dict(r.headers), r.geturl()
+
+          def sha(b):
+              return hashlib.sha256(b).hexdigest()
+
+          months={}
+          airport_months=defaultdict(set)
+          airportseq_months=defaultdict(set)
+          airport_code_by_id=defaultdict(set)
+          seq_by_id=defaultdict(set)
+          headers_ref=None
+          header_consistent=True
+          total_rows=0
+          required=['FlightDate','OriginAirportID','OriginAirportSeqID','Origin']
+
+          for m in range(1,13):
+              fn=f'On_Time_Marketing_Carrier_On_Time_Performance_Beginning_January_2018_2025_{m}.zip'
+              url=f'{BASE}/PREZIP/{fn}'
+              b,st,hdr,final=get(url)
+              z=zipfile.ZipFile(io.BytesIO(b))
+              csvnames=[n for n in z.namelist() if n.lower().endswith('.csv') and 'readme' not in n.lower()]
+              if not csvnames:
+                  raise RuntimeError(f'No CSV member in {fn}')
+              cname=max(csvnames,key=lambda n:z.getinfo(n).file_size)
+              row_count=0
+              ids=set()
+              seqs=set()
+              with z.open(cname) as raw:
+                  txt=io.TextIOWrapper(raw,encoding='utf-8-sig',newline='',errors='replace')
+                  rd=csv.reader(txt)
+                  header=next(rd)
+                  hmap={str(x).strip():i for i,x in enumerate(header)}
+                  missing=[x for x in required if x not in hmap]
+                  if missing:
+                      raise RuntimeError(f'{fn} missing required headers {missing}')
+                  if headers_ref is None:
+                      headers_ref=header
+                  elif header!=headers_ref:
+                      header_consistent=False
+                  i_aid=hmap['OriginAirportID']
+                  i_sid=hmap['OriginAirportSeqID']
+                  i_code=hmap['Origin']
+                  for row in rd:
+                      row_count+=1
+                      if len(row)<=max(i_aid,i_sid,i_code):
+                          continue
+                      aid=row[i_aid].strip()
+                      sid=row[i_sid].strip()
+                      code=row[i_code].strip()
+                      if aid:
+                          ids.add(aid)
+                          airport_months[aid].add(m)
+                          if code:
+                              airport_code_by_id[aid].add(code)
+                      if sid:
+                          seqs.add(sid)
+                          airportseq_months[sid].add(m)
+                          if aid:
+                              seq_by_id[aid].add(sid)
+              total_rows+=row_count
+              months[m]={
+                  'url':url,'http':st,'bytes':len(b),'sha256':sha(b),
+                  'csv_member':cname,'csv_uncompressed_bytes':z.getinfo(cname).file_size,
+                  'rows':row_count,'airport_ids':len(ids),'airport_seq_ids':len(seqs)
+              }
+
+          all_airports=set(airport_months)
+          all_seqs=set(airportseq_months)
+          full12={a for a,ms in airport_months.items() if len(ms)==12}
+          full12_seq={s for s,ms in airportseq_months.items() if len(ms)==12}
+          code_conflicts={a:v for a,v in airport_code_by_id.items() if len(v)>1}
+          seq_multi={a:v for a,v in seq_by_id.items() if len(v)>1}
+
+          nb,nst,nh,nfinal=get(NOAA)
+          ntext=nb.decode('utf-8',errors='replace')
+          stations=[]
+          for line in ntext.splitlines():
+              p=line.split(maxsplit=4)
+              if len(p)<5:
+                  continue
+              sid,la,lo,el,name=p
+              try:
+                  lat=float(la)
+                  lon=float(lo)
+                  elev=float(el)
+              except ValueError:
+                  continue
+              stations.append((sid,lat,lon,elev,name))
+          us_stations=[x for x in stations if x[0].startswith('US')]
+          airport_lex=[x for x in us_stations if re.search(r'\b(INTL|INTERNATIONAL|AIRPORT| AP |FIELD|AFB|NAS|MUNI|MUNICIPAL)\b', ' '+x[4]+' ', re.I)]
+
+          master_url='https://transtats.bts.gov/DL_SelectFields.aspx?QO_fu146_anzr=N8vn6v10+f722146+gnoyr5&gnoyr_VQ=FLL'
+          mb,mst,mh,mfinal=get(master_url)
+          mhtml=mb.decode('utf-8',errors='replace')
+          form_tags=re.findall(r'<form\b[^>]*>',mhtml,flags=re.I)
+          forms=[]
+          for tag in form_tags:
+              mm=re.search(r'method\s*=\s*["\x27]?([^\s"\x27>]+)',tag,re.I)
+              aa=re.search(r'action\s*=\s*["\x27]?([^\s"\x27>]+)',tag,re.I)
+              forms.append((mm.group(1) if mm else '',aa.group(1) if aa else ''))
+          input_names=sorted(set(re.findall(r'<input\b[^>]*\bname\s*=\s*["\x27]([^"\x27]+)',mhtml,flags=re.I)))
+          select_names=sorted(set(re.findall(r'<select\b[^>]*\bname\s*=\s*["\x27]([^"\x27]+)',mhtml,flags=re.I)))
+          hints=[]
+          for line in mhtml.splitlines():
+              if re.search(r'prezip|download|ftproot',line,re.I):
+                  s=re.sub(r'\s+',' ',re.sub(r'<[^>]+>',' ',line)).strip()
+                  if s and s not in hints:
+                      hints.append(s[:500])
+
+          ib,ist,ih,ifinal=get(BASE+'/PREZIP/')
+          itext=ib.decode('utf-8',errors='replace')
+          zip_names=re.findall(r'href=["\x27]([^"\x27]+\.zip)["\x27]',itext,re.I)
+          support_like=[urllib.parse.unquote(n) for n in zip_names if re.search(r'coord|airport|master|support',n,re.I)]
+
+          lines=[
+              '---',
+              'id: US-AIR-F01-SOURCE-CARDINALITY-PREFLIGHT',
+              'type: source-cardinality-preflight',
+              'created: 2026-09-05',
+              'issue: 88',
+              'relationship_outcome_computed: false',
+              'weather_values_parsed: false',
+              'delay_magnitudes_parsed: false',
+              'incremental_monetary_cost_usd: 0',
+              '---','',
+              '# US-AIR-F01 Source Cardinality Preflight',
+              '# US-AIR-F01 Source 독립단위 Cardinality 사전검증','',
+              '## Exposure boundary / 노출 경계','',
+              '- Parsed only BTS date/origin-airport identity fields needed for source-support cardinality.',
+              '- Did not index or parse departure/arrival delay magnitudes, WeatherDelay, or any NOAA weather measurement value.',
+              '- NOAA station-list latitude/longitude/name metadata were parsed; no LCDv2 observation values were downloaded.','',
+              '## A. BTS 2025 monthly source bytes / BTS 2025 월별 source bytes','',
+              '| Month | ZIP bytes | SHA-256 | CSV rows | Origin AirportID | Origin AirportSeqID |',
+              '|---:|---:|---|---:|---:|---:|'
+          ]
+          for m in range(1,13):
+              d=months[m]
+              lines.append(f"| {m} | {d['bytes']} | {d['sha256']} | {d['rows']} | {d['airport_ids']} | {d['airport_seq_ids']} |")
+          lines += [
+              '',
+              f'- total parsed 2025 flight records for identity support only: {total_rows:,}',
+              f'- union unique Origin AirportID: {len(all_airports)}',
+              f'- Origin AirportID present in all 12 months: {len(full12)}',
+              f'- union unique Origin AirportSeqID: {len(all_seqs)}',
+              f'- Origin AirportSeqID present in all 12 months: {len(full12_seq)}',
+              f'- monthly CSV headers identical across all 12 files: {header_consistent}',
+              f'- AirportID with more than one observed 2025 origin code: {len(code_conflicts)}',
+              f'- AirportID with more than one 2025 OriginAirportSeqID: {len(seq_multi)}',
+              '',
+              '### Frozen threshold structural check / 고정 threshold 구조 확인','',
+              f'- at least 50 origin AirportIDs available across 2025 source: {len(all_airports)>=50}',
+              f'- at least 50 origin AirportIDs present in every 2025 month: {len(full12)>=50}',
+              '- This does not yet establish at least 40 unique NOAA stations because the deterministic coordinate join is still pending.',
+              '',
+              '## B. NOAA LCDv2 station metadata / NOAA LCDv2 station metadata','',
+              f'- HTTP: {nst}',
+              f'- bytes: {len(nb):,}',
+              f'- SHA-256: {sha(nb)}',
+              f'- parsed station rows: {len(stations):,}',
+              f'- station IDs beginning US: {len(us_stations):,}',
+              f'- U.S.-prefix station names with airport/airfield lexical markers, diagnostic only: {len(airport_lex):,}',
+              '- The lexical name count is not the final airport-to-station mapping and cannot satisfy the 40-station gate by itself.',
+              '',
+              '## C. BTS Master Coordinate download mechanics / BTS Master Coordinate download mechanics','',
+              f'- source page HTTP: {mst}',
+              f'- source page bytes: {len(mb):,}',
+              f'- source page SHA-256: {sha(mb)}',
+              f'- detected forms: {forms}',
+              f'- public input names ({len(input_names)}): {input_names}',
+              f'- public select names ({len(select_names)}): {select_names}',
+              f'- PREZIP filenames matching coordinate/airport/master/support heuristic: {support_like}',
+              '',
+              '### Public endpoint-hint text / 공개 endpoint 단서',''
+          ]
+          lines += [f'- {html.escape(x)}' for x in hints[:30]] or ['- none']
+          lines += [
+              '',
+              '## Interim gate / 중간 판정','',
+              'CONTINUE_US_AIR_F01_MASTER_COORDINATE_MATERIALIZATION','',
+              'The frozen at-least-50-airport source-side condition can now be evaluated from actual 2025 BTS identity rows, but the at-least-40 unique NOAA-station condition remains unresolved until the official BTS Master Coordinate payload is materialized and a prospective spatial rule is applied.',
+              '',
+              'No weather-delay effect is authorized or computed.',
+              '',
+              '## Exact next action / 정확한 다음 행동','',
+              'Materialize the official BTS Master Coordinate table through the source download mechanics identified above, freeze time-valid 2025 airport coordinates, then apply one prospective airport-to-LCDv2 station distance/identity rule and report only mapping/support cardinality.',
+              '',
+              'Incremental monetary cost remains 0 USD.'
+          ]
+          OUT.parent.mkdir(parents=True,exist_ok=True)
+          OUT.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          print('\n'.join(lines[-25:]))
+          PY
+
+      - name: Commit source-cardinality preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/US-AIR-F01/SOURCE_CARDINALITY_PREFLIGHT.md
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Record US-AIR-F01 source cardinality preflight"
+            git push
+          fi
