@@ -30,7 +30,7 @@ jobs:
           SPD_REGION=MMS_BASE+"PUBLIC_ARCHIVE%23SPDREGIONCONSTRAINT%23FILE01%23202606010000.zip"
           SPD_INTER=MMS_BASE+"PUBLIC_ARCHIVE%23SPDINTERCONNECTORCONSTRAINT%23FILE01%23202606010000.zip"
           BOM_GRID="https://www.bom.gov.au/web03/ncc/www/awap/temperature/maxave/daily/grid/0.05/history/nat/2025090220250902.grid.Z"
-          ABS_QUERY="https://geo.abs.gov.au/arcgis/rest/services/ASGS2026/STE/MapServer/0/query?where=1%3D1&outFields=STE_CODE_2026%2CSTE_NAME_2026&returnGeometry=true&f=geojson"
+          ABS_QUERY="https://geo.abs.gov.au/arcgis/rest/services/ASGS2026/STE/MapServer/0/query?where=1%3D1&outFields=STATE_CODE_2026%2CSTATE_NAME_2026&returnGeometry=true&f=geojson"
 
           def get(url,timeout=180,attempts=3):
               last=None
@@ -182,7 +182,7 @@ jobs:
           for f in feats:
               p=f.get("properties",{})
               g=f.get("geometry") or {}
-              ids.append((str(p.get("STE_CODE_2026","")),str(p.get("STE_NAME_2026",""))))
+              ids.append((str(p.get("STATE_CODE_2026","")),str(p.get("STATE_NAME_2026",""))))
               gtypes[g.get("type","")]+=1
           got={c:n for c,n in ids}
           required={"1":"New South Wales","2":"Victoria","3":"Queensland","4":"South Australia","6":"Tasmania","8":"Australian Capital Territory"}
