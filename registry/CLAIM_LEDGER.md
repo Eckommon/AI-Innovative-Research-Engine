@@ -54,6 +54,8 @@
 
 | `CLM-131` | Under the frozen CA-RAIL-E01 source contract, only 1,143/1,470 ECCC station-weeks (77.755102%) satisfy the preregistered 7/7 daily Minimum Temperature rule; Prince Rupert and Lethbridge have zero numeric Min Temp support under the frozen station identities and Prince George has 86 qualified weeks, so the experiment cannot proceed to Stage B without prohibited redesign. / 고정 CA-RAIL-E01 source 계약에서 7/7 최저기온 완전성을 만족하는 station-week가 77.755102%에 그쳐 Stage B 진행이 불가하다. | `OBSERVED/DERIVED/VALIDATED` | `V3_PREREGISTERED_SOURCE_INTEGRITY` | `research/CA-RAIL-E01/STAGE_A_SOURCE_MANIFEST.md`; `registry/CLM-131.md`; Issue #84 | 2026-09-04 | active-source-hold |
 
+| `CLM-132` | Current official public sources support a deterministic zero-cost route from AEMO five-minute interconnector identity and source-defined congestion shadow price to four NEM region-pair identities, official ABS geometry and a BOM daily gridded-weather distribution route; six current interconnectors map to four region pairs. / AEMO 인터커넥터·혼잡 shadow price를 4개 NEM region-pair·ABS geometry·BOM gridded weather 경로로 결정론적으로 연결할 수 있다. | `OBSERVED/DERIVED/VALIDATED` | `V3_REPRODUCED_SOURCE_SEMANTICS` | `research/AU-NEM-F01/RESULT.md`; `registry/CLM-132.md`; Issue #86 | 2026-09-05 | active-join-pass |
+
 ## Rule / 규칙
 
 - New material claims should receive a stable ID when they influence scoring, promotion, HOLD/REJECT decisions, or downstream experiments. / 점수·승격·HOLD/REJECT·후속 실험에 영향을 주는 중요 주장은 안정적 ID 부여.
