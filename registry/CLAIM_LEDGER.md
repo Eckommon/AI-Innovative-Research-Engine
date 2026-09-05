@@ -56,6 +56,8 @@
 
 | `CLM-132` | Current official public sources support a deterministic zero-cost route from AEMO five-minute interconnector identity and source-defined congestion shadow price to four NEM region-pair identities, official ABS geometry and a BOM daily gridded-weather distribution route; six current interconnectors map to four region pairs. / AEMO 인터커넥터·혼잡 shadow price를 4개 NEM region-pair·ABS geometry·BOM gridded weather 경로로 결정론적으로 연결할 수 있다. | `OBSERVED/DERIVED/VALIDATED` | `V3_REPRODUCED_SOURCE_SEMANTICS` | `research/AU-NEM-F01/RESULT.md`; `registry/CLM-132.md`; Issue #86 | 2026-09-05 | active-join-pass |
 
+| `CLM-133` | Current official BTS On-Time + Aviation Master Coordinate metadata expose stable/time-specific airport identities, direct departure-delay/status fields, airport coordinates and time-zone attributes, while current NOAA LCDv2 exposes official station metadata and bulk CSV weather access; this source/schema evidence justifies an outcome-blind US-AIR-F01 but does not yet establish a join PASS or weather-delay effect. / 현행 BTS 정시운항·Master Coordinate와 NOAA LCDv2 source/schema는 공항 식별자·직접 지연 outcome·공항 좌표/시간대·공식 기상관측소/CSV 경로를 제공하여 US-AIR-F01 승격을 정당화하지만 아직 join PASS나 기상-지연 효과를 입증하지 않는다. | `OBSERVED/DERIVED` | `V2_PRIMARY_VERIFIED_SOURCE_SCHEMA` | `research/PORTFOLIO-R08/RESULT.md`; `registry/CLM-133.md`; Issue #88 | 2026-09-05 | active-source-schema |
+
 ## Rule / 규칙
 
 - New material claims should receive a stable ID when they influence scoring, promotion, HOLD/REJECT decisions, or downstream experiments. / 점수·승격·HOLD/REJECT·후속 실험에 영향을 주는 중요 주장은 안정적 ID 부여.
