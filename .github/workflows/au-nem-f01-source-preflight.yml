@@ -1,0 +1,298 @@
+name: AU NEM F01 source preflight
+
+on:
+  push:
+    paths:
+      - ".github/workflows/au-nem-f01-source-preflight.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect AEMO BOM ABS structures only
+        shell: bash
+        run: |
+          python - <<'PY'
+          import csv, io, re, zipfile, hashlib, urllib.request, urllib.parse, html, json, time
+          from pathlib import Path
+          from collections import defaultdict, Counter
+
+          OUT=Path("research/AU-NEM-F01/SOURCE_PREFLIGHT.md")
+          CURRENT_DIR="https://www.nemweb.com.au/Reports/CURRENT/DispatchIS_Reports/"
+          ARCHIVE_ZIP="https://www.nemweb.com.au/Reports/ARCHIVE/DispatchIS_Reports/PUBLIC_DISPATCHIS_20250902.zip"
+          MMS_BASE="https://www.nemweb.com.au/Data_Archive/Wholesale_Electricity/MMSDM/2026/MMSDM_2026_06/MMSDM_Historical_Data_SQLLoader/DATA/"
+          SPD_REGION=MMS_BASE+"PUBLIC_ARCHIVE%23SPDREGIONCONSTRAINT%23FILE01%23202606010000.zip"
+          SPD_INTER=MMS_BASE+"PUBLIC_ARCHIVE%23SPDINTERCONNECTORCONSTRAINT%23FILE01%23202606010000.zip"
+          BOM_GRID="https://www.bom.gov.au/web03/ncc/www/awap/temperature/maxave/daily/grid/0.05/history/nat/2025090220250902.grid.Z"
+          ABS_QUERY="https://geo.abs.gov.au/arcgis/rest/services/ASGS2026/STE/MapServer/0/query?where=1%3D1&outFields=STE_CODE_2026%2CSTE_NAME_2026&returnGeometry=true&f=geojson"
+
+          def get(url,timeout=180,attempts=3):
+              last=None
+              for a in range(1,attempts+1):
+                  req=urllib.request.Request(url,headers={"User-Agent":"Mozilla/5.0"})
+                  try:
+                      with urllib.request.urlopen(req,timeout=timeout) as r:
+                          return r.read(),r.geturl(),dict(r.headers)
+                  except Exception as e:
+                      last=e
+                      if a>=attempts:
+                          raise
+                      time.sleep(5*a)
+              raise last
+
+          def sha(b):
+              return hashlib.sha256(b).hexdigest()
+
+          def decode(b):
+              for enc in ("utf-8-sig","utf-8","cp1252","latin-1"):
+                  try:
+                      return b.decode(enc),enc
+                  except Exception:
+                      pass
+              raise RuntimeError("decode failed")
+
+          def first_csv(raw):
+              if raw[:2]!=b"PK":
+                  return raw,[],[]
+              z=zipfile.ZipFile(io.BytesIO(raw))
+              names=sorted(z.namelist())
+              for n in names:
+                  if n.lower().endswith(".csv"):
+                      return z.read(n),[n],names
+              for n in names:
+                  if n.lower().endswith(".zip"):
+                      try:
+                          b,p,inner=first_csv(z.read(n))
+                          return b,[n]+p,names
+                      except Exception:
+                          pass
+              raise RuntimeError("No CSV found in bounded ZIP sample")
+
+          def parse_dispatch(raw):
+              txt,enc=decode(raw)
+              rows=list(csv.reader(io.StringIO(txt)))
+              headers={}
+              counts=Counter()
+              ids=defaultdict(set)
+              for row in rows:
+                  if len(row)<4:
+                      continue
+                  rec=row[0].strip()
+                  key=(row[1].strip(),row[2].strip())
+                  if rec=="I":
+                      headers[key]=[x.strip() for x in row[4:]]
+                  elif rec=="D":
+                      counts[key]+=1
+                      h=headers.get(key)
+                      if not h:
+                          continue
+                      vals=row[4:4+len(h)]
+                      d={h[i]:(vals[i].strip() if i<len(vals) else "") for i in range(len(h))}
+                      for fld in ("CONSTRAINTID","GENCONID","INTERCONNECTORID","REGIONID"):
+                          if d.get(fld):
+                              ids[(key,fld)].add(d[fld])
+              return enc,headers,counts,ids
+
+          def parse_public_zip(raw):
+              z=zipfile.ZipFile(io.BytesIO(raw))
+              names=[n for n in z.namelist() if n.lower().endswith(".csv")]
+              if len(names)!=1:
+                  raise RuntimeError("Expected one CSV member, got "+repr(names))
+              mb=z.read(names[0])
+              txt,enc=decode(mb)
+              rows=list(csv.reader(io.StringIO(txt)))
+              header=None
+              data=[]
+              for row in rows:
+                  if len(row)<4:
+                      continue
+                  if row[0].strip()=="I":
+                      header=[x.strip() for x in row[4:]]
+                  elif row[0].strip()=="D" and header:
+                      vals=row[4:4+len(header)]
+                      data.append({header[i]:(vals[i].strip() if i<len(vals) else "") for i in range(len(header))})
+              return names[0],sha(mb),header,data
+
+          # AEMO current directory and latest current interval.
+          d_raw,d_final,d_h=get(CURRENT_DIR)
+          d_txt,_=decode(d_raw)
+          names=sorted(set(re.findall(r"PUBLIC_DISPATCHIS_[A-Za-z0-9_]+\.zip",d_txt,re.I)))
+          if not names:
+              raise RuntimeError("No DispatchIS current files detected")
+          latest=names[-1]
+          cur_raw,cur_final,cur_h=get(urllib.parse.urljoin(CURRENT_DIR,latest))
+          cur_csv,cur_path,cur_members=first_csv(cur_raw)
+          cur_enc,cur_headers,cur_counts,cur_ids=parse_dispatch(cur_csv)
+
+          # Fixed archive day.
+          arc_raw,arc_final,arc_h=get(ARCHIVE_ZIP)
+          arc_csv,arc_path,arc_members=first_csv(arc_raw)
+          arc_enc,arc_headers,arc_counts,arc_ids=parse_dispatch(arc_csv)
+
+          # Generic-constraint factor tables from AEMO public monthly archive.
+          reg_raw,reg_final,reg_h=get(SPD_REGION)
+          int_raw,int_final,int_h=get(SPD_INTER)
+          reg_member,reg_member_sha,reg_header,reg_data=parse_public_zip(reg_raw)
+          int_member,int_member_sha,int_header,int_data=parse_public_zip(int_raw)
+
+          reg_map=defaultdict(set)
+          for r in reg_data:
+              if r.get("GENCONID") and r.get("REGIONID"):
+                  reg_map[r["GENCONID"]].add(r["REGIONID"])
+          int_map=defaultdict(set)
+          for r in int_data:
+              if r.get("GENCONID") and r.get("INTERCONNECTORID"):
+                  int_map[r["GENCONID"]].add(r["INTERCONNECTORID"])
+
+          classes=Counter()
+          for gid in set(reg_map)|set(int_map):
+              nr=len(reg_map.get(gid,set()))
+              ni=len(int_map.get(gid,set()))
+              if nr==1 and ni==0:
+                  cls="ONE_REGION_ONLY"
+              elif nr==2 and ni==0:
+                  cls="TWO_REGIONS_ONLY"
+              elif nr==0 and ni==1:
+                  cls="ONE_INTERCONNECTOR_ONLY"
+              elif nr==0 and ni>1:
+                  cls="MULTI_INTERCONNECTOR_ONLY"
+              elif nr>0 and ni>0:
+                  cls="MIXED_REGION_INTERCONNECTOR"
+              else:
+                  cls="OTHER"
+              classes[cls]+=1
+
+          # BOM route: download and hash only. Do not decompress or parse grid values.
+          bom_raw,bom_final,bom_h=get(BOM_GRID)
+          if len(bom_raw)<100:
+              raise RuntimeError("BOM grid response unexpectedly small")
+
+          # ABS geometry API.
+          abs_raw,abs_final,abs_h=get(ABS_QUERY)
+          abs_obj=json.loads(abs_raw.decode("utf-8"))
+          feats=abs_obj.get("features",[])
+          ids=[]
+          gtypes=Counter()
+          for f in feats:
+              p=f.get("properties",{})
+              g=f.get("geometry") or {}
+              ids.append((str(p.get("STE_CODE_2026","")),str(p.get("STE_NAME_2026",""))))
+              gtypes[g.get("type","")]+=1
+          got={c:n for c,n in ids}
+          required={"1":"New South Wales","2":"Victoria","3":"Queensland","4":"South Australia","6":"Tasmania","8":"Australian Capital Territory"}
+          missing={c:n for c,n in required.items() if got.get(c)!=n}
+          if missing:
+              raise RuntimeError("ABS required identities missing: "+repr(missing)+" got="+repr(ids))
+
+          nem_geom={"QLD1":["3"],"NSW1":["1","8"],"SA1":["4"],"VIC1":["2"],"TAS1":["6"]}
+
+          def target_rows(label,headers,counts):
+              out=[]
+              for key,h in sorted(headers.items()):
+                  tag=(key[0]+" "+key[1]).upper()
+                  if any(x in tag for x in ("CONSTRAINT","INTERCONNECTOR","REGIONSUM")):
+                      out.append((label,key,h,counts.get(key,0)))
+              return out
+
+          targets=target_rows("current",cur_headers,cur_counts)+target_rows("archive",arc_headers,arc_counts)
+
+          lines=[
+              "---",
+              "id: AU-NEM-F01-SOURCE-PREFLIGHT",
+              "type: outcome-blind-source-preflight",
+              "created: 2026-09-05",
+              "relationship_outcome_computed: false",
+              "weather_values_parsed: false",
+              "incremental_monetary_cost_usd: 0",
+              "---","",
+              "# AU-NEM-F01 Source Preflight","",
+              "No weather value, congestion-weather statistic, threshold, ranking, or effect size was calculated.","",
+              "## A. AEMO DispatchIS public routes","",
+              "- current directory: "+d_final,
+              "- current directory SHA-256: "+sha(d_raw),
+              "- current public ZIP links detected: **"+str(len(names))+"**",
+              "- deterministic latest current ZIP: "+latest,
+              "- current ZIP final URL: "+cur_final,
+              "- current ZIP bytes: **"+str(len(cur_raw))+"**",
+              "- current ZIP SHA-256: "+sha(cur_raw),
+              "- current nested first-CSV path: "+repr(cur_path),
+              "- fixed archive ZIP: "+arc_final,
+              "- fixed archive bytes: **"+str(len(arc_raw))+"**",
+              "- fixed archive SHA-256: "+sha(arc_raw),
+              "- archive nested first-CSV path: "+repr(arc_path),"",
+              "### Target DispatchIS schemas","",
+              "| Sample | Package | Table | Sample rows | I-record data columns |",
+              "|---|---|---|---:|---|"
+          ]
+          for sample,key,h,n in targets:
+              lines.append("| "+sample+" | "+key[0]+" | "+key[1]+" | "+str(n)+" | "+repr(h)+" |")
+
+          lines += ["","### Bounded sample identity cardinality",""]
+          for label,idsx in (("current",cur_ids),("archive",arc_ids)):
+              for (key,fld),vals in sorted(idsx.items(),key=lambda x:(x[0][0],x[0][1])):
+                  tag=(key[0]+" "+key[1]).upper()
+                  if any(x in tag for x in ("CONSTRAINT","INTERCONNECTOR","REGIONSUM")):
+                      lines.append("- "+label+" "+repr(key)+" "+fld+": **"+str(len(vals))+"**; sample="+repr(sorted(vals)[:12]))
+
+          lines += ["","## B. AEMO public generic-constraint identity tables","",
+                    "- SPDREGIONCONSTRAINT URL: "+reg_final,
+                    "- SPDREGIONCONSTRAINT ZIP SHA-256: "+sha(reg_raw),
+                    "- member: "+reg_member+"; member SHA-256: "+reg_member_sha,
+                    "- schema: "+repr(reg_header),
+                    "- rows: **"+str(len(reg_data))+"**; unique GENCONID: **"+str(len(reg_map))+"**","",
+                    "- SPDINTERCONNECTORCONSTRAINT URL: "+int_final,
+                    "- SPDINTERCONNECTORCONSTRAINT ZIP SHA-256: "+sha(int_raw),
+                    "- member: "+int_member+"; member SHA-256: "+int_member_sha,
+                    "- schema: "+repr(int_header),
+                    "- rows: **"+str(len(int_data))+"**; unique GENCONID: **"+str(len(int_map))+"**","",
+                    "### Structural generic-constraint identity classes","",
+                    "| Identity class | Generic constraints |",
+                    "|---|---:|"]
+          for cls,n in sorted(classes.items()):
+              lines.append("| "+cls+" | "+str(n)+" |")
+
+          lines += ["","The GENCONID-keyed factor tables establish source-defined region/interconnector links. Mixed or multi-identity constraints remain structurally ambiguous unless a narrower prospective rule is frozen.","",
+                    "## C. BOM zero-cost daily grid route","",
+                    "- fixed historical daily grid URL: "+bom_final,
+                    "- response bytes: **"+str(len(bom_raw))+"**",
+                    "- SHA-256: "+sha(bom_raw),
+                    "- Content-Type: "+str(bom_h.get("Content-Type","")),
+                    "- first 16 bytes hex, format signature only: "+bom_raw[:16].hex(),
+                    "- grid values were not decompressed or parsed.","",
+                    "## D. ABS official machine geometry route","",
+                    "- query final URL: "+abs_final,
+                    "- response bytes: **"+str(len(abs_raw))+"**",
+                    "- SHA-256: "+sha(abs_raw),
+                    "- feature count: **"+str(len(feats))+"**",
+                    "- geometry types: "+repr(dict(gtypes)),
+                    "- state/territory identities: "+repr(sorted(ids)),"",
+                    "Prospective NEM region geometry mapping:",
+                    "- QLD1 = ABS STE "+repr(nem_geom["QLD1"]),
+                    "- NSW1 = ABS STE "+repr(nem_geom["NSW1"])+" (NSW + ACT)",
+                    "- SA1 = ABS STE "+repr(nem_geom["SA1"]),
+                    "- VIC1 = ABS STE "+repr(nem_geom["VIC1"]),
+                    "- TAS1 = ABS STE "+repr(nem_geom["TAS1"]),"",
+                    "## E. Immediate F01 interpretation","",
+                    "- AEMO current/archive DispatchIS routes are public and hashable.",
+                    "- AEMO public generic-constraint tables provide GENCONID-based region and interconnector identities without text-name inference.",
+                    "- BOM historical daily gridded temperature is directly retrievable without credentials; values were not parsed.",
+                    "- ABS State/Territory geometry is directly machine-readable.",
+                    "- Final outcome-family adjudication remains required: binding-constraint burden only if one prospective source-defined identity class can be frozen without mixed/multi-region ambiguity; otherwise use the predeclared interconnector fallback or HOLD.","",
+                    "Incremental monetary cost remained **0 USD**.",""]
+
+          OUT.parent.mkdir(parents=True,exist_ok=True)
+          OUT.write_text("\n".join(lines),encoding="utf-8")
+          PY
+      - name: Commit source preflight
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/AU-NEM-F01/SOURCE_PREFLIGHT.md
+          git diff --cached --quiet || git commit -m "record AU-NEM-F01 source preflight"
+          git push
