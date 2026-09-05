@@ -1,0 +1,420 @@
+name: US AIR F01 master-coordinate mapping preflight
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/us-air-f01-master-coordinate-mapping.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  mapping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Materialize BTS Master Coordinate and apply frozen 10 km NOAA mapping
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import csv, hashlib, html, io, math, os, re, urllib.error, urllib.parse, urllib.request, zipfile, http.cookiejar
+          from collections import Counter, defaultdict
+          from html.parser import HTMLParser
+          from pathlib import Path
+
+          ROOT=Path(os.environ['GITHUB_WORKSPACE'])
+          OUT=ROOT/'research/US-AIR-F01/MASTER_COORDINATE_MAPPING_PREFLIGHT.md'
+          PRIOR=(ROOT/'research/US-AIR-F01/SOURCE_CARDINALITY_PREFLIGHT.md').read_text(encoding='utf-8')
+          m=re.search(r'Origin AirportID present in all 12 months:\s*\*\*(\d+)\*\*',PRIOR)
+          if not m:
+              m=re.search(r'Origin AirportID present in all 12 months:\s*(\d+)',PRIOR)
+          if not m:
+              raise RuntimeError('Could not recover frozen full-12-month AirportID cardinality')
+          FULL12=int(m.group(1))
+
+          UA='AI-Innovative-Research-Engine/US-AIR-F01 master-coordinate-mapping'
+          MASTER='https://transtats.bts.gov/DL_SelectFields.aspx?QO_fu146_anzr=N8vn6v10+f722146+gnoyr5&gnoyr_VQ=FLL'
+          JAN='https://transtats.bts.gov/PREZIP/On_Time_Marketing_Carrier_On_Time_Performance_Beginning_January_2018_2025_1.zip'
+          NOAA='https://www.ncei.noaa.gov/oa/local-climatological-data/v2/doc/lcdv2-station-list.txt'
+          CAP_KM=10.0
+          TIE_KM=0.001
+
+          def sha(b):
+              return hashlib.sha256(b).hexdigest()
+
+          def norm(s):
+              return re.sub(r'[^a-z0-9]+','',str(s).casefold())
+
+          def plain_get(url, timeout=240):
+              req=urllib.request.Request(url,headers={'User-Agent':UA})
+              with urllib.request.urlopen(req,timeout=timeout) as r:
+                  return r.read(),getattr(r,'status',200),dict(r.headers),r.geturl()
+
+          class FormParser(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.inputs=[]
+                  self.selects=defaultdict(list)
+                  self.current_select=None
+              def handle_starttag(self,tag,attrs):
+                  a=dict(attrs)
+                  if tag.lower()=='input':
+                      self.inputs.append(a)
+                  elif tag.lower()=='select':
+                      self.current_select=a.get('name')
+                  elif tag.lower()=='option' and self.current_select:
+                      self.selects[self.current_select].append((a.get('value',''), 'selected' in a))
+              def handle_endtag(self,tag):
+                  if tag.lower()=='select':
+                      self.current_select=None
+
+          # January source identities only; no outcome values read.
+          jb,jst,jh,jfinal=plain_get(JAN)
+          zj=zipfile.ZipFile(io.BytesIO(jb))
+          jcsv=max([n for n in zj.namelist() if n.lower().endswith('.csv') and 'readme' not in n.lower()],key=lambda n:zj.getinfo(n).file_size)
+          jan_pairs={}
+          with zj.open(jcsv) as raw:
+              txt=io.TextIOWrapper(raw,encoding='utf-8-sig',newline='',errors='replace')
+              rd=csv.reader(txt)
+              hdr=next(rd)
+              hm={str(x).strip():i for i,x in enumerate(hdr)}
+              need=['OriginAirportID','OriginAirportSeqID','Origin']
+              if any(x not in hm for x in need):
+                  raise RuntimeError('January source missing identity columns')
+              ia,isq,ic=[hm[x] for x in need]
+              for row in rd:
+                  if len(row)<=max(ia,isq,ic):
+                      continue
+                  aid=row[ia].strip(); sq=row[isq].strip(); code=row[ic].strip()
+                  if aid and sq:
+                      prev=jan_pairs.get(aid)
+                      cur=(sq,code)
+                      if prev is not None and prev!=cur:
+                          raise RuntimeError(f'January AirportID maps to multiple SeqID/code: {aid}')
+                      jan_pairs[aid]=cur
+
+          # Reproduce BTS WebForms download using source page tokens/cookies.
+          jar=http.cookiejar.CookieJar()
+          opener=urllib.request.build_opener(urllib.request.HTTPCookieProcessor(jar))
+          req=urllib.request.Request(MASTER,headers={'User-Agent':UA})
+          with opener.open(req,timeout=120) as r:
+              page=r.read(); page_final=r.geturl(); page_status=getattr(r,'status',200)
+          text=page.decode('utf-8',errors='replace')
+          p=FormParser(); p.feed(text)
+
+          hidden={}
+          input_by_name={}
+          for a in p.inputs:
+              name=a.get('name')
+              if not name:
+                  continue
+              input_by_name[name]=a
+              if a.get('type','').lower()=='hidden':
+                  hidden[name]=html.unescape(a.get('value',''))
+
+          def field_value(name):
+              a=input_by_name.get(name,{})
+              return html.unescape(a.get('value','on')) or 'on'
+
+          body=dict(hidden)
+          body.update({
+              '__EVENTTARGET':'',
+              '__EVENTARGUMENT':'',
+              '__LASTFOCUS':'',
+              'txtSearch':'',
+              'btnDownload':'Download',
+              'cboGeography':'All',
+              'cboYear':'All',
+              'cboPeriod':'All'
+          })
+          wanted=[
+              'AIRPORT_SEQ_ID','AIRPORT_ID','AIRPORT','DISPLAY_AIRPORT_NAME',
+              'AIRPORT_COUNTRY_CODE_ISO','LATITUDE','LONGITUDE',
+              'UTC_LOCAL_TIME_VARIATION','AIRPORT_START_DATE','AIRPORT_THRU_DATE',
+              'AIRPORT_IS_CLOSED','AIRPORT_IS_LATEST'
+          ]
+          for name in wanted:
+              if name in input_by_name:
+                  body[name]=field_value(name)
+
+          pdata=urllib.parse.urlencode(body).encode('utf-8')
+          post=urllib.request.Request(MASTER,data=pdata,headers={
+              'User-Agent':UA,
+              'Referer':MASTER,
+              'Content-Type':'application/x-www-form-urlencoded'
+          })
+          with opener.open(post,timeout=240) as r:
+              rb=r.read(); rst=getattr(r,'status',200); rh=dict(r.headers); rfinal=r.geturl()
+
+          master_links=[]
+          if rb[:2]!=b'PK':
+              rt=rb.decode('utf-8',errors='replace')
+              candidates=re.findall(r'(?:https?://[^"\x27<>\s]+\.zip|/?ftproot/TranStatsData/[^"\x27<>\s]+\.zip)',rt,re.I)
+              for x in candidates:
+                  x=html.unescape(x)
+                  if x.startswith('/'):
+                      x='https://transtats.bts.gov'+x
+                  elif x.lower().startswith('ftproot/'):
+                      x='https://transtats.bts.gov/'+x
+                  if x not in master_links:
+                      master_links.append(x)
+              if not master_links:
+                  raise RuntimeError('Master Coordinate POST did not return ZIP or a generated ZIP link')
+              rb,rst,rh,rfinal=plain_get(master_links[0])
+
+          if rb[:2]!=b'PK':
+              raise RuntimeError('Master Coordinate materialized payload is not ZIP')
+
+          zm=zipfile.ZipFile(io.BytesIO(rb))
+          mcsvs=[n for n in zm.namelist() if n.lower().endswith('.csv') and 'documentation' not in n.lower() and 'readme' not in n.lower()]
+          if not mcsvs:
+              raise RuntimeError(f'No Master Coordinate CSV in ZIP: {zm.namelist()}')
+          mcsv=max(mcsvs,key=lambda n:zm.getinfo(n).file_size)
+
+          seq_rows={}
+          dup_seq=Counter()
+          all_rows=0
+          with zm.open(mcsv) as raw:
+              txt=io.TextIOWrapper(raw,encoding='utf-8-sig',newline='',errors='replace')
+              rd=csv.reader(txt)
+              hdr=next(rd)
+              nh={norm(h):i for i,h in enumerate(hdr)}
+              def pick(*names):
+                  for n in names:
+                      if norm(n) in nh:
+                          return nh[norm(n)]
+                  return None
+              i_seq=pick('AirportSeqID','AIRPORT_SEQ_ID')
+              i_id=pick('AirportID','AIRPORT_ID')
+              i_code=pick('Airport','AIRPORT')
+              i_lat=pick('Latitude','LATITUDE')
+              i_lon=pick('Longitude','LONGITUDE')
+              i_tz=pick('UTCLocalTimeVariation','UTC_LOCAL_TIME_VARIATION')
+              i_start=pick('AirportStartDate','AIRPORT_START_DATE')
+              i_end=pick('AirportEndDate','AirportThruDate','AIRPORT_THRU_DATE')
+              i_country=pick('AirportCountryCodeISO','AIRPORT_COUNTRY_CODE_ISO')
+              reqidx={'seq':i_seq,'id':i_id,'lat':i_lat,'lon':i_lon}
+              if any(v is None for v in reqidx.values()):
+                  raise RuntimeError(f'Master Coordinate missing required parsed headers; headers={hdr}')
+              for row in rd:
+                  all_rows+=1
+                  if len(row)<=max(v for v in reqidx.values() if v is not None):
+                      continue
+                  sq=row[i_seq].strip()
+                  if not sq:
+                      continue
+                  rec={
+                      'seq':sq,
+                      'id':row[i_id].strip(),
+                      'code':row[i_code].strip() if i_code is not None and i_code<len(row) else '',
+                      'lat':row[i_lat].strip(),
+                      'lon':row[i_lon].strip(),
+                      'tz':row[i_tz].strip() if i_tz is not None and i_tz<len(row) else '',
+                      'start':row[i_start].strip() if i_start is not None and i_start<len(row) else '',
+                      'end':row[i_end].strip() if i_end is not None and i_end<len(row) else '',
+                      'country':row[i_country].strip() if i_country is not None and i_country<len(row) else ''
+                  }
+                  if sq in seq_rows and seq_rows[sq]!=rec:
+                      dup_seq[sq]+=1
+                  else:
+                      seq_rows[sq]=rec
+
+          # NOAA station metadata; no weather values.
+          nb,nst,nh,nfinal=plain_get(NOAA)
+          stations=[]
+          for line in nb.decode('utf-8',errors='replace').splitlines():
+              q=line.split(maxsplit=4)
+              if len(q)<5:
+                  continue
+              sid,la,lo,el,name=q
+              if not sid.startswith('US'):
+                  continue
+              try:
+                  stations.append((sid,float(la),float(lo),name))
+              except ValueError:
+                  pass
+
+          def hav(lat1,lon1,lat2,lon2):
+              R=6371.0088
+              p1=math.radians(lat1); p2=math.radians(lat2)
+              dp=math.radians(lat2-lat1); dl=math.radians(lon2-lon1)
+              a=math.sin(dp/2)**2+math.cos(p1)*math.cos(p2)*math.sin(dl/2)**2
+              return 2*R*math.asin(min(1,math.sqrt(a)))
+
+          exact_seq=0
+          coord_ok=0
+          unmatched_seq=[]
+          invalid_coord=[]
+          mapped=[]
+          ambiguous=[]
+          over_cap=[]
+          for aid,(sq,code) in sorted(jan_pairs.items()):
+              rec=seq_rows.get(sq)
+              if rec is None:
+                  unmatched_seq.append((aid,sq,code))
+                  continue
+              exact_seq+=1
+              try:
+                  lat=float(rec['lat']); lon=float(rec['lon'])
+              except ValueError:
+                  invalid_coord.append((aid,sq,code,rec['lat'],rec['lon']))
+                  continue
+              coord_ok+=1
+              ds=[]
+              for sid,slat,slon,sname in stations:
+                  ds.append((hav(lat,lon,slat,slon),sid,sname))
+              ds.sort(key=lambda x:(x[0],x[1]))
+              if len(ds)>1 and abs(ds[1][0]-ds[0][0])<=TIE_KM:
+                  ambiguous.append((aid,sq,code,ds[0],ds[1]))
+                  continue
+              d,sid,sname=ds[0]
+              if d>CAP_KM:
+                  over_cap.append((aid,sq,code,d,sid,sname))
+                  continue
+              mapped.append((aid,sq,code,sid,d,sname,rec))
+
+          uniq_stations=sorted(set(x[3] for x in mapped))
+          station_airports=defaultdict(set)
+          distances=[]
+          for x in mapped:
+              station_airports[x[3]].add(x[0])
+              distances.append(x[4])
+          shared={s:a for s,a in station_airports.items() if len(a)>1}
+          jan_count=len(jan_pairs)
+          max_jan_not_full=max(0,jan_count-FULL12)
+          full12_unique_station_lower=max(0,len(uniq_stations)-max_jan_not_full)
+
+          # Probe 2025 station-year file existence only; do not read observations.
+          def probe2025(sid):
+              url=f'https://www.ncei.noaa.gov/oa/local-climatological-data/v2/access/2025/LCD_{sid}_2025.csv'
+              req=urllib.request.Request(url,headers={'User-Agent':UA},method='HEAD')
+              try:
+                  with urllib.request.urlopen(req,timeout=30) as r:
+                      return url,getattr(r,'status',200),dict(r.headers)
+              except urllib.error.HTTPError as e:
+                  if e.code not in (403,405):
+                      return url,e.code,dict(e.headers or {})
+              req=urllib.request.Request(url,headers={'User-Agent':UA,'Range':'bytes=0-0'})
+              try:
+                  with urllib.request.urlopen(req,timeout=30) as r:
+                      r.read(1)
+                      return url,getattr(r,'status',200),dict(r.headers)
+              except urllib.error.HTTPError as e:
+                  return url,e.code,dict(e.headers or {})
+              except Exception:
+                  return url,0,{}
+
+          station_probe={}
+          for sid in uniq_stations:
+              station_probe[sid]=probe2025(sid)
+          supported={s for s,(u,st,h) in station_probe.items() if st in (200,206)}
+          supported_lower=max(0,len(supported)-max_jan_not_full)
+
+          dsorted=sorted(distances)
+          def qtile(q):
+              if not dsorted:
+                  return None
+              k=(len(dsorted)-1)*q
+              lo=int(math.floor(k)); hi=int(math.ceil(k))
+              if lo==hi:
+                  return dsorted[lo]
+              return dsorted[lo]*(hi-k)+dsorted[hi]*(k-lo)
+
+          lines=[
+              '---',
+              'id: US-AIR-F01-MASTER-COORDINATE-MAPPING-PREFLIGHT',
+              'type: outcome-blind-spatial-mapping-preflight',
+              'created: 2026-09-05',
+              'issue: 88',
+              'frozen_distance_cap_km: 10.0',
+              'relationship_outcome_computed: false',
+              'weather_values_parsed: false',
+              'delay_magnitudes_parsed: false',
+              'incremental_monetary_cost_usd: 0',
+              '---','',
+              '# US-AIR-F01 Master Coordinate × NOAA Mapping Preflight',
+              '# US-AIR-F01 BTS 공항좌표 × NOAA 관측소 Mapping 사전검증','',
+              '## Exposure boundary / 노출 경계','',
+              '- The 10.0 km nearest-station cap was frozen in SPATIAL_TEMPORAL_CONTRACT.md before this mapping count was observed.',
+              '- Read only airport identities/coordinates and NOAA station metadata.',
+              '- Did not parse any BTS delay magnitude or NOAA weather observation value.','',
+              '## A. BTS January identity support / BTS 1월 identity support','',
+              f'- January ZIP bytes: {len(jb):,}',
+              f'- January ZIP SHA-256: {sha(jb)}',
+              f'- January unique Origin AirportID: {jan_count}',
+              f'- previously verified Origin AirportID present in all 12 months: {FULL12}',
+              f'- maximum January airports that can be outside the 12-month intersection: {max_jan_not_full}','',
+              '## B. BTS Master Coordinate materialization / BTS Master Coordinate materialization','',
+              f'- source-page HTTP: {page_status}',
+              f'- POST/materialized HTTP: {rst}',
+              f'- final materialized URL: {rfinal}',
+              f'- materialized ZIP bytes: {len(rb):,}',
+              f'- materialized ZIP SHA-256: {sha(rb)}',
+              f'- CSV member: {mcsv}',
+              f'- CSV rows: {all_rows:,}',
+              f'- exact distinct AirportSeqID rows parsed: {len(seq_rows):,}',
+              f'- conflicting duplicate AirportSeqID records: {len(dup_seq)}',
+              f'- January exact AirportSeqID matches: {exact_seq}/{jan_count}',
+              f'- January exact matches with usable decimal coordinates: {coord_ok}/{jan_count}','',
+              '## C. Frozen 10 km nearest-LCDv2 mapping / 고정 10 km mapping','',
+              f'- eligible NOAA US-prefix station metadata rows: {len(stations):,}',
+              f'- January airports mapped within 10.0 km: {len(mapped)}',
+              f'- January airports excluded for no station within cap: {len(over_cap)}',
+              f'- January airports excluded as <=0.001 km nearest-distance tie: {len(ambiguous)}',
+              f'- January airports with no exact Master Coordinate SeqID: {len(unmatched_seq)}',
+              f'- January airports with unusable coordinates: {len(invalid_coord)}',
+              f'- unique NOAA stations after frozen mapping: {len(uniq_stations)}',
+              f'- NOAA stations shared by more than one mapped airport: {len(shared)}',
+              f'- mathematically conservative lower bound on unique stations among the 349 all-12-month airports: {full12_unique_station_lower}',
+              f'- frozen >=40 unique-station threshold proven by lower bound: {full12_unique_station_lower>=40}',
+              '',
+              '### Mapping-distance diagnostics / mapping 거리 진단','',
+              f'- median km: {qtile(0.5):.3f}' if qtile(0.5) is not None else '- median km: n/a',
+              f'- p90 km: {qtile(0.9):.3f}' if qtile(0.9) is not None else '- p90 km: n/a',
+              f'- maximum accepted km: {max(distances):.3f}' if distances else '- maximum accepted km: n/a',
+              '',
+              '## D. NOAA 2025 station-year file existence / NOAA 2025 station-year 파일 존재성','',
+              '- Probe used HEAD, with one-byte Range GET fallback only when needed; no weather observation values were parsed.',
+              f'- mapped unique stations with a directly reachable 2025 LCDv2 station-year file: {len(supported)}/{len(uniq_stations)}',
+              f'- conservative lower bound after allowing for up to {max_jan_not_full} January-only airports: {supported_lower}',
+              f'- frozen >=40 station-year-file threshold proven by lower bound: {supported_lower>=40}',
+              '',
+              '## Interim gate / 중간 판정',''
+          ]
+
+          if full12_unique_station_lower>=40 and supported_lower>=40 and exact_seq>=50:
+              gate='CONTINUE_US_AIR_F01_2025_DATE_SUPPORT_VERIFICATION'
+          else:
+              gate='REJECT_OR_HOLD_US_AIR_F01_MAPPING_SUPPORT'
+          lines += [
+              f'**{gate}**','',
+              'The spatial cardinality gate is evaluated without weather/delay values. A full F01 PASS still requires 2025 station-date support semantics under the frozen station × local-calendar-date grain.',
+              '',
+              '## Exact next action / 정확한 다음 행동','',
+              'For a deterministic qualified subset, verify only DATE/support coverage in the 2025 LCDv2 station-year files and report station-day cardinality/missing-date structure. Do not parse weather measurements or delay magnitudes.',
+              '',
+              'Incremental monetary cost remains **0 USD**.'
+          ]
+
+          OUT.parent.mkdir(parents=True,exist_ok=True)
+          OUT.write_text('\n'.join(lines)+'\n',encoding='utf-8')
+          print('\n'.join(lines[-35:]))
+          PY
+
+      - name: Commit mapping preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/US-AIR-F01/MASTER_COORDINATE_MAPPING_PREFLIGHT.md
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Record US-AIR-F01 Master Coordinate NOAA mapping preflight"
+            git push
+          fi
