@@ -58,6 +58,8 @@
 
 | `CLM-133` | Current official BTS On-Time + Aviation Master Coordinate metadata expose stable/time-specific airport identities, direct departure-delay/status fields, airport coordinates and time-zone attributes, while current NOAA LCDv2 exposes official station metadata and bulk CSV weather access; this source/schema evidence justifies an outcome-blind US-AIR-F01 but does not yet establish a join PASS or weather-delay effect. / 현행 BTS 정시운항·Master Coordinate와 NOAA LCDv2 source/schema는 공항 식별자·직접 지연 outcome·공항 좌표/시간대·공식 기상관측소/CSV 경로를 제공하여 US-AIR-F01 승격을 정당화하지만 아직 join PASS나 기상-지연 효과를 입증하지 않는다. | `OBSERVED/DERIVED` | `V2_PRIMARY_VERIFIED_SOURCE_SCHEMA` | `research/PORTFOLIO-R08/RESULT.md`; `registry/CLM-133.md`; Issue #88 | 2026-09-05 | active-source-schema |
 
+| `CLM-134` | January mapping 340 stations and 322 reachable files; annual-intersection lower bounds 337/319 under January mapping only. / 1월 지도 기준 관측소 340·파일 322·연중 교집합 하한 337/319. | `OBSERVED/DERIVED` | Recorded V3 inspected; arithmetic reproduced / 기록 검토·산술 재현 | `registry/CLM-134.md`; run 33959662982 | 2026-09-07 | interim-only |
+
 ## Rule / 규칙
 
 - New material claims should receive a stable ID when they influence scoring, promotion, HOLD/REJECT decisions, or downstream experiments. / 점수·승격·HOLD/REJECT·후속 실험에 영향을 주는 중요 주장은 안정적 ID 부여.

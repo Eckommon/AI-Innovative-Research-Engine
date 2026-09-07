@@ -27,6 +27,12 @@
 | `DEC-023` | 2026-08-22 | Finalize `AMBENCH-E09` as `INCONCLUSIVE_CASE_LEVEL`; coupling changes magnitude but not rank and adds no incremental rank-order information under the frozen seven-case aggregate test. Do not generalize this to coupling being useless. / E09를 `INCONCLUSIVE_CASE_LEVEL`로 종료하며 추가 rank 정보가 없음을 기록하되 coupling 일반적 무용성으로 확대하지 않는다. | `rho_process=rho_coupled=0.0714286` for primary thermal, `delta_rho=0`, axis concordance `2/3`; stronger process-only/redundant label not satisfied. / primary process-only 자체가 약해 더 강한 음성판정은 부적절. | closed Issue #24; Run `32550309862`; `CLM-033..035`; `research/AMBENCH-E09/RESULT.md` | active |
 | `DEC-024` | 2026-08-22 | Select `BP4 dynamic-coupling temporal dynamics → same-BP4 laser-scanning-confocal 3D topography` as the highest-leverage post-E09 candidate, but require `AMBENCH-F10` source/identity feasibility before any modeling. / 동일 BP4 coupling 시간동역학→confocal 3D topography를 최우선 후보로 선택하되 모델링 전 F10 source/identity feasibility를 의무화한다. | It can attack D06 case-proxy dominance and E09 rank/cross-specimen limits simultaneously if the exact public confocal source and track map exist; current publication identity remains unverified. / 두 한계를 동시에 겨냥하지만 public source 식별이 선행조건. | Issue #26; `research/AMBENCH-POST-E09-TRIAGE.md`; `research/AMBENCH-F10/README.md`; `CLM-036..037` | active |
 
+## 2026-09-07 continuity index / 연속성 색인
+
+- [DEC-120](DEC-120.md): PORTFOLIO-R08 selection; Issue #88 source feasibility / R08 선정·#88 source 검증.
+- [DEC-121](DEC-121.md): operating improvement and checkpoint repair / 운영 개선·checkpoint 복구.
+- DEC-025 through DEC-119 retain their individual files as authority; the legacy table is not a complete latest-decision index. / DEC-025~119는 개별 파일이 권위이며 위 과거 표는 전체 최신 결정 색인이 아니다.
+
 ## Maintenance / 유지
 
 Material direction changes receive a stable decision ID. Superseded decisions remain visible with a superseding reference rather than being deleted. / 중요 방향 변경은 안정적 Decision ID를 부여하며 대체된 결정은 삭제하지 않고 superseding 참조를 남긴다.

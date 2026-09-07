@@ -12,6 +12,11 @@ source_of_truth: github
 
 # Research MOC / 연구 MOC
 
+## Operating entry / 운영 진입
+- [Current state / 현재 상태](../STATUS.md)
+- [Operating model / 운영 모델](../docs/RESEARCH_OPERATING_MODEL.md)
+- [US-AIR-F01 evidence / 항공 증거](../research/US-AIR-F01/README.md)
+
 ## Calibration / 보정
 - [AMBENCH-001 — NIST AM Bench](../research/AMBENCH-001/README.md)
 
@@ -25,7 +30,7 @@ source_of_truth: github
 - [KR-GRID-F01 — KPX Bus-Identifier Mapping / KPX 모선 ID 매핑](../research/KR-GRID-F01/README.md) — `HOLD`, completed
 - [EU-IEE-E01 — Industrial Emissions–Economic Activity Decoupling](../research/EU-IEE-E01/README.md) — empirical `VALIDATED`, novelty `LOW`
 - [EU-IEE-F02 — Facility–Sector Emissions-to-Output Normalization](../research/EU-IEE-F02/README.md) — `PARTIAL_PASS`, completed
-- **[EU-STEEL-R01 — E-PRTR × PRODCOM Steel Mercury Reproduction](../research/EU-STEEL-R01/README.md) — `ACTIVE`, Issue #8**
+- **[EU-STEEL-R01 — E-PRTR × PRODCOM Steel Mercury Reproduction](../research/EU-STEEL-R01/README.md) — historical entry; current state is in STATUS / 과거 항목, 현재 상태는 STATUS 참조**
 
 ## Topic Landscape / 연구 소재 지형
 - [Research Material Landscape / 연구 소재 탐색 지형](../registry/RESEARCH_MATERIAL_LANDSCAPE.md)

@@ -173,3 +173,8 @@ This must be a portfolio/infrastructure design decision, not a post-hoc rescue o
 ## 10. Language Compliance / 언어 준수
 
 공식 산출물은 `LANG-001` (`docs/LANGUAGE_POLICY.md`)을 따른다. / Official artifacts comply with `LANG-001` in `docs/LANGUAGE_POLICY.md`.
+
+
+## 11. Execution supplement / 실행 보완
+
+Use [Research Operating Model](RESEARCH_OPERATING_MODEL.md), adopted by DEC-121, for reusable execution, checkpoint validation and separate evidence/novelty/utility assessment. Existing frozen experiments and stop rules remain authoritative. / 재사용 실행·checkpoint·증거/신규성/실용성 분리를 적용하며 기존 실험·중단규칙은 유지한다.

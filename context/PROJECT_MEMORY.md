@@ -187,3 +187,6 @@ source_of_truth: github
 - ChatGPT/model memory may assist navigation but is never the sole project authority. / 모델 메모리는 탐색 보조일 뿐 단독 권위 아님.
 
 Official artifacts comply with `LANG-001`, `COST-001`, `READ-001`, `STATE-001`, and `MEMORY-001`. / 공식 산출물은 관련 규약을 따른다.
+
+## 2026-09-07 durable operating correction / 지속 운영 교정
+DEC-121 fixes checkpoint drift and links reusable support execution to separate evidence, novelty and utility assessment. Recover current work from synchronized STATUS/HANDOFF and live issues; historical memory entries are not current-work pointers. / DEC-121로 checkpoint drift·재사용 실행·증거/신규성/실용성 분리를 보완한다. 현재 작업은 동기 상태문서·live Issue에서 읽고 과거 메모리를 현재 작업으로 해석하지 않는다.

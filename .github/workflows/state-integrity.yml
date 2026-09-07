@@ -4,6 +4,8 @@ on:
   push:
     branches: [main]
     paths:
+      - 'context/checkpoint.json'
+      - 'tools/check_checkpoint.py'
       - 'STATUS.md'
       - 'context/SESSION_HANDOFF.md'
       - 'context/PROJECT_MEMORY.md'
@@ -14,6 +16,8 @@ on:
   pull_request:
     branches: [main]
     paths:
+      - 'context/checkpoint.json'
+      - 'tools/check_checkpoint.py'
       - 'STATUS.md'
       - 'context/SESSION_HANDOFF.md'
       - 'context/PROJECT_MEMORY.md'
@@ -35,6 +39,9 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
+
+      - name: Verify canonical checkpoint and decision index
+        run: python tools/check_checkpoint.py
 
       - name: Verify synchronized checkpoint and live Issue state
         shell: bash
@@ -116,7 +123,7 @@ jobs:
                   active_number = int(status['active_issue'].lstrip('#'))
               except ValueError as exc:
                   raise SystemExit(f'Invalid active_issue: {status["active_issue"]!r}') from exc
-              if active_number not in open_numbers:
+              if open_numbers != {active_number}:
                   raise SystemExit(
                       f'STATE_DRIFT_DETECTED: declared active Issue #{active_number} is not open; '
                       f'open Issues={sorted(open_numbers)}'
