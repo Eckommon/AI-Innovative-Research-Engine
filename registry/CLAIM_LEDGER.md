@@ -58,7 +58,9 @@
 
 | `CLM-133` | Current official BTS On-Time + Aviation Master Coordinate metadata expose stable/time-specific airport identities, direct departure-delay/status fields, airport coordinates and time-zone attributes, while current NOAA LCDv2 exposes official station metadata and bulk CSV weather access; this source/schema evidence justifies an outcome-blind US-AIR-F01 but does not yet establish a join PASS or weather-delay effect. / 현행 BTS 정시운항·Master Coordinate와 NOAA LCDv2 source/schema는 공항 식별자·직접 지연 outcome·공항 좌표/시간대·공식 기상관측소/CSV 경로를 제공하여 US-AIR-F01 승격을 정당화하지만 아직 join PASS나 기상-지연 효과를 입증하지 않는다. | `OBSERVED/DERIVED` | `V2_PRIMARY_VERIFIED_SOURCE_SCHEMA` | `research/PORTFOLIO-R08/RESULT.md`; `registry/CLM-133.md`; Issue #88 | 2026-09-05 | active-source-schema |
 
-| `CLM-134` | January mapping 340 stations and 322 reachable files; annual-intersection lower bounds 337/319 under January mapping only. / 1월 지도 기준 관측소 340·파일 322·연중 교집합 하한 337/319. | `OBSERVED/DERIVED` | Recorded V3 inspected; arithmetic reproduced / 기록 검토·산술 재현 | `registry/CLM-134.md`; run 33959662982 | 2026-09-07 | interim-only |
+| `CLM-134` | January mapping 340 stations and 322 reachable files; annual-intersection lower bounds 337/319 under January mapping only. / 1월 지도 기준 관측소 340·파일 322·연중 교집합 하한 337/319. | `OBSERVED/DERIVED` | Recorded V3 inspected; arithmetic reproduced / 기록 검토·산술 재현 | `registry/CLM-134.md`; run 33959662982 | 2026-09-07 | superseded-by-CLM-135 |
+
+| `CLM-135` | Under frozen outcome-blind 2025/10 km/date-label rules, full-year US-AIR-F01 yields 263 final origin airports mapped to 263 unique NOAA stations with complete 365-DATE support, i.e. 95,995 station×calendar-date source keys; the gate is `PASS_US_AIR_AIRPORT_WEATHER_JOIN_READY`, without any weather/delay effect claim. / 고정 결과비사용 규칙에서 최종 263개 공항·263개 NOAA station·95,995개 station-date source key가 성립하여 JOIN_READY PASS이며 효과 주장은 없다. | `OBSERVED/DERIVED/VALIDATED` | `V3_REPRODUCED_SOURCE_SEMANTICS_AND_CARDINALITY` | Run `34218434530`; `research/US-AIR-F01/RESULT.md`; `registry/CLM-135.md`; Issue #88 | 2026-09-09 | active-join-pass |
 
 ## Rule / 규칙
 

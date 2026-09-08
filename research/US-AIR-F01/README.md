@@ -3,11 +3,12 @@ id: US-AIR-F01
 type: source-semantic-join-feasibility
 created: 2026-09-05
 issue: 88
-state: ACTIVE
+state: COMPLETED
 parent: PORTFOLIO-R08
-decision: DEC-120
-claim_basis: CLM-133
+decision: DEC-122
+claim_basis: CLM-135
 mission_anchor: MEM-054
+final_gate: PASS_US_AIR_AIRPORT_WEATHER_JOIN_READY
 relationship_outcome_computed: false
 incremental_monetary_cost_usd: 0
 ---
@@ -155,3 +156,12 @@ Fail closed and return to Stage 0 if:
 ## Cost / 비용
 
 Incremental monetary cost must remain **0 USD**. Any potentially billable action requires explicit prior approval.
+
+
+## Final disposition / 최종 처분
+
+Issue #88 completed under `DEC-122` with **`PASS_US_AIR_AIRPORT_WEATHER_JOIN_READY`**. / Issue #88은 `DEC-122`에 따라 JOIN_READY PASS로 완료됐다.
+
+Final outcome-blind support is **263 origin airports, 263 unique NOAA stations, and 95,995 station × calendar-date source keys** after full-year identity, frozen 10 km mapping and 365-DATE support. / 연중 식별·고정 10km·365 DATE 기준 후 최종 지원도는 263개 공항·263개 관측소·95,995개 station-date key다.
+
+See `RESULT.md` and `TEMPORAL_SEMANTIC_ADJUDICATION.md`. E01 is not automatically authorized. / E01은 자동 승인되지 않는다.

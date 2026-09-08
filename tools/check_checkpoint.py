@@ -22,5 +22,10 @@ for path in ("STATUS.md", "context/SESSION_HANDOFF.md"):
 decision = data["last_decision"]
 assert (root / "registry" / (decision + ".md")).exists(), "missing decision"
 assert decision in (root / "registry/DECISION_LOG.md").read_text(), "decision not indexed"
-assert (root / "research" / data["active_research"] / "README.md").exists(), "missing active research"
+if data["active_issue"] == 0:
+    assert data["active_research"] == "NONE", "inactive checkpoint must use active_research=NONE"
+else:
+    assert data["active_issue"] > 0, "active_issue must be positive or 0 for none"
+    assert data["active_research"] != "NONE", "active issue requires active research"
+    assert (root / "research" / data["active_research"] / "README.md").exists(), "missing active research"
 print("CHECKPOINT_LOCAL_PASS; live issue check still required")
