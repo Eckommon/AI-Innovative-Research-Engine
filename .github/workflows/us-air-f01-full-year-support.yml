@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/us-air-f01-full-year-support.yml'
+      - 'tools/us_air_f01_support.py'
 
 permissions:
   contents: write
