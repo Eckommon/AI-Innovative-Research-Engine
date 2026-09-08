@@ -319,7 +319,7 @@ def materialize_master():
     )
     with opener.open(post, timeout=240) as r:
         payload = r.read()
-        http = getattr(r, "status", 200)
+        post_http = getattr(r, "status", 200)
         final = r.geturl()
 
     if payload[:2] != b"PK":
@@ -336,7 +336,7 @@ def materialize_master():
             link = BASE + link
         elif link.lower().startswith("ftproot/"):
             link = BASE + "/" + link
-        payload, http, _, final = get(link)
+        payload, post_http, _, final = get(link)
 
     z = zipfile.ZipFile(io.BytesIO(payload))
     members = [
@@ -400,7 +400,7 @@ def materialize_master():
 
     diag = {
         "page_http": page_http,
-        "http": http,
+        "http": post_http,
         "final": final,
         "bytes": len(payload),
         "sha256": sha(payload),
