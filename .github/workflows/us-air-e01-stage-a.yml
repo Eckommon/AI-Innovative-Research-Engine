@@ -1,0 +1,42 @@
+name: US AIR E01 Stage A precipitation quality
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/us-air-e01-stage-a.yml'
+      - 'tools/us_air_e01_stage_a.py'
+
+permissions:
+  contents: write
+
+jobs:
+  stage-a:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate runner
+        run: python -m py_compile tools/us_air_e01_stage_a.py
+
+      - name: Run outcome-blind precipitation quality gate
+        run: python tools/us_air_e01_stage_a.py
+
+      - name: Commit Stage A derived artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            research/US-AIR-E01/STAGE_A_STATION_MANIFEST.csv \
+            research/US-AIR-E01/STAGE_A_AIRPORT_QUALITY.csv \
+            research/US-AIR-E01/STAGE_A_AIRPORT_DATE_WEATHER.csv \
+            research/US-AIR-E01/STAGE_A_RESULT.md
+          if git diff --cached --quiet; then
+            echo "No Stage A artifact changes"
+          else
+            git commit -m "Record US-AIR-E01 outcome-blind precipitation Stage A"
+            git push
+          fi
