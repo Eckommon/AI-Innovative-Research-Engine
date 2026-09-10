@@ -32,6 +32,8 @@
 - [DEC-120](DEC-120.md): PORTFOLIO-R08 selection; Issue #88 source feasibility / R08 선정·#88 source 검증.
 - [DEC-121](DEC-121.md): operating improvement and checkpoint repair / 운영 개선·checkpoint 복구.
 - [DEC-122](DEC-122.md): finalize US-AIR-F01 as JOIN_READY PASS; close #88 and return to Stage 0 / US-AIR-F01 JOIN_READY PASS 확정·#88 종결·Stage 0 복귀.
+- [DEC-123](DEC-123.md): PORTFOLIO-R09 selects the first US-AIR relationship test / R09에서 US-AIR 최초 관계검증 선정.
+- [DEC-124](DEC-124.md): preregister US-AIR-E01 with DailyPrecipitation and mandatory outcome-blind Stage A / DailyPrecipitation 단일변수·결과비사용 Stage A 사전등록.
 - DEC-025 through DEC-119 retain their individual files as authority; the legacy table is not a complete latest-decision index. / DEC-025~119는 개별 파일이 권위이며 위 과거 표는 전체 최신 결정 색인이 아니다.
 
 ## Maintenance / 유지

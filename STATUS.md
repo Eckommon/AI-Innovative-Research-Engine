@@ -1,61 +1,56 @@
 ---
-checkpoint_id: CHK-20260909-US-AIR-F01-PASS-PORTFOLIO-RETURN
-active_issue: none
-active_research: NONE
-last_completed_issue: 88
-last_completed_research: US-AIR-F01
-last_decision: DEC-122
-updated: 2026-09-09
+checkpoint_id: CHK-20260910-US-AIR-E01-STAGE-A-ACTIVE
+active_issue: 90
+active_research: US-AIR-E01
+last_completed_issue: 89
+last_completed_research: PORTFOLIO-R09
+last_decision: DEC-124
+updated: 2026-09-10
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `US_AIR_F01_PASS__PORTFOLIO_RETURN__NO_ACTIVE_RESEARCH_ISSUE`
+**State / 상태:** `US_AIR_E01_PREREGISTERED__STAGE_A_WEATHER_QUALITY_ACTIVE`
 
 ## Mission / 목적
 
-Public/research data relationships → falsifiable, reproducible, practically useful innovation and bottleneck evidence. / 공공·연구 데이터 관계에서 반증 가능하고 재현 가능하며 실용적인 혁신·병목 증거를 발견한다. `MEM-054` remains mandatory.
+MEM-054 remains controlling: maximize falsifiable, reproducible, practically relevant cross-data innovation/bottleneck information, not branch throughput. / branch 처리량이 아니라 반증·재현 가능한 관계 정보가 우선이다.
 
-## Last completed research / 마지막 완료 연구
+## Stage 0 result / Stage 0 결과
 
-Issue #88 `US-AIR-F01` resolves to:
+PORTFOLIO-R09 selected:
 
-**`PASS_US_AIR_AIRPORT_WEATHER_JOIN_READY`**
+**`SELECT_C_US_004_FIRST_RELATIONSHIP_TEST`**
 
-Durable evidence:
-- successful Run `34218434530`;
-- `research/US-AIR-F01/FULL_YEAR_DATE_SUPPORT.md`;
-- `research/US-AIR-F01/TEMPORAL_SEMANTIC_ADJUDICATION.md`;
-- `research/US-AIR-F01/RESULT.md`;
-- `registry/CLM-135.md`;
-- `registry/DEC-122.md`.
+Issue #90 `US-AIR-E01` is the sole active research issue.
 
-## Verified final support / 최종 지원도
+Selection basis:
+- US-AIR-F01 final support = 263 airports / 263 NOAA stations / 95,995 station-date source keys;
+- no weather/delay relationship has yet been opened;
+- stronger unit diversity and immediate zero-cost operability than current preserved alternatives;
+- no automatic tuning of already-tested JP-PORT or rescue of CA-RAIL/AU-NEM structural limits.
 
-Outcome-blind full-year support:
-- 7,736,770 BTS 2025 identity rows;
-- 349 origin AirportIDs present in all 12 months;
-- 528 annual AirportID/SeqID pairs;
-- 337 full-year spatial-qualified airports;
-- 340 NOAA station identities before DATE-completeness filtering;
-- 263 final date-supported origin airports;
-- 263 final unique NOAA stations;
-- 95,995 station × calendar-date source keys.
+## Frozen E01 / 고정 E01
 
-Frozen thresholds >=50 airports and >=40 stations pass without relaxing the 10.0 km cap or manually repairing ambiguous/out-of-cap mappings. / 고정 기준은 거리규칙·수동보정 변경 없이 통과한다.
+Primary exposure:
+**NOAA LCDv2 `DailyPrecipitation` → `log1p(mm)`**.
 
-## Temporal and scientific boundary / 시간·과학 경계
+Primary future outcome:
+**airport-day mean eligible BTS `DepDelayMinutes`**.
 
-The admissible daily join is BTS `FlightDate` ↔ NOAA DATE YYYY-MM-DD label. This does not imply equal physical 24-hour windows during DST. Hourly/sub-daily alignment remains unauthorized without a new preregistered conversion contract. / daily 날짜 label 결합만 확정하며 DST 물리시간 동일성을 주장하지 않는다.
-
-No weather value, delay magnitude, weather–delay effect, prediction, causality, propagation, ranking, novelty or utility was established in F01. / F01은 효과·예측·인과·전파·순위·신규성·실용성을 입증하지 않는다.
+The relationship model, outcome denominator, baseline, inference, materiality rule and prohibited searches are frozen in `research/US-AIR-E01/README.md` and `DEC-124`.
 
 ## Exact next action / 정확한 다음 행동
 
-**Return to Stage 0 portfolio control. / Stage 0 포트폴리오 통제로 복귀한다.**
+**Run Stage A weather-quality support only.**
 
-There is currently **no active research Issue**. Do not automatically open US-AIR E01. / 현재 활성 연구 Issue는 없으며 US-AIR E01을 자동 개시하지 않는다.
+Before any delay magnitude:
+- map each airport-date through the F01 time-valid station assignment;
+- parse only `DailyPrecipitation` and its quality syntax;
+- require >=330 usable assigned days and >=20 usable days each month per airport;
+- Stage-A PASS requires >=120 airports and >=120 NOAA stations;
+- persist derived weather/quality manifests.
 
-Before any future E01, compare mission-level expected information value against portfolio alternatives and, if US-AIR remains preferred, preregister one bounded experiment with predictor/quality semantics, denominator/status handling, baseline, evaluation split, dependence-aware uncertainty, falsification and minimum useful improvement. / 향후 E01 전 포트폴리오 기회비용을 비교하고 필요 시 별도 사전등록한다.
+Do not calculate a weather-delay relationship or load delay magnitudes until Stage A PASS is durably adjudicated.
 
-Incremental monetary cost remains **0 USD**. Any potentially billable action requires explicit prior approval.
+Incremental monetary cost remains **0 USD**.
