@@ -1,0 +1,51 @@
+name: Finalize PORTFOLIO R10 and US AIR N01
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/finalize-us-air-n01.yml'
+      - 'tools/finalize_us_air_n01.py'
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate finalizer
+        run: python -m py_compile tools/finalize_us_air_n01.py
+
+      - name: Write R10 and N01 durable state
+        run: python tools/finalize_us_air_n01.py
+
+      - name: Commit R10 and N01 SoT atomically
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            research/PORTFOLIO-R10/RESULT.md \
+            registry/DEC-127.md \
+            research/US-AIR-N01/README.md \
+            research/US-AIR-N01/RESULT.md \
+            research/US-AIR-N01/SOURCE_MATRIX.csv \
+            registry/DEC-128.md \
+            registry/CLM-138.md \
+            registry/DECISION_LOG.md \
+            registry/CLAIM_LEDGER.md \
+            research/US-AIR-E01/RESULT.md \
+            STATUS.md \
+            context/SESSION_HANDOFF.md \
+            context/checkpoint.json
+          if git diff --cached --quiet; then
+            echo "No R10/N01 state changes"
+          else
+            git commit -m "Finalize R10 novelty screen and US-AIR low-novelty assessment"
+            git push
+          fi
