@@ -64,6 +64,8 @@
 
 | `CLM-136` | After prospectively freezing NOAA LCDv2 DailyPrecipitation quality rules, US-AIR-E01 Stage A retains 255 qualified airports, 255 NOAA stations and 92,818 usable airport-date weather keys with zero assignment ambiguity/fetch failure/hash drift; the Stage-A gate passes without opening delay magnitudes. / 사전고정 기상품질 기준에서 255개 공항·255개 station·92,818개 key를 유지하고 지연값 비노출 상태로 Stage A PASS. | `OBSERVED/DERIVED/VALIDATED` | `V3_PREREGISTERED_SOURCE_QUALITY_REPRODUCED` | Run `34429102100`; `research/US-AIR-E01/STAGE_A_RESULT.md`; `registry/CLM-136.md`; Issue #90 | 2026-09-10 | active-stage-a-pass |
 
+| `CLM-137` | Under the frozen 2025 airport-day specification, NOAA DailyPrecipitation is positively associated with BTS mean departure delay: beta `4.892130`, 95% CI `[4.318542, 5.465718]`, 0→10 mm model-implied contrast `11.730815` min over 91,687 airport-days/255 airports; exact primary gate `PASS_US_AIR_E01_POSITIVE_MATERIAL_PRECIPITATION_DELAY_ASSOCIATION`. Association only, not causal/generalization/utility evidence. / 고정 사전등록 모델에서 강수와 평균 출발지연의 양의 실질 연관성 PASS; 인과·일반화·효용 주장은 아님. | `OBSERVED/DERIVED/VALIDATED` | `V3_PREREGISTERED_RELATIONSHIP_REPRODUCED` | Run `34429684361`; `research/US-AIR-E01/RESULT.md`; `registry/CLM-137.md`; Issue #90 | 2026-09-11 | active-relationship-tested |
+
 ## Rule / 규칙
 
 - New material claims should receive a stable ID when they influence scoring, promotion, HOLD/REJECT decisions, or downstream experiments. / 점수·승격·HOLD/REJECT·후속 실험에 영향을 주는 중요 주장은 안정적 ID 부여.

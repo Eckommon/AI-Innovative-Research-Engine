@@ -1,44 +1,41 @@
 ---
-checkpoint_id: CHK-20260910-US-AIR-E01-STAGE-B-AUTHORIZED
-active_issue: 90
-active_research: US-AIR-E01
-last_completed_issue: 89
-last_completed_research: PORTFOLIO-R09
-last_decision: DEC-125
-updated: 2026-09-10
+checkpoint_id: CHK-20260911-US-AIR-E01-PASS-PORTFOLIO-RETURN
+active_issue: none
+active_research: NONE
+last_completed_issue: 90
+last_completed_research: US-AIR-E01
+last_decision: DEC-126
+updated: 2026-09-11
 ---
 
 # Session Handoff / 세션 인수인계
 
 ## Canonical restart point / 정확한 재개점
 
-US-AIR-E01 Stage A is durably PASS under DEC-125.
+US-AIR-E01 is complete under DEC-126 with:
 
-Do not rerun R09, F01 or Stage A by default.
+**`PASS_US_AIR_E01_POSITIVE_MATERIAL_PRECIPITATION_DELAY_ASSOCIATION`**
 
-Verified Stage-A support:
-**255 airports / 255 NOAA stations / 92,818 usable airport-date weather keys**.
+Do not rerun Stage A or Stage B by default. / Stage A/B 기본 재실행 금지.
 
-No DepDelayMinutes magnitude has yet been opened.
+Canonical evidence:
+- Run `34429684361`;
+- `research/US-AIR-E01/RESULT.md`;
+- `research/US-AIR-E01/STAGE_B_PRIMARY_RESULT.csv`;
+- `research/US-AIR-E01/STAGE_B_SENSITIVITY_RESULT.csv`;
+- `registry/CLM-137.md`;
+- `registry/DEC-126.md`.
 
-## Exact next bounded execution / 다음 제한 실행
+Primary result: beta=4.892129968812, 95% CI [4.318542282873, 5.465717654751], 0→10 mm model-implied contrast=11.730815 minutes across 91,687 airport-days and 255 airports. / 주결과는 사전등록 PASS다.
 
-Run Stage B using the already frozen DEC-124 model.
+## Boundary / 경계
 
-First perform a **12/12 BTS PREZIP hash check** against the F01 manifest before parsing any outcome magnitude. A mismatch is a source-integrity HOLD, not permission to silently use a revised snapshot.
+This is one contemporaneous `RELATIONSHIP_TESTED` result only. No causal, advance-prediction, propagation, generalization, novelty or decision-utility claim is authorized. / 단일 당일 연관성 검증이며 더 높은 증거단계는 미승인이다.
 
-Only after exact hash match:
-- aggregate airport-day mean eligible DepDelayMinutes;
-- scheduled count = non-duplicate scheduled rows;
-- primary exposure = log1p(DailyPrecipitation_mm);
-- baseline = airport FE + date FE + log1p(scheduled departures);
-- weather model adds the frozen precipitation exposure;
-- unweighted airport-day OLS;
-- two-way CR1 by AirportID and FlightDate;
-- realized support >=100 airports / >=30,000 airport-days.
+## Exact next action / 정확한 다음 행동
 
-Primary PASS additionally requires beta>0, 95% CI lower>0 and beta*ln(11)>=1.0 minute.
+Return to **Stage 0 portfolio control** with no active research Issue. / 활성 연구 Issue 없이 Stage 0로 복귀한다.
 
-Sensitivities may run only after the primary gate and cannot rescue it.
+Do not automatically tune US-AIR. Recompare mission-level expected information value. A US-AIR generalization descendant, if selected, must use an untouched period/spatial holdout and be separately preregistered before outcomes. / US-AIR 자동튜닝 금지, 일반화 후속은 untouched holdout과 별도 사전등록이 필요하다.
 
-Cost remains 0 USD.
+Cost remains **0 USD**; potentially billable work requires explicit prior approval.

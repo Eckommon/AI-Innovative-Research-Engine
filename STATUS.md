@@ -1,50 +1,43 @@
 ---
-checkpoint_id: CHK-20260910-US-AIR-E01-STAGE-B-AUTHORIZED
-active_issue: 90
-active_research: US-AIR-E01
-last_completed_issue: 89
-last_completed_research: PORTFOLIO-R09
-last_decision: DEC-125
-updated: 2026-09-10
+checkpoint_id: CHK-20260911-US-AIR-E01-PASS-PORTFOLIO-RETURN
+active_issue: none
+active_research: NONE
+last_completed_issue: 90
+last_completed_research: US-AIR-E01
+last_decision: DEC-126
+updated: 2026-09-11
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `US_AIR_E01_STAGE_A_PASS__STAGE_B_AUTHORIZED`
+**State / 상태:** `US_AIR_E01_RELATIONSHIP_TESTED_PASS__PORTFOLIO_RETURN__NO_ACTIVE_RESEARCH_ISSUE`
 
-## Stage A / Stage A
+## Latest completed research / 최신 완료 연구
 
-Run `34429102100` is accepted as:
+Issue #90 `US-AIR-E01` resolves to:
 
-**`PASS_US_AIR_E01_STAGE_A_PRECIPITATION_QUALITY`**
+**`PASS_US_AIR_E01_POSITIVE_MATERIAL_PRECIPITATION_DELAY_ASSOCIATION`**
 
-Frozen-quality result:
-- 255 qualified origin airports;
-- 255 NOAA stations;
-- 92,818 usable airport-date weather keys;
-- 0 assignment gaps / 0 ambiguous station assignments;
-- 0 source fetch failures;
-- 0 missing DailyPrecipitation columns;
-- 0/263 source hash drift from F01.
+Primary preregistered result:
+- Run `34429684361`;
+- 91,687 airport-days / 255 airports / 365 dates;
+- beta on `log1p(DailyPrecipitation_mm)` = **4.892129968812 min**;
+- two-way CR1 95% CI = **[4.318542282873, 5.465717654751]**;
+- model-implied 0→10 mm contrast = **11.730815 min**;
+- 12/12 frozen BTS source hashes matched before outcome parsing.
 
-No delay magnitude was parsed in Stage A.
+The result satisfies the frozen positive-direction, CI and >=1-minute materiality gates. / 사전고정 방향·CI·실질성 gate를 모두 통과한다.
+
+## Evidence status / 증거 상태
+
+US-AIR is now **RELATIONSHIP_TESTED** for one contemporaneous precipitation-delay relationship.
+
+It is **not** yet GENERALIZATION_TESTED, NOVELTY_ASSESSED, UTILITY_TESTED or an INNOVATION_CANDIDATE. The result is not causal or advance-predictive. / 일반화·신규성·효용·혁신후보 및 인과·사전예측 주장은 아직 없다.
 
 ## Exact next action / 정확한 다음 행동
 
-Execute **Stage B only under the frozen DEC-124 model**, now authorized by DEC-125.
+**Return to Stage 0 portfolio control.** There is no active research Issue after #90 closes. / #90 종결 후 활성 연구 Issue 없이 Stage 0로 복귀한다.
 
-Before parsing any delay magnitude:
-- re-download all twelve BTS 2025 PREZIP files;
-- verify each SHA-256 exactly against the F01 frozen manifest;
-- if any differs, stop before outcome parsing and HOLD source snapshot integrity.
-
-If all hashes match:
-- build the airport-day outcome only for Stage-A qualified usable weather keys;
-- apply the frozen eligibility denominator;
-- require >=100 airports and >=30,000 realized airport-days;
-- fit the preregistered baseline/weather models;
-- adjudicate the primary gate before sensitivities.
-
-No alternate predictor, lag, threshold, outcome, airport/carrier subset or station remap is allowed.
+Do not automatically test another weather variable, threshold, lag or 2025 subset. Compare portfolio alternatives before deciding whether the next uncertainty should be US-AIR external generalization, novelty/utility assessment, or another independent branch. / 자동 튜닝 금지, 다음 불확실성을 portfolio에서 다시 선택한다.
 
 Incremental monetary cost remains **0 USD**.

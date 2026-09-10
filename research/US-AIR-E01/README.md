@@ -3,14 +3,15 @@ id: US-AIR-E01
 type: preregistered-primary-relationship-experiment
 created: 2026-09-10
 issue: 90
-state: ACTIVE_STAGE_B
+state: COMPLETED_PASS
 parent: US-AIR-F01
 portfolio_decision: DEC-123
 preregistration_decision: DEC-124
 mission_anchor: MEM-054
 primary_weather_variable: DailyPrecipitation
-relationship_outcome_computed: false
-delay_magnitudes_parsed: false
+final_gate: PASS_US_AIR_E01_POSITIVE_MATERIAL_PRECIPITATION_DELAY_ASSOCIATION
+relationship_outcome_computed: true
+delay_magnitudes_parsed: true
 incremental_monetary_cost_usd: 0
 ---
 
@@ -208,3 +209,12 @@ Run 34429102100 resolves Stage A as:
 Eight airports are prospectively excluded by the frozen quality gate: AGS, ATW, BRD, EAR, HIB, LBL, MYR, PQI.
 
 Under DEC-125, Stage B may now execute the previously frozen outcome/model contract. No change to the predictor, thresholds, outcome or model is permitted.
+
+
+## Final disposition / 최종 처분
+
+Run `34429684361` resolves the preregistered E01 as **`PASS_US_AIR_E01_POSITIVE_MATERIAL_PRECIPITATION_DELAY_ASSOCIATION`**.
+
+Primary result: 91,687 airport-days / 255 airports; beta=4.892129968812, 95% CI [4.318542282873, 5.465717654751], 0→10 mm model-implied contrast=11.730815 minutes.
+
+Under DEC-126 this branch is `RELATIONSHIP_TESTED` only. Close #90 and return to Stage 0; no automatic tuning or generalization claim.
