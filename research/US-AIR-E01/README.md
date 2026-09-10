@@ -3,7 +3,7 @@ id: US-AIR-E01
 type: preregistered-primary-relationship-experiment
 created: 2026-09-10
 issue: 90
-state: ACTIVE_STAGE_A
+state: ACTIVE_STAGE_B
 parent: US-AIR-F01
 portfolio_decision: DEC-123
 preregistration_decision: DEC-124
@@ -190,3 +190,21 @@ Return to Stage 0 without rescue if:
 - paid data or paid compute is required.
 
 Incremental monetary cost must remain **0 USD**.
+
+
+## Stage A disposition / Stage A 처분
+
+Run 34429102100 resolves Stage A as:
+
+**PASS_US_AIR_E01_STAGE_A_PRECIPITATION_QUALITY**
+
+- qualified airports: **255**
+- represented NOAA stations: **255**
+- usable airport-date weather keys: **92,818**
+- assignment gaps / ambiguous station assignments: **0 / 0**
+- source fetch failures: **0**
+- F01 snapshot hash drift: **0/263**
+
+Eight airports are prospectively excluded by the frozen quality gate: AGS, ATW, BRD, EAR, HIB, LBL, MYR, PQI.
+
+Under DEC-125, Stage B may now execute the previously frozen outcome/model contract. No change to the predictor, thresholds, outcome or model is permitted.

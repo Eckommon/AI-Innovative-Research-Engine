@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260910-US-AIR-E01-STAGE-A-ACTIVE",
+  "checkpoint_id": "CHK-20260910-US-AIR-E01-STAGE-B-AUTHORIZED",
   "active_issue": 90,
   "active_research": "US-AIR-E01",
   "last_completed_issue": 89,
   "last_completed_research": "PORTFOLIO-R09",
-  "last_decision": "DEC-124",
+  "last_decision": "DEC-125",
   "updated": "2026-09-10"
 }

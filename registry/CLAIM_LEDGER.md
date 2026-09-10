@@ -62,6 +62,8 @@
 
 | `CLM-135` | Under frozen outcome-blind 2025/10 km/date-label rules, full-year US-AIR-F01 yields 263 final origin airports mapped to 263 unique NOAA stations with complete 365-DATE support, i.e. 95,995 station×calendar-date source keys; the gate is `PASS_US_AIR_AIRPORT_WEATHER_JOIN_READY`, without any weather/delay effect claim. / 고정 결과비사용 규칙에서 최종 263개 공항·263개 NOAA station·95,995개 station-date source key가 성립하여 JOIN_READY PASS이며 효과 주장은 없다. | `OBSERVED/DERIVED/VALIDATED` | `V3_REPRODUCED_SOURCE_SEMANTICS_AND_CARDINALITY` | Run `34218434530`; `research/US-AIR-F01/RESULT.md`; `registry/CLM-135.md`; Issue #88 | 2026-09-09 | active-join-pass |
 
+| `CLM-136` | After prospectively freezing NOAA LCDv2 DailyPrecipitation quality rules, US-AIR-E01 Stage A retains 255 qualified airports, 255 NOAA stations and 92,818 usable airport-date weather keys with zero assignment ambiguity/fetch failure/hash drift; the Stage-A gate passes without opening delay magnitudes. / 사전고정 기상품질 기준에서 255개 공항·255개 station·92,818개 key를 유지하고 지연값 비노출 상태로 Stage A PASS. | `OBSERVED/DERIVED/VALIDATED` | `V3_PREREGISTERED_SOURCE_QUALITY_REPRODUCED` | Run `34429102100`; `research/US-AIR-E01/STAGE_A_RESULT.md`; `registry/CLM-136.md`; Issue #90 | 2026-09-10 | active-stage-a-pass |
+
 ## Rule / 규칙
 
 - New material claims should receive a stable ID when they influence scoring, promotion, HOLD/REJECT decisions, or downstream experiments. / 점수·승격·HOLD/REJECT·후속 실험에 영향을 주는 중요 주장은 안정적 ID 부여.

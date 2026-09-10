@@ -1,56 +1,50 @@
 ---
-checkpoint_id: CHK-20260910-US-AIR-E01-STAGE-A-ACTIVE
+checkpoint_id: CHK-20260910-US-AIR-E01-STAGE-B-AUTHORIZED
 active_issue: 90
 active_research: US-AIR-E01
 last_completed_issue: 89
 last_completed_research: PORTFOLIO-R09
-last_decision: DEC-124
+last_decision: DEC-125
 updated: 2026-09-10
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `US_AIR_E01_PREREGISTERED__STAGE_A_WEATHER_QUALITY_ACTIVE`
+**State / 상태:** `US_AIR_E01_STAGE_A_PASS__STAGE_B_AUTHORIZED`
 
-## Mission / 목적
+## Stage A / Stage A
 
-MEM-054 remains controlling: maximize falsifiable, reproducible, practically relevant cross-data innovation/bottleneck information, not branch throughput. / branch 처리량이 아니라 반증·재현 가능한 관계 정보가 우선이다.
+Run `34429102100` is accepted as:
 
-## Stage 0 result / Stage 0 결과
+**`PASS_US_AIR_E01_STAGE_A_PRECIPITATION_QUALITY`**
 
-PORTFOLIO-R09 selected:
+Frozen-quality result:
+- 255 qualified origin airports;
+- 255 NOAA stations;
+- 92,818 usable airport-date weather keys;
+- 0 assignment gaps / 0 ambiguous station assignments;
+- 0 source fetch failures;
+- 0 missing DailyPrecipitation columns;
+- 0/263 source hash drift from F01.
 
-**`SELECT_C_US_004_FIRST_RELATIONSHIP_TEST`**
-
-Issue #90 `US-AIR-E01` is the sole active research issue.
-
-Selection basis:
-- US-AIR-F01 final support = 263 airports / 263 NOAA stations / 95,995 station-date source keys;
-- no weather/delay relationship has yet been opened;
-- stronger unit diversity and immediate zero-cost operability than current preserved alternatives;
-- no automatic tuning of already-tested JP-PORT or rescue of CA-RAIL/AU-NEM structural limits.
-
-## Frozen E01 / 고정 E01
-
-Primary exposure:
-**NOAA LCDv2 `DailyPrecipitation` → `log1p(mm)`**.
-
-Primary future outcome:
-**airport-day mean eligible BTS `DepDelayMinutes`**.
-
-The relationship model, outcome denominator, baseline, inference, materiality rule and prohibited searches are frozen in `research/US-AIR-E01/README.md` and `DEC-124`.
+No delay magnitude was parsed in Stage A.
 
 ## Exact next action / 정확한 다음 행동
 
-**Run Stage A weather-quality support only.**
+Execute **Stage B only under the frozen DEC-124 model**, now authorized by DEC-125.
 
-Before any delay magnitude:
-- map each airport-date through the F01 time-valid station assignment;
-- parse only `DailyPrecipitation` and its quality syntax;
-- require >=330 usable assigned days and >=20 usable days each month per airport;
-- Stage-A PASS requires >=120 airports and >=120 NOAA stations;
-- persist derived weather/quality manifests.
+Before parsing any delay magnitude:
+- re-download all twelve BTS 2025 PREZIP files;
+- verify each SHA-256 exactly against the F01 frozen manifest;
+- if any differs, stop before outcome parsing and HOLD source snapshot integrity.
 
-Do not calculate a weather-delay relationship or load delay magnitudes until Stage A PASS is durably adjudicated.
+If all hashes match:
+- build the airport-day outcome only for Stage-A qualified usable weather keys;
+- apply the frozen eligibility denominator;
+- require >=100 airports and >=30,000 realized airport-days;
+- fit the preregistered baseline/weather models;
+- adjudicate the primary gate before sensitivities.
+
+No alternate predictor, lag, threshold, outcome, airport/carrier subset or station remap is allowed.
 
 Incremental monetary cost remains **0 USD**.

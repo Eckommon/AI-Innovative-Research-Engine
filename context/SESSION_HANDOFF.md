@@ -1,10 +1,10 @@
 ---
-checkpoint_id: CHK-20260910-US-AIR-E01-STAGE-A-ACTIVE
+checkpoint_id: CHK-20260910-US-AIR-E01-STAGE-B-AUTHORIZED
 active_issue: 90
 active_research: US-AIR-E01
 last_completed_issue: 89
 last_completed_research: PORTFOLIO-R09
-last_decision: DEC-124
+last_decision: DEC-125
 updated: 2026-09-10
 ---
 
@@ -12,43 +12,33 @@ updated: 2026-09-10
 
 ## Canonical restart point / 정확한 재개점
 
-PORTFOLIO-R09 is complete and selects US-AIR-E01. / R09 완료, US-AIR-E01 선정.
+US-AIR-E01 Stage A is durably PASS under DEC-125.
 
-Issue #90 is active under `DEC-124`.
+Do not rerun R09, F01 or Stage A by default.
 
-Do not redo F01 or R09 by default.
+Verified Stage-A support:
+**255 airports / 255 NOAA stations / 92,818 usable airport-date weather keys**.
 
-## Frozen E01 question / 고정 질문
-
-Does same-calendar-date NOAA LCDv2 `DailyPrecipitation` have a positive, materially nontrivial association with airport-day mean BTS `DepDelayMinutes` after airport/date/scheduled-volume controls? / 동일 날짜 강수량이 통제 후 평균 출발지연과 양의 실질적 연관성을 갖는가?
-
-This is not advance prediction or causality.
+No DepDelayMinutes magnitude has yet been opened.
 
 ## Exact next bounded execution / 다음 제한 실행
 
-**Stage A only, before any delay magnitude.**
+Run Stage B using the already frozen DEC-124 model.
 
-Use:
-- `research/US-AIR-F01/DERIVED_AIRPORT_SEQ_STATION_MAP.csv`;
-- `research/US-AIR-F01/FINAL_SUPPORT_AIRPORTS.csv`;
-- NOAA 2025 LCDv2 station-year CSV.
+First perform a **12/12 BTS PREZIP hash check** against the F01 manifest before parsing any outcome magnitude. A mismatch is a source-integrity HOLD, not permission to silently use a revised snapshot.
 
-Parse only station/date/`DailyPrecipitation` needed for quality qualification.
+Only after exact hash match:
+- aggregate airport-day mean eligible DepDelayMinutes;
+- scheduled count = non-duplicate scheduled rows;
+- primary exposure = log1p(DailyPrecipitation_mm);
+- baseline = airport FE + date FE + log1p(scheduled departures);
+- weather model adds the frozen precipitation exposure;
+- unweighted airport-day OLS;
+- two-way CR1 by AirportID and FlightDate;
+- realized support >=100 airports / >=30,000 airport-days.
 
-Frozen per-airport Stage-A support:
-- >=330 usable assigned days;
-- >=20 usable days in every month.
+Primary PASS additionally requires beta>0, 95% CI lower>0 and beta*ln(11)>=1.0 minute.
 
-PASS requires:
-- >=120 qualified airports;
-- >=120 represented NOAA stations.
+Sensitivities may run only after the primary gate and cannot rescue it.
 
-No alternate predictor or station repair after failure.
-
-## After Stage A / Stage A 이후
-
-Only if Stage A passes may Stage B read `DepDelayMinutes` and execute the exact frozen model. Otherwise HOLD and return Stage 0.
-
-No weather-delay effect has been computed at this checkpoint.
-
-Cost remains **0 USD**.
+Cost remains 0 USD.
