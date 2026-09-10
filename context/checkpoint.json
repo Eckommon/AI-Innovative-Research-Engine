@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260911-US-AIR-E01-PASS-PORTFOLIO-RETURN",
+  "checkpoint_id": "CHK-20260911-US-AIR-N01-LOW-NOVELTY-PORTFOLIO-RETURN",
   "active_issue": "none",
   "active_research": "NONE",
-  "last_completed_issue": 90,
-  "last_completed_research": "US-AIR-E01",
-  "last_decision": "DEC-126",
+  "last_completed_issue": 92,
+  "last_completed_research": "US-AIR-N01",
+  "last_decision": "DEC-128",
   "updated": "2026-09-11"
 }

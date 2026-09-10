@@ -66,6 +66,8 @@
 
 | `CLM-137` | Under the frozen 2025 airport-day specification, NOAA DailyPrecipitation is positively associated with BTS mean departure delay: beta `4.892130`, 95% CI `[4.318542, 5.465718]`, 0→10 mm model-implied contrast `11.730815` min over 91,687 airport-days/255 airports; exact primary gate `PASS_US_AIR_E01_POSITIVE_MATERIAL_PRECIPITATION_DELAY_ASSOCIATION`. Association only, not causal/generalization/utility evidence. / 고정 사전등록 모델에서 강수와 평균 출발지연의 양의 실질 연관성 PASS; 인과·일반화·효용 주장은 아님. | `OBSERVED/DERIVED/VALIDATED` | `V3_PREREGISTERED_RELATIONSHIP_REPRODUCED` | Run `34429684361`; `research/US-AIR-E01/RESULT.md`; `registry/CLM-137.md`; Issue #90 | 2026-09-11 | active-relationship-tested |
 
+| `CLM-138` | Bounded peer-reviewed/official-practice evidence shows the US-AIR E01 core precipitation→delay relationship is already established; exact contribution is `LOW_NOVELTY_CORE_RELATIONSHIP_KNOWN`, with breadth/reproducibility as the main increment. / 강수→지연 핵심관계는 기존 근거에 존재하며 신규성은 낮고 범위·재현성이 주 증분. | `OBSERVED/DERIVED_ASSESSMENT` | `V2_BOUNDED_PEER_REVIEWED_AND_OFFICIAL_PRACTICE_ASSESSMENT` | `research/US-AIR-N01/RESULT.md`; `SOURCE_MATRIX.csv`; `registry/CLM-138.md`; Issue #92 | 2026-09-11 | active-novelty-low |
+
 ## Rule / 규칙
 
 - New material claims should receive a stable ID when they influence scoring, promotion, HOLD/REJECT decisions, or downstream experiments. / 점수·승격·HOLD/REJECT·후속 실험에 영향을 주는 중요 주장은 안정적 ID 부여.

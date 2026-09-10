@@ -43,3 +43,5 @@
 Material direction changes receive a stable decision ID. Superseded decisions remain visible with a superseding reference rather than being deleted. / 중요 방향 변경은 안정적 Decision ID를 부여하며 대체된 결정은 삭제하지 않고 superseding 참조를 남긴다.
 
 Official artifacts comply with `LANG-001`, `COST-001`, and applicable governance controls. / 공식 산출물은 관련 규약을 따른다.
+- [DEC-127](DEC-127.md): R10 selects US-AIR-N01 novelty/current-practice assessment before generalization / 일반화 전 신규성·현행관행 평가 선정.
+- [DEC-128](DEC-128.md): finalize US-AIR-N01 as LOW_NOVELTY_CORE_RELATIONSHIP_KNOWN and stop automatic generalization / 낮은 신규성 확정·자동 일반화 중단.

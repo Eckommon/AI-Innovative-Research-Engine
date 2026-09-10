@@ -95,3 +95,10 @@ Do **not** automatically tune weather variables, thresholds, lags or airport sub
 A later descendant must compete at Stage 0 and separately address generalization, novelty and named decision utility. / 후속은 Stage 0에서 다시 경쟁하고 일반화·신규성·구체적 의사결정 효익을 별도 검증해야 한다.
 
 Incremental monetary cost remained **0 USD**.
+
+
+## Post-E01 novelty assessment / E01 이후 신규성 평가
+
+`US-AIR-N01` / `DEC-128` subsequently assesses the exact E01 contribution as **`LOW_NOVELTY_CORE_RELATIONSHIP_KNOWN`**. This does not alter the empirical E01 PASS; it separates empirical validity from novelty. / N01은 E01의 실증 PASS를 변경하지 않고 신규성을 별도로 낮음으로 판정한다.
+
+Defensible incremental value remains the breadth and reproducibility of the public-data workflow. `UTILITY_TESTED` and `GENERALIZATION_TESTED` remain unresolved.
