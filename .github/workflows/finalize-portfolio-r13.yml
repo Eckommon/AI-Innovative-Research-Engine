@@ -1,0 +1,31 @@
+name: Finalize PORTFOLIO R13
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/finalize-portfolio-r13.yml'
+      - 'tools/finalize_portfolio_r13.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Validate finalizer
+        run: python -m py_compile tools/finalize_portfolio_r13.py
+      - name: Finalize R13 and activate F01
+        run: python tools/finalize_portfolio_r13.py
+      - name: Commit durable R13 state
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/PORTFOLIO-R13/RESULT.md research/US-WATERWAY-F01/README.md registry/DEC-134.md registry/DECISION_LOG.md STATUS.md context/SESSION_HANDOFF.md context/checkpoint.json
+          git commit -m 'Finalize PORTFOLIO-R13 and activate US-WATERWAY-F01'
+          git push
