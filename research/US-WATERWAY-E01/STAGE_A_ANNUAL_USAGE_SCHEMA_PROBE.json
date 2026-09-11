@@ -10,14 +10,14 @@
   "home": {
     "status": 200,
     "final_url": "https://ndc.ops.usace.army.mil/ords/r/lpms/corps-locks/home",
-    "bytes": 40589,
-    "sha256": "4c80c02c031d26698b3057564621481ce0d162392fc36fefb904fb58989fbd6b"
+    "bytes": 40587,
+    "sha256": "4a6802c08e848ed5a33e5c1dee3bc11257bad793653a761a06529c93ceb5f422"
   },
   "annual": {
     "status": 200,
     "final_url": "https://ndc.ops.usace.army.mil/ords/r/lpms/corps-locks/annual-usage-report",
-    "bytes": 106838,
-    "sha256": "f22084a87118d46181cc2132209b45dba850ebbc095e053d5541be244ce6f56b"
+    "bytes": 106834,
+    "sha256": "f4a3129ea60b32c7846d0e5d9e3217d76249d8c4e13133469b6d380f0594dba6"
   },
   "year_labels_anywhere": [
     "2016",
@@ -63,8 +63,89 @@
     "356616486227373246",
     "356617961145373261"
   ],
-  "region_ids": [],
+  "ajax_identifier_count": 5,
+  "ajax_identifier_prefixes": [
+    "SVRFTSBUWVBFfjUxMjB-NjMx",
+    "SVRFTSBUWVBFfjUxMjB-NjMx",
+    "SVRFTSBUWVBFfjUxMjB-NjMx",
+    "UkVHSU9OIFRZUEV-fjM1NjYx",
+    "UkVHSU9OIFRZUEV-fjM1NjYx"
+  ],
+  "region_ids": [
+    "R356616428807373245",
+    "R356617877054373260"
+  ],
+  "report_ids": [],
+  "static_ids": [],
+  "pagination_tokens": [
+    "pgR_min_row=51max_rows=50rows_fetched=50"
+  ],
   "pagination_links": [],
+  "pagination_attrs": [
+    {
+      "aria-label": "Pagination of All Waterways",
+      "class": "a-IRR-paginationWrap a-IRR-paginationWrap--bottom",
+      "tag": "div"
+    },
+    {
+      "class": "a-IRR-pagination",
+      "tag": "ul"
+    },
+    {
+      "class": "a-IRR-pagination-item is-disabled",
+      "tag": "li"
+    },
+    {
+      "class": "a-IRR-pagination-item",
+      "tag": "li"
+    },
+    {
+      "class": "a-IRR-pagination-label",
+      "tag": "span"
+    },
+    {
+      "class": "a-IRR-pagination-item is-disabled",
+      "tag": "li"
+    },
+    {
+      "aria-label": "Pagination of Individual Waterways",
+      "class": "a-IRR-paginationWrap a-IRR-paginationWrap--bottom",
+      "tag": "div"
+    },
+    {
+      "class": "a-IRR-pagination",
+      "tag": "ul"
+    },
+    {
+      "class": "a-IRR-pagination-item is-disabled",
+      "tag": "li"
+    },
+    {
+      "class": "a-IRR-pagination-item",
+      "tag": "li"
+    },
+    {
+      "class": "a-IRR-pagination-label",
+      "tag": "span"
+    },
+    {
+      "class": "a-IRR-pagination-item",
+      "tag": "li"
+    },
+    {
+      "class": "a-Button a-IRR-button a-IRR-button--pagination",
+      "title": "Next",
+      "aria-label": "Next",
+      "tag": "button"
+    }
+  ],
+  "forms": [
+    {
+      "id": "wwvFlowForm",
+      "action": "wwv_flow.accept?p_context=corps-locks/annual-usage-report/961539603972",
+      "method": "post"
+    }
+  ],
   "tables": [
     {
       "id": "356616486227373246",

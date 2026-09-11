@@ -3,11 +3,15 @@
 Outcome-blind structural probe: annual metric cells are reduced immediately to nonblank booleans; numerical delay/processing/traffic/hydrology magnitudes are not converted or persisted.
 
 - Annual Usage HTTP: **200**
-- Annual Usage bytes: **106838**
+- Annual Usage bytes: **106834**
 - page year labels: **2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025**
-- year item tokens: `[]`
 - worksheet IDs: `['356616486227373246', '356617961145373261']`
-- pagination links: **0**
+- AJAX identifiers found: **5**
+- region IDs: `['R356616428807373245', 'R356617877054373260']`
+- report IDs: `[]`
+- static IDs: `[]`
+- pagination tokens: `['pgR_min_row=51max_rows=50rows_fetched=50']`
+- pagination attrs: **13**
 - tables found: **2**
 
 ## Table 1
@@ -26,5 +30,20 @@ Outcome-blind structural probe: annual metric cells are reduced immediately to n
 - delay-support: AT - ATCHAFALAYA RIVER | 11 - BERWICK | all-years=True
 - delay-support: CA - CALCASIEU RIVER | 23 - CALCASIEU SALT WATER BARRIER | all-years=True
 - delay-support: FB - FRESHWATER BAYOU | 41 - FRESHWATER BAYOU | all-years=True
+
+## Pagination attributes
+- `{'aria-label': 'Pagination of All Waterways', 'class': 'a-IRR-paginationWrap a-IRR-paginationWrap--bottom', 'tag': 'div'}`
+- `{'class': 'a-IRR-pagination', 'tag': 'ul'}`
+- `{'class': 'a-IRR-pagination-item is-disabled', 'tag': 'li'}`
+- `{'class': 'a-IRR-pagination-item', 'tag': 'li'}`
+- `{'class': 'a-IRR-pagination-label', 'tag': 'span'}`
+- `{'class': 'a-IRR-pagination-item is-disabled', 'tag': 'li'}`
+- `{'aria-label': 'Pagination of Individual Waterways', 'class': 'a-IRR-paginationWrap a-IRR-paginationWrap--bottom', 'tag': 'div'}`
+- `{'class': 'a-IRR-pagination', 'tag': 'ul'}`
+- `{'class': 'a-IRR-pagination-item is-disabled', 'tag': 'li'}`
+- `{'class': 'a-IRR-pagination-item', 'tag': 'li'}`
+- `{'class': 'a-IRR-pagination-label', 'tag': 'span'}`
+- `{'class': 'a-IRR-pagination-item', 'tag': 'li'}`
+- `{'class': 'a-Button a-IRR-button a-IRR-button--pagination', 'title': 'Next', 'aria-label': 'Next', 'tag': 'button'}`
 
 Incremental monetary cost: **0 USD**.
