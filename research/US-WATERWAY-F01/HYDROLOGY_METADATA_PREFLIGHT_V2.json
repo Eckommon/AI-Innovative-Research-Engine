@@ -1,0 +1,482 @@
+{
+  "boundary": {
+    "delay_magnitudes_parsed": false,
+    "hydrology_values_requested": false,
+    "hydrology_values_parsed": false,
+    "relationship_computed": false,
+    "incremental_monetary_cost_usd": 0
+  },
+  "target_overlap": [
+    "2018-01-01",
+    "2020-12-31"
+  ],
+  "national_lock_features": 234,
+  "pmsdata_y_geometry_locks": 182,
+  "locks_attempted": 40,
+  "qualified_matches": 25,
+  "metadata_requests": 190,
+  "errors": [],
+  "matches": [
+    {
+      "lock_id": 114,
+      "lock_name": "CHAINS OF ROCKS L/D 27",
+      "river": "MISSISSIPPI",
+      "state": "IL",
+      "usgs_id": "USGS-07010000",
+      "usgs_name": "Mississippi River at St. Louis, MO",
+      "distance_km": 8.138,
+      "daily_metadata_support": [
+        {
+          "parameter_code": "00060",
+          "statistic_id": "00003",
+          "start": "1861-01-01",
+          "end": "2026-09-09"
+        },
+        {
+          "parameter_code": "00065",
+          "statistic_id": "30800",
+          "start": "1982-10-01",
+          "end": "2026-09-10"
+        }
+      ]
+    },
+    {
+      "lock_id": 159,
+      "lock_name": "LOCK & DAM 10",
+      "river": "MISSISSIPPI",
+      "state": "IA",
+      "usgs_id": "USGS-05411500",
+      "usgs_name": "Mississippi River at Clayton, IA",
+      "distance_km": 13.744,
+      "daily_metadata_support": [
+        {
+          "parameter_code": "00065",
+          "statistic_id": "00003",
+          "start": "1992-01-01",
+          "end": "2026-09-08"
+        }
+      ]
+    },
+    {
+      "lock_id": 116,
+      "lock_name": "LOCK & DAM 13",
+      "river": "MISSISSIPPI",
+      "state": "IL",
+      "usgs_id": "USGS-05420500",
+      "usgs_name": "Mississippi River at Clinton, IA",
+      "distance_km": 15.289,
+      "daily_metadata_support": [
+        {
+          "parameter_code": "00060",
+          "statistic_id": "00003",
+          "start": "1873-06-02",
+          "end": "2026-09-08"
+        }
+      ]
+    },
+    {
+      "lock_id": 112,
+      "lock_name": "LOCK & DAM 14",
+      "river": "MISSISSIPPI",
+      "state": "IA",
+      "usgs_id": "USGS-05420500",
+      "usgs_name": "Mississippi River at Clinton, IA",
+      "distance_km": 26.174,
+      "daily_metadata_support": [
+        {
+          "parameter_code": "00060",
+          "statistic_id": "00003",
+          "start": "1873-06-02",
+          "end": "2026-09-08"
+        }
+      ]
+    },
+    {
+      "lock_id": 111,
+      "lock_name": "LOCK & DAM 15",
+      "river": "MISSISSIPPI",
+      "state": "IA",
+      "usgs_id": "USGS-05420500",
+      "usgs_name": "Mississippi River at Clinton, IA",
+      "distance_km": 39.029,
+      "daily_metadata_support": [
+        {
+          "parameter_code": "00060",
+          "statistic_id": "00003",
+          "start": "1873-06-02",
+          "end": "2026-09-08"
+        }
+      ]
+    },
+    {
+      "lock_id": 106,
+      "lock_name": "LOCK & DAM 19",
+      "river": "MISSISSIPPI",
+      "state": "IA",
+      "usgs_id": "USGS-05474500",
+      "usgs_name": "Mississippi River at Keokuk, IA",
+      "distance_km": 0.159,
+      "daily_metadata_support": [
+        {
+          "parameter_code": "00060",
+          "statistic_id": "00003",
+          "start": "1878-01-01",
+          "end": "2026-06-30"
+        }
+      ]
+    },
+    {
+      "lock_id": 104,
+      "lock_name": "LOCK & DAM 20",
+      "river": "MISSISSIPPI",
+      "state": "MO",
+      "usgs_id": "USGS-05474500",
+      "usgs_name": "Mississippi River at Keokuk, IA",
+      "distance_km": 30.291,
+      "daily_metadata_support": [
+        {
+          "parameter_code": "00060",
+          "statistic_id": "00003",
+          "start": "1878-01-01",
+          "end": "2026-06-30"
+        }
+      ]
+    },
+    {
+      "lock_id": 102,
+      "lock_name": "LOCK & DAM 25",
+      "river": "MISSISSIPPI",
+      "state": "MO",
+      "usgs_id": "USGS-05587450",
+      "usgs_name": "Mississippi River at Grafton, IL",
+      "distance_km": 22.827,
+      "daily_metadata_support": [
+        {
+          "parameter_code": "00065",
+          "statistic_id": "30800",
+          "start": "1986-11-14",
+          "end": "2026-09-10"
+        },
+        {
+          "parameter_code": "00060",
+          "statistic_id": "00003",
+          "start": "1933-04-01",
+          "end": "2026-09-09"
+        }
+      ]
+    },
+    {
+      "lock_id": 164,
+      "lock_name": "LOCK & DAM 4",
+      "river": "MISSISSIPPI",
+      "state": "WI",
+      "usgs_id": "USGS-05378500",
+      "usgs_name": "MISSISSIPPI RIVER AT WINONA, MN",
+      "distance_km": 37.427,
+      "daily_metadata_support": [
+        {
+          "parameter_code": "00060",
+          "statistic_id": "00003",
+          "start": "1928-07-01",
+          "end": "2026-09-09"
+        }
+      ]
+    },
+    {
+      "lock_id": 163,
+      "lock_name": "LOCK & DAM 5",
+      "river": "MISSISSIPPI",
+      "state": "MN",
+      "usgs_id": "USGS-05378500",
+      "usgs_name": "MISSISSIPPI RIVER AT WINONA, MN",
+      "distance_km": 18.067,
+      "daily_metadata_support": [
+        {
+          "parameter_code": "00060",
+          "statistic_id": "00003",
+          "start": "1928-07-01",
+          "end": "2026-09-09"
+        }
+      ]
+    },
+    {
+      "lock_id": 165,
+      "lock_name": "LOCK & DAM 5A",
+      "river": "MISSISSIPPI",
+      "state": "MN",
+      "usgs_id": "USGS-05378500",
+      "usgs_name": "MISSISSIPPI RIVER AT WINONA, MN",
+      "distance_km": 4.337,
+      "daily_metadata_support": [
+        {
+          "parameter_code": "00060",
+          "statistic_id": "00003",
+          "start": "1928-07-01",
+          "end": "2026-09-09"
+        }
+      ]
+    },
+    {
+      "lock_id": 157,
+      "lock_name": "LOCK & DAM 6",
+      "river": "MISSISSIPPI",
+      "state": "WI",
+      "usgs_id": "USGS-05378500",
+      "usgs_name": "MISSISSIPPI RIVER AT WINONA, MN",
+      "distance_km": 17.283,
+      "daily_metadata_support": [
+        {
+          "parameter_code": "00060",
+          "statistic_id": "00003",
+          "start": "1928-07-01",
+          "end": "2026-09-09"
+        }
+      ]
+    },
+    {
+      "lock_id": 158,
+      "lock_name": "LOCK & DAM 7",
+      "river": "MISSISSIPPI",
+      "state": "MN",
+      "usgs_id": "USGS-05378500",
+      "usgs_name": "MISSISSIPPI RIVER AT WINONA, MN",
+      "distance_km": 33.771,
+      "daily_metadata_support": [
+        {
+          "parameter_code": "00060",
+          "statistic_id": "00003",
+          "start": "1928-07-01",
+          "end": "2026-09-09"
+        }
+      ]
+    },
+    {
+      "lock_id": 162,
+      "lock_name": "LOCK & DAM 9",
+      "river": "MISSISSIPPI",
+      "state": "WI",
+      "usgs_id": "USGS-05389500",
+      "usgs_name": "Mississippi River at McGregor, IA",
+      "distance_km": 21.346,
+      "daily_metadata_support": [
+        {
+          "parameter_code": "00065",
+          "statistic_id": "00003",
+          "start": "2005-10-01",
+          "end": "2026-09-08"
+        }
+      ]
+    },
+    {
+      "lock_id": 103,
+      "lock_name": "MEL PRICE LOCK & DAM",
+      "river": "MISSISSIPPI",
+      "state": "IL",
+      "usgs_id": "USGS-05587450",
+      "usgs_name": "Mississippi River at Grafton, IL",
+      "distance_km": 26.474,
+      "daily_metadata_support": [
+        {
+          "parameter_code": "00065",
+          "statistic_id": "30800",
+          "start": "1986-11-14",
+          "end": "2026-09-10"
+        },
+        {
+          "parameter_code": "00060",
+          "statistic_id": "00003",
+          "start": "1933-04-01",
+          "end": "2026-09-09"
+        }
+      ]
+    },
+    {
+      "lock_id": 140,
+      "lock_name": "CANNELTON LOCK & DAM",
+      "river": "OHIO",
+      "state": "IN",
+      "usgs_id": "USGS-03303280",
+      "usgs_name": "OHIO RIVER AT CANNELTON DAM AT CANNELTON, IN",
+      "distance_km": 0.088,
+      "daily_metadata_support": [
+        {
+          "parameter_code": "00065",
+          "statistic_id": "00003",
+          "start": "1992-09-30",
+          "end": "2026-09-09"
+        },
+        {
+          "parameter_code": "00060",
+          "statistic_id": "00003",
+          "start": "1975-10-01",
+          "end": "2026-09-08"
+        }
+      ]
+    },
+    {
+      "lock_id": 155,
+      "lock_name": "CAPT ANT MELDAHL LOCK & DAM",
+      "river": "OHIO",
+      "state": "OH",
+      "usgs_id": "USGS-03255000",
+      "usgs_name": "OHIO RIVER AT CINCINNATI, OH",
+      "distance_km": 44.165,
+      "daily_metadata_support": [
+        {
+          "parameter_code": "00065",
+          "statistic_id": "00003",
+          "start": "1987-10-01",
+          "end": "2026-09-09"
+        }
+      ]
+    },
+    {
+      "lock_id": 207,
+      "lock_name": "DASHIELDS LOCK & DAM",
+      "river": "OHIO",
+      "state": "PA",
+      "usgs_id": "USGS-03086000",
+      "usgs_name": "Ohio River at Sewickley, PA",
+      "distance_km": 0.035,
+      "daily_metadata_support": [
+        {
+          "parameter_code": "00060",
+          "statistic_id": "00003",
+          "start": "1933-10-01",
+          "end": "2026-09-09"
+        }
+      ]
+    },
+    {
+      "lock_id": 208,
+      "lock_name": "EMSWORTH LOCK & DAM",
+      "river": "OHIO",
+      "state": "PA",
+      "usgs_id": "USGS-03085734",
+      "usgs_name": "Ohio River at Emsworth Dam Lower Pool @ Emsworth",
+      "distance_km": 0.114,
+      "daily_metadata_support": [
+        {
+          "parameter_code": "00065",
+          "statistic_id": "00003",
+          "start": "2017-07-18",
+          "end": "2026-09-09"
+        }
+      ]
+    },
+    {
+      "lock_id": 188,
+      "lock_name": "GREENUP LOCKS & DAM",
+      "river": "OHIO",
+      "state": "KY",
+      "usgs_id": "USGS-03216600",
+      "usgs_name": "OHIO RIVER AT GREENUP DAM NEAR GREENUP, KY",
+      "distance_km": 0.132,
+      "daily_metadata_support": [
+        {
+          "parameter_code": "00060",
+          "statistic_id": "00003",
+          "start": "1968-10-01",
+          "end": "2026-09-10"
+        }
+      ]
+    },
+    {
+      "lock_id": 194,
+      "lock_name": "HANNIBAL LOCKS & DAM",
+      "river": "OHIO",
+      "state": "OH",
+      "usgs_id": "USGS-03114306",
+      "usgs_name": "OHIO RIVER ABOVE SARDIS, OH",
+      "distance_km": 3.965,
+      "daily_metadata_support": [
+        {
+          "parameter_code": "00060",
+          "statistic_id": "00003",
+          "start": "2013-09-30",
+          "end": "2026-09-09"
+        }
+      ]
+    },
+    {
+      "lock_id": 137,
+      "lock_name": "JOHN T. MYERSLOCK & DAM",
+      "river": "OHIO",
+      "state": "IN",
+      "usgs_id": "USGS-03322420",
+      "usgs_name": "OHIO RIVER AT UNIONTOWN DAM, KY",
+      "distance_km": 0.58,
+      "daily_metadata_support": [
+        {
+          "parameter_code": "00065",
+          "statistic_id": "00003",
+          "start": "1992-10-01",
+          "end": "2026-09-09"
+        }
+      ]
+    },
+    {
+      "lock_id": 96,
+      "lock_name": "LOCK & DAM 52",
+      "river": "OHIO",
+      "state": "IL",
+      "usgs_id": "USGS-03611000",
+      "usgs_name": "OHIO RIVER AT PADUCAH, KY",
+      "distance_km": 6.767,
+      "daily_metadata_support": [
+        {
+          "parameter_code": "00065",
+          "statistic_id": "00003",
+          "start": "2014-08-18",
+          "end": "2026-09-09"
+        }
+      ]
+    },
+    {
+      "lock_id": 146,
+      "lock_name": "MARKLAND LOCKS & DAM",
+      "river": "OHIO",
+      "state": "KY",
+      "usgs_id": "USGS-03277200",
+      "usgs_name": "OHIO RIVER AT MARKLAND DAM NEAR WARSAW, KY",
+      "distance_km": 0.547,
+      "daily_metadata_support": [
+        {
+          "parameter_code": "00065",
+          "statistic_id": "00003",
+          "start": "1989-09-30",
+          "end": "2026-09-09"
+        },
+        {
+          "parameter_code": "00060",
+          "statistic_id": "00003",
+          "start": "1970-05-01",
+          "end": "2026-09-10"
+        }
+      ]
+    },
+    {
+      "lock_id": 143,
+      "lock_name": "MCALPINE LOCKS & DAM",
+      "river": "OHIO",
+      "state": "KY",
+      "usgs_id": "USGS-03294500",
+      "usgs_name": "OHIO RIVER AT LOUISVILLE, KY",
+      "distance_km": 0.635,
+      "daily_metadata_support": [
+        {
+          "parameter_code": "00065",
+          "statistic_id": "00003",
+          "start": "1991-09-30",
+          "end": "2026-09-09"
+        },
+        {
+          "parameter_code": "00060",
+          "statistic_id": "00003",
+          "start": "1928-01-01",
+          "end": "2026-09-08"
+        }
+      ]
+    }
+  ]
+}
