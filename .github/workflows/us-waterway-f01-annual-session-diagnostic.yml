@@ -1,0 +1,29 @@
+name: US WATERWAY F01 Annual Usage session diagnostic
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/us-waterway-f01-annual-session-diagnostic.yml'
+      - 'tools/us_waterway_f01_annual_session_diagnostic.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  diagnostic:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate runner
+        run: python -m py_compile tools/us_waterway_f01_annual_session_diagnostic.py
+      - name: Inspect published Annual Usage route with public session
+        run: python tools/us_waterway_f01_annual_session_diagnostic.py
+      - name: Commit derived diagnostic
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-WATERWAY-F01/ANNUAL_USAGE_SESSION_DIAGNOSTIC.json research/US-WATERWAY-F01/ANNUAL_USAGE_SESSION_DIAGNOSTIC.md
+          git commit -m 'Record session-aware Annual Usage diagnostic'
+          git push
