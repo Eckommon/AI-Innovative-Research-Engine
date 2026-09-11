@@ -1,38 +1,40 @@
 ---
-checkpoint_id: CHK-20260911-US-UTIL-F01-PASS-PORTFOLIO-RETURN
-active_issue: none
-active_research: NONE
-last_completed_issue: 94
-last_completed_research: US-UTIL-F01
-last_decision: DEC-130
+checkpoint_id: CHK-20260911-US-UTIL-F02-ACTIVE
+active_issue: 96
+active_research: US-UTIL-F02
+last_completed_issue: 95
+last_completed_research: PORTFOLIO-R12
+last_decision: DEC-132
 updated: 2026-09-11
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `US_UTIL_F01_JOIN_READY_PASS__PORTFOLIO_RETURN__NO_ACTIVE_RESEARCH_ISSUE`
+**State / 상태:** `PORTFOLIO_R12_SELECTED_US_UTIL_F02__LONGITUDINAL_PREFLIGHT_ACTIVE`
 
-## Latest completed research / 최신 완료 연구
+## Latest portfolio decision / 최신 포트폴리오 결정
 
-Issue #94 `US-UTIL-F01` resolves to:
+PORTFOLIO-R12 selects:
 
-**`PASS_US_UTIL_F01_JOIN_READY`**
+**`SELECT_C_US_005_LONGITUDINAL_COMPARABILITY_PREFLIGHT`**
 
-Outcome-blind verified structure:
-- 842 fully county-qualified reliability utilities with AMI support;
-- 6,341 qualified utility×county mappings;
-- deterministic EIA utility ID → Service Territory county → Census GEOID → NOAA county-FIPS route;
-- frozen source/cardinality thresholds all pass;
-- no SAIDI/SAIFI magnitude, AMI magnitude, or relationship opened.
+Issue #96 `US-UTIL-F02` is the sole active research issue.
 
-## Evidence status / 증거 상태
+## Why this gate / gate 선정 이유
 
-`C-US-005` is **JOIN_READY only**. It is not RELATIONSHIP_TESTED, GENERALIZATION_TESTED, NOVELTY_ASSESSED, UTILITY_TESTED, or an INNOVATION_CANDIDATE. / 효과·일반화·신규성·효용은 미검증이다.
+US-UTIL-F01 is JOIN_READY for 2024, but a relationship experiment would still risk mixing Reliability reporting methods, major-event semantics, AMI field definitions and changing utility/county support across years. Generic AMI resilience mechanisms also have prior precedent, so the next information gain is longitudinal comparability rather than an immediate coefficient. / 즉시 효과계산보다 다년 비교가능성 검증이 우선이다.
 
 ## Exact next action / 정확한 다음 행동
 
-Return to **Stage 0 portfolio control** with no active research Issue. / 활성 연구 Issue 없이 Stage 0로 복귀한다.
+Execute only the **2019–2024 outcome-blind source/schema/identity/reporting-basis/cardinality preflight** under DEC-132.
 
-Do not automatically open AMI × storm × reliability outcomes. Recompare this descendant against independent opportunities; any selected experiment must preregister outcome comparability, storm aggregation/MED treatment, many-to-many dependence and materiality before values are opened. / 효과실험 자동진입 금지.
+Do not parse SAIDI/SAIFI/CAIDI magnitudes, AMI/AMR/standard-meter counts, storm severity/damage values, or any relationship coefficient.
+
+Frozen PASS minimums:
+- >=500 utilities with triple-schedule support in >=4/6 years;
+- >=300 utilities with >=4 comparable Reliability-basis years;
+- >=2,000 qualified utility-years;
+- >=8,000 qualified utility-year×county mappings;
+- NOAA county route and AMI field route reproducible in all six years.
 
 Incremental monetary cost remains **0 USD**.

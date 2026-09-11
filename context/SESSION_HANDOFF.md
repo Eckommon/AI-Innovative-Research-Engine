@@ -1,10 +1,10 @@
 ---
-checkpoint_id: CHK-20260911-US-UTIL-F01-PASS-PORTFOLIO-RETURN
-active_issue: none
-active_research: NONE
-last_completed_issue: 94
-last_completed_research: US-UTIL-F01
-last_decision: DEC-130
+checkpoint_id: CHK-20260911-US-UTIL-F02-ACTIVE
+active_issue: 96
+active_research: US-UTIL-F02
+last_completed_issue: 95
+last_completed_research: PORTFOLIO-R12
+last_decision: DEC-132
 updated: 2026-09-11
 ---
 
@@ -12,29 +12,29 @@ updated: 2026-09-11
 
 ## Canonical restart point / 정확한 재개점
 
-US-UTIL-F01 is complete under DEC-130 with:
+PORTFOLIO-R12 selected **US-UTIL-F02**. Issue #96 is active under DEC-132.
 
-**`PASS_US_UTIL_F01_JOIN_READY`**
+Do not rerun US-UTIL-F01 and do not open Reliability/AMI magnitudes. / F01 재실행·효과값 개방 금지.
 
-Do not rerun the F01 source/county qualification by default. / F01 기본 재실행 금지.
+## Exact next bounded execution / 다음 제한 실행
 
-Canonical evidence:
-- `research/US-UTIL-F01/RESULT.md`;
-- `research/US-UTIL-F01/JOIN_QUALIFICATION.md`;
-- `research/US-UTIL-F01/UTILITY_COUNTY_JOIN_MAP.csv`;
-- `registry/CLM-139.md`;
-- `registry/DEC-130.md`.
+Run only the 2019–2024 outcome-blind longitudinal comparability preflight:
+- materialize EIA-861 final ZIP bytes transiently for each year and record hash/member/sheet structure;
+- inspect Utility Number and non-outcome Reliability reporting-basis metadata only;
+- inspect Advanced Metering field names only for future numerator/denominator route, never meter-count values;
+- preserve Service Territory utility×county identities by year;
+- verify NOAA Storm Events county-key route for each year;
+- compute repeated utility/schedule/geography support counts only.
 
-Verified support: **842** complete reliability+AMI utility identities and **6,341** utility×county mappings. / 구조 gate PASS다.
+Frozen PASS:
+- >=500 triple-schedule utilities in >=4/6 years;
+- >=300 utilities with >=4 years on one prospectively identifiable comparable Reliability basis;
+- >=2,000 qualified utility-years;
+- >=8,000 qualified utility-year×county mappings;
+- NOAA county route + AMI field route in all six years.
 
 ## Boundary / 경계
 
-This is JOIN_READY only. No SAIDI/SAIFI magnitude, AMI magnitude, storm-reliability coefficient, causality, predictive utility or resilience benefit has been established. / 효과·인과·예측·효용 주장은 없다.
+Even PASS means PANEL_DESIGN_READY only. No AMI effect, storm effect, resilience benefit, causality, novelty or utility is established.
 
-## Exact next action / 정확한 다음 행동
-
-Return to **Stage 0 portfolio control** with no active research Issue. / 활성 연구 Issue 없이 Stage 0로 복귀한다.
-
-A US-UTIL relationship descendant may re-enter only through a fresh portfolio selection and a preregistered outcome/exposure/dependence contract. / 후속 효과실험은 새 portfolio 선정·사전등록 필요.
-
-Cost remains **0 USD**; potentially billable work requires explicit prior approval.
+Cost remains **0 USD**; paid work requires explicit prior approval.

@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260911-US-UTIL-F01-PASS-PORTFOLIO-RETURN",
-  "active_issue": "none",
-  "active_research": "NONE",
-  "last_completed_issue": 94,
-  "last_completed_research": "US-UTIL-F01",
-  "last_decision": "DEC-130",
+  "checkpoint_id": "CHK-20260911-US-UTIL-F02-ACTIVE",
+  "active_issue": 96,
+  "active_research": "US-UTIL-F02",
+  "last_completed_issue": 95,
+  "last_completed_research": "PORTFOLIO-R12",
+  "last_decision": "DEC-132",
   "updated": "2026-09-11"
 }
