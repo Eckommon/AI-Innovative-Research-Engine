@@ -1,0 +1,24 @@
+name: Finalize US WATERWAY E01
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/finalize-us-waterway-e01.yml'
+      - 'tools/finalize_us_waterway_e01.py'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python -m py_compile tools/finalize_us_waterway_e01.py
+      - run: python tools/finalize_us_waterway_e01.py
+      - name: Commit final durable state
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-WATERWAY-E01/RESULT.md research/US-WATERWAY-E01/README.md registry/CLM-143.md registry/DEC-139.md registry/CLAIM_LEDGER.md registry/DECISION_LOG.md STATUS.md context/SESSION_HANDOFF.md context/checkpoint.json
+          git commit -m 'Finalize US-WATERWAY-E01 HOLD and return to Stage 0'
+          git push
