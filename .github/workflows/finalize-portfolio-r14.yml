@@ -1,0 +1,31 @@
+name: Finalize PORTFOLIO R14
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/finalize-portfolio-r14.yml'
+      - 'tools/finalize_portfolio_r14.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - name: Validate finalizer
+        run: python -m py_compile tools/finalize_portfolio_r14.py
+      - name: Finalize R14 and activate E01 Stage A
+        run: python tools/finalize_portfolio_r14.py
+      - name: Commit durable R14 state atomically
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/PORTFOLIO-R14/RESULT.md research/US-WATERWAY-E01/README.md registry/DEC-136.md registry/DEC-137.md registry/DECISION_LOG.md STATUS.md context/SESSION_HANDOFF.md context/checkpoint.json
+          git commit -m 'Finalize PORTFOLIO-R14 and activate US-WATERWAY-E01 Stage A'
+          git push
