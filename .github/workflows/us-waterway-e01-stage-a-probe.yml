@@ -1,0 +1,29 @@
+name: US WATERWAY E01 Stage A schema probe
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/us-waterway-e01-stage-a-probe.yml'
+      - 'tools/us_waterway_e01_stage_a_probe.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate runner
+        run: python -m py_compile tools/us_waterway_e01_stage_a_probe.py
+      - name: Run outcome-blind Annual Usage structural probe
+        run: python tools/us_waterway_e01_stage_a_probe.py
+      - name: Commit probe artifacts
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-WATERWAY-E01/STAGE_A_ANNUAL_USAGE_SCHEMA_PROBE.json research/US-WATERWAY-E01/STAGE_A_ANNUAL_USAGE_SCHEMA_PROBE.md
+          git commit -m 'Record US-WATERWAY-E01 Stage A Annual Usage schema probe'
+          git push
