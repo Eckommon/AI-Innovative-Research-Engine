@@ -1,0 +1,23 @@
+{
+  "boundary": {
+    "outcome_magnitudes_parsed": false,
+    "hydrology_values_parsed": false
+  },
+  "needles": [
+    "PRICE",
+    "MELD",
+    "MYERS"
+  ],
+  "hits": {
+    "PRICE": [
+      "MELVIN PRICE"
+    ],
+    "MELD": [
+      "CAPTAIN ANTHONY MELDAHL"
+    ],
+    "MYERS": [
+      "JOHN T. MYERS"
+    ]
+  },
+  "incremental_monetary_cost_usd": 0
+}
