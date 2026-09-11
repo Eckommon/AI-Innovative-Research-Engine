@@ -1,0 +1,30 @@
+name: US WATERWAY F01 hydrology metadata preflight v2
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/us-waterway-f01-hydrology-fast-v2.yml'
+      - 'tools/us_waterway_f01_hydrology_fast_v2.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate runner
+        run: python -m py_compile tools/us_waterway_f01_hydrology_fast_v2.py
+      - name: Run outcome-blind USGS metadata qualification
+        run: python tools/us_waterway_f01_hydrology_fast_v2.py
+      - name: Commit derived metadata qualification
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-WATERWAY-F01/HYDROLOGY_METADATA_PREFLIGHT_V2.json research/US-WATERWAY-F01/HYDROLOGY_METADATA_PREFLIGHT_V2.md
+          git commit -m 'Record US-WATERWAY-F01 hydrology metadata preflight v2'
+          git pull --rebase origin main
+          git push
