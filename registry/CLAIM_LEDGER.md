@@ -70,6 +70,8 @@
 
 | `CLM-139` | Outcome-blind US-UTIL-F01 deterministically qualifies 842 EIA-861 reliability utilities with AMI support and 6,341 utility×county mappings through Census GEOID to NOAA 2024 county FIPS; frozen structural gate `PASS_US_UTIL_F01_JOIN_READY`. No SAIDI/SAIFI, AMI magnitude or relationship was used. / 결과값 비사용 상태에서 842개 utility·6,341개 utility×county 결합으로 JOIN_READY PASS. | `OBSERVED/DERIVED/VALIDATED` | `V3_OUTCOME_BLIND_JOIN_REPRODUCED` | `research/US-UTIL-F01/RESULT.md`; `JOIN_QUALIFICATION.md`; `registry/CLM-139.md`; Issue #94 | 2026-09-11 | active-join-ready |
 
+| `CLM-140` | Under the frozen 2019–2024 outcome-blind contract, US-UTIL-F02 retains 883 >=4/6-year triple-schedule utilities, 819 >=4-year comparable utilities, 4,857 qualified utility-years and 37,156 utility-year×county mappings; all six years have identifiable Reliability-basis, AMI-header and NOAA county routes, yielding `PASS_US_UTIL_F02_PANEL_DESIGN_READY` without reading outcome/exposure magnitudes. / 결과 비사용 다년 panel 구조 PASS. | `OBSERVED/DERIVED/VALIDATED` | `V3_PREREGISTERED_LONGITUDINAL_SOURCE_AND_CARDINALITY_REPRODUCED` | Run `34553499300`; `research/US-UTIL-F02/RESULT.md`; `registry/CLM-140.md`; Issue #96 | 2026-09-11 | active-panel-design-ready |
+
 ## Rule / 규칙
 
 - New material claims should receive a stable ID when they influence scoring, promotion, HOLD/REJECT decisions, or downstream experiments. / 점수·승격·HOLD/REJECT·후속 실험에 영향을 주는 중요 주장은 안정적 ID 부여.

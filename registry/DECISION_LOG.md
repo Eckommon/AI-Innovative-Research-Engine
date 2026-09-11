@@ -47,3 +47,6 @@ Official artifacts comply with `LANG-001`, `COST-001`, and applicable governance
 - [DEC-128](DEC-128.md): finalize US-AIR-N01 as LOW_NOVELTY_CORE_RELATIONSHIP_KNOWN and stop automatic generalization / 낮은 신규성 확정·자동 일반화 중단.
 - [DEC-129](DEC-129.md): R11 selects C-US-005 / US-UTIL-F01 fresh utility AMI × storm × reliability join feasibility; first gate remains outcome-blind. / 신규 utility AMI×폭풍×신뢰도 결합 feasibility 선정·첫 gate 효과값 비사용.
 - [DEC-130](DEC-130.md): accept US-UTIL-F01 as `PASS_US_UTIL_F01_JOIN_READY`; classify C-US-005 JOIN_READY only and return to Stage 0 without automatic AMI×storm×reliability effect testing. / JOIN_READY만 수용하고 효과실험 자동진입 없이 Stage 0 복귀.
+- [DEC-131](DEC-131.md): R12 selects US-UTIL-F02 longitudinal comparability preflight before any relationship / 효과검증 전 다년 비교가능성 gate 선정.
+- [DEC-132](DEC-132.md): freeze 2019–2024 outcome-blind F02 panel-feasibility contract / 2019–2024 결과 비사용 panel 계약 고정.
+- [DEC-133](DEC-133.md): accept US-UTIL-F02 PANEL_DESIGN_READY PASS and return to Stage 0 / F02 PASS 수용·Stage 0 복귀.

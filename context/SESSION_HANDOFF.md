@@ -1,10 +1,10 @@
 ---
-checkpoint_id: CHK-20260911-US-UTIL-F02-ACTIVE
-active_issue: 96
-active_research: US-UTIL-F02
-last_completed_issue: 95
-last_completed_research: PORTFOLIO-R12
-last_decision: DEC-132
+checkpoint_id: CHK-20260911-US-UTIL-F02-PASS-PORTFOLIO-RETURN
+active_issue: none
+active_research: NONE
+last_completed_issue: 96
+last_completed_research: US-UTIL-F02
+last_decision: DEC-133
 updated: 2026-09-11
 ---
 
@@ -12,29 +12,25 @@ updated: 2026-09-11
 
 ## Canonical restart point / 정확한 재개점
 
-PORTFOLIO-R12 selected **US-UTIL-F02**. Issue #96 is active under DEC-132.
+US-UTIL-F02 is complete under DEC-133 with:
 
-Do not rerun US-UTIL-F01 and do not open Reliability/AMI magnitudes. / F01 재실행·효과값 개방 금지.
+**`PASS_US_UTIL_F02_PANEL_DESIGN_READY`**
 
-## Exact next bounded execution / 다음 제한 실행
+Do not rerun F01/F02 by default and do not open SAIDI/SAIFI or AMI magnitudes automatically. / F01/F02 기본 재실행·효과값 자동개방 금지.
 
-Run only the 2019–2024 outcome-blind longitudinal comparability preflight:
-- materialize EIA-861 final ZIP bytes transiently for each year and record hash/member/sheet structure;
-- inspect Utility Number and non-outcome Reliability reporting-basis metadata only;
-- inspect Advanced Metering field names only for future numerator/denominator route, never meter-count values;
-- preserve Service Territory utility×county identities by year;
-- verify NOAA Storm Events county-key route for each year;
-- compute repeated utility/schedule/geography support counts only.
+Canonical support:
+- 883 >=4/6-year triple-schedule utilities;
+- 819 >=4-year comparable utilities;
+- 4,857 qualified utility-years;
+- 37,156 utility-year×county mappings;
+- 6/6 Reliability basis, AMI field-route and NOAA county-route support.
 
-Frozen PASS:
-- >=500 triple-schedule utilities in >=4/6 years;
-- >=300 utilities with >=4 years on one prospectively identifiable comparable Reliability basis;
-- >=2,000 qualified utility-years;
-- >=8,000 qualified utility-year×county mappings;
-- NOAA county route + AMI field route in all six years.
+Canonical evidence: `research/US-UTIL-F02/RESULT.md`, `BASIS_ADJUDICATION.md`, `BASIS_HEADER_RESOLUTION.md`, `registry/CLM-140.md`, `registry/DEC-133.md`.
 
-## Boundary / 경계
+## Exact next action / 정확한 다음 행동
 
-Even PASS means PANEL_DESIGN_READY only. No AMI effect, storm effect, resilience benefit, causality, novelty or utility is established.
+Return to **Stage 0** with no active research issue. Compare a potential US-UTIL preregistered relationship design against independent portfolio opportunities before opening magnitudes. / 효과실험 자동 승격 금지.
 
-Cost remains **0 USD**; paid work requires explicit prior approval.
+If US-UTIL is selected later, first freeze one Reliability outcome/basis, AMI penetration definition, storm exposure aggregation/window, MED treatment, dependence, baseline/confounding, falsification/materiality, and novelty/utility plan.
+
+Cost remains **0 USD**.

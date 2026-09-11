@@ -1,10 +1,13 @@
 ---
 id: US-UTIL-F02
 issue: 96
-state: ACTIVE_SOURCE_COMPARABILITY_PREFLIGHT
+state: COMPLETED_PASS_PANEL_DESIGN_READY
 mission_anchor: MEM-054
 portfolio_decision: DEC-131
 contract_decision: DEC-132
+final_decision: DEC-133
+claim_basis: CLM-140
+final_gate: PASS_US_UTIL_F02_PANEL_DESIGN_READY
 period: 2019-2024
 outcome_values_opened: false
 ami_magnitudes_opened: false
@@ -86,3 +89,12 @@ It does not establish an AMI effect, storm effect, resilience benefit, causality
 Execute the six-year source/schema/identity/reporting-basis/cardinality preflight only. Persist derived manifests and counts; keep raw ZIP/XLSX/GZ/CSV bytes transient under RAW-001.
 
 Incremental monetary cost remains **0 USD**.
+
+
+## Final disposition / 최종 처분
+
+Run `34553499300` resolves F02 as **`PASS_US_UTIL_F02_PANEL_DESIGN_READY`** under DEC-133 / CLM-140.
+
+Verified repeated support: **883** triple-schedule utilities, **819** comparable >=4-year utilities, **4,857** utility-years and **37,156** utility-year×county mappings. All six years have identifiable Reliability basis, AMI field routes and NOAA county-key routes.
+
+No Reliability/AMI magnitude or relationship was opened. A later E01 is not automatically authorized. / 효과실험 자동승격 금지.
