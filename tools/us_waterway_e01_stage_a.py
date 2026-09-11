@@ -6,7 +6,7 @@ or persisted. Annual metric cells are reduced immediately to nonblank booleans.
 USGS support comes from previously persisted time-series metadata only.
 """
 from __future__ import annotations
-import csv, json, re, time, urllib.request
+import csv, json, re, urllib.request
 from collections import defaultdict
 from pathlib import Path
 
@@ -21,6 +21,8 @@ OUT = ROOT / "research" / "US-WATERWAY-E01"
 HOME = "https://ndc.ops.usace.army.mil/ords/r/lpms/corps-locks/home"
 ANNUAL = "https://ndc.ops.usace.army.mil/ords/r/lpms/corps-locks/annual-usage-report"
 LOCK_QUERY = "https://services7.arcgis.com/n1YM8pTrFmm7L4hs/ArcGIS/rest/services/Locks/FeatureServer/0/query?where=1%3D1&outFields=ID,NDCCODE,RIVERCD,LOCKCD,PMSDATA,PMSNAME,RIVER,STATE,DISTRICT&returnGeometry=false&f=json"
+INDIVIDUAL_TABLE_ID = "356617961145373261"
+INDIVIDUAL_REGION_ID = "R356617877054373260"
 START = "2016-01-01"
 END = "2025-12-31"
 YEARS = [str(y) for y in range(2016, 2026)]
@@ -87,16 +89,16 @@ def metadata_qualifies(match):
     return False, "", ""
 
 
+def text_content(element):
+    return (element.get_attribute("textContent") or "").strip()
+
+
 def table_headers(table):
-    return [x.text.strip() for x in table.find_elements(By.CSS_SELECTOR, "thead th")]
+    return [text_content(x) for x in table.find_elements(By.CSS_SELECTOR, "thead th")]
 
 
 def find_individual_table(driver):
-    for t in driver.find_elements(By.TAG_NAME, "table"):
-        h = [re.sub(r"\s+", " ", x.upper()).strip() for x in table_headers(t)]
-        if all(x in h for x in ["DISTRICT", "RIVER", "LOCK", "USAGE TYPE"]):
-            return t
-    raise RuntimeError("Individual Waterways Annual Usage table not found")
+    return driver.find_element(By.ID, INDIVIDUAL_TABLE_ID)
 
 
 def scrape_annual_support():
@@ -111,12 +113,10 @@ def scrape_annual_support():
     page_count = 0
     try:
         wait = WebDriverWait(driver, 30)
-        # Corps Locks is session-aware. Establish the same public session route used
-        # by the successful urllib probe before opening the Annual Usage report.
         driver.get(HOME)
         wait.until(lambda d: "corps-locks" in d.current_url)
         driver.get(ANNUAL)
-        wait.until(lambda d: len(d.find_elements(By.TAG_NAME, "table")) >= 2)
+        wait.until(lambda d: len(d.find_elements(By.ID, INDIVIDUAL_TABLE_ID)) == 1)
         while True:
             table = find_individual_table(driver)
             headers = table_headers(table)
@@ -136,17 +136,15 @@ def scrape_annual_support():
                 cells = tr.find_elements(By.TAG_NAME, "td")
                 if len(cells) < len(headers):
                     continue
-                district = cells[idx["DISTRICT"]].text.strip()
-                river = cells[idx["RIVER"]].text.strip()
-                lock = cells[idx["LOCK"]].text.strip()
-                usage = cells[idx["USAGE TYPE"]].text.strip()
+                district = text_content(cells[idx["DISTRICT"]])
+                river = text_content(cells[idx["RIVER"]])
+                lock = text_content(cells[idx["LOCK"]])
+                usage = text_content(cells[idx["USAGE TYPE"]])
                 if first_sig is None:
                     first_sig = (river, lock, usage)
                 if usage.upper() != "AVERAGE DELAY (MINUTES)":
                     continue
-                present = {}
-                for y in YEARS:
-                    present[y] = bool(cells[year_idx[y]].text.strip())
+                present = {y: bool(text_content(cells[year_idx[y]])) for y in YEARS}
                 key = (code_part(river), lockcode(code_part(lock)))
                 all_delay[key] = {
                     "district": district,
@@ -155,24 +153,27 @@ def scrape_annual_support():
                     "year_nonblank": present,
                     "all_years_nonblank": all(present.values()),
                 }
-            region = driver.find_element(By.ID, "R356617877054373260")
+            region = driver.find_element(By.ID, INDIVIDUAL_REGION_ID)
             buttons = region.find_elements(By.CSS_SELECTOR, "button.a-IRR-button--pagination[title='Next']")
             if not buttons:
                 break
             btn = buttons[0]
-            if btn.get_attribute("disabled") is not None or "is-disabled" in (btn.get_attribute("class") or ""):
+            disabled = btn.get_attribute("disabled") is not None or bool(btn.get_attribute("aria-disabled") == "true")
+            if disabled:
                 break
             before = first_sig
-            btn.click()
+            driver.execute_script("arguments[0].click();", btn)
             def changed(d):
                 try:
                     nt = find_individual_table(d)
                     rs = nt.find_elements(By.CSS_SELECTOR, "tbody tr")
-                    if not rs: return False
+                    if not rs:
+                        return False
                     cs = rs[0].find_elements(By.TAG_NAME, "td")
-                    nh = table_headers(nt); nhn = [re.sub(r"\s+", " ", x.upper()).strip() for x in nh]
+                    nh = table_headers(nt)
+                    nhn = [re.sub(r"\s+", " ", x.upper()).strip() for x in nh]
                     ri, li, ui = nhn.index("RIVER"), nhn.index("LOCK"), nhn.index("USAGE TYPE")
-                    sig = (cs[ri].text.strip(), cs[li].text.strip(), cs[ui].text.strip())
+                    sig = (text_content(cs[ri]), text_content(cs[li]), text_content(cs[ui]))
                     return sig != before
                 except Exception:
                     return False
