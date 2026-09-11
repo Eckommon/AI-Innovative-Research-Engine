@@ -1,0 +1,63 @@
+{
+  "boundary": {
+    "delay_magnitudes_parsed": false,
+    "hydrology_magnitudes_parsed": false,
+    "relationship_computed": false
+  },
+  "home": {
+    "status": 200,
+    "final_url": "https://ndc.ops.usace.army.mil/ords/r/lpms/corps-locks/home",
+    "bytes": 40595,
+    "sha256": "6e816b787e74dfc94980c5203bc8b68cc9805ab98c5a143384869e00e22b62f1"
+  },
+  "cookies_created": [
+    {
+      "name": "session",
+      "domain": "ndc.ops.usace.army.mil",
+      "path": "/ords/r/lpms/corps-locks"
+    },
+    {
+      "name": "ORA_WWV_APP_108",
+      "domain": "ndc.ops.usace.army.mil",
+      "path": "/ords/"
+    }
+  ],
+  "published_annual_href": "/ords/r/lpms/corps-locks/annual-usage-report",
+  "annual": {
+    "requested_url": "https://ndc.ops.usace.army.mil/ords/r/lpms/corps-locks/annual-usage-report",
+    "status": 200,
+    "final_url": "https://ndc.ops.usace.army.mil/ords/r/lpms/corps-locks/annual-usage-report",
+    "bytes": 106844,
+    "sha256": "a10ca66e305c0963c6b4694c247230543271830fd43dd98c770ac4f72f5c69e4",
+    "title": "Annual Usage Report",
+    "contains_average_delay_label": true,
+    "contains_processing_label": true,
+    "contains_delay_label": true,
+    "year_labels_2016_2025": [
+      "2016",
+      "2017",
+      "2018",
+      "2019",
+      "2020",
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025"
+    ],
+    "schema_label_contexts": [
+      "    This report summarizes usage metrics for each lock. Prior year data since 1993 are available in the ",
+      "Average Delay (minutes)",
+      "Average Percent Vessels Delayed",
+      "Average Processing (minutes)",
+      "Public Lock Usage Report files (xlsx)"
+    ],
+    "export_hrefs": [],
+    "export_button_contexts": [
+      "108\\u0026p_worksheet_id=356616486227373246\\u0026p_lang=en\",\"downloadContentDisposition\":\"ATTACHMENT\",\"subscription\":false,\"lazyL",
+      "108\\u0026p_worksheet_id=356617961145373261\\u0026p_lang=en\",\"downloadContentDisposition\":\"ATTACHMENT\",\"subscription\":false,\"lazyL",
+      "Public Lock Usage Report files (xlsx)"
+    ],
+    "contains_apex_region": true
+  }
+}
