@@ -1,0 +1,109 @@
+{
+  "high_flow_only": {
+    "gate": "NO_PREREGISTERED_POSITIVE_US_WATERWAY_E02_RELATIONSHIP",
+    "N": 120,
+    "G_gage": 12,
+    "G_year": 10,
+    "K": 22,
+    "beta_minutes_per_share_1_0": 101.28516373476714,
+    "se_two_way_cr1": 160.0628839152463,
+    "df": 9,
+    "ci95_lower": -260.80223561224483,
+    "ci95_upper": 463.3725630817791,
+    "t_stat": 0.6327835739133495,
+    "p_two_sided": 0.5426161453452255,
+    "delta_minutes_per_plus_10pp": 10.128516373476714,
+    "fe_iterations": 2,
+    "fe_final_delta": 2.842170943040401e-14,
+    "var_gage": 28317.264760402282,
+    "var_year": 23414.464538371583,
+    "var_intersection": 26111.602491508256
+  },
+  "low_flow_only": {
+    "gate": "NO_PREREGISTERED_POSITIVE_US_WATERWAY_E02_RELATIONSHIP",
+    "N": 120,
+    "G_gage": 12,
+    "G_year": 10,
+    "K": 22,
+    "beta_minutes_per_share_1_0": 44.288263255962235,
+    "se_two_way_cr1": 210.6502834084789,
+    "df": 9,
+    "ci95_lower": -432.23578420200016,
+    "ci95_upper": 520.8123107139246,
+    "t_stat": 0.21024544823460503,
+    "p_two_sided": 0.8381587734774951,
+    "delta_minutes_per_plus_10pp": 4.428826325596224,
+    "fe_iterations": 2,
+    "fe_final_delta": 2.842170943040401e-14,
+    "var_gage": 41273.79111169333,
+    "var_year": 25248.12842538254,
+    "var_intersection": 22148.37763700338
+  },
+  "leave_one_gage_out": {
+    "rows": [
+      {
+        "left_out_gage": "USGS-03086000",
+        "beta": 61.98271985959689,
+        "gate_if_treated_as_primary": "NO_PREREGISTERED_POSITIVE_US_WATERWAY_E02_RELATIONSHIP"
+      },
+      {
+        "left_out_gage": "USGS-03114306",
+        "beta": 96.07479932450393,
+        "gate_if_treated_as_primary": "NO_PREREGISTERED_POSITIVE_US_WATERWAY_E02_RELATIONSHIP"
+      },
+      {
+        "left_out_gage": "USGS-03216600",
+        "beta": 101.4640702817563,
+        "gate_if_treated_as_primary": "NO_PREREGISTERED_POSITIVE_US_WATERWAY_E02_RELATIONSHIP"
+      },
+      {
+        "left_out_gage": "USGS-03277200",
+        "beta": 80.47257586498613,
+        "gate_if_treated_as_primary": "NO_PREREGISTERED_POSITIVE_US_WATERWAY_E02_RELATIONSHIP"
+      },
+      {
+        "left_out_gage": "USGS-03294500",
+        "beta": 94.20909696270505,
+        "gate_if_treated_as_primary": "NO_PREREGISTERED_POSITIVE_US_WATERWAY_E02_RELATIONSHIP"
+      },
+      {
+        "left_out_gage": "USGS-03303280",
+        "beta": 122.67246712458673,
+        "gate_if_treated_as_primary": "NO_PREREGISTERED_POSITIVE_US_WATERWAY_E02_RELATIONSHIP"
+      },
+      {
+        "left_out_gage": "USGS-03399800",
+        "beta": 71.30866589478943,
+        "gate_if_treated_as_primary": "NO_PREREGISTERED_POSITIVE_US_WATERWAY_E02_RELATIONSHIP"
+      },
+      {
+        "left_out_gage": "USGS-05378500",
+        "beta": 117.44674562378943,
+        "gate_if_treated_as_primary": "NO_PREREGISTERED_POSITIVE_US_WATERWAY_E02_RELATIONSHIP"
+      },
+      {
+        "left_out_gage": "USGS-05420500",
+        "beta": 129.69937503445746,
+        "gate_if_treated_as_primary": "NO_PREREGISTERED_POSITIVE_US_WATERWAY_E02_RELATIONSHIP"
+      },
+      {
+        "left_out_gage": "USGS-05587450",
+        "beta": 115.61809829231508,
+        "gate_if_treated_as_primary": "NO_PREREGISTERED_POSITIVE_US_WATERWAY_E02_RELATIONSHIP"
+      },
+      {
+        "left_out_gage": "USGS-07010000",
+        "beta": 28.790047588495923,
+        "gate_if_treated_as_primary": "NO_PREREGISTERED_POSITIVE_US_WATERWAY_E02_RELATIONSHIP"
+      },
+      {
+        "left_out_gage": "USGS-07249455",
+        "beta": 100.11818683575497,
+        "gate_if_treated_as_primary": "NO_PREREGISTERED_POSITIVE_US_WATERWAY_E02_RELATIONSHIP"
+      }
+    ],
+    "beta_min": 28.790047588495923,
+    "beta_max": 129.69937503445746
+  },
+  "cannot_rescue_primary": true
+}

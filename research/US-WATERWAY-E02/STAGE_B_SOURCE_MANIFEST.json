@@ -1,0 +1,307 @@
+{
+  "boundary": {
+    "raw_external_bytes_persisted": false
+  },
+  "period": [
+    "2016-01-01",
+    "2025-12-31"
+  ],
+  "incremental_monetary_cost_usd": 0,
+  "usgs_daily": {
+    "endpoint": "https://api.waterdata.usgs.gov/ogcapi/v0/collections/daily/items",
+    "pages": [
+      {
+        "url": "https://api.waterdata.usgs.gov/ogcapi/v0/collections/daily/items?f=json&monitoring_location_id=USGS-03086000,USGS-03114306,USGS-03216600,USGS-03277200,USGS-03294500,USGS-03303280,USGS-03399800,USGS-05378500,USGS-05420500,USGS-05474500,USGS-05587450,USGS-07010000,USGS-07249455&parameter_code=00060&statistic_id=00003&datetime=2016-01-01%2F2025-12-31&limit=10000&api_key=DEMO_KEY&properties=monitoring_location_id,parameter_code,statistic_id,time,value,unit_of_measure,approval_status,qualifier",
+        "final_url": "https://api.waterdata.usgs.gov/ogcapi/v0/collections/daily/items?f=json&monitoring_location_id=USGS-03086000,USGS-03114306,USGS-03216600,USGS-03277200,USGS-03294500,USGS-03303280,USGS-03399800,USGS-05378500,USGS-05420500,USGS-05474500,USGS-05587450,USGS-07010000,USGS-07249455&parameter_code=00060&statistic_id=00003&datetime=2016-01-01%2F2025-12-31&limit=10000&api_key=DEMO_KEY&properties=monitoring_location_id,parameter_code,statistic_id,time,value,unit_of_measure,approval_status,qualifier",
+        "status": 200,
+        "bytes": 5428502,
+        "sha256": "0a9ec971d0d600b5b1749949a238616fa3a122b964ecb8fbd7c867ca4abfa796",
+        "page": 1,
+        "numberReturned": 10000,
+        "negative_records_on_page": 7,
+        "signed_value_contract": true,
+        "negative_record_count_all_pages": 28,
+        "negative_gage_count_all_pages": 2
+      },
+      {
+        "url": "https://api.waterdata.usgs.gov/ogcapi/v1/collections/daily/items?cursor=MzcyYjlmZjEtMGU0Ny00ZjQ3LThlMTktZTFiMWI0M2U4Yzkw&monitoring_location_id=USGS-03086000,USGS-03114306,USGS-03216600,USGS-03277200,USGS-03294500,USGS-03303280,USGS-03399800,USGS-05378500,USGS-05420500,USGS-05474500,USGS-05587450,USGS-07010000,USGS-07249455&parameter_code=00060&statistic_id=00003&datetime=2016-01-01%2F2025-12-31&limit=10000&properties=monitoring_location_id,parameter_code,statistic_id,time,value,unit_of_measure,approval_status,qualifier&f=json",
+        "final_url": "https://api.waterdata.usgs.gov/ogcapi/v1/collections/daily/items?cursor=MzcyYjlmZjEtMGU0Ny00ZjQ3LThlMTktZTFiMWI0M2U4Yzkw&monitoring_location_id=USGS-03086000,USGS-03114306,USGS-03216600,USGS-03277200,USGS-03294500,USGS-03303280,USGS-03399800,USGS-05378500,USGS-05420500,USGS-05474500,USGS-05587450,USGS-07010000,USGS-07249455&parameter_code=00060&statistic_id=00003&datetime=2016-01-01%2F2025-12-31&limit=10000&properties=monitoring_location_id,parameter_code,statistic_id,time,value,unit_of_measure,approval_status,qualifier&f=json",
+        "status": 200,
+        "bytes": 5427601,
+        "sha256": "9a503c46bfbbccf6feca982c35ff27827efaee7231cd7d4e731c47d98c40e8cd",
+        "page": 2,
+        "numberReturned": 10000,
+        "negative_records_on_page": 4
+      },
+      {
+        "url": "https://api.waterdata.usgs.gov/ogcapi/v1/collections/daily/items?cursor=NmQ2NGVjOTctZTIzNy00YzM1LWFiMmItZjQ2MTgwZmY1NWQ4&monitoring_location_id=USGS-03086000,USGS-03114306,USGS-03216600,USGS-03277200,USGS-03294500,USGS-03303280,USGS-03399800,USGS-05378500,USGS-05420500,USGS-05474500,USGS-05587450,USGS-07010000,USGS-07249455&parameter_code=00060&statistic_id=00003&datetime=2016-01-01%2F2025-12-31&limit=10000&properties=monitoring_location_id,parameter_code,statistic_id,time,value,unit_of_measure,approval_status,qualifier&f=json",
+        "final_url": "https://api.waterdata.usgs.gov/ogcapi/v1/collections/daily/items?cursor=NmQ2NGVjOTctZTIzNy00YzM1LWFiMmItZjQ2MTgwZmY1NWQ4&monitoring_location_id=USGS-03086000,USGS-03114306,USGS-03216600,USGS-03277200,USGS-03294500,USGS-03303280,USGS-03399800,USGS-05378500,USGS-05420500,USGS-05474500,USGS-05587450,USGS-07010000,USGS-07249455&parameter_code=00060&statistic_id=00003&datetime=2016-01-01%2F2025-12-31&limit=10000&properties=monitoring_location_id,parameter_code,statistic_id,time,value,unit_of_measure,approval_status,qualifier&f=json",
+        "status": 200,
+        "bytes": 5428194,
+        "sha256": "a7879461869911562b121b8b60dbabdb2b54e6d33ee1ea9f230c8b19d351f703",
+        "page": 3,
+        "numberReturned": 10000,
+        "negative_records_on_page": 5
+      },
+      {
+        "url": "https://api.waterdata.usgs.gov/ogcapi/v1/collections/daily/items?cursor=YTU4YTMxODMtYjkyZC00MmM2LTg2NDEtMTIwZTI5OGQzMDJj&monitoring_location_id=USGS-03086000,USGS-03114306,USGS-03216600,USGS-03277200,USGS-03294500,USGS-03303280,USGS-03399800,USGS-05378500,USGS-05420500,USGS-05474500,USGS-05587450,USGS-07010000,USGS-07249455&parameter_code=00060&statistic_id=00003&datetime=2016-01-01%2F2025-12-31&limit=10000&properties=monitoring_location_id,parameter_code,statistic_id,time,value,unit_of_measure,approval_status,qualifier&f=json",
+        "final_url": "https://api.waterdata.usgs.gov/ogcapi/v1/collections/daily/items?cursor=YTU4YTMxODMtYjkyZC00MmM2LTg2NDEtMTIwZTI5OGQzMDJj&monitoring_location_id=USGS-03086000,USGS-03114306,USGS-03216600,USGS-03277200,USGS-03294500,USGS-03303280,USGS-03399800,USGS-05378500,USGS-05420500,USGS-05474500,USGS-05587450,USGS-07010000,USGS-07249455&parameter_code=00060&statistic_id=00003&datetime=2016-01-01%2F2025-12-31&limit=10000&properties=monitoring_location_id,parameter_code,statistic_id,time,value,unit_of_measure,approval_status,qualifier&f=json",
+        "status": 200,
+        "bytes": 5427413,
+        "sha256": "06d967352773aea3295d626c4f1e8e8d97cc21125ae26a7a51ad40a656547467",
+        "page": 4,
+        "numberReturned": 10000,
+        "negative_records_on_page": 6
+      },
+      {
+        "url": "https://api.waterdata.usgs.gov/ogcapi/v1/collections/daily/items?cursor=ZGM5ZWU5YWQtNWRjNC00N2JkLThhNzYtYzE1YWIxNzZhNGM4&monitoring_location_id=USGS-03086000,USGS-03114306,USGS-03216600,USGS-03277200,USGS-03294500,USGS-03303280,USGS-03399800,USGS-05378500,USGS-05420500,USGS-05474500,USGS-05587450,USGS-07010000,USGS-07249455&parameter_code=00060&statistic_id=00003&datetime=2016-01-01%2F2025-12-31&limit=10000&properties=monitoring_location_id,parameter_code,statistic_id,time,value,unit_of_measure,approval_status,qualifier&f=json",
+        "final_url": "https://api.waterdata.usgs.gov/ogcapi/v1/collections/daily/items?cursor=ZGM5ZWU5YWQtNWRjNC00N2JkLThhNzYtYzE1YWIxNzZhNGM4&monitoring_location_id=USGS-03086000,USGS-03114306,USGS-03216600,USGS-03277200,USGS-03294500,USGS-03303280,USGS-03399800,USGS-05378500,USGS-05420500,USGS-05474500,USGS-05587450,USGS-07010000,USGS-07249455&parameter_code=00060&statistic_id=00003&datetime=2016-01-01%2F2025-12-31&limit=10000&properties=monitoring_location_id,parameter_code,statistic_id,time,value,unit_of_measure,approval_status,qualifier&f=json",
+        "status": 200,
+        "bytes": 3557442,
+        "sha256": "612da2f2c74c012d5d8be65e8b2d8abca39ef42c1e3540fd17f0c9ad31a1a786",
+        "page": 5,
+        "numberReturned": 6551,
+        "negative_records_on_page": 6
+      }
+    ],
+    "gage_count_requested": 13
+  },
+  "usace_annual_usage": {
+    "url": "https://ndc.ops.usace.army.mil/ords/r/lpms/corps-locks/annual-usage-report",
+    "pages": 58,
+    "page_html_sha256": [
+      {
+        "page": 1,
+        "html_sha256": "58aed1e74f62c237b1565e2a9827e8a60c12d782796036074a6f3c37c9d3dd9d"
+      },
+      {
+        "page": 2,
+        "html_sha256": "df6797878d493c6ca5cff42c5fd149a8fd60178ecd08f84c19b830e2c5889cff"
+      },
+      {
+        "page": 3,
+        "html_sha256": "45362fe5f71a803c4af8ad76852dbc10d6f65c6c78488bf15d1c75e76bd74be5"
+      },
+      {
+        "page": 4,
+        "html_sha256": "d6e5e1489f27c8205e502a0c01939de16f9faccdd51e71f1c10c823857609fc4"
+      },
+      {
+        "page": 5,
+        "html_sha256": "261e6fcb675d89519b60a2f07e484ec8b90ce49b939b0308a3cb1f7218f65dbd"
+      },
+      {
+        "page": 6,
+        "html_sha256": "548af2410e3651e3bb866f3e021dbea0cd2fadd259d09732c6ba8a05277ded30"
+      },
+      {
+        "page": 7,
+        "html_sha256": "f21e009b15e3bd82cff357a46d30874eccab541539b7db6daba7636d8d64e18c"
+      },
+      {
+        "page": 8,
+        "html_sha256": "57eb37c5cdea41328b5f33e374d8a31a5ee13989fed22ec3b6c5dca96e3ecf0b"
+      },
+      {
+        "page": 9,
+        "html_sha256": "13d5913acd911f90d7cb0ccd6adc4b150aeb61005cb4dc5335d464390a463f88"
+      },
+      {
+        "page": 10,
+        "html_sha256": "887c8fbad4c7c073a935db8f26796b0e7592908f8f88e7a181d4d3203f214b8c"
+      },
+      {
+        "page": 11,
+        "html_sha256": "326db120043e4d2692bdb462f74935833797e3ed9878de09bd1a8dad7c8d2479"
+      },
+      {
+        "page": 12,
+        "html_sha256": "78afe23cab7875a56cfcae5dd2e81d3b4ff96a5969f168ede19c510cf347ce9e"
+      },
+      {
+        "page": 13,
+        "html_sha256": "e8755dda0e66d008e93443a60fd1514a5553c9eabe1ad609432e2112b9be9e66"
+      },
+      {
+        "page": 14,
+        "html_sha256": "15f39b812b299ae39e9a3de27886fcd66ee05bc8514c7328d1d8c31dba2816e6"
+      },
+      {
+        "page": 15,
+        "html_sha256": "a194a0899d69236ee74215c180212e1118e628c693148b2d3d20f372973e4238"
+      },
+      {
+        "page": 16,
+        "html_sha256": "f507e0c2bd372f0772093cff0dffaf229de36321a883755cc904ce58e00f6296"
+      },
+      {
+        "page": 17,
+        "html_sha256": "0e9759f6ed7db6732d31c110d008383706455ba869302e7593c1465c67ebdb51"
+      },
+      {
+        "page": 18,
+        "html_sha256": "c1e037637f94b59e10f6c37d1f392b20920c5afcaedf8ac6a8da53e284d19ec6"
+      },
+      {
+        "page": 19,
+        "html_sha256": "86e9802fa416ac517a4f5e7f2a6feed9d9b9561376ccc4ff82bc2f0cdc2708bc"
+      },
+      {
+        "page": 20,
+        "html_sha256": "69255199415d6e978a5f22ccc286f4c82c5164db00d8da09c57363dd56e44c47"
+      },
+      {
+        "page": 21,
+        "html_sha256": "79009da0b14a0db9643e412fb765c38f487e48d2b3aa69534205f7bac165c74f"
+      },
+      {
+        "page": 22,
+        "html_sha256": "d1aaffc37cafb9539c399a23ecbd08f44b84a7da34cb9af25a23a9c75885950a"
+      },
+      {
+        "page": 23,
+        "html_sha256": "a1ae757899b56eb4593a3d728cf2606e6f7d0b584215a080f27e597fb5085c4b"
+      },
+      {
+        "page": 24,
+        "html_sha256": "deb644cd139d1ae44de729f98d8edf6100506d59f7b00d577dca7d30af8018a1"
+      },
+      {
+        "page": 25,
+        "html_sha256": "e1c5b78ff784aa98b1aeeae58430069ed79bee64bee358812c53cf444f224abc"
+      },
+      {
+        "page": 26,
+        "html_sha256": "2b7b82bf6e120c4e4ace19114412f0f33a5423c02bc746a8f48c5a2370c1926c"
+      },
+      {
+        "page": 27,
+        "html_sha256": "b6cbfcfb751206f1b4d0bb22b040db2fd2737afb8a5b09119a22a24ca003876a"
+      },
+      {
+        "page": 28,
+        "html_sha256": "8f6c239816d6bb77e9928bf858eec38e480166c81e3cf1fdfc3a7a8094e5da4e"
+      },
+      {
+        "page": 29,
+        "html_sha256": "83a8b4f5fd5f5fb4e7f7ef22584c7d2ae0f211e03029e19264adfa6cdb6d59c1"
+      },
+      {
+        "page": 30,
+        "html_sha256": "c605ed3a18dc2237217a96cef69411f2e474f75849f79487d1e605e4222e518a"
+      },
+      {
+        "page": 31,
+        "html_sha256": "c656bcaec14efbe58dc4fa2d9d92b67edc620a4f75cbc15bc8de6d29c3c89fe2"
+      },
+      {
+        "page": 32,
+        "html_sha256": "927b7c150e06abc08d21d00f3ca184bc7195d81405f48a6db665ff7bb301b9d6"
+      },
+      {
+        "page": 33,
+        "html_sha256": "1527b851bae73d87f7de2c62eea782d04d997b91940e74e07bcceececee6d3a5"
+      },
+      {
+        "page": 34,
+        "html_sha256": "29f5697d526e57a76cc4ac6b84b04531486ef14823f05ce88487ad30ebe318cd"
+      },
+      {
+        "page": 35,
+        "html_sha256": "22d33f04bb6d6dce108a9d809fb7b0c9abf7137bc33fb37696767bd354ddf0cd"
+      },
+      {
+        "page": 36,
+        "html_sha256": "99c4b2f0dc9ebc64b3d8aeebbf935bff0dccfeeabe64397571aa424e0173626b"
+      },
+      {
+        "page": 37,
+        "html_sha256": "d1af0b2054e3f2c3804e3ed04603498bb950ff4e3d596032e960d8ac38a7db06"
+      },
+      {
+        "page": 38,
+        "html_sha256": "bd49fa86fc835289ae790e8353d1d12fb5172e5e16eb266c265845aa1186d0da"
+      },
+      {
+        "page": 39,
+        "html_sha256": "178991aa4ea1d3ce1ffc19f97211e138b046f903c4a249762e4a2d447fff9a55"
+      },
+      {
+        "page": 40,
+        "html_sha256": "76cc9c0b0694ad6b41ca6c3e4498f49e48ea22af5e4203c018d9c3fd2bb25e92"
+      },
+      {
+        "page": 41,
+        "html_sha256": "0f600fafd7c9bbf9aaf8c7887a9a4c65a5a94664ffe36ea98543f98a43357b4f"
+      },
+      {
+        "page": 42,
+        "html_sha256": "da6090584e438e7cb3eb78d5d7f5d59077d88b664708fe7b9a164ddd400268c3"
+      },
+      {
+        "page": 43,
+        "html_sha256": "41aa9af5dec30e597004f427dc2312f8f4e6f34a3314838bd26bd3374a0616c0"
+      },
+      {
+        "page": 44,
+        "html_sha256": "396c05b2c86d96f5fa8b49e09f14ae36d1f624e4935a358208d9db1b5daa92ed"
+      },
+      {
+        "page": 45,
+        "html_sha256": "fd8375f42e369b6b155fafe7fca036de415cf85e26f12c7a1e6b0121bb891f79"
+      },
+      {
+        "page": 46,
+        "html_sha256": "3f6cf8108346dcd4a7660a09a963c8c1626f7f154583d77dd3a88462b533db5a"
+      },
+      {
+        "page": 47,
+        "html_sha256": "714a4cfe529bdd9bded15da2c9c97b03912acdeb70a3aaf1edd7c760433f2322"
+      },
+      {
+        "page": 48,
+        "html_sha256": "1fbb6c992604a17767a9ba06d544196f3686f0b4a7acdba0afd6ff8fd5dafb1a"
+      },
+      {
+        "page": 49,
+        "html_sha256": "3330cb90d564e898ee170e10a2fac4812f4c9551b06349b76a1baee3200b1199"
+      },
+      {
+        "page": 50,
+        "html_sha256": "d544e5268d61a8625ff3a3e111ba696db74f6c4418c8598d2199a607c87222ea"
+      },
+      {
+        "page": 51,
+        "html_sha256": "fcf3a7cce8cd051fc409a1c99ef29a41721830eb3720d167a5b72498c636af7b"
+      },
+      {
+        "page": 52,
+        "html_sha256": "6a40d16a0287edf36fdc459ddfa214f712e99a4fd79f82aeaee5a1af1c199105"
+      },
+      {
+        "page": 53,
+        "html_sha256": "272a75bbd86fb24444daf133bb566dcc81b8e80c4fdb5c9a88a2d304ed462f01"
+      },
+      {
+        "page": 54,
+        "html_sha256": "0bb265715b2f3abab2b8b130e6a57f02f32e8a03b57ee53c507922b0e008e4ad"
+      },
+      {
+        "page": 55,
+        "html_sha256": "2909a695015a409efa86e222566714ef3ef5939329a1614659d21c44c90111ff"
+      },
+      {
+        "page": 56,
+        "html_sha256": "626c304a5698589d5ad4a64b1b4d181b7c59cdf969ccc247953375b3d829660a"
+      },
+      {
+        "page": 57,
+        "html_sha256": "d8669c1743c75f97899c61b8489afd16517825c6d830367cee2e40270c499c8c"
+      },
+      {
+        "page": 58,
+        "html_sha256": "2385029315e78e6aee0f77111adcbe15f44e3cbc7bf9dbf51bc2caaad435e303"
+      }
+    ]
+  }
+}

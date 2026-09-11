@@ -1,0 +1,22 @@
+{
+  "gate": "NO_PREREGISTERED_POSITIVE_US_WATERWAY_E02_RELATIONSHIP",
+  "N": 120,
+  "G_gage": 12,
+  "G_year": 10,
+  "K": 22,
+  "beta_minutes_per_share_1_0": 93.0279684806691,
+  "se_two_way_cr1": 78.69643700718568,
+  "df": 9,
+  "ci95_lower": -84.9957401818337,
+  "ci95_upper": 271.0516771431719,
+  "t_stat": 1.1821115671624984,
+  "p_two_sided": 0.26745109019251373,
+  "delta_minutes_per_plus_10pp": 9.30279684806691,
+  "fe_iterations": 2,
+  "fe_final_delta": 2.842170943040401e-14,
+  "var_gage": 8226.786096600228,
+  "var_year": 6102.367849345667,
+  "var_intersection": 8136.02474831995,
+  "status": "PRIMARY_GATE_FIXED_BEFORE_SENSITIVITIES",
+  "incremental_monetary_cost_usd": 0
+}
