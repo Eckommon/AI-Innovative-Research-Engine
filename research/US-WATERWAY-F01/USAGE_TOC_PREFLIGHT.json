@@ -1,0 +1,2292 @@
+{
+  "boundary": {
+    "numeric_outcome_cells_read": false,
+    "delay_magnitudes_parsed": false,
+    "hydrology_magnitudes_parsed": false,
+    "relationship_computed": false
+  },
+  "url": "https://usace.contentdm.oclc.org/utils/getfile/collection/p16021coll2/id/2958/filename/2959.xlsx",
+  "http": 200,
+  "final_url": "https://usace.contentdm.oclc.org/utils/getfile/collection/p16021coll2/id/2958/filename/2959.xlsx",
+  "bytes": 733421,
+  "sha256": "0db8e4ae602bb60fea029a17a3c39929fe58cef6cc46b6f05bd1f45c4088f90f",
+  "toc_sheet": "TOC",
+  "nonempty_string_rows": 251,
+  "toc_rows_string_cells": [
+    {
+      "row": 1,
+      "cells": [
+        {
+          "col": 2,
+          "text": "Table of Contents - Locks by Waterway"
+        },
+        {
+          "col": 8,
+          "text": "Return to LPMS"
+        }
+      ]
+    },
+    {
+      "row": 2,
+      "cells": [
+        {
+          "col": 2,
+          "text": "Lock Usage, CY 1993 - 2017"
+        }
+      ]
+    },
+    {
+      "row": 4,
+      "cells": [
+        {
+          "col": 2,
+          "text": "Waterway"
+        },
+        {
+          "col": 3,
+          "text": "Lock"
+        }
+      ]
+    },
+    {
+      "row": 5,
+      "cells": [
+        {
+          "col": 2,
+          "text": "All Waterways"
+        }
+      ]
+    },
+    {
+      "row": 6,
+      "cells": [
+        {
+          "col": 2,
+          "text": "ALABAMA"
+        }
+      ]
+    },
+    {
+      "row": 7,
+      "cells": [
+        {
+          "col": 3,
+          "text": "CLAIBORNE"
+        }
+      ]
+    },
+    {
+      "row": 8,
+      "cells": [
+        {
+          "col": 3,
+          "text": "MILLERS FERRY"
+        }
+      ]
+    },
+    {
+      "row": 9,
+      "cells": [
+        {
+          "col": 3,
+          "text": "ROBERT F. HENRY"
+        }
+      ]
+    },
+    {
+      "row": 10,
+      "cells": [
+        {
+          "col": 2,
+          "text": "ALBEMARLE & CHESAPEAKE CANAL"
+        }
+      ]
+    },
+    {
+      "row": 11,
+      "cells": [
+        {
+          "col": 3,
+          "text": "GREAT BRIDGE"
+        }
+      ]
+    },
+    {
+      "row": 12,
+      "cells": [
+        {
+          "col": 2,
+          "text": "ALLEGHENY"
+        }
+      ]
+    },
+    {
+      "row": 13,
+      "cells": [
+        {
+          "col": 3,
+          "text": "2 ALLEGHENY"
+        }
+      ]
+    },
+    {
+      "row": 14,
+      "cells": [
+        {
+          "col": 3,
+          "text": "3 ALLEGHENY"
+        }
+      ]
+    },
+    {
+      "row": 15,
+      "cells": [
+        {
+          "col": 3,
+          "text": "4 ALLEGHENY"
+        }
+      ]
+    },
+    {
+      "row": 16,
+      "cells": [
+        {
+          "col": 3,
+          "text": "5 ALLEGHENY"
+        }
+      ]
+    },
+    {
+      "row": 17,
+      "cells": [
+        {
+          "col": 3,
+          "text": "6 ALLEGHENY"
+        }
+      ]
+    },
+    {
+      "row": 18,
+      "cells": [
+        {
+          "col": 3,
+          "text": "7 ALLEGHENY"
+        }
+      ]
+    },
+    {
+      "row": 19,
+      "cells": [
+        {
+          "col": 3,
+          "text": "8 ALLEGHENY"
+        }
+      ]
+    },
+    {
+      "row": 20,
+      "cells": [
+        {
+          "col": 3,
+          "text": "9 ALLEGHENY"
+        }
+      ]
+    },
+    {
+      "row": 21,
+      "cells": [
+        {
+          "col": 2,
+          "text": "APALACHICOLA"
+        }
+      ]
+    },
+    {
+      "row": 22,
+      "cells": [
+        {
+          "col": 3,
+          "text": "JIM WOODRUFF"
+        }
+      ]
+    },
+    {
+      "row": 23,
+      "cells": [
+        {
+          "col": 2,
+          "text": "ARKANSAS"
+        }
+      ]
+    },
+    {
+      "row": 24,
+      "cells": [
+        {
+          "col": 3,
+          "text": "2 ARKANSAS"
+        }
+      ]
+    },
+    {
+      "row": 25,
+      "cells": [
+        {
+          "col": 3,
+          "text": "ARTHUR V. ORMOND"
+        }
+      ]
+    },
+    {
+      "row": 26,
+      "cells": [
+        {
+          "col": 3,
+          "text": "COLONEL CHARLES D. MAYNARD LOCK AND DAM"
+        }
+      ]
+    },
+    {
+      "row": 27,
+      "cells": [
+        {
+          "col": 3,
+          "text": "DARDANELLE"
+        }
+      ]
+    },
+    {
+      "row": 28,
+      "cells": [
+        {
+          "col": 3,
+          "text": "DAVID D. TERRY"
+        }
+      ]
+    },
+    {
+      "row": 29,
+      "cells": [
+        {
+          "col": 3,
+          "text": "EMMETT SANDERS"
+        }
+      ]
+    },
+    {
+      "row": 30,
+      "cells": [
+        {
+          "col": 3,
+          "text": "JAMES W. TRIMBLE"
+        }
+      ]
+    },
+    {
+      "row": 31,
+      "cells": [
+        {
+          "col": 3,
+          "text": "JOE HARDIN"
+        }
+      ]
+    },
+    {
+      "row": 32,
+      "cells": [
+        {
+          "col": 3,
+          "text": "MURRAY"
+        }
+      ]
+    },
+    {
+      "row": 33,
+      "cells": [
+        {
+          "col": 3,
+          "text": "NORRELL"
+        }
+      ]
+    },
+    {
+      "row": 34,
+      "cells": [
+        {
+          "col": 3,
+          "text": "OZARK - JETA TAYLOR"
+        }
+      ]
+    },
+    {
+      "row": 35,
+      "cells": [
+        {
+          "col": 3,
+          "text": "ROBERT S. KERR"
+        }
+      ]
+    },
+    {
+      "row": 36,
+      "cells": [
+        {
+          "col": 3,
+          "text": "TOAD SUCK FERRY"
+        }
+      ]
+    },
+    {
+      "row": 37,
+      "cells": [
+        {
+          "col": 3,
+          "text": "W.D. MAYO"
+        }
+      ]
+    },
+    {
+      "row": 38,
+      "cells": [
+        {
+          "col": 3,
+          "text": "WEBBERS FALLS"
+        }
+      ]
+    },
+    {
+      "row": 39,
+      "cells": [
+        {
+          "col": 2,
+          "text": "ATCHAFALAYA"
+        }
+      ]
+    },
+    {
+      "row": 40,
+      "cells": [
+        {
+          "col": 3,
+          "text": "BERWICK"
+        }
+      ]
+    },
+    {
+      "row": 41,
+      "cells": [
+        {
+          "col": 2,
+          "text": "BAYOU TECHE"
+        }
+      ]
+    },
+    {
+      "row": 42,
+      "cells": [
+        {
+          "col": 3,
+          "text": "EAST & WEST CALUMET"
+        }
+      ]
+    },
+    {
+      "row": 43,
+      "cells": [
+        {
+          "col": 3,
+          "text": "KEYSTONE"
+        }
+      ]
+    },
+    {
+      "row": 44,
+      "cells": [
+        {
+          "col": 2,
+          "text": "BLACK"
+        }
+      ]
+    },
+    {
+      "row": 45,
+      "cells": [
+        {
+          "col": 3,
+          "text": "JONESVILLE"
+        }
+      ]
+    },
+    {
+      "row": 46,
+      "cells": [
+        {
+          "col": 2,
+          "text": "BLACK ROCK CANAL"
+        }
+      ]
+    },
+    {
+      "row": 47,
+      "cells": [
+        {
+          "col": 3,
+          "text": "BLACK ROCK"
+        }
+      ]
+    },
+    {
+      "row": 48,
+      "cells": [
+        {
+          "col": 2,
+          "text": "BLACK WARRIOR"
+        }
+      ]
+    },
+    {
+      "row": 49,
+      "cells": [
+        {
+          "col": 3,
+          "text": "ARMISTEAD I. SELDON"
+        }
+      ]
+    },
+    {
+      "row": 50,
+      "cells": [
+        {
+          "col": 3,
+          "text": "HOLT"
+        }
+      ]
+    },
+    {
+      "row": 51,
+      "cells": [
+        {
+          "col": 3,
+          "text": "JOHN HOLLIS BANKHEAD"
+        }
+      ]
+    },
+    {
+      "row": 52,
+      "cells": [
+        {
+          "col": 3,
+          "text": "WILLIAM BACON OLIVER"
+        }
+      ]
+    },
+    {
+      "row": 53,
+      "cells": [
+        {
+          "col": 2,
+          "text": "CALCASIEU RIVER"
+        }
+      ]
+    },
+    {
+      "row": 54,
+      "cells": [
+        {
+          "col": 3,
+          "text": "CALCASIEU BARRIER"
+        }
+      ]
+    },
+    {
+      "row": 55,
+      "cells": [
+        {
+          "col": 2,
+          "text": "CALOOSAHATCHEE"
+        }
+      ]
+    },
+    {
+      "row": 56,
+      "cells": [
+        {
+          "col": 3,
+          "text": "MOORE HAVEN"
+        }
+      ]
+    },
+    {
+      "row": 57,
+      "cells": [
+        {
+          "col": 3,
+          "text": "W. P. FRANKLIN"
+        }
+      ]
+    },
+    {
+      "row": 58,
+      "cells": [
+        {
+          "col": 2,
+          "text": "CALUMET"
+        }
+      ]
+    },
+    {
+      "row": 59,
+      "cells": [
+        {
+          "col": 3,
+          "text": "THOMAS J. OBRIEN"
+        }
+      ]
+    },
+    {
+      "row": 60,
+      "cells": [
+        {
+          "col": 2,
+          "text": "CANAVERAL BARGE CANAL"
+        }
+      ]
+    },
+    {
+      "row": 61,
+      "cells": [
+        {
+          "col": 3,
+          "text": "CANAVERAL"
+        }
+      ]
+    },
+    {
+      "row": 62,
+      "cells": [
+        {
+          "col": 2,
+          "text": "CAPE FEAR"
+        }
+      ]
+    },
+    {
+      "row": 63,
+      "cells": [
+        {
+          "col": 3,
+          "text": "1 CAPE FEAR"
+        }
+      ]
+    },
+    {
+      "row": 64,
+      "cells": [
+        {
+          "col": 3,
+          "text": "2 CAPE FEAR"
+        }
+      ]
+    },
+    {
+      "row": 65,
+      "cells": [
+        {
+          "col": 3,
+          "text": "WILLIAM O. HUSKE"
+        }
+      ]
+    },
+    {
+      "row": 66,
+      "cells": [
+        {
+          "col": 2,
+          "text": "CHATTAHOOCHEE"
+        }
+      ]
+    },
+    {
+      "row": 67,
+      "cells": [
+        {
+          "col": 3,
+          "text": "GEORGE W. ANDREWS"
+        }
+      ]
+    },
+    {
+      "row": 68,
+      "cells": [
+        {
+          "col": 3,
+          "text": "WALTER F. GEORGE"
+        }
+      ]
+    },
+    {
+      "row": 69,
+      "cells": [
+        {
+          "col": 2,
+          "text": "CHICAGO RIVER"
+        }
+      ]
+    },
+    {
+      "row": 70,
+      "cells": [
+        {
+          "col": 3,
+          "text": "CHICAGO"
+        }
+      ]
+    },
+    {
+      "row": 71,
+      "cells": [
+        {
+          "col": 2,
+          "text": "CLINCH"
+        }
+      ]
+    },
+    {
+      "row": 72,
+      "cells": [
+        {
+          "col": 3,
+          "text": "MELTON HILL"
+        }
+      ]
+    },
+    {
+      "row": 73,
+      "cells": [
+        {
+          "col": 2,
+          "text": "COLUMBIA"
+        }
+      ]
+    },
+    {
+      "row": 74,
+      "cells": [
+        {
+          "col": 3,
+          "text": "BONNEVILLE"
+        }
+      ]
+    },
+    {
+      "row": 75,
+      "cells": [
+        {
+          "col": 3,
+          "text": "JOHN DAY"
+        }
+      ]
+    },
+    {
+      "row": 76,
+      "cells": [
+        {
+          "col": 3,
+          "text": "MCNARY"
+        }
+      ]
+    },
+    {
+      "row": 77,
+      "cells": [
+        {
+          "col": 3,
+          "text": "THE DALLES"
+        }
+      ]
+    },
+    {
+      "row": 78,
+      "cells": [
+        {
+          "col": 2,
+          "text": "CROOKED"
+        }
+      ]
+    },
+    {
+      "row": 79,
+      "cells": [
+        {
+          "col": 3,
+          "text": "ALANSON"
+        }
+      ]
+    },
+    {
+      "row": 80,
+      "cells": [
+        {
+          "col": 2,
+          "text": "CUMBERLAND"
+        }
+      ]
+    },
+    {
+      "row": 81,
+      "cells": [
+        {
+          "col": 3,
+          "text": "BARKLEY"
+        }
+      ]
+    },
+    {
+      "row": 82,
+      "cells": [
+        {
+          "col": 3,
+          "text": "CHEATHAM"
+        }
+      ]
+    },
+    {
+      "row": 83,
+      "cells": [
+        {
+          "col": 3,
+          "text": "CORDELL HULL"
+        }
+      ]
+    },
+    {
+      "row": 84,
+      "cells": [
+        {
+          "col": 3,
+          "text": "OLD HICKORY"
+        }
+      ]
+    },
+    {
+      "row": 85,
+      "cells": [
+        {
+          "col": 2,
+          "text": "DISMAL SWAMP CANAL"
+        }
+      ]
+    },
+    {
+      "row": 86,
+      "cells": [
+        {
+          "col": 3,
+          "text": "DEEP CREEK"
+        }
+      ]
+    },
+    {
+      "row": 87,
+      "cells": [
+        {
+          "col": 3,
+          "text": "SOUTH MILLS"
+        }
+      ]
+    },
+    {
+      "row": 88,
+      "cells": [
+        {
+          "col": 2,
+          "text": "FRESHWATER BAYOU"
+        }
+      ]
+    },
+    {
+      "row": 89,
+      "cells": [
+        {
+          "col": 3,
+          "text": "FRESHWATER BAYOU"
+        }
+      ]
+    },
+    {
+      "row": 90,
+      "cells": [
+        {
+          "col": 2,
+          "text": "GIWW"
+        }
+      ]
+    },
+    {
+      "row": 91,
+      "cells": [
+        {
+          "col": 3,
+          "text": "BAYOU BOEUF"
+        }
+      ]
+    },
+    {
+      "row": 92,
+      "cells": [
+        {
+          "col": 3,
+          "text": "CALCASIEU"
+        }
+      ]
+    },
+    {
+      "row": 93,
+      "cells": [
+        {
+          "col": 3,
+          "text": "LELAND BOWMAN"
+        }
+      ]
+    },
+    {
+      "row": 94,
+      "cells": [
+        {
+          "col": 2,
+          "text": "GIWW Algiers Canal"
+        }
+      ]
+    },
+    {
+      "row": 95,
+      "cells": [
+        {
+          "col": 3,
+          "text": "ALGIERS"
+        }
+      ]
+    },
+    {
+      "row": 96,
+      "cells": [
+        {
+          "col": 2,
+          "text": "GIWW EAST"
+        }
+      ]
+    },
+    {
+      "row": 97,
+      "cells": [
+        {
+          "col": 3,
+          "text": "INNER HARBOR NAVIGATION CANAL"
+        }
+      ]
+    },
+    {
+      "row": 98,
+      "cells": [
+        {
+          "col": 2,
+          "text": "GIWW Port Allen-Morgan cty Alt. Rte"
+        }
+      ]
+    },
+    {
+      "row": 99,
+      "cells": [
+        {
+          "col": 3,
+          "text": "BAYOU SORREL"
+        }
+      ]
+    },
+    {
+      "row": 100,
+      "cells": [
+        {
+          "col": 3,
+          "text": "PORT ALLEN"
+        }
+      ]
+    },
+    {
+      "row": 101,
+      "cells": [
+        {
+          "col": 2,
+          "text": "GIWW Texas"
+        }
+      ]
+    },
+    {
+      "row": 102,
+      "cells": [
+        {
+          "col": 3,
+          "text": "BRAZOS EAST"
+        }
+      ]
+    },
+    {
+      "row": 103,
+      "cells": [
+        {
+          "col": 3,
+          "text": "BRAZOS WEST"
+        }
+      ]
+    },
+    {
+      "row": 104,
+      "cells": [
+        {
+          "col": 3,
+          "text": "COLORADO RIVER EAST"
+        }
+      ]
+    },
+    {
+      "row": 105,
+      "cells": [
+        {
+          "col": 3,
+          "text": "COLORADO RIVER WEST"
+        }
+      ]
+    },
+    {
+      "row": 106,
+      "cells": [
+        {
+          "col": 2,
+          "text": "GIWW WEST"
+        }
+      ]
+    },
+    {
+      "row": 107,
+      "cells": [
+        {
+          "col": 3,
+          "text": "HARVEY"
+        }
+      ]
+    },
+    {
+      "row": 108,
+      "cells": [
+        {
+          "col": 2,
+          "text": "GREEN"
+        }
+      ]
+    },
+    {
+      "row": 109,
+      "cells": [
+        {
+          "col": 3,
+          "text": "1 GREEN"
+        }
+      ]
+    },
+    {
+      "row": 110,
+      "cells": [
+        {
+          "col": 3,
+          "text": "2 GREEN"
+        }
+      ]
+    },
+    {
+      "row": 111,
+      "cells": [
+        {
+          "col": 2,
+          "text": "HUDSON"
+        }
+      ]
+    },
+    {
+      "row": 112,
+      "cells": [
+        {
+          "col": 3,
+          "text": "TROY"
+        }
+      ]
+    },
+    {
+      "row": 113,
+      "cells": [
+        {
+          "col": 2,
+          "text": "ILLINOIS"
+        }
+      ]
+    },
+    {
+      "row": 114,
+      "cells": [
+        {
+          "col": 3,
+          "text": "BRANDON ROAD"
+        }
+      ]
+    },
+    {
+      "row": 115,
+      "cells": [
+        {
+          "col": 3,
+          "text": "DRESDEN ISLAND"
+        }
+      ]
+    },
+    {
+      "row": 116,
+      "cells": [
+        {
+          "col": 3,
+          "text": "LAGRANGE"
+        }
+      ]
+    },
+    {
+      "row": 117,
+      "cells": [
+        {
+          "col": 3,
+          "text": "LOCKPORT"
+        }
+      ]
+    },
+    {
+      "row": 118,
+      "cells": [
+        {
+          "col": 3,
+          "text": "MARSEILLES"
+        }
+      ]
+    },
+    {
+      "row": 119,
+      "cells": [
+        {
+          "col": 3,
+          "text": "PEORIA"
+        }
+      ]
+    },
+    {
+      "row": 120,
+      "cells": [
+        {
+          "col": 3,
+          "text": "STARVED ROCK"
+        }
+      ]
+    },
+    {
+      "row": 121,
+      "cells": [
+        {
+          "col": 2,
+          "text": "INLAND WW FRANKLIN-MERMENTAU"
+        }
+      ]
+    },
+    {
+      "row": 122,
+      "cells": [
+        {
+          "col": 3,
+          "text": "SCHOONER BAYOU"
+        }
+      ]
+    },
+    {
+      "row": 123,
+      "cells": [
+        {
+          "col": 2,
+          "text": "KANAWHA"
+        }
+      ]
+    },
+    {
+      "row": 124,
+      "cells": [
+        {
+          "col": 3,
+          "text": "LONDON"
+        }
+      ]
+    },
+    {
+      "row": 125,
+      "cells": [
+        {
+          "col": 3,
+          "text": "MARMET"
+        }
+      ]
+    },
+    {
+      "row": 126,
+      "cells": [
+        {
+          "col": 3,
+          "text": "WINFIELD"
+        }
+      ]
+    },
+    {
+      "row": 127,
+      "cells": [
+        {
+          "col": 2,
+          "text": "KASKASKIA"
+        }
+      ]
+    },
+    {
+      "row": 128,
+      "cells": [
+        {
+          "col": 3,
+          "text": "KASKASKIA"
+        }
+      ]
+    },
+    {
+      "row": 129,
+      "cells": [
+        {
+          "col": 2,
+          "text": "LAKE WASHINGTON SHIP CANAL"
+        }
+      ]
+    },
+    {
+      "row": 130,
+      "cells": [
+        {
+          "col": 3,
+          "text": "HIRAM M. CHITTENDEN"
+        }
+      ]
+    },
+    {
+      "row": 131,
+      "cells": [
+        {
+          "col": 2,
+          "text": "MERMENTAU"
+        }
+      ]
+    },
+    {
+      "row": 132,
+      "cells": [
+        {
+          "col": 3,
+          "text": "CATFISH POINT"
+        }
+      ]
+    },
+    {
+      "row": 133,
+      "cells": [
+        {
+          "col": 2,
+          "text": "MISSISSIPPI"
+        }
+      ]
+    },
+    {
+      "row": 134,
+      "cells": [
+        {
+          "col": 3,
+          "text": "10 MISSISSIPPI"
+        }
+      ]
+    },
+    {
+      "row": 135,
+      "cells": [
+        {
+          "col": 3,
+          "text": "11 MISSISSIPPI"
+        }
+      ]
+    },
+    {
+      "row": 136,
+      "cells": [
+        {
+          "col": 3,
+          "text": "12 MISSISSIPPI"
+        }
+      ]
+    },
+    {
+      "row": 137,
+      "cells": [
+        {
+          "col": 3,
+          "text": "13 MISSISSIPPI"
+        }
+      ]
+    },
+    {
+      "row": 138,
+      "cells": [
+        {
+          "col": 3,
+          "text": "14 MISSISSIPPI"
+        }
+      ]
+    },
+    {
+      "row": 139,
+      "cells": [
+        {
+          "col": 3,
+          "text": "15 MISSISSIPPI"
+        }
+      ]
+    },
+    {
+      "row": 140,
+      "cells": [
+        {
+          "col": 3,
+          "text": "16 MISSISSIPPI"
+        }
+      ]
+    },
+    {
+      "row": 141,
+      "cells": [
+        {
+          "col": 3,
+          "text": "17 MISSISSIPPI"
+        }
+      ]
+    },
+    {
+      "row": 142,
+      "cells": [
+        {
+          "col": 3,
+          "text": "18 MISSISSIPPI"
+        }
+      ]
+    },
+    {
+      "row": 143,
+      "cells": [
+        {
+          "col": 3,
+          "text": "19 MISSISSIPPI"
+        }
+      ]
+    },
+    {
+      "row": 144,
+      "cells": [
+        {
+          "col": 3,
+          "text": "1 MISSISSIPPI"
+        }
+      ]
+    },
+    {
+      "row": 145,
+      "cells": [
+        {
+          "col": 3,
+          "text": "20 MISSISSIPPI"
+        }
+      ]
+    },
+    {
+      "row": 146,
+      "cells": [
+        {
+          "col": 3,
+          "text": "21 MISSISSIPPI"
+        }
+      ]
+    },
+    {
+      "row": 147,
+      "cells": [
+        {
+          "col": 3,
+          "text": "22 MISSISSIPPI"
+        }
+      ]
+    },
+    {
+      "row": 148,
+      "cells": [
+        {
+          "col": 3,
+          "text": "24 MISSISSIPPI"
+        }
+      ]
+    },
+    {
+      "row": 149,
+      "cells": [
+        {
+          "col": 3,
+          "text": "25 MISSISSIPPI"
+        }
+      ]
+    },
+    {
+      "row": 150,
+      "cells": [
+        {
+          "col": 3,
+          "text": "27 MISSISSIPPI"
+        }
+      ]
+    },
+    {
+      "row": 151,
+      "cells": [
+        {
+          "col": 3,
+          "text": "2 MISSISSIPPI"
+        }
+      ]
+    },
+    {
+      "row": 152,
+      "cells": [
+        {
+          "col": 3,
+          "text": "3 MISSISSIPPI"
+        }
+      ]
+    },
+    {
+      "row": 153,
+      "cells": [
+        {
+          "col": 3,
+          "text": "4 MISSISSIPPI"
+        }
+      ]
+    },
+    {
+      "row": 154,
+      "cells": [
+        {
+          "col": 3,
+          "text": "5a MISSISSIPPI"
+        }
+      ]
+    },
+    {
+      "row": 155,
+      "cells": [
+        {
+          "col": 3,
+          "text": "5 MISSISSIPPI"
+        }
+      ]
+    },
+    {
+      "row": 156,
+      "cells": [
+        {
+          "col": 3,
+          "text": "6 MISSISSIPPI"
+        }
+      ]
+    },
+    {
+      "row": 157,
+      "cells": [
+        {
+          "col": 3,
+          "text": "7 MISSISSIPPI"
+        }
+      ]
+    },
+    {
+      "row": 158,
+      "cells": [
+        {
+          "col": 3,
+          "text": "8 MISSISSIPPI"
+        }
+      ]
+    },
+    {
+      "row": 159,
+      "cells": [
+        {
+          "col": 3,
+          "text": "9 MISSISSIPPI"
+        }
+      ]
+    },
+    {
+      "row": 160,
+      "cells": [
+        {
+          "col": 3,
+          "text": "LOWER SAINT ANTHONY FALLS"
+        }
+      ]
+    },
+    {
+      "row": 161,
+      "cells": [
+        {
+          "col": 3,
+          "text": "MELVIN PRICE"
+        }
+      ]
+    },
+    {
+      "row": 162,
+      "cells": [
+        {
+          "col": 3,
+          "text": "UPPER SAINT ANTHONY FALLS"
+        }
+      ]
+    },
+    {
+      "row": 163,
+      "cells": [
+        {
+          "col": 2,
+          "text": "MONONGAHELA"
+        }
+      ]
+    },
+    {
+      "row": 164,
+      "cells": [
+        {
+          "col": 3,
+          "text": "2 MONONGAHELA"
+        }
+      ]
+    },
+    {
+      "row": 165,
+      "cells": [
+        {
+          "col": 3,
+          "text": "3 MONONGAHELA"
+        }
+      ]
+    },
+    {
+      "row": 166,
+      "cells": [
+        {
+          "col": 3,
+          "text": "4 MONONGAHELA"
+        }
+      ]
+    },
+    {
+      "row": 167,
+      "cells": [
+        {
+          "col": 3,
+          "text": "GRAYS LANDING"
+        }
+      ]
+    },
+    {
+      "row": 168,
+      "cells": [
+        {
+          "col": 3,
+          "text": "HILDEBRAND"
+        }
+      ]
+    },
+    {
+      "row": 169,
+      "cells": [
+        {
+          "col": 3,
+          "text": "MAXWELL"
+        }
+      ]
+    },
+    {
+      "row": 170,
+      "cells": [
+        {
+          "col": 3,
+          "text": "MORGANTOWN"
+        }
+      ]
+    },
+    {
+      "row": 171,
+      "cells": [
+        {
+          "col": 3,
+          "text": "OPEKISKA"
+        }
+      ]
+    },
+    {
+      "row": 172,
+      "cells": [
+        {
+          "col": 3,
+          "text": "POINT MARION"
+        }
+      ]
+    },
+    {
+      "row": 173,
+      "cells": [
+        {
+          "col": 2,
+          "text": "OHIO"
+        }
+      ]
+    },
+    {
+      "row": 174,
+      "cells": [
+        {
+          "col": 3,
+          "text": "52 OHIO"
+        }
+      ]
+    },
+    {
+      "row": 175,
+      "cells": [
+        {
+          "col": 3,
+          "text": "53 OHIO"
+        }
+      ]
+    },
+    {
+      "row": 176,
+      "cells": [
+        {
+          "col": 3,
+          "text": "BELLEVILLE"
+        }
+      ]
+    },
+    {
+      "row": 177,
+      "cells": [
+        {
+          "col": 3,
+          "text": "CANNELTON"
+        }
+      ]
+    },
+    {
+      "row": 178,
+      "cells": [
+        {
+          "col": 3,
+          "text": "CAPTAIN ANTHONY MELDAHL"
+        }
+      ]
+    },
+    {
+      "row": 179,
+      "cells": [
+        {
+          "col": 3,
+          "text": "DASHIELDS"
+        }
+      ]
+    },
+    {
+      "row": 180,
+      "cells": [
+        {
+          "col": 3,
+          "text": "EMSWORTH"
+        }
+      ]
+    },
+    {
+      "row": 181,
+      "cells": [
+        {
+          "col": 3,
+          "text": "GREENUP"
+        }
+      ]
+    },
+    {
+      "row": 182,
+      "cells": [
+        {
+          "col": 3,
+          "text": "HANNIBAL"
+        }
+      ]
+    },
+    {
+      "row": 183,
+      "cells": [
+        {
+          "col": 3,
+          "text": "JOHN T. MYERS"
+        }
+      ]
+    },
+    {
+      "row": 184,
+      "cells": [
+        {
+          "col": 3,
+          "text": "MARKLAND"
+        }
+      ]
+    },
+    {
+      "row": 185,
+      "cells": [
+        {
+          "col": 3,
+          "text": "MCALPINE"
+        }
+      ]
+    },
+    {
+      "row": 186,
+      "cells": [
+        {
+          "col": 3,
+          "text": "MONTGOMERY"
+        }
+      ]
+    },
+    {
+      "row": 187,
+      "cells": [
+        {
+          "col": 3,
+          "text": "NEWBURGH"
+        }
+      ]
+    },
+    {
+      "row": 188,
+      "cells": [
+        {
+          "col": 3,
+          "text": "NEW CUMBERLAND"
+        }
+      ]
+    },
+    {
+      "row": 189,
+      "cells": [
+        {
+          "col": 3,
+          "text": "PIKE ISLAND"
+        }
+      ]
+    },
+    {
+      "row": 190,
+      "cells": [
+        {
+          "col": 3,
+          "text": "RACINE"
+        }
+      ]
+    },
+    {
+      "row": 191,
+      "cells": [
+        {
+          "col": 3,
+          "text": "ROBERT C. BYRD"
+        }
+      ]
+    },
+    {
+      "row": 192,
+      "cells": [
+        {
+          "col": 3,
+          "text": "SMITHLAND"
+        }
+      ]
+    },
+    {
+      "row": 193,
+      "cells": [
+        {
+          "col": 3,
+          "text": "WILLOW ISLAND"
+        }
+      ]
+    },
+    {
+      "row": 194,
+      "cells": [
+        {
+          "col": 2,
+          "text": "OKEECHOBEE"
+        }
+      ]
+    },
+    {
+      "row": 195,
+      "cells": [
+        {
+          "col": 3,
+          "text": "ORTONA"
+        }
+      ]
+    },
+    {
+      "row": 196,
+      "cells": [
+        {
+          "col": 2,
+          "text": "OLD RIVER"
+        }
+      ]
+    },
+    {
+      "row": 197,
+      "cells": [
+        {
+          "col": 3,
+          "text": "OLD RIVER"
+        }
+      ]
+    },
+    {
+      "row": 198,
+      "cells": [
+        {
+          "col": 2,
+          "text": "OUACHITA"
+        }
+      ]
+    },
+    {
+      "row": 199,
+      "cells": [
+        {
+          "col": 3,
+          "text": "COLUMBIA"
+        }
+      ]
+    },
+    {
+      "row": 200,
+      "cells": [
+        {
+          "col": 3,
+          "text": "FELSENTHAL"
+        }
+      ]
+    },
+    {
+      "row": 201,
+      "cells": [
+        {
+          "col": 3,
+          "text": "H. K. THATCHER"
+        }
+      ]
+    },
+    {
+      "row": 202,
+      "cells": [
+        {
+          "col": 2,
+          "text": "RED"
+        }
+      ]
+    },
+    {
+      "row": 203,
+      "cells": [
+        {
+          "col": 3,
+          "text": "3 RED"
+        }
+      ]
+    },
+    {
+      "row": 204,
+      "cells": [
+        {
+          "col": 3,
+          "text": "JOE D. WAGGONNER"
+        }
+      ]
+    },
+    {
+      "row": 205,
+      "cells": [
+        {
+          "col": 3,
+          "text": "JOHN H.OVERTON"
+        }
+      ]
+    },
+    {
+      "row": 206,
+      "cells": [
+        {
+          "col": 3,
+          "text": "LINDY CLAIBORNE BOGGS"
+        }
+      ]
+    },
+    {
+      "row": 207,
+      "cells": [
+        {
+          "col": 3,
+          "text": "RUSSELL B. LONG"
+        }
+      ]
+    },
+    {
+      "row": 208,
+      "cells": [
+        {
+          "col": 2,
+          "text": "SNAKE"
+        }
+      ]
+    },
+    {
+      "row": 209,
+      "cells": [
+        {
+          "col": 3,
+          "text": "ICE HARBOR"
+        }
+      ]
+    },
+    {
+      "row": 210,
+      "cells": [
+        {
+          "col": 3,
+          "text": "LITTLE GOOSE"
+        }
+      ]
+    },
+    {
+      "row": 211,
+      "cells": [
+        {
+          "col": 3,
+          "text": "LOWER GRANITE"
+        }
+      ]
+    },
+    {
+      "row": 212,
+      "cells": [
+        {
+          "col": 3,
+          "text": "LOWER MONUMENTAL"
+        }
+      ]
+    },
+    {
+      "row": 213,
+      "cells": [
+        {
+          "col": 2,
+          "text": "ST. LUCIE CANAL"
+        }
+      ]
+    },
+    {
+      "row": 214,
+      "cells": [
+        {
+          "col": 3,
+          "text": "PORT MAYACA"
+        }
+      ]
+    },
+    {
+      "row": 215,
+      "cells": [
+        {
+          "col": 3,
+          "text": "ST. LUCIE"
+        }
+      ]
+    },
+    {
+      "row": 216,
+      "cells": [
+        {
+          "col": 2,
+          "text": "ST. MARYS"
+        }
+      ]
+    },
+    {
+      "row": 217,
+      "cells": [
+        {
+          "col": 3,
+          "text": "ST. MARYS"
+        }
+      ]
+    },
+    {
+      "row": 218,
+      "cells": [
+        {
+          "col": 2,
+          "text": "TENNESSEE"
+        }
+      ]
+    },
+    {
+      "row": 219,
+      "cells": [
+        {
+          "col": 3,
+          "text": "CHICKAMAUGA"
+        }
+      ]
+    },
+    {
+      "row": 220,
+      "cells": [
+        {
+          "col": 3,
+          "text": "FORT LOUDON"
+        }
+      ]
+    },
+    {
+      "row": 221,
+      "cells": [
+        {
+          "col": 3,
+          "text": "GENERAL JOSEPH WHEELER"
+        }
+      ]
+    },
+    {
+      "row": 222,
+      "cells": [
+        {
+          "col": 3,
+          "text": "GUNTERSVILLE"
+        }
+      ]
+    },
+    {
+      "row": 223,
+      "cells": [
+        {
+          "col": 3,
+          "text": "KENTUCKY"
+        }
+      ]
+    },
+    {
+      "row": 224,
+      "cells": [
+        {
+          "col": 3,
+          "text": "NICKAJACK"
+        }
+      ]
+    },
+    {
+      "row": 225,
+      "cells": [
+        {
+          "col": 3,
+          "text": "PICKWICK LANDING"
+        }
+      ]
+    },
+    {
+      "row": 226,
+      "cells": [
+        {
+          "col": 3,
+          "text": "WATTS BAR"
+        }
+      ]
+    },
+    {
+      "row": 227,
+      "cells": [
+        {
+          "col": 3,
+          "text": "WILSON"
+        }
+      ]
+    },
+    {
+      "row": 228,
+      "cells": [
+        {
+          "col": 2,
+          "text": "TENN-TOMBIGBEE"
+        }
+      ]
+    },
+    {
+      "row": 229,
+      "cells": [
+        {
+          "col": 3,
+          "text": "ABERDEEN"
+        }
+      ]
+    },
+    {
+      "row": 230,
+      "cells": [
+        {
+          "col": 3,
+          "text": "AMORY"
+        }
+      ]
+    },
+    {
+      "row": 231,
+      "cells": [
+        {
+          "col": 3,
+          "text": "FULTON"
+        }
+      ]
+    },
+    {
+      "row": 232,
+      "cells": [
+        {
+          "col": 3,
+          "text": "GLOVER WILKINS"
+        }
+      ]
+    },
+    {
+      "row": 233,
+      "cells": [
+        {
+          "col": 3,
+          "text": "G.V. \"SONNY\" MONTGOMERY"
+        }
+      ]
+    },
+    {
+      "row": 234,
+      "cells": [
+        {
+          "col": 3,
+          "text": "HOWELL HEFLIN"
+        }
+      ]
+    },
+    {
+      "row": 235,
+      "cells": [
+        {
+          "col": 3,
+          "text": "JAMIE WHITTEN"
+        }
+      ]
+    },
+    {
+      "row": 236,
+      "cells": [
+        {
+          "col": 3,
+          "text": "JOHN C. STENNIS"
+        }
+      ]
+    },
+    {
+      "row": 237,
+      "cells": [
+        {
+          "col": 3,
+          "text": "JOHN E. RANKIN"
+        }
+      ]
+    },
+    {
+      "row": 238,
+      "cells": [
+        {
+          "col": 3,
+          "text": "TOM BEVILL"
+        }
+      ]
+    },
+    {
+      "row": 239,
+      "cells": [
+        {
+          "col": 2,
+          "text": "TOMBIGBEE"
+        }
+      ]
+    },
+    {
+      "row": 240,
+      "cells": [
+        {
+          "col": 3,
+          "text": "COFFEEVILLE"
+        }
+      ]
+    },
+    {
+      "row": 241,
+      "cells": [
+        {
+          "col": 3,
+          "text": "DEMOPOLIS"
+        }
+      ]
+    },
+    {
+      "row": 242,
+      "cells": [
+        {
+          "col": 2,
+          "text": "VERDIGRIS"
+        }
+      ]
+    },
+    {
+      "row": 243,
+      "cells": [
+        {
+          "col": 3,
+          "text": "CHOUTEAU"
+        }
+      ]
+    },
+    {
+      "row": 244,
+      "cells": [
+        {
+          "col": 3,
+          "text": "NEWT GRAHAM LOCK"
+        }
+      ]
+    },
+    {
+      "row": 245,
+      "cells": [
+        {
+          "col": 2,
+          "text": "WEST PEARL"
+        }
+      ]
+    },
+    {
+      "row": 246,
+      "cells": [
+        {
+          "col": 3,
+          "text": "1 WEST PEARL"
+        }
+      ]
+    },
+    {
+      "row": 247,
+      "cells": [
+        {
+          "col": 3,
+          "text": "2 WEST PEARL"
+        }
+      ]
+    },
+    {
+      "row": 248,
+      "cells": [
+        {
+          "col": 3,
+          "text": "3 WEST PEARL"
+        }
+      ]
+    },
+    {
+      "row": 249,
+      "cells": [
+        {
+          "col": 2,
+          "text": "WHITE"
+        }
+      ]
+    },
+    {
+      "row": 250,
+      "cells": [
+        {
+          "col": 3,
+          "text": "MONTGOMERY POINT"
+        }
+      ]
+    },
+    {
+      "row": 251,
+      "cells": [
+        {
+          "col": 2,
+          "text": "WILLAMETTE"
+        }
+      ]
+    },
+    {
+      "row": 252,
+      "cells": [
+        {
+          "col": 3,
+          "text": "WILLAMETTE FALLS"
+        }
+      ]
+    }
+  ],
+  "lock_like_unique_strings": [
+    "COLONEL CHARLES D. MAYNARD LOCK AND DAM",
+    "LOCKPORT",
+    "Lock Usage, CY 1993 - 2017",
+    "NEWT GRAHAM LOCK"
+  ],
+  "lock_like_unique_count": 4,
+  "incremental_monetary_cost_usd": 0
+}
