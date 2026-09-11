@@ -11,6 +11,11 @@
   "bytes": 733421,
   "sha256": "0db8e4ae602bb60fea029a17a3c39929fe58cef6cc46b6f05bd1f45c4088f90f",
   "toc_sheet": "TOC",
+  "toc_schema": {
+    "header_row": 4,
+    "waterway_col": 2,
+    "lock_col": 3
+  },
   "nonempty_string_rows": 251,
   "toc_rows_string_cells": [
     {
@@ -2281,12 +2286,1168 @@
       ]
     }
   ],
-  "lock_like_unique_strings": [
-    "COLONEL CHARLES D. MAYNARD LOCK AND DAM",
-    "LOCKPORT",
-    "Lock Usage, CY 1993 - 2017",
-    "NEWT GRAHAM LOCK"
+  "lock_identity_records": [
+    {
+      "row": 7,
+      "waterway": "ALABAMA",
+      "lock": "CLAIBORNE"
+    },
+    {
+      "row": 8,
+      "waterway": "ALABAMA",
+      "lock": "MILLERS FERRY"
+    },
+    {
+      "row": 9,
+      "waterway": "ALABAMA",
+      "lock": "ROBERT F. HENRY"
+    },
+    {
+      "row": 11,
+      "waterway": "ALBEMARLE & CHESAPEAKE CANAL",
+      "lock": "GREAT BRIDGE"
+    },
+    {
+      "row": 13,
+      "waterway": "ALLEGHENY",
+      "lock": "2 ALLEGHENY"
+    },
+    {
+      "row": 14,
+      "waterway": "ALLEGHENY",
+      "lock": "3 ALLEGHENY"
+    },
+    {
+      "row": 15,
+      "waterway": "ALLEGHENY",
+      "lock": "4 ALLEGHENY"
+    },
+    {
+      "row": 16,
+      "waterway": "ALLEGHENY",
+      "lock": "5 ALLEGHENY"
+    },
+    {
+      "row": 17,
+      "waterway": "ALLEGHENY",
+      "lock": "6 ALLEGHENY"
+    },
+    {
+      "row": 18,
+      "waterway": "ALLEGHENY",
+      "lock": "7 ALLEGHENY"
+    },
+    {
+      "row": 19,
+      "waterway": "ALLEGHENY",
+      "lock": "8 ALLEGHENY"
+    },
+    {
+      "row": 20,
+      "waterway": "ALLEGHENY",
+      "lock": "9 ALLEGHENY"
+    },
+    {
+      "row": 22,
+      "waterway": "APALACHICOLA",
+      "lock": "JIM WOODRUFF"
+    },
+    {
+      "row": 24,
+      "waterway": "ARKANSAS",
+      "lock": "2 ARKANSAS"
+    },
+    {
+      "row": 25,
+      "waterway": "ARKANSAS",
+      "lock": "ARTHUR V. ORMOND"
+    },
+    {
+      "row": 26,
+      "waterway": "ARKANSAS",
+      "lock": "COLONEL CHARLES D. MAYNARD LOCK AND DAM"
+    },
+    {
+      "row": 27,
+      "waterway": "ARKANSAS",
+      "lock": "DARDANELLE"
+    },
+    {
+      "row": 28,
+      "waterway": "ARKANSAS",
+      "lock": "DAVID D. TERRY"
+    },
+    {
+      "row": 29,
+      "waterway": "ARKANSAS",
+      "lock": "EMMETT SANDERS"
+    },
+    {
+      "row": 30,
+      "waterway": "ARKANSAS",
+      "lock": "JAMES W. TRIMBLE"
+    },
+    {
+      "row": 31,
+      "waterway": "ARKANSAS",
+      "lock": "JOE HARDIN"
+    },
+    {
+      "row": 32,
+      "waterway": "ARKANSAS",
+      "lock": "MURRAY"
+    },
+    {
+      "row": 33,
+      "waterway": "ARKANSAS",
+      "lock": "NORRELL"
+    },
+    {
+      "row": 34,
+      "waterway": "ARKANSAS",
+      "lock": "OZARK - JETA TAYLOR"
+    },
+    {
+      "row": 35,
+      "waterway": "ARKANSAS",
+      "lock": "ROBERT S. KERR"
+    },
+    {
+      "row": 36,
+      "waterway": "ARKANSAS",
+      "lock": "TOAD SUCK FERRY"
+    },
+    {
+      "row": 37,
+      "waterway": "ARKANSAS",
+      "lock": "W.D. MAYO"
+    },
+    {
+      "row": 38,
+      "waterway": "ARKANSAS",
+      "lock": "WEBBERS FALLS"
+    },
+    {
+      "row": 40,
+      "waterway": "ATCHAFALAYA",
+      "lock": "BERWICK"
+    },
+    {
+      "row": 42,
+      "waterway": "BAYOU TECHE",
+      "lock": "EAST & WEST CALUMET"
+    },
+    {
+      "row": 43,
+      "waterway": "BAYOU TECHE",
+      "lock": "KEYSTONE"
+    },
+    {
+      "row": 45,
+      "waterway": "BLACK",
+      "lock": "JONESVILLE"
+    },
+    {
+      "row": 47,
+      "waterway": "BLACK ROCK CANAL",
+      "lock": "BLACK ROCK"
+    },
+    {
+      "row": 49,
+      "waterway": "BLACK WARRIOR",
+      "lock": "ARMISTEAD I. SELDON"
+    },
+    {
+      "row": 50,
+      "waterway": "BLACK WARRIOR",
+      "lock": "HOLT"
+    },
+    {
+      "row": 51,
+      "waterway": "BLACK WARRIOR",
+      "lock": "JOHN HOLLIS BANKHEAD"
+    },
+    {
+      "row": 52,
+      "waterway": "BLACK WARRIOR",
+      "lock": "WILLIAM BACON OLIVER"
+    },
+    {
+      "row": 54,
+      "waterway": "CALCASIEU RIVER",
+      "lock": "CALCASIEU BARRIER"
+    },
+    {
+      "row": 56,
+      "waterway": "CALOOSAHATCHEE",
+      "lock": "MOORE HAVEN"
+    },
+    {
+      "row": 57,
+      "waterway": "CALOOSAHATCHEE",
+      "lock": "W. P. FRANKLIN"
+    },
+    {
+      "row": 59,
+      "waterway": "CALUMET",
+      "lock": "THOMAS J. OBRIEN"
+    },
+    {
+      "row": 61,
+      "waterway": "CANAVERAL BARGE CANAL",
+      "lock": "CANAVERAL"
+    },
+    {
+      "row": 63,
+      "waterway": "CAPE FEAR",
+      "lock": "1 CAPE FEAR"
+    },
+    {
+      "row": 64,
+      "waterway": "CAPE FEAR",
+      "lock": "2 CAPE FEAR"
+    },
+    {
+      "row": 65,
+      "waterway": "CAPE FEAR",
+      "lock": "WILLIAM O. HUSKE"
+    },
+    {
+      "row": 67,
+      "waterway": "CHATTAHOOCHEE",
+      "lock": "GEORGE W. ANDREWS"
+    },
+    {
+      "row": 68,
+      "waterway": "CHATTAHOOCHEE",
+      "lock": "WALTER F. GEORGE"
+    },
+    {
+      "row": 70,
+      "waterway": "CHICAGO RIVER",
+      "lock": "CHICAGO"
+    },
+    {
+      "row": 72,
+      "waterway": "CLINCH",
+      "lock": "MELTON HILL"
+    },
+    {
+      "row": 74,
+      "waterway": "COLUMBIA",
+      "lock": "BONNEVILLE"
+    },
+    {
+      "row": 75,
+      "waterway": "COLUMBIA",
+      "lock": "JOHN DAY"
+    },
+    {
+      "row": 76,
+      "waterway": "COLUMBIA",
+      "lock": "MCNARY"
+    },
+    {
+      "row": 77,
+      "waterway": "COLUMBIA",
+      "lock": "THE DALLES"
+    },
+    {
+      "row": 79,
+      "waterway": "CROOKED",
+      "lock": "ALANSON"
+    },
+    {
+      "row": 81,
+      "waterway": "CUMBERLAND",
+      "lock": "BARKLEY"
+    },
+    {
+      "row": 82,
+      "waterway": "CUMBERLAND",
+      "lock": "CHEATHAM"
+    },
+    {
+      "row": 83,
+      "waterway": "CUMBERLAND",
+      "lock": "CORDELL HULL"
+    },
+    {
+      "row": 84,
+      "waterway": "CUMBERLAND",
+      "lock": "OLD HICKORY"
+    },
+    {
+      "row": 86,
+      "waterway": "DISMAL SWAMP CANAL",
+      "lock": "DEEP CREEK"
+    },
+    {
+      "row": 87,
+      "waterway": "DISMAL SWAMP CANAL",
+      "lock": "SOUTH MILLS"
+    },
+    {
+      "row": 89,
+      "waterway": "FRESHWATER BAYOU",
+      "lock": "FRESHWATER BAYOU"
+    },
+    {
+      "row": 91,
+      "waterway": "GIWW",
+      "lock": "BAYOU BOEUF"
+    },
+    {
+      "row": 92,
+      "waterway": "GIWW",
+      "lock": "CALCASIEU"
+    },
+    {
+      "row": 93,
+      "waterway": "GIWW",
+      "lock": "LELAND BOWMAN"
+    },
+    {
+      "row": 95,
+      "waterway": "GIWW Algiers Canal",
+      "lock": "ALGIERS"
+    },
+    {
+      "row": 97,
+      "waterway": "GIWW EAST",
+      "lock": "INNER HARBOR NAVIGATION CANAL"
+    },
+    {
+      "row": 99,
+      "waterway": "GIWW Port Allen-Morgan cty Alt. Rte",
+      "lock": "BAYOU SORREL"
+    },
+    {
+      "row": 100,
+      "waterway": "GIWW Port Allen-Morgan cty Alt. Rte",
+      "lock": "PORT ALLEN"
+    },
+    {
+      "row": 102,
+      "waterway": "GIWW Texas",
+      "lock": "BRAZOS EAST"
+    },
+    {
+      "row": 103,
+      "waterway": "GIWW Texas",
+      "lock": "BRAZOS WEST"
+    },
+    {
+      "row": 104,
+      "waterway": "GIWW Texas",
+      "lock": "COLORADO RIVER EAST"
+    },
+    {
+      "row": 105,
+      "waterway": "GIWW Texas",
+      "lock": "COLORADO RIVER WEST"
+    },
+    {
+      "row": 107,
+      "waterway": "GIWW WEST",
+      "lock": "HARVEY"
+    },
+    {
+      "row": 109,
+      "waterway": "GREEN",
+      "lock": "1 GREEN"
+    },
+    {
+      "row": 110,
+      "waterway": "GREEN",
+      "lock": "2 GREEN"
+    },
+    {
+      "row": 112,
+      "waterway": "HUDSON",
+      "lock": "TROY"
+    },
+    {
+      "row": 114,
+      "waterway": "ILLINOIS",
+      "lock": "BRANDON ROAD"
+    },
+    {
+      "row": 115,
+      "waterway": "ILLINOIS",
+      "lock": "DRESDEN ISLAND"
+    },
+    {
+      "row": 116,
+      "waterway": "ILLINOIS",
+      "lock": "LAGRANGE"
+    },
+    {
+      "row": 117,
+      "waterway": "ILLINOIS",
+      "lock": "LOCKPORT"
+    },
+    {
+      "row": 118,
+      "waterway": "ILLINOIS",
+      "lock": "MARSEILLES"
+    },
+    {
+      "row": 119,
+      "waterway": "ILLINOIS",
+      "lock": "PEORIA"
+    },
+    {
+      "row": 120,
+      "waterway": "ILLINOIS",
+      "lock": "STARVED ROCK"
+    },
+    {
+      "row": 122,
+      "waterway": "INLAND WW FRANKLIN-MERMENTAU",
+      "lock": "SCHOONER BAYOU"
+    },
+    {
+      "row": 124,
+      "waterway": "KANAWHA",
+      "lock": "LONDON"
+    },
+    {
+      "row": 125,
+      "waterway": "KANAWHA",
+      "lock": "MARMET"
+    },
+    {
+      "row": 126,
+      "waterway": "KANAWHA",
+      "lock": "WINFIELD"
+    },
+    {
+      "row": 128,
+      "waterway": "KASKASKIA",
+      "lock": "KASKASKIA"
+    },
+    {
+      "row": 130,
+      "waterway": "LAKE WASHINGTON SHIP CANAL",
+      "lock": "HIRAM M. CHITTENDEN"
+    },
+    {
+      "row": 132,
+      "waterway": "MERMENTAU",
+      "lock": "CATFISH POINT"
+    },
+    {
+      "row": 134,
+      "waterway": "MISSISSIPPI",
+      "lock": "10 MISSISSIPPI"
+    },
+    {
+      "row": 135,
+      "waterway": "MISSISSIPPI",
+      "lock": "11 MISSISSIPPI"
+    },
+    {
+      "row": 136,
+      "waterway": "MISSISSIPPI",
+      "lock": "12 MISSISSIPPI"
+    },
+    {
+      "row": 137,
+      "waterway": "MISSISSIPPI",
+      "lock": "13 MISSISSIPPI"
+    },
+    {
+      "row": 138,
+      "waterway": "MISSISSIPPI",
+      "lock": "14 MISSISSIPPI"
+    },
+    {
+      "row": 139,
+      "waterway": "MISSISSIPPI",
+      "lock": "15 MISSISSIPPI"
+    },
+    {
+      "row": 140,
+      "waterway": "MISSISSIPPI",
+      "lock": "16 MISSISSIPPI"
+    },
+    {
+      "row": 141,
+      "waterway": "MISSISSIPPI",
+      "lock": "17 MISSISSIPPI"
+    },
+    {
+      "row": 142,
+      "waterway": "MISSISSIPPI",
+      "lock": "18 MISSISSIPPI"
+    },
+    {
+      "row": 143,
+      "waterway": "MISSISSIPPI",
+      "lock": "19 MISSISSIPPI"
+    },
+    {
+      "row": 144,
+      "waterway": "MISSISSIPPI",
+      "lock": "1 MISSISSIPPI"
+    },
+    {
+      "row": 145,
+      "waterway": "MISSISSIPPI",
+      "lock": "20 MISSISSIPPI"
+    },
+    {
+      "row": 146,
+      "waterway": "MISSISSIPPI",
+      "lock": "21 MISSISSIPPI"
+    },
+    {
+      "row": 147,
+      "waterway": "MISSISSIPPI",
+      "lock": "22 MISSISSIPPI"
+    },
+    {
+      "row": 148,
+      "waterway": "MISSISSIPPI",
+      "lock": "24 MISSISSIPPI"
+    },
+    {
+      "row": 149,
+      "waterway": "MISSISSIPPI",
+      "lock": "25 MISSISSIPPI"
+    },
+    {
+      "row": 150,
+      "waterway": "MISSISSIPPI",
+      "lock": "27 MISSISSIPPI"
+    },
+    {
+      "row": 151,
+      "waterway": "MISSISSIPPI",
+      "lock": "2 MISSISSIPPI"
+    },
+    {
+      "row": 152,
+      "waterway": "MISSISSIPPI",
+      "lock": "3 MISSISSIPPI"
+    },
+    {
+      "row": 153,
+      "waterway": "MISSISSIPPI",
+      "lock": "4 MISSISSIPPI"
+    },
+    {
+      "row": 154,
+      "waterway": "MISSISSIPPI",
+      "lock": "5a MISSISSIPPI"
+    },
+    {
+      "row": 155,
+      "waterway": "MISSISSIPPI",
+      "lock": "5 MISSISSIPPI"
+    },
+    {
+      "row": 156,
+      "waterway": "MISSISSIPPI",
+      "lock": "6 MISSISSIPPI"
+    },
+    {
+      "row": 157,
+      "waterway": "MISSISSIPPI",
+      "lock": "7 MISSISSIPPI"
+    },
+    {
+      "row": 158,
+      "waterway": "MISSISSIPPI",
+      "lock": "8 MISSISSIPPI"
+    },
+    {
+      "row": 159,
+      "waterway": "MISSISSIPPI",
+      "lock": "9 MISSISSIPPI"
+    },
+    {
+      "row": 160,
+      "waterway": "MISSISSIPPI",
+      "lock": "LOWER SAINT ANTHONY FALLS"
+    },
+    {
+      "row": 161,
+      "waterway": "MISSISSIPPI",
+      "lock": "MELVIN PRICE"
+    },
+    {
+      "row": 162,
+      "waterway": "MISSISSIPPI",
+      "lock": "UPPER SAINT ANTHONY FALLS"
+    },
+    {
+      "row": 164,
+      "waterway": "MONONGAHELA",
+      "lock": "2 MONONGAHELA"
+    },
+    {
+      "row": 165,
+      "waterway": "MONONGAHELA",
+      "lock": "3 MONONGAHELA"
+    },
+    {
+      "row": 166,
+      "waterway": "MONONGAHELA",
+      "lock": "4 MONONGAHELA"
+    },
+    {
+      "row": 167,
+      "waterway": "MONONGAHELA",
+      "lock": "GRAYS LANDING"
+    },
+    {
+      "row": 168,
+      "waterway": "MONONGAHELA",
+      "lock": "HILDEBRAND"
+    },
+    {
+      "row": 169,
+      "waterway": "MONONGAHELA",
+      "lock": "MAXWELL"
+    },
+    {
+      "row": 170,
+      "waterway": "MONONGAHELA",
+      "lock": "MORGANTOWN"
+    },
+    {
+      "row": 171,
+      "waterway": "MONONGAHELA",
+      "lock": "OPEKISKA"
+    },
+    {
+      "row": 172,
+      "waterway": "MONONGAHELA",
+      "lock": "POINT MARION"
+    },
+    {
+      "row": 174,
+      "waterway": "OHIO",
+      "lock": "52 OHIO"
+    },
+    {
+      "row": 175,
+      "waterway": "OHIO",
+      "lock": "53 OHIO"
+    },
+    {
+      "row": 176,
+      "waterway": "OHIO",
+      "lock": "BELLEVILLE"
+    },
+    {
+      "row": 177,
+      "waterway": "OHIO",
+      "lock": "CANNELTON"
+    },
+    {
+      "row": 178,
+      "waterway": "OHIO",
+      "lock": "CAPTAIN ANTHONY MELDAHL"
+    },
+    {
+      "row": 179,
+      "waterway": "OHIO",
+      "lock": "DASHIELDS"
+    },
+    {
+      "row": 180,
+      "waterway": "OHIO",
+      "lock": "EMSWORTH"
+    },
+    {
+      "row": 181,
+      "waterway": "OHIO",
+      "lock": "GREENUP"
+    },
+    {
+      "row": 182,
+      "waterway": "OHIO",
+      "lock": "HANNIBAL"
+    },
+    {
+      "row": 183,
+      "waterway": "OHIO",
+      "lock": "JOHN T. MYERS"
+    },
+    {
+      "row": 184,
+      "waterway": "OHIO",
+      "lock": "MARKLAND"
+    },
+    {
+      "row": 185,
+      "waterway": "OHIO",
+      "lock": "MCALPINE"
+    },
+    {
+      "row": 186,
+      "waterway": "OHIO",
+      "lock": "MONTGOMERY"
+    },
+    {
+      "row": 187,
+      "waterway": "OHIO",
+      "lock": "NEWBURGH"
+    },
+    {
+      "row": 188,
+      "waterway": "OHIO",
+      "lock": "NEW CUMBERLAND"
+    },
+    {
+      "row": 189,
+      "waterway": "OHIO",
+      "lock": "PIKE ISLAND"
+    },
+    {
+      "row": 190,
+      "waterway": "OHIO",
+      "lock": "RACINE"
+    },
+    {
+      "row": 191,
+      "waterway": "OHIO",
+      "lock": "ROBERT C. BYRD"
+    },
+    {
+      "row": 192,
+      "waterway": "OHIO",
+      "lock": "SMITHLAND"
+    },
+    {
+      "row": 193,
+      "waterway": "OHIO",
+      "lock": "WILLOW ISLAND"
+    },
+    {
+      "row": 195,
+      "waterway": "OKEECHOBEE",
+      "lock": "ORTONA"
+    },
+    {
+      "row": 197,
+      "waterway": "OLD RIVER",
+      "lock": "OLD RIVER"
+    },
+    {
+      "row": 199,
+      "waterway": "OUACHITA",
+      "lock": "COLUMBIA"
+    },
+    {
+      "row": 200,
+      "waterway": "OUACHITA",
+      "lock": "FELSENTHAL"
+    },
+    {
+      "row": 201,
+      "waterway": "OUACHITA",
+      "lock": "H. K. THATCHER"
+    },
+    {
+      "row": 203,
+      "waterway": "RED",
+      "lock": "3 RED"
+    },
+    {
+      "row": 204,
+      "waterway": "RED",
+      "lock": "JOE D. WAGGONNER"
+    },
+    {
+      "row": 205,
+      "waterway": "RED",
+      "lock": "JOHN H.OVERTON"
+    },
+    {
+      "row": 206,
+      "waterway": "RED",
+      "lock": "LINDY CLAIBORNE BOGGS"
+    },
+    {
+      "row": 207,
+      "waterway": "RED",
+      "lock": "RUSSELL B. LONG"
+    },
+    {
+      "row": 209,
+      "waterway": "SNAKE",
+      "lock": "ICE HARBOR"
+    },
+    {
+      "row": 210,
+      "waterway": "SNAKE",
+      "lock": "LITTLE GOOSE"
+    },
+    {
+      "row": 211,
+      "waterway": "SNAKE",
+      "lock": "LOWER GRANITE"
+    },
+    {
+      "row": 212,
+      "waterway": "SNAKE",
+      "lock": "LOWER MONUMENTAL"
+    },
+    {
+      "row": 214,
+      "waterway": "ST. LUCIE CANAL",
+      "lock": "PORT MAYACA"
+    },
+    {
+      "row": 215,
+      "waterway": "ST. LUCIE CANAL",
+      "lock": "ST. LUCIE"
+    },
+    {
+      "row": 217,
+      "waterway": "ST. MARYS",
+      "lock": "ST. MARYS"
+    },
+    {
+      "row": 219,
+      "waterway": "TENNESSEE",
+      "lock": "CHICKAMAUGA"
+    },
+    {
+      "row": 220,
+      "waterway": "TENNESSEE",
+      "lock": "FORT LOUDON"
+    },
+    {
+      "row": 221,
+      "waterway": "TENNESSEE",
+      "lock": "GENERAL JOSEPH WHEELER"
+    },
+    {
+      "row": 222,
+      "waterway": "TENNESSEE",
+      "lock": "GUNTERSVILLE"
+    },
+    {
+      "row": 223,
+      "waterway": "TENNESSEE",
+      "lock": "KENTUCKY"
+    },
+    {
+      "row": 224,
+      "waterway": "TENNESSEE",
+      "lock": "NICKAJACK"
+    },
+    {
+      "row": 225,
+      "waterway": "TENNESSEE",
+      "lock": "PICKWICK LANDING"
+    },
+    {
+      "row": 226,
+      "waterway": "TENNESSEE",
+      "lock": "WATTS BAR"
+    },
+    {
+      "row": 227,
+      "waterway": "TENNESSEE",
+      "lock": "WILSON"
+    },
+    {
+      "row": 229,
+      "waterway": "TENN-TOMBIGBEE",
+      "lock": "ABERDEEN"
+    },
+    {
+      "row": 230,
+      "waterway": "TENN-TOMBIGBEE",
+      "lock": "AMORY"
+    },
+    {
+      "row": 231,
+      "waterway": "TENN-TOMBIGBEE",
+      "lock": "FULTON"
+    },
+    {
+      "row": 232,
+      "waterway": "TENN-TOMBIGBEE",
+      "lock": "GLOVER WILKINS"
+    },
+    {
+      "row": 233,
+      "waterway": "TENN-TOMBIGBEE",
+      "lock": "G.V. \"SONNY\" MONTGOMERY"
+    },
+    {
+      "row": 234,
+      "waterway": "TENN-TOMBIGBEE",
+      "lock": "HOWELL HEFLIN"
+    },
+    {
+      "row": 235,
+      "waterway": "TENN-TOMBIGBEE",
+      "lock": "JAMIE WHITTEN"
+    },
+    {
+      "row": 236,
+      "waterway": "TENN-TOMBIGBEE",
+      "lock": "JOHN C. STENNIS"
+    },
+    {
+      "row": 237,
+      "waterway": "TENN-TOMBIGBEE",
+      "lock": "JOHN E. RANKIN"
+    },
+    {
+      "row": 238,
+      "waterway": "TENN-TOMBIGBEE",
+      "lock": "TOM BEVILL"
+    },
+    {
+      "row": 240,
+      "waterway": "TOMBIGBEE",
+      "lock": "COFFEEVILLE"
+    },
+    {
+      "row": 241,
+      "waterway": "TOMBIGBEE",
+      "lock": "DEMOPOLIS"
+    },
+    {
+      "row": 243,
+      "waterway": "VERDIGRIS",
+      "lock": "CHOUTEAU"
+    },
+    {
+      "row": 244,
+      "waterway": "VERDIGRIS",
+      "lock": "NEWT GRAHAM LOCK"
+    },
+    {
+      "row": 246,
+      "waterway": "WEST PEARL",
+      "lock": "1 WEST PEARL"
+    },
+    {
+      "row": 247,
+      "waterway": "WEST PEARL",
+      "lock": "2 WEST PEARL"
+    },
+    {
+      "row": 248,
+      "waterway": "WEST PEARL",
+      "lock": "3 WEST PEARL"
+    },
+    {
+      "row": 250,
+      "waterway": "WHITE",
+      "lock": "MONTGOMERY POINT"
+    },
+    {
+      "row": 252,
+      "waterway": "WILLAMETTE",
+      "lock": "WILLAMETTE FALLS"
+    }
   ],
-  "lock_like_unique_count": 4,
+  "lock_identity_unique": [
+    "1 CAPE FEAR",
+    "1 GREEN",
+    "1 MISSISSIPPI",
+    "1 WEST PEARL",
+    "10 MISSISSIPPI",
+    "11 MISSISSIPPI",
+    "12 MISSISSIPPI",
+    "13 MISSISSIPPI",
+    "14 MISSISSIPPI",
+    "15 MISSISSIPPI",
+    "16 MISSISSIPPI",
+    "17 MISSISSIPPI",
+    "18 MISSISSIPPI",
+    "19 MISSISSIPPI",
+    "2 ALLEGHENY",
+    "2 ARKANSAS",
+    "2 CAPE FEAR",
+    "2 GREEN",
+    "2 MISSISSIPPI",
+    "2 MONONGAHELA",
+    "2 WEST PEARL",
+    "20 MISSISSIPPI",
+    "21 MISSISSIPPI",
+    "22 MISSISSIPPI",
+    "24 MISSISSIPPI",
+    "25 MISSISSIPPI",
+    "27 MISSISSIPPI",
+    "3 ALLEGHENY",
+    "3 MISSISSIPPI",
+    "3 MONONGAHELA",
+    "3 RED",
+    "3 WEST PEARL",
+    "4 ALLEGHENY",
+    "4 MISSISSIPPI",
+    "4 MONONGAHELA",
+    "5 ALLEGHENY",
+    "5 MISSISSIPPI",
+    "52 OHIO",
+    "53 OHIO",
+    "5a MISSISSIPPI",
+    "6 ALLEGHENY",
+    "6 MISSISSIPPI",
+    "7 ALLEGHENY",
+    "7 MISSISSIPPI",
+    "8 ALLEGHENY",
+    "8 MISSISSIPPI",
+    "9 ALLEGHENY",
+    "9 MISSISSIPPI",
+    "ABERDEEN",
+    "ALANSON",
+    "ALGIERS",
+    "AMORY",
+    "ARMISTEAD I. SELDON",
+    "ARTHUR V. ORMOND",
+    "BARKLEY",
+    "BAYOU BOEUF",
+    "BAYOU SORREL",
+    "BELLEVILLE",
+    "BERWICK",
+    "BLACK ROCK",
+    "BONNEVILLE",
+    "BRANDON ROAD",
+    "BRAZOS EAST",
+    "BRAZOS WEST",
+    "CALCASIEU",
+    "CALCASIEU BARRIER",
+    "CANAVERAL",
+    "CANNELTON",
+    "CAPTAIN ANTHONY MELDAHL",
+    "CATFISH POINT",
+    "CHEATHAM",
+    "CHICAGO",
+    "CHICKAMAUGA",
+    "CHOUTEAU",
+    "CLAIBORNE",
+    "COFFEEVILLE",
+    "COLONEL CHARLES D. MAYNARD LOCK AND DAM",
+    "COLORADO RIVER EAST",
+    "COLORADO RIVER WEST",
+    "COLUMBIA",
+    "CORDELL HULL",
+    "DARDANELLE",
+    "DASHIELDS",
+    "DAVID D. TERRY",
+    "DEEP CREEK",
+    "DEMOPOLIS",
+    "DRESDEN ISLAND",
+    "EAST & WEST CALUMET",
+    "EMMETT SANDERS",
+    "EMSWORTH",
+    "FELSENTHAL",
+    "FORT LOUDON",
+    "FRESHWATER BAYOU",
+    "FULTON",
+    "G.V. \"SONNY\" MONTGOMERY",
+    "GENERAL JOSEPH WHEELER",
+    "GEORGE W. ANDREWS",
+    "GLOVER WILKINS",
+    "GRAYS LANDING",
+    "GREAT BRIDGE",
+    "GREENUP",
+    "GUNTERSVILLE",
+    "H. K. THATCHER",
+    "HANNIBAL",
+    "HARVEY",
+    "HILDEBRAND",
+    "HIRAM M. CHITTENDEN",
+    "HOLT",
+    "HOWELL HEFLIN",
+    "ICE HARBOR",
+    "INNER HARBOR NAVIGATION CANAL",
+    "JAMES W. TRIMBLE",
+    "JAMIE WHITTEN",
+    "JIM WOODRUFF",
+    "JOE D. WAGGONNER",
+    "JOE HARDIN",
+    "JOHN C. STENNIS",
+    "JOHN DAY",
+    "JOHN E. RANKIN",
+    "JOHN H.OVERTON",
+    "JOHN HOLLIS BANKHEAD",
+    "JOHN T. MYERS",
+    "JONESVILLE",
+    "KASKASKIA",
+    "KENTUCKY",
+    "KEYSTONE",
+    "LAGRANGE",
+    "LELAND BOWMAN",
+    "LINDY CLAIBORNE BOGGS",
+    "LITTLE GOOSE",
+    "LOCKPORT",
+    "LONDON",
+    "LOWER GRANITE",
+    "LOWER MONUMENTAL",
+    "LOWER SAINT ANTHONY FALLS",
+    "MARKLAND",
+    "MARMET",
+    "MARSEILLES",
+    "MAXWELL",
+    "MCALPINE",
+    "MCNARY",
+    "MELTON HILL",
+    "MELVIN PRICE",
+    "MILLERS FERRY",
+    "MONTGOMERY",
+    "MONTGOMERY POINT",
+    "MOORE HAVEN",
+    "MORGANTOWN",
+    "MURRAY",
+    "NEW CUMBERLAND",
+    "NEWBURGH",
+    "NEWT GRAHAM LOCK",
+    "NICKAJACK",
+    "NORRELL",
+    "OLD HICKORY",
+    "OLD RIVER",
+    "OPEKISKA",
+    "ORTONA",
+    "OZARK - JETA TAYLOR",
+    "PEORIA",
+    "PICKWICK LANDING",
+    "PIKE ISLAND",
+    "POINT MARION",
+    "PORT ALLEN",
+    "PORT MAYACA",
+    "RACINE",
+    "ROBERT C. BYRD",
+    "ROBERT F. HENRY",
+    "ROBERT S. KERR",
+    "RUSSELL B. LONG",
+    "SCHOONER BAYOU",
+    "SMITHLAND",
+    "SOUTH MILLS",
+    "ST. LUCIE",
+    "ST. MARYS",
+    "STARVED ROCK",
+    "THE DALLES",
+    "THOMAS J. OBRIEN",
+    "TOAD SUCK FERRY",
+    "TOM BEVILL",
+    "TROY",
+    "UPPER SAINT ANTHONY FALLS",
+    "W. P. FRANKLIN",
+    "W.D. MAYO",
+    "WALTER F. GEORGE",
+    "WATTS BAR",
+    "WEBBERS FALLS",
+    "WILLAMETTE FALLS",
+    "WILLIAM BACON OLIVER",
+    "WILLIAM O. HUSKE",
+    "WILLOW ISLAND",
+    "WILSON",
+    "WINFIELD"
+  ],
+  "lock_identity_unique_count": 193,
   "incremental_monetary_cost_usd": 0
 }

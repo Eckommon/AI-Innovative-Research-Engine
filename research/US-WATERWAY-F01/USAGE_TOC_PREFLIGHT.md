@@ -5,14 +5,61 @@ String-cell only; no numeric outcome magnitudes read.
 - HTTP: **200**
 - bytes: **733421**
 - SHA-256: `0db8e4ae602bb60fea029a17a3c39929fe58cef6cc46b6f05bd1f45c4088f90f`
+- TOC schema: row 4; Waterway=column 2; Lock=column 3
 - TOC nonempty string rows: **251**
-- unique lock-like identity strings: **4**
+- unique lock identities in column 3: **193**
 
-## Lock-like identity strings
-- COLONEL CHARLES D. MAYNARD LOCK AND DAM
-- LOCKPORT
-- Lock Usage, CY 1993 - 2017
-- NEWT GRAHAM LOCK
+## Sample lock identities
+- 1 CAPE FEAR
+- 1 GREEN
+- 1 MISSISSIPPI
+- 1 WEST PEARL
+- 10 MISSISSIPPI
+- 11 MISSISSIPPI
+- 12 MISSISSIPPI
+- 13 MISSISSIPPI
+- 14 MISSISSIPPI
+- 15 MISSISSIPPI
+- 16 MISSISSIPPI
+- 17 MISSISSIPPI
+- 18 MISSISSIPPI
+- 19 MISSISSIPPI
+- 2 ALLEGHENY
+- 2 ARKANSAS
+- 2 CAPE FEAR
+- 2 GREEN
+- 2 MISSISSIPPI
+- 2 MONONGAHELA
+- 2 WEST PEARL
+- 20 MISSISSIPPI
+- 21 MISSISSIPPI
+- 22 MISSISSIPPI
+- 24 MISSISSIPPI
+- 25 MISSISSIPPI
+- 27 MISSISSIPPI
+- 3 ALLEGHENY
+- 3 MISSISSIPPI
+- 3 MONONGAHELA
+- 3 RED
+- 3 WEST PEARL
+- 4 ALLEGHENY
+- 4 MISSISSIPPI
+- 4 MONONGAHELA
+- 5 ALLEGHENY
+- 5 MISSISSIPPI
+- 52 OHIO
+- 53 OHIO
+- 5a MISSISSIPPI
+- 6 ALLEGHENY
+- 6 MISSISSIPPI
+- 7 ALLEGHENY
+- 7 MISSISSIPPI
+- 8 ALLEGHENY
+- 8 MISSISSIPPI
+- 9 ALLEGHENY
+- 9 MISSISSIPPI
+- ABERDEEN
+- ALANSON
 
 This is an identity-only diagnostic, not an effect analysis.
 
