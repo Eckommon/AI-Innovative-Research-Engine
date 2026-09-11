@@ -1,10 +1,10 @@
 ---
-checkpoint_id: CHK-20260911-US-WATERWAY-E02-ACTIVE
-active_issue: 102
-active_research: US-WATERWAY-E02
-last_completed_issue: 101
-last_completed_research: PORTFOLIO-R15
-last_decision: DEC-141
+checkpoint_id: CHK-20260911-US-WATERWAY-E02-NO-PORTFOLIO-RETURN
+active_issue: none
+active_research: NONE
+last_completed_issue: 102
+last_completed_research: US-WATERWAY-E02
+last_decision: DEC-142
 updated: 2026-09-11
 ---
 
@@ -12,6 +12,10 @@ updated: 2026-09-11
 
 ## Canonical restart point / 정확한 재개점
 
-Issue #101 PORTFOLIO-R15 selected Issue #102 `US-WATERWAY-E02` after R15 Run `34577013281` showed 28 approved negative Daily `00060/00003` records across 2/13 frozen gages. Negative values are preserved as signed source observations in E02; E01 remains terminal HOLD.
+US-WATERWAY-E02 / Issue #102 is complete at **`NO_PREREGISTERED_POSITIVE_US_WATERWAY_E02_RELATIONSHIP`**.
 
-Execute the E02 frozen relationship test only. Use the exact 13-gage/23-lock cohort, 2016–2025, >=330 usable days per gage-year, signed q10/q90 extreme-day share, USACE Average Delay outcome, gage+year FE, two-way CR1, and the preregistered directional/materiality gate. Primary gate must be fixed before sensitivities. Cost = 0 USD.
+Primary Run `34577544880`: N=120, G=12, T=10, beta=93.0279684807, SE=78.6964370072, 95% CI=[-84.9957401818, 271.051677143], p=0.267451090193, +10pp=9.30279684807 minutes.
+
+The signed-flow source-semantic problem is resolved, but the preregistered positive relationship is not established. Do not tune/re-run E02. Next work begins at **Stage 0 portfolio control** with no active research issue.
+
+Incremental monetary cost: **0 USD**.

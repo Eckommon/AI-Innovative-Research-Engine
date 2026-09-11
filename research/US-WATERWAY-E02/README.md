@@ -1,12 +1,12 @@
 ---
 id: US-WATERWAY-E02
 issue: 102
-state: ACTIVE_PREREGISTERED
+state: COMPLETED_NO_PREREGISTERED_POSITIVE_RELATIONSHIP
 mission_anchor: MEM-054
 portfolio_decision: DEC-140
 preregistration_decision: DEC-141
 parent: US-WATERWAY-E01
-relationship_computed: false
+relationship_computed: true
 delay_magnitudes_opened: false
 incremental_monetary_cost_usd: 0
 ---
@@ -67,3 +67,7 @@ Sensitivities cannot rescue or reverse primary.
 No abs(Q), negative-value deletion, zero coercion, alternate predictor, percentile tuning, lag/lead search, river cherry-picking, outcome substitution, causal/prediction/novelty/utility claim.
 
 Incremental monetary cost: **0 USD**.
+
+## Final disposition / 최종 처분
+
+Run `34577544880` resolves E02 as **`NO_PREREGISTERED_POSITIVE_US_WATERWAY_E02_RELATIONSHIP`**. Realized panel: 120 gage-years / 12 gages / 10 years. beta=93.0279684807, 95% CI=[-84.9957401818, 271.051677143], p=0.267451090193, +10pp=9.30279684807 minutes. The positive point estimate does not pass the preregistered CI gate. No automatic descendant is authorized; return to Stage 0.
