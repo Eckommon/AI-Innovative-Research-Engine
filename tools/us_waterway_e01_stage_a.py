@@ -18,6 +18,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 ROOT = Path(__file__).resolve().parents[1]
 F01 = ROOT / "research" / "US-WATERWAY-F01"
 OUT = ROOT / "research" / "US-WATERWAY-E01"
+HOME = "https://ndc.ops.usace.army.mil/ords/r/lpms/corps-locks/home"
 ANNUAL = "https://ndc.ops.usace.army.mil/ords/r/lpms/corps-locks/annual-usage-report"
 LOCK_QUERY = "https://services7.arcgis.com/n1YM8pTrFmm7L4hs/ArcGIS/rest/services/Locks/FeatureServer/0/query?where=1%3D1&outFields=ID,NDCCODE,RIVERCD,LOCKCD,PMSDATA,PMSNAME,RIVER,STATE,DISTRICT&returnGeometry=false&f=json"
 START = "2016-01-01"
@@ -109,8 +110,12 @@ def scrape_annual_support():
     all_delay = {}
     page_count = 0
     try:
-        driver.get(ANNUAL)
         wait = WebDriverWait(driver, 30)
+        # Corps Locks is session-aware. Establish the same public session route used
+        # by the successful urllib probe before opening the Annual Usage report.
+        driver.get(HOME)
+        wait.until(lambda d: "corps-locks" in d.current_url)
+        driver.get(ANNUAL)
         wait.until(lambda d: len(d.find_elements(By.TAG_NAME, "table")) >= 2)
         while True:
             table = find_individual_table(driver)
@@ -141,7 +146,6 @@ def scrape_annual_support():
                     continue
                 present = {}
                 for y in YEARS:
-                    # Deliberately reduce rendered metric text immediately to boolean presence.
                     present[y] = bool(cells[year_idx[y]].text.strip())
                 key = (code_part(river), lockcode(code_part(lock)))
                 all_delay[key] = {
