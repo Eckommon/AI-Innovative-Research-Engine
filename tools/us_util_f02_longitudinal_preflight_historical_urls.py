@@ -6,7 +6,7 @@ EIA-861 final ZIP route discovered after Run 34553100100: 2024 is under /zip/,
 while 2019-2023 are under /archive/zip/.
 """
 
-from tools import us_util_f02_longitudinal_preflight as base
+import us_util_f02_longitudinal_preflight as base
 
 
 def official_eia_url(year: int) -> str:
