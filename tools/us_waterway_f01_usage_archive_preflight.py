@@ -7,7 +7,7 @@ never converted, summarized, ranked, or persisted.
 """
 from __future__ import annotations
 
-import hashlib, io, json, re, urllib.request
+import hashlib, io, json, re, time, urllib.request
 from pathlib import Path
 from openpyxl import load_workbook
 
@@ -18,10 +18,18 @@ COLL = "p16021coll2"
 COMPOUND_ID = 2610
 
 
-def get(url: str) -> tuple[bytes, int, str]:
-    req = urllib.request.Request(url, headers={"User-Agent": UA})
-    with urllib.request.urlopen(req, timeout=120) as r:
-        return r.read(), getattr(r, "status", 200), r.geturl()
+def get(url: str, attempts: int = 4) -> tuple[bytes, int, str]:
+    last = None
+    for attempt in range(attempts):
+        try:
+            req = urllib.request.Request(url, headers={"User-Agent": UA})
+            with urllib.request.urlopen(req, timeout=120) as r:
+                return r.read(), getattr(r, "status", 200), r.geturl()
+        except Exception as exc:
+            last = exc
+            if attempt + 1 < attempts:
+                time.sleep(2 * (attempt + 1))
+    raise last
 
 
 def sha256(b: bytes) -> str:
