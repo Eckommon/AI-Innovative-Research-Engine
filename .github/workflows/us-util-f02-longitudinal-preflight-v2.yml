@@ -1,0 +1,48 @@
+name: US UTIL F02 longitudinal preflight v2
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/us-util-f02-longitudinal-preflight-v2.yml'
+      - 'tools/us_util_f02_longitudinal_preflight_historical_urls.py'
+
+permissions:
+  contents: write
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate runner and URL wrapper
+        run: |
+          python -m py_compile tools/us_util_f02_longitudinal_preflight.py
+          python -m py_compile tools/us_util_f02_longitudinal_preflight_historical_urls.py
+
+      - name: Install workbook dependency
+        run: python -m pip install --disable-pip-version-check openpyxl
+
+      - name: Run frozen outcome-blind 2019-2024 comparability preflight
+        run: python tools/us_util_f02_longitudinal_preflight_historical_urls.py
+
+      - name: Commit derived F02 artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            research/US-UTIL-F02/SOURCE_MANIFEST.csv \
+            research/US-UTIL-F02/YEAR_SCHEMA_SUPPORT.csv \
+            research/US-UTIL-F02/UTILITY_YEAR_SUPPORT.csv \
+            research/US-UTIL-F02/QUALIFIED_UTILITY_YEAR_COUNTY.csv \
+            research/US-UTIL-F02/RESULT.md
+          if git diff --cached --quiet; then
+            echo "No F02 artifact changes"
+          else
+            git commit -m "Record US-UTIL-F02 longitudinal comparability result"
+            git push
+          fi
