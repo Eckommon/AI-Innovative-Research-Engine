@@ -28,35 +28,40 @@ def main():
     wb=load_workbook(io.BytesIO(b),read_only=True,data_only=False)
     ws=wb['TOC']
     rows=[]
-    strings=[]
+    lock_ids=[]
+    waterway=None
+    lock_records=[]
     for r_idx,row in enumerate(ws.iter_rows(),start=1):
         vals=[]
         for c_idx,cell in enumerate(row,start=1):
             v=cell.value
             if isinstance(v,str) and v.strip():
-                s=v.strip(); vals.append({'col':c_idx,'text':s}); strings.append(s)
+                s=v.strip(); vals.append({'col':c_idx,'text':s})
         if vals: rows.append({'row':r_idx,'cells':vals})
+        if r_idx <= 4:
+            continue
+        c2 = row[1].value if len(row) > 1 else None
+        c3 = row[2].value if len(row) > 2 else None
+        if isinstance(c2,str) and c2.strip():
+            waterway=c2.strip()
+        if isinstance(c3,str) and c3.strip():
+            lock=c3.strip()
+            if lock.lower() != 'lock':
+                lock_ids.append(lock)
+                lock_records.append({'row':r_idx,'waterway':waterway,'lock':lock})
     wb.close()
-    # Structural identity estimate from TOC rows: rows containing at least one hyperlink target or named lock-like text
-    # We do not infer from numeric cells.
-    lock_like=[]
-    stop={'Lock','Locks','Waterway','Table of Contents - Locks by Waterway'}
-    for rec in rows:
-        for c in rec['cells']:
-            s=c['text']; u=s.upper()
-            if s in stop: continue
-            if any(tok in u for tok in ['LOCK','L/D','L & D','LOCKS & DAM','LOCK & DAM']) and len(s)<=120:
-                lock_like.append(s)
+    unique_locks=sorted(set(lock_ids))
     out={
       'boundary':{'numeric_outcome_cells_read':False,'delay_magnitudes_parsed':False,'hydrology_magnitudes_parsed':False,'relationship_computed':False},
       'url':URL,'http':status,'final_url':final,'bytes':len(b),'sha256':hashlib.sha256(b).hexdigest(),
-      'toc_sheet':'TOC','nonempty_string_rows':len(rows),'toc_rows_string_cells':rows,
-      'lock_like_unique_strings':sorted(set(lock_like)),'lock_like_unique_count':len(set(lock_like)),
+      'toc_sheet':'TOC','toc_schema':{'header_row':4,'waterway_col':2,'lock_col':3},
+      'nonempty_string_rows':len(rows),'toc_rows_string_cells':rows,
+      'lock_identity_records':lock_records,'lock_identity_unique':unique_locks,'lock_identity_unique_count':len(unique_locks),
       'incremental_monetary_cost_usd':0
     }
     (OUT/'USAGE_TOC_PREFLIGHT.json').write_text(json.dumps(out,indent=2,ensure_ascii=False),encoding='utf-8')
-    md=['# US-WATERWAY-F01 Lock Usage TOC Identity Preflight','', 'String-cell only; no numeric outcome magnitudes read.', '',f'- HTTP: **{status}**',f'- bytes: **{len(b)}**',f'- SHA-256: `{out["sha256"]}`',f'- TOC nonempty string rows: **{len(rows)}**',f'- unique lock-like identity strings: **{len(set(lock_like))}**','', '## Lock-like identity strings']
-    md += [f'- {x}' for x in sorted(set(lock_like))]
+    md=['# US-WATERWAY-F01 Lock Usage TOC Identity Preflight','', 'String-cell only; no numeric outcome magnitudes read.', '',f'- HTTP: **{status}**',f'- bytes: **{len(b)}**',f'- SHA-256: `{out["sha256"]}`',f'- TOC schema: row 4; Waterway=column 2; Lock=column 3',f'- TOC nonempty string rows: **{len(rows)}**',f'- unique lock identities in column 3: **{len(unique_locks)}**','', '## Sample lock identities']
+    md += [f'- {x}' for x in unique_locks[:50]]
     md += ['', 'This is an identity-only diagnostic, not an effect analysis.', '', 'Incremental monetary cost: **0 USD**.']
     (OUT/'USAGE_TOC_PREFLIGHT.md').write_text('\n'.join(md)+'\n',encoding='utf-8')
 
