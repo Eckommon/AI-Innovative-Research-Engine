@@ -1,9 +1,11 @@
 ---
 id: US-WATERWAY-F01
 issue: 98
-state: ACTIVE_SOURCE_IDENTITY_PREFLIGHT
+state: COMPLETED_PASS
 mission_anchor: MEM-054
-decision: DEC-134
+decision: DEC-135
+claim: CLM-141
+final_gate: PASS_US_WATERWAY_F01_JOIN_READY
 outcome_values_opened: false
 relationship_computed: false
 incremental_monetary_cost_usd: 0
@@ -46,3 +48,11 @@ All must hold:
 - zero incremental monetary cost.
 
 Failure of the historical-delay route is terminal HOLD for this F01. Do not lower thresholds or substitute annual unavailability.
+
+## Final disposition / 최종 상태
+
+**`PASS_US_WATERWAY_F01_JOIN_READY`** under `DEC-135` / `CLM-141`.
+
+Verified outcome-blind structure: 193 historical Usage lock identities; 25/25 qualified historical-lock↔USGS crosswalks; shared 2018–2020 support; public Corps Locks Annual Usage route spans 2016–2025. No delay or hydrology magnitude was parsed.
+
+`JOIN_READY ≠ EXPERIMENT_READY`; return to Stage 0 before any relationship test.

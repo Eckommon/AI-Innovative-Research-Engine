@@ -51,3 +51,5 @@ Official artifacts comply with `LANG-001`, `COST-001`, and applicable governance
 - [DEC-132](DEC-132.md): freeze 2019–2024 outcome-blind F02 panel-feasibility contract / 2019–2024 결과 비사용 panel 계약 고정.
 - [DEC-133](DEC-133.md): accept US-UTIL-F02 PANEL_DESIGN_READY PASS and return to Stage 0 / F02 PASS 수용·Stage 0 복귀.
 - [DEC-134](DEC-134.md): R13 selects C-US-006 / US-WATERWAY-F01 historical LPMS delay × USGS hydrology source/identity feasibility; no outcome magnitudes opened. / 역사적 delay×수문 source feasibility를 결과값 비사용으로 선정.
+
+- `DEC-135` — Finalize US-WATERWAY-F01 as `PASS_US_WATERWAY_F01_JOIN_READY` and return to Stage 0; no automatic effect exposure. / US-WATERWAY-F01 구조 PASS 후 Stage 0 복귀.

@@ -80,3 +80,5 @@
 - `V2_PRIMARY_VERIFIED` does not imply raw numerical reproduction; promotion to `V3_REPRODUCED` requires executable extraction/calculation. / 1차 출처 검증과 raw 수치 재현을 구분한다.
 
 Official artifacts comply with `LANG-001`, `COST-001`, `FACT-001`, and `FRESH-001`. / 공식 산출물은 관련 규약을 따른다.
+
+| `CLM-141` | US-WATERWAY-F01 has reproducible public lock-level historical-delay schema/identity support and 25 deterministic historical-lock↔USGS metadata matches over shared 2018–2020 support; gate `PASS_US_WATERWAY_F01_JOIN_READY`. | `OBSERVED_DERIVED_VALIDATED` | `V3_REPRODUCED_SOURCE_SEMANTICS_IDENTITY_AND_DATE_SUPPORT` | Issue #98; `research/US-WATERWAY-F01/RESULT.md` | 2026-09-11 | active |
