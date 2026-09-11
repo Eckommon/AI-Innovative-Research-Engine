@@ -1,7 +1,7 @@
 ---
 id: US-WATERWAY-E01
 issue: 100
-state: ACTIVE_STAGE_A_PANEL_SUPPORT
+state: ACTIVE_STAGE_B_AUTHORIZED
 mission_anchor: MEM-054
 portfolio_decision: DEC-136
 preregistration_decision: DEC-137

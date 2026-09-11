@@ -55,3 +55,5 @@ Official artifacts comply with `LANG-001`, `COST-001`, and applicable governance
 - `DEC-135` — Finalize US-WATERWAY-F01 as `PASS_US_WATERWAY_F01_JOIN_READY` and return to Stage 0; no automatic effect exposure. / US-WATERWAY-F01 구조 PASS 후 Stage 0 복귀.
 - [DEC-136](DEC-136.md): R14 selects US-WATERWAY first preregistered relationship descendant, with unique-gage Stage A required before magnitudes. / R14가 US-WATERWAY 첫 관계실험을 선정하되 unique-gage Stage A를 선행한다.
 - [DEC-137](DEC-137.md): Preregister US-WATERWAY-E01 extreme-flow burden × annual Average Delay and block Stage B until 2016–2025 panel support passes. / E01 사전등록 및 Stage A PASS 전 효과값 개방 금지.
+
+- [DEC-138](DEC-138.md): accept US-WATERWAY-E01 Stage A PASS and authorize only the frozen Stage B implementation contract; no values opened by adjudication. / Stage A PASS 수용 및 고정 Stage B만 승인.
