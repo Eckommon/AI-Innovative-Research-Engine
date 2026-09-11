@@ -1,0 +1,56 @@
+name: US UTIL F02 longitudinal preflight v3
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/us-util-f02-longitudinal-preflight-v3.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Apply execution-only empty-table serialization fix
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('tools/us_util_f02_longitudinal_preflight.py')
+          s = p.read_text(encoding='utf-8')
+          old = 'w=csv.DictWriter(f,fieldnames=list(utility_year_rows[0])); w.writeheader(); w.writerows(utility_year_rows)'
+          new = 'uy_fields=["year","utility_id","triple_schedule_support","ieee_with_med_basis_complete","geography_complete","comparable_utility_year"]; w=csv.DictWriter(f,fieldnames=uy_fields); w.writeheader(); w.writerows(utility_year_rows)'
+          if old not in s:
+              raise SystemExit('expected serialization line not found')
+          p.write_text(s.replace(old, new), encoding='utf-8')
+          PY
+
+      - name: Validate runner and historical URL wrapper
+        run: |
+          python -m py_compile tools/us_util_f02_longitudinal_preflight.py
+          python -m py_compile tools/us_util_f02_longitudinal_preflight_historical_urls.py
+
+      - name: Install workbook dependency
+        run: python -m pip install --disable-pip-version-check openpyxl
+
+      - name: Run frozen outcome-blind F02 and persist diagnostics
+        run: python tools/us_util_f02_longitudinal_preflight_historical_urls.py
+
+      - name: Commit F02 diagnostic/result artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            research/US-UTIL-F02/SOURCE_MANIFEST.csv \
+            research/US-UTIL-F02/YEAR_SCHEMA_SUPPORT.csv \
+            research/US-UTIL-F02/UTILITY_YEAR_SUPPORT.csv \
+            research/US-UTIL-F02/QUALIFIED_UTILITY_YEAR_COUNTY.csv \
+            research/US-UTIL-F02/RESULT.md
+          git commit -m "Record US-UTIL-F02 longitudinal diagnostics" || true
+          git push
