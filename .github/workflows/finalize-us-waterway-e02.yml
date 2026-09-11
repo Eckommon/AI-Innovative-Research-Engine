@@ -1,0 +1,29 @@
+name: Finalize US WATERWAY E02
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/finalize_us_waterway_e02.py'
+      - '.github/workflows/finalize-us-waterway-e02.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate finalizer
+        run: python -m py_compile tools/finalize_us_waterway_e02.py
+      - name: Finalize E02 primary classification
+        run: python tools/finalize_us_waterway_e02.py
+      - name: Commit final durable state atomically
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-WATERWAY-E02/RESULT.md research/US-WATERWAY-E02/README.md registry/CLM-145.md registry/DEC-142.md registry/CLAIM_LEDGER.md registry/DECISION_LOG.md STATUS.md context/SESSION_HANDOFF.md context/checkpoint.json
+          git diff --cached --quiet || git commit -m 'Finalize US-WATERWAY-E02 NO and return to Stage 0'
+          git push
