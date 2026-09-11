@@ -1,0 +1,30 @@
+name: US WATERWAY F01 historical hydrology crosswalk
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/us-waterway-f01-historical-hydrology-crosswalk.yml'
+      - 'tools/us_waterway_f01_historical_hydrology_crosswalk.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  crosswalk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate runner
+        run: python -m py_compile tools/us_waterway_f01_historical_hydrology_crosswalk.py
+      - name: Run identity-only crosswalk
+        run: python tools/us_waterway_f01_historical_hydrology_crosswalk.py
+      - name: Commit crosswalk artifacts
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-WATERWAY-F01/HISTORICAL_HYDROLOGY_CROSSWALK.json research/US-WATERWAY-F01/HISTORICAL_HYDROLOGY_CROSSWALK.md
+          git diff --cached --quiet && exit 0
+          git commit -m 'Record US-WATERWAY-F01 historical hydrology identity crosswalk'
+          git push
