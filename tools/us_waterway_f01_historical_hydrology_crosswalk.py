@@ -11,6 +11,13 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/'research'/'US-WATERWAY-F01'
 
+# Explicit aliases are admitted only because the official USACE historical Usage
+# TOC itself contains these exact names; see NAMED_LOCK_ALIAS_DIAGNOSTIC.md.
+DOCUMENTED_ALIASES={
+    'MEL PRICE':'MELVIN PRICE',
+    'CAPT ANT MELDAHL':'CAPTAIN ANTHONY MELDAHL',
+    'JOHN T MYERSLOCK':'JOHN T MYERS',
+}
 
 def norm(s:str)->str:
     s=str(s or '').upper().replace('&',' AND ')
@@ -19,23 +26,21 @@ def norm(s:str)->str:
     s=re.sub(r'\s+',' ',s).strip()
     return s
 
-
 def stripped_name(name:str)->str:
     toks=[t for t in norm(name).split() if t not in {'LOCK','LOCKS','DAM','AND'}]
     return ' '.join(toks)
 
-
 def candidates(name:str,river:str):
     n=norm(name); r=norm(river)
-    out={n,stripped_name(name)}
+    stripped=stripped_name(name)
+    out={n,stripped}
     nums=re.findall(r'\b(\d+[A-Z]?)\b',n)
     if nums:
-        # USACE TOC convention for numbered river locks: "N RIVER".
         out.add(f'{nums[-1]} {r}')
-    # common title words retained but structural LOCK/DAM wording removed.
     out.add(norm(re.sub(r'\b(?:LOCKS?|DAM|L/D)\b',' ',name,flags=re.I)))
+    alias=DOCUMENTED_ALIASES.get(stripped)
+    if alias: out.add(norm(alias))
     return {x for x in out if x}
-
 
 def main():
     toc=json.loads((OUT/'USAGE_TOC_PREFLIGHT.json').read_text(encoding='utf-8'))
@@ -52,11 +57,13 @@ def main():
           'matched':bool(hits),'matched_key':hits[0] if hits else '',
           'toc_lock':toc_norm[hits[0]] if hits else '',
           'hydrology_interval':hyd['target_overlap'],
+          'documented_alias_used': stripped_name(m['lock_name']) in DOCUMENTED_ALIASES,
         })
     matched=[r for r in rows if r['matched']]
     out={
       'boundary':{'delay_magnitudes_parsed':False,'hydrology_values_parsed':False,'relationship_computed':False},
-      'rule':'exact normalized name after structural LOCK/DAM token removal OR numbered-lock key <number> <river>; no fuzzy distance/name matching',
+      'rule':'exact normalized name after structural LOCK/DAM token removal OR numbered-lock key <number> <river>; three explicit aliases allowed only where official USACE Usage TOC documents the corresponding historical name; no fuzzy matching',
+      'documented_aliases':DOCUMENTED_ALIASES,
       'toc_lock_count':len(toc_names),'hydrology_qualified_count':len(hyd['matches']),
       'crosswalk_matched_count':len(matched),'crosswalk_unmatched_count':len(rows)-len(matched),
       'target_overlap':hyd['target_overlap'],'rows':rows,'incremental_monetary_cost_usd':0
@@ -69,7 +76,8 @@ def main():
         f'- deterministically crosswalked to historical Lock Usage identities: **{len(matched)}**',
         f'- unmatched: **{len(rows)-len(matched)}**',
         f'- USGS metadata overlap: **{hyd["target_overlap"][0]}–{hyd["target_overlap"][1]}**','',
-        'Rule: exact normalized name after removing structural LOCK/DAM wording, or numbered-lock key `<number> <river>`; no fuzzy name matching.','',
+        'Rule: exact normalized identity, numbered-lock `<number> <river>`, plus only three aliases directly documented by the official historical Usage TOC. No fuzzy name matching.','',
+        'Documented aliases: `MEL PRICE → MELVIN PRICE`; `CAPT ANT MELDAHL → CAPTAIN ANTHONY MELDAHL`; `JOHN T MYERSLOCK → JOHN T MYERS`.','',
         '## Crosswalk']
     for r in rows:
         md.append(f"- `{r['lock_id']}` {r['lock_name']} / {r['river']} → {r['toc_lock'] or 'UNMATCHED'} → {r['usgs_id']} — {'PASS' if r['matched'] else 'NO_MATCH'}")
