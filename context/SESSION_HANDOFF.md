@@ -1,10 +1,10 @@
 ---
-checkpoint_id: CHK-20260911-US-WATERWAY-E02-NO-PORTFOLIO-RETURN
-active_issue: none
-active_research: NONE
-last_completed_issue: 102
-last_completed_research: US-WATERWAY-E02
-last_decision: DEC-142
+checkpoint_id: CHK-20260911-EU-GRID-F01-ACTIVE
+active_issue: 104
+active_research: EU-GRID-F01
+last_completed_issue: 103
+last_completed_research: PORTFOLIO-R16
+last_decision: DEC-144
 updated: 2026-09-11
 ---
 
@@ -12,10 +12,6 @@ updated: 2026-09-11
 
 ## Canonical restart point / 정확한 재개점
 
-US-WATERWAY-E02 / Issue #102 is complete at **`NO_PREREGISTERED_POSITIVE_US_WATERWAY_E02_RELATIONSHIP`**.
+Issue #103 PORTFOLIO-R16 selected Issue #104 `EU-GRID-F01`. Frozen countries: FR, BE, NL, ES, PT, PL, AT, CZ. Structural period: 2022–2025.
 
-Primary Run `34577544880`: N=120, G=12, T=10, beta=93.0279684807, SE=78.6964370072, 95% CI=[-84.9957401818, 271.051677143], p=0.267451090193, +10pp=9.30279684807 minutes.
-
-The signed-flow source-semantic problem is resolved, but the preregistered positive relationship is not established. Do not tune/re-run E02. Next work begins at **Stage 0 portfolio control** with no active research issue.
-
-Incremental monetary cost: **0 USD**.
+Execute source/access/identity/time/nonblank-presence feasibility only for ENTSO-E Actual Load + Day-ahead Forecast + structural cross-border flow and E-OBS v33.0e weather metadata. No numeric magnitude persistence or relationship computation. Cost = 0 USD.

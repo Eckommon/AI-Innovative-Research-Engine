@@ -1,21 +1,21 @@
 ---
-checkpoint_id: CHK-20260911-US-WATERWAY-E02-NO-PORTFOLIO-RETURN
-active_issue: none
-active_research: NONE
-last_completed_issue: 102
-last_completed_research: US-WATERWAY-E02
-last_decision: DEC-142
+checkpoint_id: CHK-20260911-EU-GRID-F01-ACTIVE
+active_issue: 104
+active_research: EU-GRID-F01
+last_completed_issue: 103
+last_completed_research: PORTFOLIO-R16
+last_decision: DEC-144
 updated: 2026-09-11
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `US_WATERWAY_E02_NO_PREREGISTERED_POSITIVE_RELATIONSHIP__PORTFOLIO_RETURN__NO_ACTIVE_RESEARCH_ISSUE`
+**State / 상태:** `PORTFOLIO_R16_SELECTED_C_EU_001__EU_GRID_F01_ACTIVE`
 
-US-WATERWAY-E02 completed a valid preregistered signed-flow relationship test. The primary point estimate was positive and above the materiality floor, but its two-way-CR1 95% CI included zero, so the preregistered positive relationship was not established.
+PORTFOLIO-R16 selected C-EU-001 at 42/45. Only outcome-blind EU-GRID-F01 source-operability and country-panel feasibility is active. No grid/weather magnitude or relationship may be opened.
 
 ## Exact next action / 정확한 다음 행동
 
-Return to Stage 0 portfolio control. Compare the marginal value of any waterway follow-up against independent ready alternatives; do not tune E02 or automatically open E03.
+Execute Issue #104 for the frozen 8-country set: ENTSO-E public-view machine access and identity/time semantics, E-OBS v33.0e temporal/spatial support, and structural cross-border support. Classify PASS/PARTIAL/HOLD without analyzing values.
 
 Incremental monetary cost remains **0 USD**.

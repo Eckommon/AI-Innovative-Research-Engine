@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260911-US-WATERWAY-E02-NO-PORTFOLIO-RETURN",
-  "active_issue": "none",
-  "active_research": "NONE",
-  "last_completed_issue": 102,
-  "last_completed_research": "US-WATERWAY-E02",
-  "last_decision": "DEC-142",
+  "checkpoint_id": "CHK-20260911-EU-GRID-F01-ACTIVE",
+  "active_issue": 104,
+  "active_research": "EU-GRID-F01",
+  "last_completed_issue": 103,
+  "last_completed_research": "PORTFOLIO-R16",
+  "last_decision": "DEC-144",
   "updated": "2026-09-11"
 }
