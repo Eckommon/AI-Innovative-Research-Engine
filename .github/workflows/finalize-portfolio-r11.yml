@@ -1,0 +1,42 @@
+name: Finalize PORTFOLIO R11 selection
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/finalize-portfolio-r11.yml'
+      - 'tools/finalize_portfolio_r11.py'
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate finalizer
+        run: python -m py_compile tools/finalize_portfolio_r11.py
+
+      - name: Finalize R11 selection
+        run: python tools/finalize_portfolio_r11.py
+
+      - name: Commit durable R11 state atomically
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            research/PORTFOLIO-R11/RESULT.md \
+            research/US-UTIL-F01/README.md \
+            registry/DEC-129.md \
+            registry/DECISION_LOG.md \
+            STATUS.md \
+            context/SESSION_HANDOFF.md \
+            context/checkpoint.json
+          git diff --cached --quiet && { echo 'No durable changes'; exit 1; }
+          git commit -m "Select US-UTIL-F01 in PORTFOLIO-R11"
+          git push
