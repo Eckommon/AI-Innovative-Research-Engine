@@ -3,7 +3,7 @@ id: US-UTIL-F01-SOURCE-CARDINALITY-PREFLIGHT
 type: outcome-blind-source-identity-result
 created: 2026-09-11
 issue: 94
-gate: HOLD_US_UTIL_F01_SOURCE_IDENTITY_CARDINALITY
+gate: PASS_US_UTIL_F01_SOURCE_IDENTITY_CARDINALITY
 reliability_magnitudes_parsed: false
 relationship_computed: false
 incremental_monetary_cost_usd: 0
@@ -27,13 +27,13 @@ The reliability workbook was parsed only through the Utility Number identity col
 
 ## EIA identity cardinality / EIA identity cardinality
 
-- Reliability unique Utility Numbers: **3**
-- Advanced Metering unique Utility Numbers: **8**
-- Service Territory unique Utility Numbers: **5**
-- Reliability ∩ Service Territory utility IDs: **3**
-- Reliability ∩ Service Territory ∩ Advanced Metering utility IDs: **3**
-- unique Service Territory utility×state×county keys for Reliability utilities: **84**
-- same keys restricted to triple-intersection utilities: **84**
+- Reliability unique Utility Numbers: **908**
+- Advanced Metering unique Utility Numbers: **2,379**
+- Service Territory unique Utility Numbers: **2,907**
+- Reliability ∩ Service Territory utility IDs: **907**
+- Reliability ∩ Service Territory ∩ Advanced Metering utility IDs: **907**
+- unique Service Territory utility×state×county keys for Reliability utilities: **7,514**
+- same keys restricted to triple-intersection utilities: **7,514**
 
 ## NOAA county route / NOAA county route
 
@@ -41,21 +41,21 @@ The reliability workbook was parsed only through the Utility Number identity col
 - county-type (`CZ_TYPE=C`) rows: **39,718**
 - unique county FIPS keys: **3,063**
 - unique deterministic USPS-state × normalized-county-name keys: **2,984**
-- EIA Service Territory unique normalized state×county keys: **90**
-- exact normalized EIA↔NOAA county-name keys: **0** (0.00% of EIA unique county keys)
+- EIA Service Territory unique normalized state×county keys: **3,135**
+- exact normalized EIA↔NOAA county-name keys: **2,903** (92.60% of EIA unique county keys)
 
 The normalized-name comparison is diagnostic only. It is deterministic, not fuzzy, and is not yet a customer-allocation weight. Unmatched keys are retained for a later explicit county-key adjudication if needed. / 정규화 name 비교는 진단용이며 fuzzy matching이 아니다.
 
 ## Frozen structural thresholds / 고정 구조 기준
 
-- >=300 Reliability utilities joined to Service Territory: **False** (3)
-- >=250 of those with Advanced Metering support: **False** (3)
-- >=1,000 qualified utility×county mappings: **False** (84)
+- >=300 Reliability utilities joined to Service Territory: **True** (907)
+- >=250 of those with Advanced Metering support: **True** (907)
+- >=1,000 qualified utility×county mappings: **True** (7,514)
 - reproducible NOAA 2024 county-key route: **True**
 
 ## Gate / 판정
 
-**`HOLD_US_UTIL_F01_SOURCE_IDENTITY_CARDINALITY`**
+**`PASS_US_UTIL_F01_SOURCE_IDENTITY_CARDINALITY`**
 
 A structural PASS authorizes only the next outcome-blind county-key/join qualification step. It does not authorize reading reliability magnitudes or estimating an AMI/storm effect. / 구조 PASS는 다음 join qualification만 허용한다.
 
