@@ -1,0 +1,50 @@
+name: Finalize US UTIL F01 JOIN_READY
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/finalize-us-util-f01.yml'
+      - 'tools/finalize_us_util_f01.py'
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate finalizer
+        run: python -m py_compile tools/finalize_us_util_f01.py
+
+      - name: Finalize existing F01 PASS only
+        run: python tools/finalize_us_util_f01.py
+
+      - name: Commit durable SoT atomically
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            research/US-UTIL-F01/RESULT.md \
+            research/US-UTIL-F01/README.md \
+            registry/CLM-139.md \
+            registry/DEC-130.md \
+            registry/CLAIM_LEDGER.md \
+            registry/DECISION_LOG.md \
+            STATUS.md \
+            context/SESSION_HANDOFF.md \
+            context/checkpoint.json
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo "No finalization changes"
+          else
+            git commit -m "Finalize US-UTIL-F01 JOIN_READY pass and portfolio return"
+            git push
+          fi
