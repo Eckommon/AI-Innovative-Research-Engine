@@ -1,0 +1,32 @@
+name: US WATERWAY F01 usage TOC preflight
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/us-waterway-f01-usage-toc-preflight.yml'
+      - 'tools/us_waterway_f01_usage_toc_preflight.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate runner
+        run: python -m py_compile tools/us_waterway_f01_usage_toc_preflight.py
+      - name: Install workbook dependency
+        run: python -m pip install --disable-pip-version-check openpyxl
+      - name: Run TOC identity-only preflight
+        run: python tools/us_waterway_f01_usage_toc_preflight.py
+      - name: Commit TOC diagnostic artifacts
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-WATERWAY-F01/USAGE_TOC_PREFLIGHT.json research/US-WATERWAY-F01/USAGE_TOC_PREFLIGHT.md
+          git diff --cached --quiet && exit 0
+          git commit -m 'Record US-WATERWAY-F01 Lock Usage TOC identity preflight'
+          git push
