@@ -1,0 +1,435 @@
+{
+  "boundary": {
+    "delay_magnitudes_parsed": false,
+    "hydrology_magnitudes_parsed": false,
+    "relationship_computed": false,
+    "incremental_monetary_cost_usd": 0
+  },
+  "routes": [
+    {
+      "name": "NDC_LOCKS",
+      "url": "https://www.iwr.usace.army.mil/About/Technical-Centers/NDC-Navigation-and-Civil-Works-Decision-Support/NDC-Locks/",
+      "error": "HTTPError: HTTP Error 403: Forbidden"
+    },
+    {
+      "name": "CORPS_HOME",
+      "url": "https://ndc.ops.usace.army.mil/ords/r/lpms/corps-locks/home",
+      "status": 200,
+      "final_url": "https://ndc.ops.usace.army.mil/ords/r/lpms/corps-locks/home",
+      "content_type": "text/html;charset=utf-8",
+      "bytes": 40593,
+      "sha256": "37e89b35a0b7f994b031f735465784a9a0480a7bb0a70be5153f1c532fac0b53",
+      "signals": {
+        "annual_usage": true,
+        "average_delay": false,
+        "delay": true,
+        "processing_time": false,
+        "2016": true,
+        "2025": true,
+        "xlsx": false,
+        "csv": false,
+        "download": false,
+        "apex": true
+      },
+      "relevant_hrefs": [
+        "&#x2F;ords&#x2F;r&#x2F;lpms&#x2F;corps-locks&#x2F;home",
+        "/ords/",
+        "/ords/r/lpms/corps-locks/annual-commodity-report",
+        "/ords/r/lpms/corps-locks/annual-lock-unavailability-report",
+        "/ords/r/lpms/corps-locks/annual-usage-report",
+        "/ords/r/lpms/corps-locks/data-web-services",
+        "/ords/r/lpms/corps-locks/glossary",
+        "/ords/r/lpms/corps-locks/home",
+        "/ords/r/lpms/corps-locks/home?request=SET_SESSION_SCREEN_READER_ON",
+        "/ords/r/lpms/corps-locks/lock-queue-flotilla-report",
+        "/ords/r/lpms/corps-locks/lock-status-report",
+        "/ords/r/lpms/corps-locks/monthly-key-lock-report",
+        "/ords/r/lpms/corps-locks/monthly-tonnage-report",
+        "/ords/r/lpms/corps-locks/river-at-a-glance"
+      ]
+    },
+    {
+      "name": "ANNUAL_USAGE",
+      "url": "https://ndc.ops.usace.army.mil/ords/r/lpms/corps-locks/annual-usage-report",
+      "status": 200,
+      "final_url": "https://ndc.ops.usace.army.mil/ords/r/lpms/corps-locks/home",
+      "content_type": "text/html;charset=utf-8",
+      "bytes": 40591,
+      "sha256": "2097675dd534d35b33927d4ee77a456e998472c9c3dd035ecc4f04ca4db18ea2",
+      "signals": {
+        "annual_usage": true,
+        "average_delay": false,
+        "delay": true,
+        "processing_time": false,
+        "2016": true,
+        "2025": true,
+        "xlsx": false,
+        "csv": false,
+        "download": false,
+        "apex": true
+      },
+      "relevant_hrefs": [
+        "&#x2F;ords&#x2F;r&#x2F;lpms&#x2F;corps-locks&#x2F;home",
+        "/ords/",
+        "/ords/r/lpms/corps-locks/annual-commodity-report",
+        "/ords/r/lpms/corps-locks/annual-lock-unavailability-report",
+        "/ords/r/lpms/corps-locks/annual-usage-report",
+        "/ords/r/lpms/corps-locks/data-web-services",
+        "/ords/r/lpms/corps-locks/glossary",
+        "/ords/r/lpms/corps-locks/home",
+        "/ords/r/lpms/corps-locks/home?request=SET_SESSION_SCREEN_READER_ON",
+        "/ords/r/lpms/corps-locks/lock-queue-flotilla-report",
+        "/ords/r/lpms/corps-locks/lock-status-report",
+        "/ords/r/lpms/corps-locks/monthly-key-lock-report",
+        "/ords/r/lpms/corps-locks/monthly-tonnage-report",
+        "/ords/r/lpms/corps-locks/river-at-a-glance"
+      ]
+    }
+  ],
+  "contentdm": {
+    "search_url": "https://usace.contentdm.oclc.org/digital/api/search/collection/p16021coll2/searchterm/lock%20usage/field/title/maxRecords/100",
+    "status": 200,
+    "final_url": "https://usace.contentdm.oclc.org/digital/api/search/collection/p16021coll2/searchterm/lock%20usage/field/title/maxRecords/100",
+    "content_type": "application/json",
+    "bytes": 2393,
+    "sha256": "a873ad2631f58c699499914eb49c124b0d069d71c5e671685b5c493744820071",
+    "totalResults": 1,
+    "items": [
+      {
+        "title": "Public lock reports: Public lock commodity, public lock unavailability, public lock usage, public lock report glossary",
+        "date": "",
+        "item_ref": "/compoundobject/collection/p16021coll2/id/2610"
+      }
+    ],
+    "known_item_2958": {
+      "status": 200,
+      "title": null,
+      "date": null,
+      "find": null,
+      "filename": "2959.xlsx",
+      "format": null,
+      "resource": null,
+      "type": null,
+      "fullrsEnabled": false
+    }
+  },
+  "lock_layer": {
+    "layer": "https://services7.arcgis.com/n1YM8pTrFmm7L4hs/ArcGIS/rest/services/Locks/FeatureServer/0",
+    "metadata_status": 200,
+    "name": "Lock",
+    "object_id_field": "OBJECTID",
+    "max_record_count": 2000,
+    "fields": [
+      {
+        "name": "OBJECTID",
+        "alias": "OBJECTID",
+        "type": "esriFieldTypeOID"
+      },
+      {
+        "name": "ID",
+        "alias": "ID",
+        "type": "esriFieldTypeInteger"
+      },
+      {
+        "name": "NDCCODE",
+        "alias": "NDCCODE",
+        "type": "esriFieldTypeString"
+      },
+      {
+        "name": "REGION",
+        "alias": "REGION",
+        "type": "esriFieldTypeString"
+      },
+      {
+        "name": "RIVERCD",
+        "alias": "RIVERCD",
+        "type": "esriFieldTypeString"
+      },
+      {
+        "name": "LOCKCD",
+        "alias": "LOCKCD",
+        "type": "esriFieldTypeString"
+      },
+      {
+        "name": "CHMBCD",
+        "alias": "CHMBCD",
+        "type": "esriFieldTypeString"
+      },
+      {
+        "name": "NOCHMB",
+        "alias": "NOCHMB",
+        "type": "esriFieldTypeSmallInteger"
+      },
+      {
+        "name": "PMSDATA",
+        "alias": "PMSDATA",
+        "type": "esriFieldTypeString"
+      },
+      {
+        "name": "NAVSTR",
+        "alias": "NAVSTR",
+        "type": "esriFieldTypeString"
+      },
+      {
+        "name": "CHAMBN",
+        "alias": "CHAMBN",
+        "type": "esriFieldTypeString"
+      },
+      {
+        "name": "CHB1",
+        "alias": "CHB1",
+        "type": "esriFieldTypeString"
+      },
+      {
+        "name": "STR1",
+        "alias": "STR1",
+        "type": "esriFieldTypeString"
+      },
+      {
+        "name": "PMSNAME",
+        "alias": "PMSNAME",
+        "type": "esriFieldTypeString"
+      },
+      {
+        "name": "STATUS",
+        "alias": "STATUS",
+        "type": "esriFieldTypeString"
+      },
+      {
+        "name": "RIVER",
+        "alias": "RIVER",
+        "type": "esriFieldTypeString"
+      },
+      {
+        "name": "RIVERMI",
+        "alias": "RIVERMI",
+        "type": "esriFieldTypeDouble"
+      },
+      {
+        "name": "BANK",
+        "alias": "BANK",
+        "type": "esriFieldTypeString"
+      },
+      {
+        "name": "LIFT",
+        "alias": "LIFT",
+        "type": "esriFieldTypeDouble"
+      },
+      {
+        "name": "LENGTH",
+        "alias": "LENGTH",
+        "type": "esriFieldTypeDouble"
+      },
+      {
+        "name": "CHMBUL",
+        "alias": "CHMBUL",
+        "type": "esriFieldTypeDouble"
+      },
+      {
+        "name": "WIDTH",
+        "alias": "WIDTH",
+        "type": "esriFieldTypeDouble"
+      },
+      {
+        "name": "CHMBUW",
+        "alias": "CHMBUW",
+        "type": "esriFieldTypeDouble"
+      },
+      {
+        "name": "AUDPA",
+        "alias": "AUDPA",
+        "type": "esriFieldTypeDouble"
+      },
+      {
+        "name": "AUDPB",
+        "alias": "AUDPB",
+        "type": "esriFieldTypeDouble"
+      },
+      {
+        "name": "UPDPTHMS",
+        "alias": "UPDPTHMS",
+        "type": "esriFieldTypeDouble"
+      },
+      {
+        "name": "LWDPTHMS",
+        "alias": "LWDPTHMS",
+        "type": "esriFieldTypeDouble"
+      },
+      {
+        "name": "YEAROPEN",
+        "alias": "YEAROPEN",
+        "type": "esriFieldTypeDouble"
+      },
+      {
+        "name": "GATETYPE",
+        "alias": "GATETYPE",
+        "type": "esriFieldTypeString"
+      },
+      {
+        "name": "GATE",
+        "alias": "GATE",
+        "type": "esriFieldTypeString"
+      },
+      {
+        "name": "CHNLGTH",
+        "alias": "CHNLGTH",
+        "type": "esriFieldTypeDouble"
+      },
+      {
+        "name": "CHNDPTHA",
+        "alias": "CHNDPTHA",
+        "type": "esriFieldTypeDouble"
+      },
+      {
+        "name": "CHNDPTHB",
+        "alias": "CHNDPTHB",
+        "type": "esriFieldTypeDouble"
+      },
+      {
+        "name": "CHNWDTHA",
+        "alias": "CHNWDTHA",
+        "type": "esriFieldTypeDouble"
+      },
+      {
+        "name": "CHNWDTHB",
+        "alias": "CHNWDTHB",
+        "type": "esriFieldTypeDouble"
+      },
+      {
+        "name": "WWPRJCT",
+        "alias": "WWPRJCT",
+        "type": "esriFieldTypeString"
+      },
+      {
+        "name": "MOORING",
+        "alias": "MOORING",
+        "type": "esriFieldTypeString"
+      },
+      {
+        "name": "MULTI",
+        "alias": "MULTI",
+        "type": "esriFieldTypeString"
+      },
+      {
+        "name": "DIVISION",
+        "alias": "DIVISION",
+        "type": "esriFieldTypeString"
+      },
+      {
+        "name": "DISTRICT",
+        "alias": "DISTRICT",
+        "type": "esriFieldTypeString"
+      },
+      {
+        "name": "STATE",
+        "alias": "STATE",
+        "type": "esriFieldTypeString"
+      },
+      {
+        "name": "MAINT1",
+        "alias": "MAINT1",
+        "type": "esriFieldTypeString"
+      },
+      {
+        "name": "OPER1",
+        "alias": "OPER1",
+        "type": "esriFieldTypeString"
+      },
+      {
+        "name": "OWNER1",
+        "alias": "OWNER1",
+        "type": "esriFieldTypeString"
+      },
+      {
+        "name": "TOWN",
+        "alias": "TOWN",
+        "type": "esriFieldTypeString"
+      },
+      {
+        "name": "COUNTY1",
+        "alias": "COUNTY1",
+        "type": "esriFieldTypeString"
+      },
+      {
+        "name": "MOORING_R",
+        "alias": "MOORING_R",
+        "type": "esriFieldTypeString"
+      },
+      {
+        "name": "SE_ANNO_CAD_DATA",
+        "alias": "SE_ANNO_CAD_DATA",
+        "type": "esriFieldTypeBlob"
+      }
+    ],
+    "query_status": 200,
+    "feature_count": 234,
+    "identity_samples": [
+      {
+        "OBJECTID": 1,
+        "ID": 1,
+        "RIVERCD": "SA",
+        "PMSDATA": "N",
+        "PMSNAME": "BARGE CANAL LOCK",
+        "RIVER": "SACRAMENTO",
+        "RIVERMI": 43,
+        "WIDTH": 86,
+        "DIVISION": "SPD",
+        "DISTRICT": "SPK",
+        "STATE": "CA"
+      },
+      {
+        "OBJECTID": 2,
+        "ID": 2,
+        "RIVERCD": "WI",
+        "PMSDATA": "Y",
+        "PMSNAME": "WILLAMETTE FALLS GUARD LOCK",
+        "RIVER": "WILLAMETTE",
+        "RIVERMI": 26,
+        "WIDTH": 40,
+        "DIVISION": "NWD",
+        "DISTRICT": "NWP",
+        "STATE": "OR"
+      },
+      {
+        "OBJECTID": 3,
+        "ID": 3,
+        "RIVERCD": "CO",
+        "PMSDATA": "Y",
+        "PMSNAME": "BONNEVILLE LOCK & DAM",
+        "RIVER": "COLUMBIA",
+        "RIVERMI": 145.3,
+        "WIDTH": 86,
+        "DIVISION": "NWD",
+        "DISTRICT": "NWP",
+        "STATE": "OR"
+      },
+      {
+        "OBJECTID": 4,
+        "ID": 4,
+        "RIVERCD": "WS",
+        "PMSDATA": "Y",
+        "PMSNAME": "HIRAM M. CHITTENDEN LOCK",
+        "RIVER": "LAKE WASHINGTON SHIP CANAL",
+        "RIVERMI": 0,
+        "WIDTH": 80,
+        "DIVISION": "NWD",
+        "DISTRICT": "NWS",
+        "STATE": "WA"
+      },
+      {
+        "OBJECTID": 5,
+        "ID": 5,
+        "RIVERCD": "CO",
+        "PMSDATA": "Y",
+        "PMSNAME": "THE DALLES DAM",
+        "RIVER": "COLUMBIA",
+        "RIVERMI": 191.70000000000002,
+        "WIDTH": 86,
+        "DIVISION": "NWD",
+        "DISTRICT": "NWP",
+        "STATE": "WA"
+      }
+    ],
+    "geometry_nonnull_count": 234
+  }
+}
