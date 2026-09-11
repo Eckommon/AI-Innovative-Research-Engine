@@ -130,7 +130,7 @@ def main() -> None:
         elif not geoids:
             key_status[key] = ("UNMATCHED", "")
         else:
-            key_status[key] = ("AMBIGUOUS", "|").join(geoids)
+            key_status[key] = ("AMBIGUOUS", "|".join(geoids))
 
     by_utility = defaultdict(list)
     for u, state, county in eligible_service_rows:
