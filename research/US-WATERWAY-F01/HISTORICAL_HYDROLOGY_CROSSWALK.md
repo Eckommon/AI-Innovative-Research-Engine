@@ -4,11 +4,13 @@ Outcome-blind identity crosswalk only. No delay or hydrology magnitudes parsed.
 
 - archive TOC lock identities: **193**
 - USGS-qualified locks: **25**
-- deterministically crosswalked to historical Lock Usage identities: **22**
-- unmatched: **3**
+- deterministically crosswalked to historical Lock Usage identities: **25**
+- unmatched: **0**
 - USGS metadata overlap: **2018-01-01–2020-12-31**
 
-Rule: exact normalized name after removing structural LOCK/DAM wording, or numbered-lock key `<number> <river>`; no fuzzy name matching.
+Rule: exact normalized identity, numbered-lock `<number> <river>`, plus only three aliases directly documented by the official historical Usage TOC. No fuzzy name matching.
+
+Documented aliases: `MEL PRICE → MELVIN PRICE`; `CAPT ANT MELDAHL → CAPTAIN ANTHONY MELDAHL`; `JOHN T MYERSLOCK → JOHN T MYERS`.
 
 ## Crosswalk
 - `114` CHAINS OF ROCKS L/D 27 / MISSISSIPPI → 27 MISSISSIPPI → USGS-07010000 — PASS
@@ -25,14 +27,14 @@ Rule: exact normalized name after removing structural LOCK/DAM wording, or numbe
 - `157` LOCK & DAM 6 / MISSISSIPPI → 6 MISSISSIPPI → USGS-05378500 — PASS
 - `158` LOCK & DAM 7 / MISSISSIPPI → 7 MISSISSIPPI → USGS-05378500 — PASS
 - `162` LOCK & DAM 9 / MISSISSIPPI → 9 MISSISSIPPI → USGS-05389500 — PASS
-- `103` MEL PRICE LOCK & DAM / MISSISSIPPI → UNMATCHED → USGS-05587450 — NO_MATCH
+- `103` MEL PRICE LOCK & DAM / MISSISSIPPI → MELVIN PRICE → USGS-05587450 — PASS
 - `140` CANNELTON LOCK & DAM / OHIO → CANNELTON → USGS-03303280 — PASS
-- `155` CAPT ANT MELDAHL LOCK & DAM / OHIO → UNMATCHED → USGS-03255000 — NO_MATCH
+- `155` CAPT ANT MELDAHL LOCK & DAM / OHIO → CAPTAIN ANTHONY MELDAHL → USGS-03255000 — PASS
 - `207` DASHIELDS LOCK & DAM / OHIO → DASHIELDS → USGS-03086000 — PASS
 - `208` EMSWORTH LOCK & DAM / OHIO → EMSWORTH → USGS-03085734 — PASS
 - `188` GREENUP LOCKS & DAM / OHIO → GREENUP → USGS-03216600 — PASS
 - `194` HANNIBAL LOCKS & DAM / OHIO → HANNIBAL → USGS-03114306 — PASS
-- `137` JOHN T. MYERSLOCK & DAM / OHIO → UNMATCHED → USGS-03322420 — NO_MATCH
+- `137` JOHN T. MYERSLOCK & DAM / OHIO → JOHN T. MYERS → USGS-03322420 — PASS
 - `96` LOCK & DAM 52 / OHIO → 52 OHIO → USGS-03611000 — PASS
 - `146` MARKLAND LOCKS & DAM / OHIO → MARKLAND → USGS-03277200 — PASS
 - `143` MCALPINE LOCKS & DAM / OHIO → MCALPINE → USGS-03294500 — PASS

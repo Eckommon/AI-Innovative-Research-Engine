@@ -4,11 +4,16 @@
     "hydrology_values_parsed": false,
     "relationship_computed": false
   },
-  "rule": "exact normalized name after structural LOCK/DAM token removal OR numbered-lock key <number> <river>; no fuzzy distance/name matching",
+  "rule": "exact normalized name after structural LOCK/DAM token removal OR numbered-lock key <number> <river>; three explicit aliases allowed only where official USACE Usage TOC documents the corresponding historical name; no fuzzy matching",
+  "documented_aliases": {
+    "MEL PRICE": "MELVIN PRICE",
+    "CAPT ANT MELDAHL": "CAPTAIN ANTHONY MELDAHL",
+    "JOHN T MYERSLOCK": "JOHN T MYERS"
+  },
   "toc_lock_count": 193,
   "hydrology_qualified_count": 25,
-  "crosswalk_matched_count": 22,
-  "crosswalk_unmatched_count": 3,
+  "crosswalk_matched_count": 25,
+  "crosswalk_unmatched_count": 0,
   "target_overlap": [
     "2018-01-01",
     "2020-12-31"
@@ -30,7 +35,8 @@
       "hydrology_interval": [
         "2018-01-01",
         "2020-12-31"
-      ]
+      ],
+      "documented_alias_used": false
     },
     {
       "lock_id": 159,
@@ -49,7 +55,8 @@
       "hydrology_interval": [
         "2018-01-01",
         "2020-12-31"
-      ]
+      ],
+      "documented_alias_used": false
     },
     {
       "lock_id": 116,
@@ -68,7 +75,8 @@
       "hydrology_interval": [
         "2018-01-01",
         "2020-12-31"
-      ]
+      ],
+      "documented_alias_used": false
     },
     {
       "lock_id": 112,
@@ -87,7 +95,8 @@
       "hydrology_interval": [
         "2018-01-01",
         "2020-12-31"
-      ]
+      ],
+      "documented_alias_used": false
     },
     {
       "lock_id": 111,
@@ -106,7 +115,8 @@
       "hydrology_interval": [
         "2018-01-01",
         "2020-12-31"
-      ]
+      ],
+      "documented_alias_used": false
     },
     {
       "lock_id": 106,
@@ -125,7 +135,8 @@
       "hydrology_interval": [
         "2018-01-01",
         "2020-12-31"
-      ]
+      ],
+      "documented_alias_used": false
     },
     {
       "lock_id": 104,
@@ -144,7 +155,8 @@
       "hydrology_interval": [
         "2018-01-01",
         "2020-12-31"
-      ]
+      ],
+      "documented_alias_used": false
     },
     {
       "lock_id": 102,
@@ -163,7 +175,8 @@
       "hydrology_interval": [
         "2018-01-01",
         "2020-12-31"
-      ]
+      ],
+      "documented_alias_used": false
     },
     {
       "lock_id": 164,
@@ -182,7 +195,8 @@
       "hydrology_interval": [
         "2018-01-01",
         "2020-12-31"
-      ]
+      ],
+      "documented_alias_used": false
     },
     {
       "lock_id": 163,
@@ -201,7 +215,8 @@
       "hydrology_interval": [
         "2018-01-01",
         "2020-12-31"
-      ]
+      ],
+      "documented_alias_used": false
     },
     {
       "lock_id": 165,
@@ -220,7 +235,8 @@
       "hydrology_interval": [
         "2018-01-01",
         "2020-12-31"
-      ]
+      ],
+      "documented_alias_used": false
     },
     {
       "lock_id": 157,
@@ -239,7 +255,8 @@
       "hydrology_interval": [
         "2018-01-01",
         "2020-12-31"
-      ]
+      ],
+      "documented_alias_used": false
     },
     {
       "lock_id": 158,
@@ -258,7 +275,8 @@
       "hydrology_interval": [
         "2018-01-01",
         "2020-12-31"
-      ]
+      ],
+      "documented_alias_used": false
     },
     {
       "lock_id": 162,
@@ -277,7 +295,8 @@
       "hydrology_interval": [
         "2018-01-01",
         "2020-12-31"
-      ]
+      ],
+      "documented_alias_used": false
     },
     {
       "lock_id": 103,
@@ -287,15 +306,17 @@
       "candidate_keys": [
         "MEL PRICE",
         "MEL PRICE AND",
-        "MEL PRICE LOCK AND DAM"
+        "MEL PRICE LOCK AND DAM",
+        "MELVIN PRICE"
       ],
-      "matched": false,
-      "matched_key": "",
-      "toc_lock": "",
+      "matched": true,
+      "matched_key": "MELVIN PRICE",
+      "toc_lock": "MELVIN PRICE",
       "hydrology_interval": [
         "2018-01-01",
         "2020-12-31"
-      ]
+      ],
+      "documented_alias_used": true
     },
     {
       "lock_id": 140,
@@ -313,7 +334,8 @@
       "hydrology_interval": [
         "2018-01-01",
         "2020-12-31"
-      ]
+      ],
+      "documented_alias_used": false
     },
     {
       "lock_id": 155,
@@ -323,15 +345,17 @@
       "candidate_keys": [
         "CAPT ANT MELDAHL",
         "CAPT ANT MELDAHL AND",
-        "CAPT ANT MELDAHL LOCK AND DAM"
+        "CAPT ANT MELDAHL LOCK AND DAM",
+        "CAPTAIN ANTHONY MELDAHL"
       ],
-      "matched": false,
-      "matched_key": "",
-      "toc_lock": "",
+      "matched": true,
+      "matched_key": "CAPTAIN ANTHONY MELDAHL",
+      "toc_lock": "CAPTAIN ANTHONY MELDAHL",
       "hydrology_interval": [
         "2018-01-01",
         "2020-12-31"
-      ]
+      ],
+      "documented_alias_used": true
     },
     {
       "lock_id": 207,
@@ -349,7 +373,8 @@
       "hydrology_interval": [
         "2018-01-01",
         "2020-12-31"
-      ]
+      ],
+      "documented_alias_used": false
     },
     {
       "lock_id": 208,
@@ -367,7 +392,8 @@
       "hydrology_interval": [
         "2018-01-01",
         "2020-12-31"
-      ]
+      ],
+      "documented_alias_used": false
     },
     {
       "lock_id": 188,
@@ -385,7 +411,8 @@
       "hydrology_interval": [
         "2018-01-01",
         "2020-12-31"
-      ]
+      ],
+      "documented_alias_used": false
     },
     {
       "lock_id": 194,
@@ -403,7 +430,8 @@
       "hydrology_interval": [
         "2018-01-01",
         "2020-12-31"
-      ]
+      ],
+      "documented_alias_used": false
     },
     {
       "lock_id": 137,
@@ -411,17 +439,19 @@
       "river": "OHIO",
       "usgs_id": "USGS-03322420",
       "candidate_keys": [
+        "JOHN T MYERS",
         "JOHN T MYERSLOCK",
         "JOHN T MYERSLOCK AND",
         "JOHN T MYERSLOCK AND DAM"
       ],
-      "matched": false,
-      "matched_key": "",
-      "toc_lock": "",
+      "matched": true,
+      "matched_key": "JOHN T MYERS",
+      "toc_lock": "JOHN T. MYERS",
       "hydrology_interval": [
         "2018-01-01",
         "2020-12-31"
-      ]
+      ],
+      "documented_alias_used": true
     },
     {
       "lock_id": 96,
@@ -440,7 +470,8 @@
       "hydrology_interval": [
         "2018-01-01",
         "2020-12-31"
-      ]
+      ],
+      "documented_alias_used": false
     },
     {
       "lock_id": 146,
@@ -458,7 +489,8 @@
       "hydrology_interval": [
         "2018-01-01",
         "2020-12-31"
-      ]
+      ],
+      "documented_alias_used": false
     },
     {
       "lock_id": 143,
@@ -476,7 +508,8 @@
       "hydrology_interval": [
         "2018-01-01",
         "2020-12-31"
-      ]
+      ],
+      "documented_alias_used": false
     }
   ],
   "incremental_monetary_cost_usd": 0
