@@ -1,0 +1,38 @@
+{
+  "boundary": {
+    "delay_magnitudes_parsed": false,
+    "hydrology_values_requested": false,
+    "hydrology_values_parsed": false,
+    "relationship_computed": false,
+    "annual_metric_cells_reduced_to_nonblank_boolean_only": true
+  },
+  "period": [
+    "2016-01-01",
+    "2025-12-31"
+  ],
+  "annual_usage_pages_traversed": 58,
+  "annual_usage_average_delay_identity_rows": 179,
+  "v3_hydrology_matches_entering": 35,
+  "candidates_after_00060_00003_full_period_and_historical_identity": 23,
+  "qualified_all_year_locks": 23,
+  "qualified_unique_usgs_gages": 13,
+  "prospective_gage_year_cells": 130,
+  "excluded_candidate_locks": 0,
+  "stage_a_gate": "PASS_US_WATERWAY_E01_STAGE_A_PANEL_SUPPORT",
+  "gage_lock_counts": {
+    "USGS-03086000": 1,
+    "USGS-03114306": 1,
+    "USGS-03216600": 1,
+    "USGS-03277200": 1,
+    "USGS-03294500": 1,
+    "USGS-03303280": 1,
+    "USGS-03399800": 1,
+    "USGS-05378500": 5,
+    "USGS-05420500": 3,
+    "USGS-05474500": 2,
+    "USGS-05587450": 2,
+    "USGS-07010000": 1,
+    "USGS-07249455": 3
+  },
+  "incremental_monetary_cost_usd": 0
+}
