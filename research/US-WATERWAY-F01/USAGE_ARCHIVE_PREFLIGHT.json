@@ -21,48 +21,321 @@
       "title": "",
       "filename": "2607.xlsx",
       "format": "",
-      "download_url": "https://usace.contentdm.oclc.org/utils/getfile/collection/p16021coll2/filename/2607.xlsx",
-      "error": "HTTPError: HTTP Error 404: Page not found."
+      "download_url": "https://usace.contentdm.oclc.org/utils/getfile/collection/p16021coll2/id/2606/filename/2607.xlsx",
+      "status": 200,
+      "final_url": "https://usace.contentdm.oclc.org/utils/getfile/collection/p16021coll2/id/2606/filename/2607.xlsx",
+      "bytes": 439835,
+      "sha256": "2e85e1a3e779eb4b492c244411d8ab6fd8b9deb3aab74083b6a83b591e54c595",
+      "prior_route_errors": [],
+      "sheet_names": [
+        "TOC",
+        "Commodity"
+      ],
+      "year_labels_2016_2025": [
+        2016,
+        2020
+      ],
+      "contiguous_3yr_windows": [],
+      "delay_metric_labels": [],
+      "processing_metric_labels": [],
+      "lock_identity_label_count": 6,
+      "lock_identity_label_sample": [
+        "COLONEL CHARLES D. MAYNARD LOCK AND DAM",
+        "LOCKPORT",
+        "Lock",
+        "Lock Commodity, CY 1999 - 2016",
+        "NEWT GRAHAM LOCK",
+        "Table of Contents - Locks by Waterway"
+      ],
+      "delay_magnitudes_parsed": false,
+      "processing_magnitudes_parsed": false
     },
     {
       "id": 2607,
       "title": "",
       "filename": "2608.xlsx",
       "format": "",
-      "download_url": "https://usace.contentdm.oclc.org/utils/getfile/collection/p16021coll2/filename/2608.xlsx",
-      "error": "HTTPError: HTTP Error 404: Page not found."
+      "download_url": "https://usace.contentdm.oclc.org/utils/getfile/collection/p16021coll2/id/2607/filename/2608.xlsx",
+      "status": 200,
+      "final_url": "https://usace.contentdm.oclc.org/utils/getfile/collection/p16021coll2/id/2607/filename/2608.xlsx",
+      "bytes": 336861,
+      "sha256": "9e555153dc2a6e10be28d685e30588d41455a97caa46351aa88e66b434ae97a1",
+      "prior_route_errors": [],
+      "sheet_names": [
+        "TOC",
+        "Unavailabilities"
+      ],
+      "year_labels_2016_2025": [
+        2016,
+        2018,
+        2020,
+        2024
+      ],
+      "contiguous_3yr_windows": [],
+      "delay_metric_labels": [],
+      "processing_metric_labels": [],
+      "lock_identity_label_count": 6,
+      "lock_identity_label_sample": [
+        "COLONEL CHARLES D. MAYNARD LOCK AND DAM",
+        "LOCKPORT",
+        "Lock",
+        "Lock Unavailabilities, CY 1993 - 2016",
+        "NEWT GRAHAM LOCK",
+        "Table of Contents - Locks by Waterway"
+      ],
+      "delay_magnitudes_parsed": false,
+      "processing_magnitudes_parsed": false
     },
     {
       "id": 2608,
       "title": "",
       "filename": "2609.xlsx",
       "format": "",
-      "download_url": "https://usace.contentdm.oclc.org/utils/getfile/collection/p16021coll2/filename/2609.xlsx",
-      "error": "HTTPError: HTTP Error 404: Page not found."
+      "download_url": "https://usace.contentdm.oclc.org/utils/getfile/collection/p16021coll2/id/2608/filename/2609.xlsx",
+      "status": 200,
+      "final_url": "https://usace.contentdm.oclc.org/utils/getfile/collection/p16021coll2/id/2608/filename/2609.xlsx",
+      "bytes": 695026,
+      "sha256": "f618aa8f9c7387962c33936a6603b2ce5ca7c7e6d72fa29ab7400a35daae0135",
+      "prior_route_errors": [],
+      "sheet_names": [
+        "TOC",
+        "Usage"
+      ],
+      "year_labels_2016_2025": [
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ],
+      "contiguous_3yr_windows": [
+        [
+          2016,
+          2017,
+          2018
+        ],
+        [
+          2017,
+          2018,
+          2019
+        ],
+        [
+          2018,
+          2019,
+          2020
+        ],
+        [
+          2019,
+          2020,
+          2021
+        ],
+        [
+          2020,
+          2021,
+          2022
+        ],
+        [
+          2021,
+          2022,
+          2023
+        ],
+        [
+          2022,
+          2023,
+          2024
+        ],
+        [
+          2023,
+          2024,
+          2025
+        ]
+      ],
+      "delay_metric_labels": [
+        "Average Delay (Tows) (Hrs)"
+      ],
+      "processing_metric_labels": [
+        "Average Processing Time (Hrs)"
+      ],
+      "lock_identity_label_count": 6,
+      "lock_identity_label_sample": [
+        "COLONEL CHARLES D. MAYNARD LOCK AND DAM",
+        "LOCKPORT",
+        "Lock",
+        "Lock Usage, CY 1993 - 2016",
+        "NEWT GRAHAM LOCK",
+        "Table of Contents - Locks by Waterway"
+      ],
+      "delay_magnitudes_parsed": false,
+      "processing_magnitudes_parsed": false
     },
     {
       "id": 2956,
       "title": "",
       "filename": "2957.xlsx",
       "format": "",
-      "download_url": "https://usace.contentdm.oclc.org/utils/getfile/collection/p16021coll2/filename/2957.xlsx",
-      "error": "HTTPError: HTTP Error 404: Page not found."
+      "download_url": "https://usace.contentdm.oclc.org/utils/getfile/collection/p16021coll2/id/2956/filename/2957.xlsx",
+      "status": 200,
+      "final_url": "https://usace.contentdm.oclc.org/utils/getfile/collection/p16021coll2/id/2956/filename/2957.xlsx",
+      "bytes": 461400,
+      "sha256": "d8c5df2173a4e0ba84b2aff540420b8ec40a4998f65900b17485f9321eb21749",
+      "prior_route_errors": [],
+      "sheet_names": [
+        "TOC",
+        "Commodity"
+      ],
+      "year_labels_2016_2025": [
+        2017,
+        2020
+      ],
+      "contiguous_3yr_windows": [],
+      "delay_metric_labels": [],
+      "processing_metric_labels": [],
+      "lock_identity_label_count": 6,
+      "lock_identity_label_sample": [
+        "COLONEL CHARLES D. MAYNARD LOCK AND DAM",
+        "LOCKPORT",
+        "Lock",
+        "Lock Commodity, CY 1999 - 2017",
+        "NEWT GRAHAM LOCK",
+        "Table of Contents - Locks by Waterway"
+      ],
+      "delay_magnitudes_parsed": false,
+      "processing_magnitudes_parsed": false
     },
     {
       "id": 2957,
       "title": "",
       "filename": "2958.xlsx",
       "format": "",
-      "download_url": "https://usace.contentdm.oclc.org/utils/getfile/collection/p16021coll2/filename/2958.xlsx",
-      "error": "HTTPError: HTTP Error 404: Page not found."
+      "download_url": "https://usace.contentdm.oclc.org/utils/getfile/collection/p16021coll2/id/2957/filename/2958.xlsx",
+      "status": 200,
+      "final_url": "https://usace.contentdm.oclc.org/utils/getfile/collection/p16021coll2/id/2957/filename/2958.xlsx",
+      "bytes": 352961,
+      "sha256": "588efeabde2a31d34d35b520093945f6791a29fba261509667f5ed70a8c92653",
+      "prior_route_errors": [],
+      "sheet_names": [
+        "TOC",
+        "Unavailabilities"
+      ],
+      "year_labels_2016_2025": [
+        2016,
+        2017,
+        2018,
+        2020,
+        2024
+      ],
+      "contiguous_3yr_windows": [
+        [
+          2016,
+          2017,
+          2018
+        ]
+      ],
+      "delay_metric_labels": [],
+      "processing_metric_labels": [],
+      "lock_identity_label_count": 6,
+      "lock_identity_label_sample": [
+        "COLONEL CHARLES D. MAYNARD LOCK AND DAM",
+        "LOCKPORT",
+        "Lock",
+        "Lock Unavailabilities, CY 1993 - 2017",
+        "NEWT GRAHAM LOCK",
+        "Table of Contents - Locks by Waterway"
+      ],
+      "delay_magnitudes_parsed": false,
+      "processing_magnitudes_parsed": false
     },
     {
       "id": 2958,
       "title": "",
       "filename": "2959.xlsx",
       "format": "",
-      "download_url": "https://usace.contentdm.oclc.org/utils/getfile/collection/p16021coll2/filename/2959.xlsx",
-      "error": "HTTPError: HTTP Error 404: Page not found."
+      "download_url": "https://usace.contentdm.oclc.org/utils/getfile/collection/p16021coll2/id/2958/filename/2959.xlsx",
+      "status": 200,
+      "final_url": "https://usace.contentdm.oclc.org/utils/getfile/collection/p16021coll2/id/2958/filename/2959.xlsx",
+      "bytes": 733421,
+      "sha256": "0db8e4ae602bb60fea029a17a3c39929fe58cef6cc46b6f05bd1f45c4088f90f",
+      "prior_route_errors": [],
+      "sheet_names": [
+        "TOC",
+        "Usage"
+      ],
+      "year_labels_2016_2025": [
+        2016,
+        2017,
+        2018,
+        2019,
+        2020,
+        2021,
+        2022,
+        2023,
+        2024,
+        2025
+      ],
+      "contiguous_3yr_windows": [
+        [
+          2016,
+          2017,
+          2018
+        ],
+        [
+          2017,
+          2018,
+          2019
+        ],
+        [
+          2018,
+          2019,
+          2020
+        ],
+        [
+          2019,
+          2020,
+          2021
+        ],
+        [
+          2020,
+          2021,
+          2022
+        ],
+        [
+          2021,
+          2022,
+          2023
+        ],
+        [
+          2022,
+          2023,
+          2024
+        ],
+        [
+          2023,
+          2024,
+          2025
+        ]
+      ],
+      "delay_metric_labels": [
+        "Average Delay (Tows) (Hrs)"
+      ],
+      "processing_metric_labels": [
+        "Average Processing Time (Hrs)"
+      ],
+      "lock_identity_label_count": 6,
+      "lock_identity_label_sample": [
+        "COLONEL CHARLES D. MAYNARD LOCK AND DAM",
+        "LOCKPORT",
+        "Lock",
+        "Lock Usage, CY 1993 - 2017",
+        "NEWT GRAHAM LOCK",
+        "Table of Contents - Locks by Waterway"
+      ],
+      "delay_magnitudes_parsed": false,
+      "processing_magnitudes_parsed": false
     }
   ],
   "historical_outcome_route_pass": false,
