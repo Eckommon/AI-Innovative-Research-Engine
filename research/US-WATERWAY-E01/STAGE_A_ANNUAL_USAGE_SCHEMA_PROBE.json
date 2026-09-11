@@ -4,19 +4,20 @@
     "processing_magnitudes_parsed": false,
     "traffic_magnitudes_parsed": false,
     "hydrology_values_parsed": false,
-    "relationship_computed": false
+    "relationship_computed": false,
+    "annual_value_cells_reduced_to_nonblank_boolean_only": true
   },
   "home": {
     "status": 200,
     "final_url": "https://ndc.ops.usace.army.mil/ords/r/lpms/corps-locks/home",
     "bytes": 40589,
-    "sha256": "c1e85c9ab81a0940e42106e27317a1c48e1777f13fe67a0d71a35d58fd8362ca"
+    "sha256": "4c80c02c031d26698b3057564621481ce0d162392fc36fefb904fb58989fbd6b"
   },
   "annual": {
     "status": 200,
     "final_url": "https://ndc.ops.usace.army.mil/ords/r/lpms/corps-locks/annual-usage-report",
     "bytes": 106838,
-    "sha256": "11faa0997ae57edf63e976c78ef20625beb3d461218e60615e8feb66a9caaae0"
+    "sha256": "f22084a87118d46181cc2132209b45dba850ebbc095e053d5541be244ce6f56b"
   },
   "year_labels_anywhere": [
     "2016",
@@ -63,6 +64,7 @@
     "356617961145373261"
   ],
   "region_ids": [],
+  "pagination_links": [],
   "tables": [
     {
       "id": "356616486227373246",
@@ -80,10 +82,137 @@
         "CY_2017",
         "CY_2016"
       ],
-      "identity_column_indexes": [],
-      "identity_row_count": 0,
-      "year_labels_in_identity_cells": [],
-      "identity_samples": []
+      "year_columns": {
+        "2025": 1,
+        "2024": 2,
+        "2023": 3,
+        "2022": 4,
+        "2021": 5,
+        "2020": 6,
+        "2019": 7,
+        "2018": 8,
+        "2017": 9,
+        "2016": 10
+      },
+      "unique_lock_count_on_page": 0,
+      "usage_type_labels": [
+        "Average Delay (minutes)",
+        "Average Percent Vessels Delayed",
+        "Average Processing (minutes)",
+        "Barges Empty",
+        "Barges Loaded",
+        "Commercial Flotillas",
+        "Commercial Lockages",
+        "Commercial Vessels",
+        "Non-commercial Flotillas",
+        "Non-commercial Lockages",
+        "Non-commercial Vessels",
+        "Non-vessel Lockages",
+        "Recreational Lockages",
+        "Recreational Vessels",
+        "Total Lockages",
+        "Total Vessels"
+      ],
+      "identity_samples": [
+        {
+          "district": "",
+          "river": "",
+          "lock": "",
+          "usage_type": "Barges Empty"
+        },
+        {
+          "district": "",
+          "river": "",
+          "lock": "",
+          "usage_type": "Barges Loaded"
+        },
+        {
+          "district": "",
+          "river": "",
+          "lock": "",
+          "usage_type": "Commercial Flotillas"
+        },
+        {
+          "district": "",
+          "river": "",
+          "lock": "",
+          "usage_type": "Commercial Lockages"
+        },
+        {
+          "district": "",
+          "river": "",
+          "lock": "",
+          "usage_type": "Commercial Vessels"
+        },
+        {
+          "district": "",
+          "river": "",
+          "lock": "",
+          "usage_type": "Non-commercial Flotillas"
+        },
+        {
+          "district": "",
+          "river": "",
+          "lock": "",
+          "usage_type": "Non-commercial Lockages"
+        },
+        {
+          "district": "",
+          "river": "",
+          "lock": "",
+          "usage_type": "Non-commercial Vessels"
+        },
+        {
+          "district": "",
+          "river": "",
+          "lock": "",
+          "usage_type": "Non-vessel Lockages"
+        },
+        {
+          "district": "",
+          "river": "",
+          "lock": "",
+          "usage_type": "Recreational Lockages"
+        },
+        {
+          "district": "",
+          "river": "",
+          "lock": "",
+          "usage_type": "Recreational Vessels"
+        },
+        {
+          "district": "",
+          "river": "",
+          "lock": "",
+          "usage_type": "Total Lockages"
+        },
+        {
+          "district": "",
+          "river": "",
+          "lock": "",
+          "usage_type": "Total Vessels"
+        },
+        {
+          "district": "",
+          "river": "",
+          "lock": "",
+          "usage_type": "Average Delay (minutes)"
+        },
+        {
+          "district": "",
+          "river": "",
+          "lock": "",
+          "usage_type": "Average Percent Vessels Delayed"
+        },
+        {
+          "district": "",
+          "river": "",
+          "lock": "",
+          "usage_type": "Average Processing (minutes)"
+        }
+      ],
+      "average_delay_support_rows": [],
+      "all_year_average_delay_lock_count_on_page": 0
     },
     {
       "id": "356617961145373261",
@@ -104,414 +233,396 @@
         "CY 2017",
         "CY 2016"
       ],
-      "identity_column_indexes": [
-        1,
-        2
+      "year_columns": {
+        "2025": 4,
+        "2024": 5,
+        "2023": 6,
+        "2022": 7,
+        "2021": 8,
+        "2020": 9,
+        "2019": 10,
+        "2018": 11,
+        "2017": 12,
+        "2016": 13
+      },
+      "unique_lock_count_on_page": 4,
+      "usage_type_labels": [
+        "Average Delay (minutes)",
+        "Average Percent Vessels Delayed",
+        "Average Processing (minutes)",
+        "Barges Empty",
+        "Barges Loaded",
+        "Commercial Flotillas",
+        "Commercial Lockages",
+        "Commercial Vessels",
+        "Non-commercial Flotillas",
+        "Non-commercial Lockages",
+        "Non-commercial Vessels",
+        "Non-vessel Lockages",
+        "Recreational Lockages",
+        "Recreational Vessels",
+        "Total Lockages",
+        "Total Vessels"
       ],
-      "identity_row_count": 50,
-      "year_labels_in_identity_cells": [],
       "identity_samples": [
-        [
-          {
-            "header": "River",
-            "text": "AT - ATCHAFALAYA RIVER"
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "AT - ATCHAFALAYA RIVER",
+          "lock": "11 - BERWICK",
+          "usage_type": "Barges Empty"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "AT - ATCHAFALAYA RIVER",
+          "lock": "11 - BERWICK",
+          "usage_type": "Barges Loaded"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "AT - ATCHAFALAYA RIVER",
+          "lock": "11 - BERWICK",
+          "usage_type": "Commercial Flotillas"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "AT - ATCHAFALAYA RIVER",
+          "lock": "11 - BERWICK",
+          "usage_type": "Commercial Lockages"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "AT - ATCHAFALAYA RIVER",
+          "lock": "11 - BERWICK",
+          "usage_type": "Commercial Vessels"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "AT - ATCHAFALAYA RIVER",
+          "lock": "11 - BERWICK",
+          "usage_type": "Non-commercial Flotillas"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "AT - ATCHAFALAYA RIVER",
+          "lock": "11 - BERWICK",
+          "usage_type": "Non-commercial Lockages"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "AT - ATCHAFALAYA RIVER",
+          "lock": "11 - BERWICK",
+          "usage_type": "Non-commercial Vessels"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "AT - ATCHAFALAYA RIVER",
+          "lock": "11 - BERWICK",
+          "usage_type": "Recreational Lockages"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "AT - ATCHAFALAYA RIVER",
+          "lock": "11 - BERWICK",
+          "usage_type": "Recreational Vessels"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "AT - ATCHAFALAYA RIVER",
+          "lock": "11 - BERWICK",
+          "usage_type": "Total Lockages"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "AT - ATCHAFALAYA RIVER",
+          "lock": "11 - BERWICK",
+          "usage_type": "Total Vessels"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "AT - ATCHAFALAYA RIVER",
+          "lock": "11 - BERWICK",
+          "usage_type": "Average Delay (minutes)"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "AT - ATCHAFALAYA RIVER",
+          "lock": "11 - BERWICK",
+          "usage_type": "Average Percent Vessels Delayed"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "AT - ATCHAFALAYA RIVER",
+          "lock": "11 - BERWICK",
+          "usage_type": "Average Processing (minutes)"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "CA - CALCASIEU RIVER",
+          "lock": "23 - CALCASIEU SALT WATER BARRIER",
+          "usage_type": "Barges Empty"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "CA - CALCASIEU RIVER",
+          "lock": "23 - CALCASIEU SALT WATER BARRIER",
+          "usage_type": "Barges Loaded"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "CA - CALCASIEU RIVER",
+          "lock": "23 - CALCASIEU SALT WATER BARRIER",
+          "usage_type": "Commercial Flotillas"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "CA - CALCASIEU RIVER",
+          "lock": "23 - CALCASIEU SALT WATER BARRIER",
+          "usage_type": "Commercial Lockages"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "CA - CALCASIEU RIVER",
+          "lock": "23 - CALCASIEU SALT WATER BARRIER",
+          "usage_type": "Commercial Vessels"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "CA - CALCASIEU RIVER",
+          "lock": "23 - CALCASIEU SALT WATER BARRIER",
+          "usage_type": "Non-commercial Flotillas"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "CA - CALCASIEU RIVER",
+          "lock": "23 - CALCASIEU SALT WATER BARRIER",
+          "usage_type": "Non-commercial Lockages"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "CA - CALCASIEU RIVER",
+          "lock": "23 - CALCASIEU SALT WATER BARRIER",
+          "usage_type": "Non-commercial Vessels"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "CA - CALCASIEU RIVER",
+          "lock": "23 - CALCASIEU SALT WATER BARRIER",
+          "usage_type": "Non-vessel Lockages"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "CA - CALCASIEU RIVER",
+          "lock": "23 - CALCASIEU SALT WATER BARRIER",
+          "usage_type": "Recreational Lockages"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "CA - CALCASIEU RIVER",
+          "lock": "23 - CALCASIEU SALT WATER BARRIER",
+          "usage_type": "Recreational Vessels"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "CA - CALCASIEU RIVER",
+          "lock": "23 - CALCASIEU SALT WATER BARRIER",
+          "usage_type": "Total Lockages"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "CA - CALCASIEU RIVER",
+          "lock": "23 - CALCASIEU SALT WATER BARRIER",
+          "usage_type": "Total Vessels"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "CA - CALCASIEU RIVER",
+          "lock": "23 - CALCASIEU SALT WATER BARRIER",
+          "usage_type": "Average Delay (minutes)"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "CA - CALCASIEU RIVER",
+          "lock": "23 - CALCASIEU SALT WATER BARRIER",
+          "usage_type": "Average Percent Vessels Delayed"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "CA - CALCASIEU RIVER",
+          "lock": "23 - CALCASIEU SALT WATER BARRIER",
+          "usage_type": "Average Processing (minutes)"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "FB - FRESHWATER BAYOU",
+          "lock": "41 - FRESHWATER BAYOU",
+          "usage_type": "Barges Empty"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "FB - FRESHWATER BAYOU",
+          "lock": "41 - FRESHWATER BAYOU",
+          "usage_type": "Barges Loaded"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "FB - FRESHWATER BAYOU",
+          "lock": "41 - FRESHWATER BAYOU",
+          "usage_type": "Commercial Flotillas"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "FB - FRESHWATER BAYOU",
+          "lock": "41 - FRESHWATER BAYOU",
+          "usage_type": "Commercial Lockages"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "FB - FRESHWATER BAYOU",
+          "lock": "41 - FRESHWATER BAYOU",
+          "usage_type": "Commercial Vessels"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "FB - FRESHWATER BAYOU",
+          "lock": "41 - FRESHWATER BAYOU",
+          "usage_type": "Non-commercial Flotillas"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "FB - FRESHWATER BAYOU",
+          "lock": "41 - FRESHWATER BAYOU",
+          "usage_type": "Non-commercial Lockages"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "FB - FRESHWATER BAYOU",
+          "lock": "41 - FRESHWATER BAYOU",
+          "usage_type": "Non-commercial Vessels"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "FB - FRESHWATER BAYOU",
+          "lock": "41 - FRESHWATER BAYOU",
+          "usage_type": "Non-vessel Lockages"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "FB - FRESHWATER BAYOU",
+          "lock": "41 - FRESHWATER BAYOU",
+          "usage_type": "Recreational Lockages"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "FB - FRESHWATER BAYOU",
+          "lock": "41 - FRESHWATER BAYOU",
+          "usage_type": "Recreational Vessels"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "FB - FRESHWATER BAYOU",
+          "lock": "41 - FRESHWATER BAYOU",
+          "usage_type": "Total Lockages"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "FB - FRESHWATER BAYOU",
+          "lock": "41 - FRESHWATER BAYOU",
+          "usage_type": "Total Vessels"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "FB - FRESHWATER BAYOU",
+          "lock": "41 - FRESHWATER BAYOU",
+          "usage_type": "Average Delay (minutes)"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "FB - FRESHWATER BAYOU",
+          "lock": "41 - FRESHWATER BAYOU",
+          "usage_type": "Average Percent Vessels Delayed"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "FB - FRESHWATER BAYOU",
+          "lock": "41 - FRESHWATER BAYOU",
+          "usage_type": "Average Processing (minutes)"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "GI - GULF INTRACOASTAL WATERWAY",
+          "lock": "01 - PORT ALLEN",
+          "usage_type": "Barges Empty"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "GI - GULF INTRACOASTAL WATERWAY",
+          "lock": "01 - PORT ALLEN",
+          "usage_type": "Barges Loaded"
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "GI - GULF INTRACOASTAL WATERWAY",
+          "lock": "01 - PORT ALLEN",
+          "usage_type": "Commercial Flotillas"
+        }
+      ],
+      "average_delay_support_rows": [
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "AT - ATCHAFALAYA RIVER",
+          "lock": "11 - BERWICK",
+          "year_nonblank": {
+            "2016": true,
+            "2017": true,
+            "2018": true,
+            "2019": true,
+            "2020": true,
+            "2021": true,
+            "2022": true,
+            "2023": true,
+            "2024": true,
+            "2025": true
           },
-          {
-            "header": "Lock",
-            "text": "11 - BERWICK"
-          }
-        ],
-        [
-          {
-            "header": "River",
-            "text": "AT - ATCHAFALAYA RIVER"
+          "all_2016_2025_nonblank": true
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "CA - CALCASIEU RIVER",
+          "lock": "23 - CALCASIEU SALT WATER BARRIER",
+          "year_nonblank": {
+            "2016": true,
+            "2017": true,
+            "2018": true,
+            "2019": true,
+            "2020": true,
+            "2021": true,
+            "2022": true,
+            "2023": true,
+            "2024": true,
+            "2025": true
           },
-          {
-            "header": "Lock",
-            "text": "11 - BERWICK"
-          }
-        ],
-        [
-          {
-            "header": "River",
-            "text": "AT - ATCHAFALAYA RIVER"
+          "all_2016_2025_nonblank": true
+        },
+        {
+          "district": "B2 - NEW ORLEANS",
+          "river": "FB - FRESHWATER BAYOU",
+          "lock": "41 - FRESHWATER BAYOU",
+          "year_nonblank": {
+            "2016": true,
+            "2017": true,
+            "2018": true,
+            "2019": true,
+            "2020": true,
+            "2021": true,
+            "2022": true,
+            "2023": true,
+            "2024": true,
+            "2025": true
           },
-          {
-            "header": "Lock",
-            "text": "11 - BERWICK"
-          }
-        ],
-        [
-          {
-            "header": "River",
-            "text": "AT - ATCHAFALAYA RIVER"
-          },
-          {
-            "header": "Lock",
-            "text": "11 - BERWICK"
-          }
-        ],
-        [
-          {
-            "header": "River",
-            "text": "AT - ATCHAFALAYA RIVER"
-          },
-          {
-            "header": "Lock",
-            "text": "11 - BERWICK"
-          }
-        ],
-        [
-          {
-            "header": "River",
-            "text": "AT - ATCHAFALAYA RIVER"
-          },
-          {
-            "header": "Lock",
-            "text": "11 - BERWICK"
-          }
-        ],
-        [
-          {
-            "header": "River",
-            "text": "AT - ATCHAFALAYA RIVER"
-          },
-          {
-            "header": "Lock",
-            "text": "11 - BERWICK"
-          }
-        ],
-        [
-          {
-            "header": "River",
-            "text": "AT - ATCHAFALAYA RIVER"
-          },
-          {
-            "header": "Lock",
-            "text": "11 - BERWICK"
-          }
-        ],
-        [
-          {
-            "header": "River",
-            "text": "AT - ATCHAFALAYA RIVER"
-          },
-          {
-            "header": "Lock",
-            "text": "11 - BERWICK"
-          }
-        ],
-        [
-          {
-            "header": "River",
-            "text": "AT - ATCHAFALAYA RIVER"
-          },
-          {
-            "header": "Lock",
-            "text": "11 - BERWICK"
-          }
-        ],
-        [
-          {
-            "header": "River",
-            "text": "AT - ATCHAFALAYA RIVER"
-          },
-          {
-            "header": "Lock",
-            "text": "11 - BERWICK"
-          }
-        ],
-        [
-          {
-            "header": "River",
-            "text": "AT - ATCHAFALAYA RIVER"
-          },
-          {
-            "header": "Lock",
-            "text": "11 - BERWICK"
-          }
-        ],
-        [
-          {
-            "header": "River",
-            "text": "AT - ATCHAFALAYA RIVER"
-          },
-          {
-            "header": "Lock",
-            "text": "11 - BERWICK"
-          }
-        ],
-        [
-          {
-            "header": "River",
-            "text": "AT - ATCHAFALAYA RIVER"
-          },
-          {
-            "header": "Lock",
-            "text": "11 - BERWICK"
-          }
-        ],
-        [
-          {
-            "header": "River",
-            "text": "AT - ATCHAFALAYA RIVER"
-          },
-          {
-            "header": "Lock",
-            "text": "11 - BERWICK"
-          }
-        ],
-        [
-          {
-            "header": "River",
-            "text": "CA - CALCASIEU RIVER"
-          },
-          {
-            "header": "Lock",
-            "text": "23 - CALCASIEU SALT WATER BARRIER"
-          }
-        ],
-        [
-          {
-            "header": "River",
-            "text": "CA - CALCASIEU RIVER"
-          },
-          {
-            "header": "Lock",
-            "text": "23 - CALCASIEU SALT WATER BARRIER"
-          }
-        ],
-        [
-          {
-            "header": "River",
-            "text": "CA - CALCASIEU RIVER"
-          },
-          {
-            "header": "Lock",
-            "text": "23 - CALCASIEU SALT WATER BARRIER"
-          }
-        ],
-        [
-          {
-            "header": "River",
-            "text": "CA - CALCASIEU RIVER"
-          },
-          {
-            "header": "Lock",
-            "text": "23 - CALCASIEU SALT WATER BARRIER"
-          }
-        ],
-        [
-          {
-            "header": "River",
-            "text": "CA - CALCASIEU RIVER"
-          },
-          {
-            "header": "Lock",
-            "text": "23 - CALCASIEU SALT WATER BARRIER"
-          }
-        ],
-        [
-          {
-            "header": "River",
-            "text": "CA - CALCASIEU RIVER"
-          },
-          {
-            "header": "Lock",
-            "text": "23 - CALCASIEU SALT WATER BARRIER"
-          }
-        ],
-        [
-          {
-            "header": "River",
-            "text": "CA - CALCASIEU RIVER"
-          },
-          {
-            "header": "Lock",
-            "text": "23 - CALCASIEU SALT WATER BARRIER"
-          }
-        ],
-        [
-          {
-            "header": "River",
-            "text": "CA - CALCASIEU RIVER"
-          },
-          {
-            "header": "Lock",
-            "text": "23 - CALCASIEU SALT WATER BARRIER"
-          }
-        ],
-        [
-          {
-            "header": "River",
-            "text": "CA - CALCASIEU RIVER"
-          },
-          {
-            "header": "Lock",
-            "text": "23 - CALCASIEU SALT WATER BARRIER"
-          }
-        ],
-        [
-          {
-            "header": "River",
-            "text": "CA - CALCASIEU RIVER"
-          },
-          {
-            "header": "Lock",
-            "text": "23 - CALCASIEU SALT WATER BARRIER"
-          }
-        ],
-        [
-          {
-            "header": "River",
-            "text": "CA - CALCASIEU RIVER"
-          },
-          {
-            "header": "Lock",
-            "text": "23 - CALCASIEU SALT WATER BARRIER"
-          }
-        ],
-        [
-          {
-            "header": "River",
-            "text": "CA - CALCASIEU RIVER"
-          },
-          {
-            "header": "Lock",
-            "text": "23 - CALCASIEU SALT WATER BARRIER"
-          }
-        ],
-        [
-          {
-            "header": "River",
-            "text": "CA - CALCASIEU RIVER"
-          },
-          {
-            "header": "Lock",
-            "text": "23 - CALCASIEU SALT WATER BARRIER"
-          }
-        ],
-        [
-          {
-            "header": "River",
-            "text": "CA - CALCASIEU RIVER"
-          },
-          {
-            "header": "Lock",
-            "text": "23 - CALCASIEU SALT WATER BARRIER"
-          }
-        ],
-        [
-          {
-            "header": "River",
-            "text": "CA - CALCASIEU RIVER"
-          },
-          {
-            "header": "Lock",
-            "text": "23 - CALCASIEU SALT WATER BARRIER"
-          }
-        ],
-        [
-          {
-            "header": "River",
-            "text": "CA - CALCASIEU RIVER"
-          },
-          {
-            "header": "Lock",
-            "text": "23 - CALCASIEU SALT WATER BARRIER"
-          }
-        ],
-        [
-          {
-            "header": "River",
-            "text": "FB - FRESHWATER BAYOU"
-          },
-          {
-            "header": "Lock",
-            "text": "41 - FRESHWATER BAYOU"
-          }
-        ],
-        [
-          {
-            "header": "River",
-            "text": "FB - FRESHWATER BAYOU"
-          },
-          {
-            "header": "Lock",
-            "text": "41 - FRESHWATER BAYOU"
-          }
-        ],
-        [
-          {
-            "header": "River",
-            "text": "FB - FRESHWATER BAYOU"
-          },
-          {
-            "header": "Lock",
-            "text": "41 - FRESHWATER BAYOU"
-          }
-        ],
-        [
-          {
-            "header": "River",
-            "text": "FB - FRESHWATER BAYOU"
-          },
-          {
-            "header": "Lock",
-            "text": "41 - FRESHWATER BAYOU"
-          }
-        ],
-        [
-          {
-            "header": "River",
-            "text": "FB - FRESHWATER BAYOU"
-          },
-          {
-            "header": "Lock",
-            "text": "41 - FRESHWATER BAYOU"
-          }
-        ],
-        [
-          {
-            "header": "River",
-            "text": "FB - FRESHWATER BAYOU"
-          },
-          {
-            "header": "Lock",
-            "text": "41 - FRESHWATER BAYOU"
-          }
-        ],
-        [
-          {
-            "header": "River",
-            "text": "FB - FRESHWATER BAYOU"
-          },
-          {
-            "header": "Lock",
-            "text": "41 - FRESHWATER BAYOU"
-          }
-        ],
-        [
-          {
-            "header": "River",
-            "text": "FB - FRESHWATER BAYOU"
-          },
-          {
-            "header": "Lock",
-            "text": "41 - FRESHWATER BAYOU"
-          }
-        ],
-        [
-          {
-            "header": "River",
-            "text": "FB - FRESHWATER BAYOU"
-          },
-          {
-            "header": "Lock",
-            "text": "41 - FRESHWATER BAYOU"
-          }
-        ]
-      ]
+          "all_2016_2025_nonblank": true
+        }
+      ],
+      "all_year_average_delay_lock_count_on_page": 3
     }
   ],
   "incremental_monetary_cost_usd": 0
