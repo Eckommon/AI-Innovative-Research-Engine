@@ -44,4 +44,5 @@ def choose_sheet(wb, needs: set[str]):
 base.choose_sheet = choose_sheet
 
 if __name__ == "__main__":
+    # Same frozen #94 scientific gate; this retry changes parser sheet selection only.
     base.main()
