@@ -97,6 +97,24 @@ def table_headers(table):
     return [text_content(x) for x in table.find_elements(By.CSS_SELECTOR, "thead th")]
 
 
+def header_index(headers, label):
+    target = re.sub(r"\s+", " ", label.upper()).strip()
+    normalized = [re.sub(r"\s+", " ", h.upper()).strip() for h in headers]
+    for i, h in enumerate(normalized):
+        if h == target or h.startswith(target + " ") or h.startswith(target + "SORT"):
+            return i
+    raise ValueError(f"header {label!r} not found in {headers!r}")
+
+
+def year_header_index(headers, year):
+    normalized = [re.sub(r"\s+", " ", h.upper()).strip() for h in headers]
+    pat = re.compile(rf"^CY[_ ]?{re.escape(year)}(?:\b|SORT)")
+    for i, h in enumerate(normalized):
+        if pat.search(h):
+            return i
+    raise ValueError(f"year header {year} not found in {headers!r}")
+
+
 def find_individual_table(driver):
     return driver.find_element(By.ID, INDIVIDUAL_TABLE_ID)
 
@@ -120,15 +138,8 @@ def scrape_annual_support():
         while True:
             table = find_individual_table(driver)
             headers = table_headers(table)
-            hn = [re.sub(r"\s+", " ", x.upper()).strip() for x in headers]
-            idx = {name: hn.index(name) for name in ["DISTRICT", "RIVER", "LOCK", "USAGE TYPE"]}
-            year_idx = {}
-            for y in YEARS:
-                candidates = [f"CY {y}", f"CY_{y}"]
-                found = next((hn.index(c) for c in candidates if c in hn), None)
-                if found is None:
-                    raise RuntimeError(f"missing Annual Usage year column {y}: {headers}")
-                year_idx[y] = found
+            idx = {name: header_index(headers, name) for name in ["DISTRICT", "RIVER", "LOCK", "USAGE TYPE"]}
+            year_idx = {y: year_header_index(headers, y) for y in YEARS}
             rows = table.find_elements(By.CSS_SELECTOR, "tbody tr")
             page_count += 1
             first_sig = None
@@ -158,7 +169,7 @@ def scrape_annual_support():
             if not buttons:
                 break
             btn = buttons[0]
-            disabled = btn.get_attribute("disabled") is not None or bool(btn.get_attribute("aria-disabled") == "true")
+            disabled = btn.get_attribute("disabled") is not None or btn.get_attribute("aria-disabled") == "true"
             if disabled:
                 break
             before = first_sig
@@ -171,8 +182,9 @@ def scrape_annual_support():
                         return False
                     cs = rs[0].find_elements(By.TAG_NAME, "td")
                     nh = table_headers(nt)
-                    nhn = [re.sub(r"\s+", " ", x.upper()).strip() for x in nh]
-                    ri, li, ui = nhn.index("RIVER"), nhn.index("LOCK"), nhn.index("USAGE TYPE")
+                    ri = header_index(nh, "RIVER")
+                    li = header_index(nh, "LOCK")
+                    ui = header_index(nh, "USAGE TYPE")
                     sig = (text_content(cs[ri]), text_content(cs[li]), text_content(cs[ui]))
                     return sig != before
                 except Exception:
