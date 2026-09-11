@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Outcome-blind Stage-A structural probe for Corps Locks Annual Usage.
 
-Reads only page/form/table structure, identity/usage labels, and boolean nonblank
-presence for annual cells. It never converts or persists delay, processing,
-traffic, or hydrology magnitudes.
+Reads only page/form/table structure, identity/usage labels, boolean nonblank
+presence for annual cells, and APEX pagination metadata. It never converts or
+persists delay, processing, traffic, or hydrology magnitudes.
 """
 from __future__ import annotations
 import hashlib, json, re, time
@@ -41,6 +41,8 @@ class Probe(HTMLParser):
         self.selects = []
         self.tables = []
         self.links = []
+        self.pagination_attrs = []
+        self.forms = []
         self._select = None
         self._option = None
         self._table = None
@@ -50,6 +52,13 @@ class Probe(HTMLParser):
 
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
+        attr_text = " ".join(f"{k}={v}" for k, v in attrs if v is not None)
+        if any(k in attr_text.lower() for k in ["paginate", "pagination", "pgr_", "min_row", "max_rows", "rows_fetched"]):
+            safe = {k: str(v)[:1000] for k, v in attrs if k in {"id", "class", "href", "onclick", "data-action", "data-region-id", "data-region-type", "aria-label", "title"}}
+            safe["tag"] = tag
+            self.pagination_attrs.append(safe)
+        if tag == "form":
+            self.forms.append({"id": str(a.get("id") or ""), "action": str(a.get("action") or ""), "method": str(a.get("method") or "")})
         if tag == "input":
             name = str(a.get("name") or "")
             iid = str(a.get("id") or "")
@@ -63,7 +72,7 @@ class Probe(HTMLParser):
         elif tag == "option" and self._select is not None:
             self._option = {"value": str(a.get("value") or ""), "text": ""}
         elif tag == "a":
-            self._link = {"href": str(a.get("href") or ""), "class": str(a.get("class") or ""), "text": ""}
+            self._link = {"href": str(a.get("href") or ""), "class": str(a.get("class") or ""), "onclick": str(a.get("onclick") or ""), "text": ""}
         elif tag == "table":
             self._table = {"id": str(a.get("id") or ""), "class": str(a.get("class") or ""), "rows": []}
         elif tag == "tr" and self._table is not None:
@@ -85,8 +94,9 @@ class Probe(HTMLParser):
             self._link["text"] = self._link["text"].strip()
             h = self._link["href"]
             c = self._link["class"]
+            o = self._link["onclick"]
             t = self._link["text"]
-            if any(k in (h + " " + c + " " + t).lower() for k in ["paginate", "pagination", "next", "previous", "pg_r_", "row"]):
+            if any(k in (h + " " + c + " " + o + " " + t).lower() for k in ["paginate", "pagination", "next", "previous", "pgr_", "row"]):
                 self.links.append(self._link)
             self._link = None
         elif tag in {"th", "td"} and self._cell is not None and self._row is not None:
@@ -175,7 +185,11 @@ def main():
     summaries = [safe_table_summary(t) for t in p.tables]
     item_tokens = sorted(set(re.findall(r"\bP\d+_[A-Z0-9_]*YEAR[A-Z0-9_]*\b", text, re.I)))
     worksheet_ids = sorted(set(re.findall(r"p_worksheet_id(?:\\u0026|=)(\d+)", text, re.I)))
-    region_ids = sorted(set(re.findall(r"(?:regionId|region_id)[\"']?\s*[:=]\s*[\"']?(\d+)", text, re.I)))
+    ajax_identifiers = sorted(set(re.findall(r"ajaxIdentifier[\"']?\s*[:=]\s*[\"']([^\"']+)", text, re.I)))
+    region_ids = sorted(set(re.findall(r"(?:regionId|region_id)[\"']?\s*[:=]\s*[\"']?([A-Za-z0-9_\-]+)", text, re.I)))
+    report_ids = sorted(set(re.findall(r"(?:reportId|report_id|currentReportId)[\"']?\s*[:=]\s*[\"']?([A-Za-z0-9_\-]+)", text, re.I)))
+    static_ids = sorted(set(re.findall(r"(?:staticId|static_id)[\"']?\s*[:=]\s*[\"']?([A-Za-z0-9_\-]+)", text, re.I)))
+    pagination_tokens = sorted(set(re.findall(r"pgR_[A-Za-z0-9_=;&:,.-]+", text, re.I)))
     year_labels = sorted(set(re.findall(r"\b(?:2016|2017|2018|2019|2020|2021|2022|2023|2024|2025)\b", text)))
     out = {
         "boundary": {
@@ -193,8 +207,15 @@ def main():
         "year_inputs": p.inputs,
         "year_selects": p.selects,
         "worksheet_ids": worksheet_ids,
+        "ajax_identifier_count": len(ajax_identifiers),
+        "ajax_identifier_prefixes": [x[:24] for x in ajax_identifiers],
         "region_ids": region_ids,
+        "report_ids": report_ids,
+        "static_ids": static_ids,
+        "pagination_tokens": pagination_tokens,
         "pagination_links": p.links,
+        "pagination_attrs": p.pagination_attrs,
+        "forms": p.forms,
         "tables": summaries,
         "incremental_monetary_cost_usd": 0,
     }
@@ -205,19 +226,27 @@ def main():
         f"- Annual Usage HTTP: **{annual_status}**",
         f"- Annual Usage bytes: **{len(annual_b)}**",
         f"- page year labels: **{', '.join(year_labels)}**",
-        f"- year item tokens: `{item_tokens}`",
         f"- worksheet IDs: `{worksheet_ids}`",
-        f"- pagination links: **{len(p.links)}**",
+        f"- AJAX identifiers found: **{len(ajax_identifiers)}**",
+        f"- region IDs: `{region_ids}`",
+        f"- report IDs: `{report_ids}`",
+        f"- static IDs: `{static_ids}`",
+        f"- pagination tokens: `{pagination_tokens}`",
+        f"- pagination attrs: **{len(p.pagination_attrs)}**",
         f"- tables found: **{len(summaries)}**",
     ]
     for i, s in enumerate(summaries):
         lines += ["", f"## Table {i+1}", f"- id: `{s['id']}`", f"- headers: `{s['header']}`", f"- unique locks on rendered page: **{s['unique_lock_count_on_page']}**", f"- usage labels: `{s['usage_type_labels']}`", f"- Average Delay rows with all 2016–2025 cells nonblank on page: **{s['all_year_average_delay_lock_count_on_page']}**"]
         for r in s["average_delay_support_rows"][:20]:
             lines.append(f"- delay-support: {r['river']} | {r['lock']} | all-years={r['all_2016_2025_nonblank']}")
+    if p.pagination_attrs:
+        lines += ["", "## Pagination attributes"]
+        for x in p.pagination_attrs[:30]:
+            lines.append(f"- `{x}`")
     if p.links:
-        lines += ["", "## Pagination diagnostics"]
+        lines += ["", "## Pagination links"]
         for x in p.links[:30]:
-            lines.append(f"- text=`{x['text']}` class=`{x['class']}` href=`{x['href']}`")
+            lines.append(f"- text=`{x['text']}` class=`{x['class']}` href=`{x['href']}` onclick=`{x['onclick']}`")
     lines += ["", "Incremental monetary cost: **0 USD**."]
     (OUT / "STAGE_A_ANNUAL_USAGE_SCHEMA_PROBE.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
