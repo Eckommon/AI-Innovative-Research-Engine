@@ -59,3 +59,5 @@ Official artifacts comply with `LANG-001`, `COST-001`, and applicable governance
 - [DEC-138](DEC-138.md): accept US-WATERWAY-E01 Stage A PASS and authorize only the frozen Stage B implementation contract; no values opened by adjudication. / Stage A PASS 수용 및 고정 Stage B만 승인.
 
 - [DEC-139](DEC-139.md): finalize US-WATERWAY-E01 as source/panel/inference HOLD; no post-hoc recoding or relationship fit; return Stage 0. / E01 HOLD 확정·Stage 0 복귀.
+| `DEC-140` | 2026-09-11 | R15 selects prospective signed-flow `US-WATERWAY-E02` after source-semantics probe; E01 remains terminal HOLD. / source 의미 확인 후 별도 E02 선정. | Relationship remains untested; signed negative USGS discharge is approved source data. | Issue #101; `CLM-144`; `research/PORTFOLIO-R15/RESULT.md` | active |
+| `DEC-141` | 2026-09-11 | Preregister E02 with signed finite Daily `00060/00003`, frozen 13-gage/23-lock cohort, >=330 days/year and unchanged primary inferential gate. / signed-flow E02 사전등록. | Prospectively resolves E01 source assumption without outcome feedback. | Issue #102; `research/US-WATERWAY-E02/README.md` | active |

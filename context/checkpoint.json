@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260911-US-WATERWAY-E01-HOLD-PORTFOLIO-RETURN",
-  "active_issue": "none",
-  "active_research": "NONE",
-  "last_completed_issue": 100,
-  "last_completed_research": "US-WATERWAY-E01",
-  "last_decision": "DEC-139",
+  "checkpoint_id": "CHK-20260911-US-WATERWAY-E02-ACTIVE",
+  "active_issue": 102,
+  "active_research": "US-WATERWAY-E02",
+  "last_completed_issue": 101,
+  "last_completed_research": "PORTFOLIO-R15",
+  "last_decision": "DEC-141",
   "updated": "2026-09-11"
 }
