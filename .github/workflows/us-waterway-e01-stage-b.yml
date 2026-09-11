@@ -1,0 +1,33 @@
+name: US WATERWAY E01 Stage B
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/us-waterway-e01-stage-b.yml'
+      - 'tools/us_waterway_e01_stage_b.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  stage-b:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate runner
+        run: python -m py_compile tools/us_waterway_e01_stage_b.py
+      - name: Install numerical and browser dependencies
+        run: python -m pip install --disable-pip-version-check numpy scipy selenium
+      - name: Run frozen Stage B
+        run: python tools/us_waterway_e01_stage_b.py
+      - name: Commit derived Stage B artifacts
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-WATERWAY-E01/STAGE_B_SOURCE_MANIFEST.json research/US-WATERWAY-E01/STAGE_B_PRIMARY_RESULT.json research/US-WATERWAY-E01/STAGE_B_SENSITIVITY_RESULT.json research/US-WATERWAY-E01/STAGE_B_RESULT.md
+          if [ -f research/US-WATERWAY-E01/STAGE_B_GAGE_YEAR_PANEL.csv ]; then git add research/US-WATERWAY-E01/STAGE_B_GAGE_YEAR_PANEL.csv; fi
+          if [ -f research/US-WATERWAY-E01/STAGE_B_GAGE_QUALITY.csv ]; then git add research/US-WATERWAY-E01/STAGE_B_GAGE_QUALITY.csv; fi
+          git commit -m 'Record US-WATERWAY-E01 frozen Stage B result'
+          git push
