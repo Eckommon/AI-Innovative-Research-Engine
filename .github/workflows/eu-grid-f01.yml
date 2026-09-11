@@ -1,0 +1,29 @@
+name: EU GRID F01 source operability
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/eu_grid_f01.py'
+      - '.github/workflows/eu-grid-f01.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  f01:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate probe
+        run: python -m py_compile tools/eu_grid_f01.py
+      - name: Run outcome-blind source-operability probe
+        run: python tools/eu_grid_f01.py
+      - name: Commit derived F01 artifacts
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/EU-GRID-F01/SOURCE_PANEL_MANIFEST.json research/EU-GRID-F01/RESULT.md
+          git diff --cached --quiet || git commit -m 'Record EU-GRID-F01 source-operability result'
+          git push
