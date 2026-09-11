@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260911-US-WATERWAY-E01-STAGE-B-AUTHORIZED",
-  "active_issue": 100,
-  "active_research": "US-WATERWAY-E01",
-  "last_completed_issue": 99,
-  "last_completed_research": "PORTFOLIO-R14",
-  "last_decision": "DEC-138",
+  "checkpoint_id": "CHK-20260911-US-WATERWAY-E01-HOLD-PORTFOLIO-RETURN",
+  "active_issue": "none",
+  "active_research": "NONE",
+  "last_completed_issue": 100,
+  "last_completed_research": "US-WATERWAY-E01",
+  "last_decision": "DEC-139",
   "updated": "2026-09-11"
 }

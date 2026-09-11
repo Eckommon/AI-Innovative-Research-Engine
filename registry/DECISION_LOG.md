@@ -57,3 +57,5 @@ Official artifacts comply with `LANG-001`, `COST-001`, and applicable governance
 - [DEC-137](DEC-137.md): Preregister US-WATERWAY-E01 extreme-flow burden × annual Average Delay and block Stage B until 2016–2025 panel support passes. / E01 사전등록 및 Stage A PASS 전 효과값 개방 금지.
 
 - [DEC-138](DEC-138.md): accept US-WATERWAY-E01 Stage A PASS and authorize only the frozen Stage B implementation contract; no values opened by adjudication. / Stage A PASS 수용 및 고정 Stage B만 승인.
+
+- [DEC-139](DEC-139.md): finalize US-WATERWAY-E01 as source/panel/inference HOLD; no post-hoc recoding or relationship fit; return Stage 0. / E01 HOLD 확정·Stage 0 복귀.

@@ -1,19 +1,15 @@
 ---
-checkpoint_id: CHK-20260911-US-WATERWAY-E01-STAGE-B-AUTHORIZED
-active_issue: 100
-active_research: US-WATERWAY-E01
-last_completed_issue: 99
-last_completed_research: PORTFOLIO-R14
-last_decision: DEC-138
+checkpoint_id: CHK-20260911-US-WATERWAY-E01-HOLD-PORTFOLIO-RETURN
+active_issue: none
+active_research: NONE
+last_completed_issue: 100
+last_completed_research: US-WATERWAY-E01
+last_decision: DEC-139
 updated: 2026-09-11
 ---
 
 # Session Handoff / 세션 인수인계
 
-## Canonical restart point / 정확한 재개점
+US-WATERWAY-E01 is complete with `HOLD_US_WATERWAY_E01_SOURCE_PANEL_OR_INFERENCE_SUPPORT`. Stage A passed (13 gages / 23 locks / 130 prospective gage-years), but Stage B found Daily USGS `00060/00003` value `-399` at `USGS-07249455` on 2016-12-23. The frozen nonnegative contract required fail-closed before model fitting. No relationship coefficient was computed.
 
-Issue #100 `US-WATERWAY-E01` remains the sole active research gate. Stage A is durably **PASS** (`CLM-142`, `DEC-138`).
-
-Exact next action: execute the frozen Stage B implementation contract. The primary panel is gage×calendar-year over 2016–2025; exposure is within-gage q10/q90 extreme-day share from Daily streamflow `00060/00003`; outcome is the unweighted mean Annual Usage `Average Delay (minutes)` across the prospectively mapped locks for each gage-year. Two-way CR1 is by gage and calendar year. Store the primary gate before sensitivities.
-
-Do not substitute predictors/outcomes, tune percentiles, search lags/leads, cherry-pick rivers, rank locks, or claim causality/prediction/novelty/utility. Cost remains 0 USD.
+Canonical restart: Stage 0 portfolio control; do not automatically repair/re-run E01. Any future treatment of negative/sentinel USGS discharge must be prospectively justified from authoritative semantics in a new preregistered descendant. Cost 0 USD.

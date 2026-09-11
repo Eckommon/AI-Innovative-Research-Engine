@@ -84,3 +84,5 @@ Official artifacts comply with `LANG-001`, `COST-001`, `FACT-001`, and `FRESH-00
 | `CLM-141` | US-WATERWAY-F01 has reproducible public lock-level historical-delay schema/identity support and 25 deterministic historical-lock↔USGS metadata matches over shared 2018–2020 support; gate `PASS_US_WATERWAY_F01_JOIN_READY`. | `OBSERVED_DERIVED_VALIDATED` | `V3_REPRODUCED_SOURCE_SEMANTICS_IDENTITY_AND_DATE_SUPPORT` | Issue #98; `research/US-WATERWAY-F01/RESULT.md` | 2026-09-11 | active |
 
 | `CLM-142` | US-WATERWAY-E01 Stage A passes: 23 all-year locks, 13 unique gages, 130 prospective gage-years; no magnitudes opened. / E01 Stage A 구조 PASS. | `OBSERVED/DERIVED/VALIDATED` | `V3_PREREGISTERED_SOURCE_PANEL_REPRODUCED` | Run `34575280258`; `research/US-WATERWAY-E01/STAGE_A_RESULT.md` | 2026-09-11 | active |
+
+| `CLM-143` | US-WATERWAY-E01 Stage B stopped on negative USGS 00060/00003 value -399 before model fitting; final gate HOLD. / 음수 유량 source-semantics 위반으로 모델 적합 전 HOLD. | `OBSERVED/DERIVED/VALIDATED` | `V3_PREREGISTERED_GATE` | Stage B Run `34575978994`; `research/US-WATERWAY-E01/RESULT.md` | 2026-09-11 | active |
