@@ -1,0 +1,483 @@
+{
+  "boundary": {
+    "delay_magnitudes_parsed": false,
+    "hydrology_values_parsed": false,
+    "relationship_computed": false
+  },
+  "rule": "exact normalized name after structural LOCK/DAM token removal OR numbered-lock key <number> <river>; no fuzzy distance/name matching",
+  "toc_lock_count": 193,
+  "hydrology_qualified_count": 25,
+  "crosswalk_matched_count": 22,
+  "crosswalk_unmatched_count": 3,
+  "target_overlap": [
+    "2018-01-01",
+    "2020-12-31"
+  ],
+  "rows": [
+    {
+      "lock_id": 114,
+      "lock_name": "CHAINS OF ROCKS L/D 27",
+      "river": "MISSISSIPPI",
+      "usgs_id": "USGS-07010000",
+      "candidate_keys": [
+        "27 MISSISSIPPI",
+        "CHAINS OF ROCKS 27",
+        "CHAINS OF ROCKS LOCK AND DAM 27"
+      ],
+      "matched": true,
+      "matched_key": "27 MISSISSIPPI",
+      "toc_lock": "27 MISSISSIPPI",
+      "hydrology_interval": [
+        "2018-01-01",
+        "2020-12-31"
+      ]
+    },
+    {
+      "lock_id": 159,
+      "lock_name": "LOCK & DAM 10",
+      "river": "MISSISSIPPI",
+      "usgs_id": "USGS-05411500",
+      "candidate_keys": [
+        "10",
+        "10 MISSISSIPPI",
+        "AND 10",
+        "LOCK AND DAM 10"
+      ],
+      "matched": true,
+      "matched_key": "10 MISSISSIPPI",
+      "toc_lock": "10 MISSISSIPPI",
+      "hydrology_interval": [
+        "2018-01-01",
+        "2020-12-31"
+      ]
+    },
+    {
+      "lock_id": 116,
+      "lock_name": "LOCK & DAM 13",
+      "river": "MISSISSIPPI",
+      "usgs_id": "USGS-05420500",
+      "candidate_keys": [
+        "13",
+        "13 MISSISSIPPI",
+        "AND 13",
+        "LOCK AND DAM 13"
+      ],
+      "matched": true,
+      "matched_key": "13 MISSISSIPPI",
+      "toc_lock": "13 MISSISSIPPI",
+      "hydrology_interval": [
+        "2018-01-01",
+        "2020-12-31"
+      ]
+    },
+    {
+      "lock_id": 112,
+      "lock_name": "LOCK & DAM 14",
+      "river": "MISSISSIPPI",
+      "usgs_id": "USGS-05420500",
+      "candidate_keys": [
+        "14",
+        "14 MISSISSIPPI",
+        "AND 14",
+        "LOCK AND DAM 14"
+      ],
+      "matched": true,
+      "matched_key": "14 MISSISSIPPI",
+      "toc_lock": "14 MISSISSIPPI",
+      "hydrology_interval": [
+        "2018-01-01",
+        "2020-12-31"
+      ]
+    },
+    {
+      "lock_id": 111,
+      "lock_name": "LOCK & DAM 15",
+      "river": "MISSISSIPPI",
+      "usgs_id": "USGS-05420500",
+      "candidate_keys": [
+        "15",
+        "15 MISSISSIPPI",
+        "AND 15",
+        "LOCK AND DAM 15"
+      ],
+      "matched": true,
+      "matched_key": "15 MISSISSIPPI",
+      "toc_lock": "15 MISSISSIPPI",
+      "hydrology_interval": [
+        "2018-01-01",
+        "2020-12-31"
+      ]
+    },
+    {
+      "lock_id": 106,
+      "lock_name": "LOCK & DAM 19",
+      "river": "MISSISSIPPI",
+      "usgs_id": "USGS-05474500",
+      "candidate_keys": [
+        "19",
+        "19 MISSISSIPPI",
+        "AND 19",
+        "LOCK AND DAM 19"
+      ],
+      "matched": true,
+      "matched_key": "19 MISSISSIPPI",
+      "toc_lock": "19 MISSISSIPPI",
+      "hydrology_interval": [
+        "2018-01-01",
+        "2020-12-31"
+      ]
+    },
+    {
+      "lock_id": 104,
+      "lock_name": "LOCK & DAM 20",
+      "river": "MISSISSIPPI",
+      "usgs_id": "USGS-05474500",
+      "candidate_keys": [
+        "20",
+        "20 MISSISSIPPI",
+        "AND 20",
+        "LOCK AND DAM 20"
+      ],
+      "matched": true,
+      "matched_key": "20 MISSISSIPPI",
+      "toc_lock": "20 MISSISSIPPI",
+      "hydrology_interval": [
+        "2018-01-01",
+        "2020-12-31"
+      ]
+    },
+    {
+      "lock_id": 102,
+      "lock_name": "LOCK & DAM 25",
+      "river": "MISSISSIPPI",
+      "usgs_id": "USGS-05587450",
+      "candidate_keys": [
+        "25",
+        "25 MISSISSIPPI",
+        "AND 25",
+        "LOCK AND DAM 25"
+      ],
+      "matched": true,
+      "matched_key": "25 MISSISSIPPI",
+      "toc_lock": "25 MISSISSIPPI",
+      "hydrology_interval": [
+        "2018-01-01",
+        "2020-12-31"
+      ]
+    },
+    {
+      "lock_id": 164,
+      "lock_name": "LOCK & DAM 4",
+      "river": "MISSISSIPPI",
+      "usgs_id": "USGS-05378500",
+      "candidate_keys": [
+        "4",
+        "4 MISSISSIPPI",
+        "AND 4",
+        "LOCK AND DAM 4"
+      ],
+      "matched": true,
+      "matched_key": "4 MISSISSIPPI",
+      "toc_lock": "4 MISSISSIPPI",
+      "hydrology_interval": [
+        "2018-01-01",
+        "2020-12-31"
+      ]
+    },
+    {
+      "lock_id": 163,
+      "lock_name": "LOCK & DAM 5",
+      "river": "MISSISSIPPI",
+      "usgs_id": "USGS-05378500",
+      "candidate_keys": [
+        "5",
+        "5 MISSISSIPPI",
+        "AND 5",
+        "LOCK AND DAM 5"
+      ],
+      "matched": true,
+      "matched_key": "5 MISSISSIPPI",
+      "toc_lock": "5 MISSISSIPPI",
+      "hydrology_interval": [
+        "2018-01-01",
+        "2020-12-31"
+      ]
+    },
+    {
+      "lock_id": 165,
+      "lock_name": "LOCK & DAM 5A",
+      "river": "MISSISSIPPI",
+      "usgs_id": "USGS-05378500",
+      "candidate_keys": [
+        "5A",
+        "5A MISSISSIPPI",
+        "AND 5A",
+        "LOCK AND DAM 5A"
+      ],
+      "matched": true,
+      "matched_key": "5A MISSISSIPPI",
+      "toc_lock": "5a MISSISSIPPI",
+      "hydrology_interval": [
+        "2018-01-01",
+        "2020-12-31"
+      ]
+    },
+    {
+      "lock_id": 157,
+      "lock_name": "LOCK & DAM 6",
+      "river": "MISSISSIPPI",
+      "usgs_id": "USGS-05378500",
+      "candidate_keys": [
+        "6",
+        "6 MISSISSIPPI",
+        "AND 6",
+        "LOCK AND DAM 6"
+      ],
+      "matched": true,
+      "matched_key": "6 MISSISSIPPI",
+      "toc_lock": "6 MISSISSIPPI",
+      "hydrology_interval": [
+        "2018-01-01",
+        "2020-12-31"
+      ]
+    },
+    {
+      "lock_id": 158,
+      "lock_name": "LOCK & DAM 7",
+      "river": "MISSISSIPPI",
+      "usgs_id": "USGS-05378500",
+      "candidate_keys": [
+        "7",
+        "7 MISSISSIPPI",
+        "AND 7",
+        "LOCK AND DAM 7"
+      ],
+      "matched": true,
+      "matched_key": "7 MISSISSIPPI",
+      "toc_lock": "7 MISSISSIPPI",
+      "hydrology_interval": [
+        "2018-01-01",
+        "2020-12-31"
+      ]
+    },
+    {
+      "lock_id": 162,
+      "lock_name": "LOCK & DAM 9",
+      "river": "MISSISSIPPI",
+      "usgs_id": "USGS-05389500",
+      "candidate_keys": [
+        "9",
+        "9 MISSISSIPPI",
+        "AND 9",
+        "LOCK AND DAM 9"
+      ],
+      "matched": true,
+      "matched_key": "9 MISSISSIPPI",
+      "toc_lock": "9 MISSISSIPPI",
+      "hydrology_interval": [
+        "2018-01-01",
+        "2020-12-31"
+      ]
+    },
+    {
+      "lock_id": 103,
+      "lock_name": "MEL PRICE LOCK & DAM",
+      "river": "MISSISSIPPI",
+      "usgs_id": "USGS-05587450",
+      "candidate_keys": [
+        "MEL PRICE",
+        "MEL PRICE AND",
+        "MEL PRICE LOCK AND DAM"
+      ],
+      "matched": false,
+      "matched_key": "",
+      "toc_lock": "",
+      "hydrology_interval": [
+        "2018-01-01",
+        "2020-12-31"
+      ]
+    },
+    {
+      "lock_id": 140,
+      "lock_name": "CANNELTON LOCK & DAM",
+      "river": "OHIO",
+      "usgs_id": "USGS-03303280",
+      "candidate_keys": [
+        "CANNELTON",
+        "CANNELTON AND",
+        "CANNELTON LOCK AND DAM"
+      ],
+      "matched": true,
+      "matched_key": "CANNELTON",
+      "toc_lock": "CANNELTON",
+      "hydrology_interval": [
+        "2018-01-01",
+        "2020-12-31"
+      ]
+    },
+    {
+      "lock_id": 155,
+      "lock_name": "CAPT ANT MELDAHL LOCK & DAM",
+      "river": "OHIO",
+      "usgs_id": "USGS-03255000",
+      "candidate_keys": [
+        "CAPT ANT MELDAHL",
+        "CAPT ANT MELDAHL AND",
+        "CAPT ANT MELDAHL LOCK AND DAM"
+      ],
+      "matched": false,
+      "matched_key": "",
+      "toc_lock": "",
+      "hydrology_interval": [
+        "2018-01-01",
+        "2020-12-31"
+      ]
+    },
+    {
+      "lock_id": 207,
+      "lock_name": "DASHIELDS LOCK & DAM",
+      "river": "OHIO",
+      "usgs_id": "USGS-03086000",
+      "candidate_keys": [
+        "DASHIELDS",
+        "DASHIELDS AND",
+        "DASHIELDS LOCK AND DAM"
+      ],
+      "matched": true,
+      "matched_key": "DASHIELDS",
+      "toc_lock": "DASHIELDS",
+      "hydrology_interval": [
+        "2018-01-01",
+        "2020-12-31"
+      ]
+    },
+    {
+      "lock_id": 208,
+      "lock_name": "EMSWORTH LOCK & DAM",
+      "river": "OHIO",
+      "usgs_id": "USGS-03085734",
+      "candidate_keys": [
+        "EMSWORTH",
+        "EMSWORTH AND",
+        "EMSWORTH LOCK AND DAM"
+      ],
+      "matched": true,
+      "matched_key": "EMSWORTH",
+      "toc_lock": "EMSWORTH",
+      "hydrology_interval": [
+        "2018-01-01",
+        "2020-12-31"
+      ]
+    },
+    {
+      "lock_id": 188,
+      "lock_name": "GREENUP LOCKS & DAM",
+      "river": "OHIO",
+      "usgs_id": "USGS-03216600",
+      "candidate_keys": [
+        "GREENUP",
+        "GREENUP AND",
+        "GREENUP LOCKS AND DAM"
+      ],
+      "matched": true,
+      "matched_key": "GREENUP",
+      "toc_lock": "GREENUP",
+      "hydrology_interval": [
+        "2018-01-01",
+        "2020-12-31"
+      ]
+    },
+    {
+      "lock_id": 194,
+      "lock_name": "HANNIBAL LOCKS & DAM",
+      "river": "OHIO",
+      "usgs_id": "USGS-03114306",
+      "candidate_keys": [
+        "HANNIBAL",
+        "HANNIBAL AND",
+        "HANNIBAL LOCKS AND DAM"
+      ],
+      "matched": true,
+      "matched_key": "HANNIBAL",
+      "toc_lock": "HANNIBAL",
+      "hydrology_interval": [
+        "2018-01-01",
+        "2020-12-31"
+      ]
+    },
+    {
+      "lock_id": 137,
+      "lock_name": "JOHN T. MYERSLOCK & DAM",
+      "river": "OHIO",
+      "usgs_id": "USGS-03322420",
+      "candidate_keys": [
+        "JOHN T MYERSLOCK",
+        "JOHN T MYERSLOCK AND",
+        "JOHN T MYERSLOCK AND DAM"
+      ],
+      "matched": false,
+      "matched_key": "",
+      "toc_lock": "",
+      "hydrology_interval": [
+        "2018-01-01",
+        "2020-12-31"
+      ]
+    },
+    {
+      "lock_id": 96,
+      "lock_name": "LOCK & DAM 52",
+      "river": "OHIO",
+      "usgs_id": "USGS-03611000",
+      "candidate_keys": [
+        "52",
+        "52 OHIO",
+        "AND 52",
+        "LOCK AND DAM 52"
+      ],
+      "matched": true,
+      "matched_key": "52 OHIO",
+      "toc_lock": "52 OHIO",
+      "hydrology_interval": [
+        "2018-01-01",
+        "2020-12-31"
+      ]
+    },
+    {
+      "lock_id": 146,
+      "lock_name": "MARKLAND LOCKS & DAM",
+      "river": "OHIO",
+      "usgs_id": "USGS-03277200",
+      "candidate_keys": [
+        "MARKLAND",
+        "MARKLAND AND",
+        "MARKLAND LOCKS AND DAM"
+      ],
+      "matched": true,
+      "matched_key": "MARKLAND",
+      "toc_lock": "MARKLAND",
+      "hydrology_interval": [
+        "2018-01-01",
+        "2020-12-31"
+      ]
+    },
+    {
+      "lock_id": 143,
+      "lock_name": "MCALPINE LOCKS & DAM",
+      "river": "OHIO",
+      "usgs_id": "USGS-03294500",
+      "candidate_keys": [
+        "MCALPINE",
+        "MCALPINE AND",
+        "MCALPINE LOCKS AND DAM"
+      ],
+      "matched": true,
+      "matched_key": "MCALPINE",
+      "toc_lock": "MCALPINE",
+      "hydrology_interval": [
+        "2018-01-01",
+        "2020-12-31"
+      ]
+    }
+  ],
+  "incremental_monetary_cost_usd": 0
+}
