@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260911-US-AIR-N01-LOW-NOVELTY-PORTFOLIO-RETURN",
-  "active_issue": "none",
-  "active_research": "NONE",
-  "last_completed_issue": 92,
-  "last_completed_research": "US-AIR-N01",
-  "last_decision": "DEC-128",
+  "checkpoint_id": "CHK-20260911-US-UTIL-F01-ACTIVE",
+  "active_issue": 94,
+  "active_research": "US-UTIL-F01",
+  "last_completed_issue": 93,
+  "last_completed_research": "PORTFOLIO-R11",
+  "last_decision": "DEC-129",
   "updated": "2026-09-11"
 }
