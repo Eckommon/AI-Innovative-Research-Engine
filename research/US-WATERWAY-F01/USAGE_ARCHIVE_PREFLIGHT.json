@@ -1,0 +1,71 @@
+{
+  "boundary": {
+    "delay_magnitudes_parsed": false,
+    "processing_magnitudes_parsed": false,
+    "hydrology_magnitudes_parsed": false,
+    "relationship_computed": false
+  },
+  "compound_id": 2610,
+  "compound_source": {
+    "id": 2610,
+    "url": "https://usace.contentdm.oclc.org/digital/api/singleitem/collection/p16021coll2/id/2610",
+    "status": 200,
+    "final_url": "https://usace.contentdm.oclc.org/digital/api/singleitem/collection/p16021coll2/id/2610",
+    "bytes": 3277,
+    "sha256": "cc9a0b308a2de1fc28c12578928f710f1ba93f23455370719ee9ec8f68f047e6"
+  },
+  "candidate_count": 7,
+  "workbooks": [
+    {
+      "id": 2606,
+      "title": "",
+      "filename": "2607.xlsx",
+      "format": "",
+      "download_url": "https://usace.contentdm.oclc.org/utils/getfile/collection/p16021coll2/filename/2607.xlsx",
+      "error": "HTTPError: HTTP Error 404: Page not found."
+    },
+    {
+      "id": 2607,
+      "title": "",
+      "filename": "2608.xlsx",
+      "format": "",
+      "download_url": "https://usace.contentdm.oclc.org/utils/getfile/collection/p16021coll2/filename/2608.xlsx",
+      "error": "HTTPError: HTTP Error 404: Page not found."
+    },
+    {
+      "id": 2608,
+      "title": "",
+      "filename": "2609.xlsx",
+      "format": "",
+      "download_url": "https://usace.contentdm.oclc.org/utils/getfile/collection/p16021coll2/filename/2609.xlsx",
+      "error": "HTTPError: HTTP Error 404: Page not found."
+    },
+    {
+      "id": 2956,
+      "title": "",
+      "filename": "2957.xlsx",
+      "format": "",
+      "download_url": "https://usace.contentdm.oclc.org/utils/getfile/collection/p16021coll2/filename/2957.xlsx",
+      "error": "HTTPError: HTTP Error 404: Page not found."
+    },
+    {
+      "id": 2957,
+      "title": "",
+      "filename": "2958.xlsx",
+      "format": "",
+      "download_url": "https://usace.contentdm.oclc.org/utils/getfile/collection/p16021coll2/filename/2958.xlsx",
+      "error": "HTTPError: HTTP Error 404: Page not found."
+    },
+    {
+      "id": 2958,
+      "title": "",
+      "filename": "2959.xlsx",
+      "format": "",
+      "download_url": "https://usace.contentdm.oclc.org/utils/getfile/collection/p16021coll2/filename/2959.xlsx",
+      "error": "HTTPError: HTTP Error 404: Page not found."
+    }
+  ],
+  "historical_outcome_route_pass": false,
+  "best_public_workbook": null,
+  "incremental_monetary_cost_usd": 0
+}
