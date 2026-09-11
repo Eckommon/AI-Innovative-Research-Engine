@@ -50,3 +50,4 @@ Official artifacts comply with `LANG-001`, `COST-001`, and applicable governance
 - [DEC-131](DEC-131.md): R12 selects US-UTIL-F02 longitudinal comparability preflight before any relationship / 효과검증 전 다년 비교가능성 gate 선정.
 - [DEC-132](DEC-132.md): freeze 2019–2024 outcome-blind F02 panel-feasibility contract / 2019–2024 결과 비사용 panel 계약 고정.
 - [DEC-133](DEC-133.md): accept US-UTIL-F02 PANEL_DESIGN_READY PASS and return to Stage 0 / F02 PASS 수용·Stage 0 복귀.
+- [DEC-134](DEC-134.md): R13 selects C-US-006 / US-WATERWAY-F01 historical LPMS delay × USGS hydrology source/identity feasibility; no outcome magnitudes opened. / 역사적 delay×수문 source feasibility를 결과값 비사용으로 선정.

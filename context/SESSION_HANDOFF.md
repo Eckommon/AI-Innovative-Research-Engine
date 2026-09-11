@@ -1,10 +1,10 @@
 ---
-checkpoint_id: CHK-20260911-US-UTIL-F02-PASS-PORTFOLIO-RETURN
-active_issue: none
-active_research: NONE
-last_completed_issue: 96
-last_completed_research: US-UTIL-F02
-last_decision: DEC-133
+checkpoint_id: CHK-20260911-US-WATERWAY-F01-ACTIVE
+active_issue: 98
+active_research: US-WATERWAY-F01
+last_completed_issue: 97
+last_completed_research: PORTFOLIO-R13
+last_decision: DEC-134
 updated: 2026-09-11
 ---
 
@@ -12,25 +12,17 @@ updated: 2026-09-11
 
 ## Canonical restart point / 정확한 재개점
 
-US-UTIL-F02 is complete under DEC-133 with:
+PORTFOLIO-R13 selected **C-US-006** and opened Issue #98 `US-WATERWAY-F01`.
 
-**`PASS_US_UTIL_F02_PANEL_DESIGN_READY`**
+Do not return automatically to US-UTIL, US-AIR or AU-NEM. / 자동 복귀 금지.
 
-Do not rerun F01/F02 by default and do not open SAIDI/SAIFI or AMI magnitudes automatically. / F01/F02 기본 재실행·효과값 자동개방 금지.
+## Exact bounded execution / 제한 실행
 
-Canonical support:
-- 883 >=4/6-year triple-schedule utilities;
-- 819 >=4-year comparable utilities;
-- 4,857 qualified utility-years;
-- 37,156 utility-year×county mappings;
-- 6/6 Reliability basis, AMI field-route and NOAA county-route support.
+1. Verify the official public USACE LPMS route for >=3 contiguous years of lock-level historical delay or arrival/start timing support.
+2. If and only if that survives, verify stable public lock identity/coordinates and >=30 supported locks.
+3. Then qualify >=25 lock↔USGS monitoring-location candidates using coordinates plus river/waterbody identity and overlapping daily-value date support.
+4. Do not read delay or hydrology magnitudes and do not estimate a relationship.
 
-Canonical evidence: `research/US-UTIL-F02/RESULT.md`, `BASIS_ADJUDICATION.md`, `BASIS_HEADER_RESOLUTION.md`, `registry/CLM-140.md`, `registry/DEC-133.md`.
+A current 24-hour/30-day Corps Locks feed cannot satisfy the historical gate by itself. Annual unavailability is not a substitute for delay.
 
-## Exact next action / 정확한 다음 행동
-
-Return to **Stage 0** with no active research issue. Compare a potential US-UTIL preregistered relationship design against independent portfolio opportunities before opening magnitudes. / 효과실험 자동 승격 금지.
-
-If US-UTIL is selected later, first freeze one Reliability outcome/basis, AMI penetration definition, storm exposure aggregation/window, MED treatment, dependence, baseline/confounding, falsification/materiality, and novelty/utility plan.
-
-Cost remains **0 USD**.
+Cost remains **0 USD**; potentially billable work requires explicit prior approval.

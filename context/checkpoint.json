@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260911-US-UTIL-F02-PASS-PORTFOLIO-RETURN",
-  "active_issue": "none",
-  "active_research": "NONE",
-  "last_completed_issue": 96,
-  "last_completed_research": "US-UTIL-F02",
-  "last_decision": "DEC-133",
+  "checkpoint_id": "CHK-20260911-US-WATERWAY-F01-ACTIVE",
+  "active_issue": 98,
+  "active_research": "US-WATERWAY-F01",
+  "last_completed_issue": 97,
+  "last_completed_research": "PORTFOLIO-R13",
+  "last_decision": "DEC-134",
   "updated": "2026-09-11"
 }
