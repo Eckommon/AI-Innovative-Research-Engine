@@ -1,9 +1,9 @@
 ---
 id: US-UTIL-F01
 issue: 94
-state: ACTIVE_SOURCE_PREFLIGHT
+state: COMPLETED_JOIN_READY
 mission_anchor: MEM-054
-decision: DEC-129
+decision: DEC-130
 outcome_values_opened: false
 relationship_computed: false
 incremental_monetary_cost_usd: 0
@@ -44,6 +44,12 @@ Require all for source-side structural PASS:
 
 These thresholds qualify structure only; they do not imply a useful or novel AMI-resilience relationship.
 
+## Final disposition / 최종 처분
+
+**`PASS_US_UTIL_F01_JOIN_READY`**
+
+Verified: **842** completely county-qualified reliability utilities with AMI support and **6,341** qualified utility×county mappings under the deterministic Census GEOID→NOAA FIPS route. No reliability/AMI magnitude or relationship was opened. / 결과값 비사용 JOIN_READY다.
+
 ## Exact next action / 정확한 다음 행동
 
-Run source-byte/schema/cardinality preflight. Persist hashes, member/sheet names, selected non-outcome headers, identity counts, county-key counts and exclusions. / source hash·schema·identity cardinality만 기록한다.
+Return to **Stage 0 portfolio control**. Do not automatically fit an AMI × storm × reliability model. Any relationship descendant requires separate portfolio selection and preregistration. / Stage 0로 복귀하며 효과실험 자동진입을 금지한다.

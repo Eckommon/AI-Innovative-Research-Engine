@@ -1,10 +1,10 @@
 ---
-checkpoint_id: CHK-20260911-US-UTIL-F01-ACTIVE
-active_issue: 94
-active_research: US-UTIL-F01
-last_completed_issue: 93
-last_completed_research: PORTFOLIO-R11
-last_decision: DEC-129
+checkpoint_id: CHK-20260911-US-UTIL-F01-PASS-PORTFOLIO-RETURN
+active_issue: none
+active_research: NONE
+last_completed_issue: 94
+last_completed_research: US-UTIL-F01
+last_decision: DEC-130
 updated: 2026-09-11
 ---
 
@@ -12,28 +12,29 @@ updated: 2026-09-11
 
 ## Canonical restart point / 정확한 재개점
 
-PORTFOLIO-R11 selected fresh candidate **C-US-005** and opened Issue #94 `US-UTIL-F01`.
+US-UTIL-F01 is complete under DEC-130 with:
 
-Do not return automatically to US-AIR. / US-AIR 자동 복귀 금지.
+**`PASS_US_UTIL_F01_JOIN_READY`**
 
-## Selected source structure / 선정 source 구조
+Do not rerun the F01 source/county qualification by default. / F01 기본 재실행 금지.
 
-- EIA-861 2024 final data: utility identity + Advanced Metering + Reliability + Service Territory.
-- NOAA/NCEI Storm Events 2024 annual bulk source.
-- Preserve explicit utility↔county many-to-many structure.
+Canonical evidence:
+- `research/US-UTIL-F01/RESULT.md`;
+- `research/US-UTIL-F01/JOIN_QUALIFICATION.md`;
+- `research/US-UTIL-F01/UTILITY_COUNTY_JOIN_MAP.csv`;
+- `registry/CLM-139.md`;
+- `registry/DEC-130.md`.
 
-## Exact next bounded execution / 다음 제한 실행
+Verified support: **842** complete reliability+AMI utility identities and **6,341** utility×county mappings. / 구조 gate PASS다.
 
-Run only the F01 source-byte/schema/cardinality preflight:
-- exact source URL / byte length / SHA-256;
-- archive/workbook/sheet names;
-- non-outcome identity schemas;
-- Reliability utility-ID support count without reading reliability magnitudes;
-- Advanced Metering utility-ID support count;
-- Service Territory utility×county count;
-- NOAA county-key schema/cardinality;
-- deterministic intersection counts and exclusions.
+## Boundary / 경계
 
-Do not estimate any relationship. / 관계추정 금지.
+This is JOIN_READY only. No SAIDI/SAIFI magnitude, AMI magnitude, storm-reliability coefficient, causality, predictive utility or resilience benefit has been established. / 효과·인과·예측·효용 주장은 없다.
+
+## Exact next action / 정확한 다음 행동
+
+Return to **Stage 0 portfolio control** with no active research Issue. / 활성 연구 Issue 없이 Stage 0로 복귀한다.
+
+A US-UTIL relationship descendant may re-enter only through a fresh portfolio selection and a preregistered outcome/exposure/dependence contract. / 후속 효과실험은 새 portfolio 선정·사전등록 필요.
 
 Cost remains **0 USD**; potentially billable work requires explicit prior approval.

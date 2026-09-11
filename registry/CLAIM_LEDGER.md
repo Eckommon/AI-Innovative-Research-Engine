@@ -68,6 +68,8 @@
 
 | `CLM-138` | Bounded peer-reviewed/official-practice evidence shows the US-AIR E01 core precipitation→delay relationship is already established; exact contribution is `LOW_NOVELTY_CORE_RELATIONSHIP_KNOWN`, with breadth/reproducibility as the main increment. / 강수→지연 핵심관계는 기존 근거에 존재하며 신규성은 낮고 범위·재현성이 주 증분. | `OBSERVED/DERIVED_ASSESSMENT` | `V2_BOUNDED_PEER_REVIEWED_AND_OFFICIAL_PRACTICE_ASSESSMENT` | `research/US-AIR-N01/RESULT.md`; `SOURCE_MATRIX.csv`; `registry/CLM-138.md`; Issue #92 | 2026-09-11 | active-novelty-low |
 
+| `CLM-139` | Outcome-blind US-UTIL-F01 deterministically qualifies 842 EIA-861 reliability utilities with AMI support and 6,341 utility×county mappings through Census GEOID to NOAA 2024 county FIPS; frozen structural gate `PASS_US_UTIL_F01_JOIN_READY`. No SAIDI/SAIFI, AMI magnitude or relationship was used. / 결과값 비사용 상태에서 842개 utility·6,341개 utility×county 결합으로 JOIN_READY PASS. | `OBSERVED/DERIVED/VALIDATED` | `V3_OUTCOME_BLIND_JOIN_REPRODUCED` | `research/US-UTIL-F01/RESULT.md`; `JOIN_QUALIFICATION.md`; `registry/CLM-139.md`; Issue #94 | 2026-09-11 | active-join-ready |
+
 ## Rule / 규칙
 
 - New material claims should receive a stable ID when they influence scoring, promotion, HOLD/REJECT decisions, or downstream experiments. / 점수·승격·HOLD/REJECT·후속 실험에 영향을 주는 중요 주장은 안정적 ID 부여.
