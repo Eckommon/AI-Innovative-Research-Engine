@@ -1,0 +1,197 @@
+{
+  "boundary": {
+    "load_magnitudes_parsed_or_persisted": false,
+    "forecast_magnitudes_parsed_or_persisted": false,
+    "forecast_error_computed": false,
+    "physical_flow_magnitudes_parsed_or_persisted": false,
+    "weather_magnitudes_parsed_or_persisted": false,
+    "relationship_computed": false,
+    "numeric_cells_reduced_to_structural_presence_only": true
+  },
+  "frozen_countries": [
+    "FR",
+    "BE",
+    "NL",
+    "ES",
+    "PT",
+    "PL",
+    "AT",
+    "CZ"
+  ],
+  "structural_period": [
+    "2022-01-01",
+    "2025-12-31"
+  ],
+  "prospective_anchor_dates": [
+    "2022-01-15",
+    "2022-04-15",
+    "2022-07-15",
+    "2022-10-15",
+    "2023-01-15",
+    "2023-04-15",
+    "2023-07-15",
+    "2023-10-15",
+    "2024-01-15",
+    "2024-04-15",
+    "2024-07-15",
+    "2024-10-15",
+    "2025-01-15",
+    "2025-04-15",
+    "2025-07-15",
+    "2025-10-15"
+  ],
+  "country_summary": [
+    {
+      "country": "FR",
+      "name": "France",
+      "expected_eic": "10YFR-RTE------C",
+      "anchors_total": 16,
+      "anchors_structurally_supported": 0,
+      "all_anchors_supported": false,
+      "export_login_notice_anchors": 0,
+      "min_interval_label_count": 0,
+      "max_interval_label_count": 0,
+      "distinct_page_hashes": 1
+    },
+    {
+      "country": "BE",
+      "name": "Belgium",
+      "expected_eic": "10YBE----------2",
+      "anchors_total": 16,
+      "anchors_structurally_supported": 0,
+      "all_anchors_supported": false,
+      "export_login_notice_anchors": 0,
+      "min_interval_label_count": 0,
+      "max_interval_label_count": 0,
+      "distinct_page_hashes": 1
+    },
+    {
+      "country": "NL",
+      "name": "Netherlands",
+      "expected_eic": "10YNL----------L",
+      "anchors_total": 16,
+      "anchors_structurally_supported": 0,
+      "all_anchors_supported": false,
+      "export_login_notice_anchors": 0,
+      "min_interval_label_count": 0,
+      "max_interval_label_count": 0,
+      "distinct_page_hashes": 1
+    },
+    {
+      "country": "ES",
+      "name": "Spain",
+      "expected_eic": "10YES-REE------0",
+      "anchors_total": 16,
+      "anchors_structurally_supported": 0,
+      "all_anchors_supported": false,
+      "export_login_notice_anchors": 0,
+      "min_interval_label_count": 0,
+      "max_interval_label_count": 0,
+      "distinct_page_hashes": 1
+    },
+    {
+      "country": "PT",
+      "name": "Portugal",
+      "expected_eic": "10YPT-REN------W",
+      "anchors_total": 16,
+      "anchors_structurally_supported": 0,
+      "all_anchors_supported": false,
+      "export_login_notice_anchors": 0,
+      "min_interval_label_count": 0,
+      "max_interval_label_count": 0,
+      "distinct_page_hashes": 1
+    },
+    {
+      "country": "PL",
+      "name": "Poland",
+      "expected_eic": "10YPL-AREA-----S",
+      "anchors_total": 16,
+      "anchors_structurally_supported": 0,
+      "all_anchors_supported": false,
+      "export_login_notice_anchors": 0,
+      "min_interval_label_count": 0,
+      "max_interval_label_count": 0,
+      "distinct_page_hashes": 1
+    },
+    {
+      "country": "AT",
+      "name": "Austria",
+      "expected_eic": "10YAT-APG------L",
+      "anchors_total": 16,
+      "anchors_structurally_supported": 0,
+      "all_anchors_supported": false,
+      "export_login_notice_anchors": 0,
+      "min_interval_label_count": 0,
+      "max_interval_label_count": 0,
+      "distinct_page_hashes": 1
+    },
+    {
+      "country": "CZ",
+      "name": "Czech Republic",
+      "expected_eic": "10YCZ-CEPS-----N",
+      "anchors_total": 16,
+      "anchors_structurally_supported": 0,
+      "all_anchors_supported": false,
+      "export_login_notice_anchors": 0,
+      "min_interval_label_count": 0,
+      "max_interval_label_count": 0,
+      "distinct_page_hashes": 1
+    }
+  ],
+  "entsoe_no_login_machine_path_8_of_8": false,
+  "entsoe_export_registration_notice_observed": false,
+  "physical_flow": {
+    "status": 200,
+    "bytes": 14498,
+    "sha256": "5973430aaf22c667fbe33511718af5abeba3ccc1aa1bfe52d5e54668a4ef5dd6",
+    "physical_flow_domain_present": false,
+    "border_checks": [
+      {
+        "a": "FR",
+        "b": "BE",
+        "structural_option_present": false
+      },
+      {
+        "a": "FR",
+        "b": "ES",
+        "structural_option_present": false
+      },
+      {
+        "a": "BE",
+        "b": "NL",
+        "structural_option_present": false
+      },
+      {
+        "a": "ES",
+        "b": "PT",
+        "structural_option_present": false
+      },
+      {
+        "a": "PL",
+        "b": "CZ",
+        "structural_option_present": false
+      },
+      {
+        "a": "AT",
+        "b": "CZ",
+        "structural_option_present": false
+      }
+    ],
+    "frozen_countries_with_internal_border_support": [],
+    "supported_country_count": 0
+  },
+  "eobs": {
+    "status": 200,
+    "final_url": "https://surfobs.climate.copernicus.eu/dataaccess/access_eobs.php",
+    "bytes": 169837,
+    "sha256": "9b17c39a3b8ed8ee3d02e1a1ad2c7368a223085b3a5a8f4d829b05736ff75a19",
+    "version_33_0e_present": true,
+    "coverage_1950_to_2025_present": true,
+    "daily_mean_temperature_tg_present": true,
+    "regular_grid_0_1_0_25_present": true,
+    "europe_scope_present": true
+  },
+  "eobs_country_aggregation_rule": "Prospective later-stage rule: aggregate E-OBS regular-grid cells to frozen country polygons by a separately versioned official boundary asset before any values are opened; F01 does not open weather fields.",
+  "gate": "HOLD_EU_GRID_F01_SOURCE_OR_IDENTITY_SUPPORT",
+  "incremental_monetary_cost_usd": 0
+}
