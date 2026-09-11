@@ -1,0 +1,47 @@
+name: Finalize US UTIL F02 PANEL_DESIGN_READY
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/finalize-us-util-f02.yml'
+      - 'tools/finalize_us_util_f02.py'
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate finalizer
+        run: python -m py_compile tools/finalize_us_util_f02.py
+
+      - name: Finalize from existing committed F02 result
+        run: python tools/finalize_us_util_f02.py
+
+      - name: Commit durable F02 SoT atomically
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            research/US-UTIL-F02/README.md \
+            registry/CLM-140.md \
+            registry/DEC-131.md \
+            registry/DEC-132.md \
+            registry/DEC-133.md \
+            registry/CLAIM_LEDGER.md \
+            registry/DECISION_LOG.md \
+            STATUS.md \
+            context/SESSION_HANDOFF.md \
+            context/checkpoint.json
+          if git diff --cached --quiet; then
+            echo "No F02 finalization changes"
+          else
+            git commit -m "Finalize US-UTIL-F02 PANEL_DESIGN_READY pass and portfolio return"
+            git push
+          fi
