@@ -1,0 +1,729 @@
+{
+  "boundary": {
+    "usace_delay_opened": false,
+    "relationship_computed": false,
+    "positive_usgs_values_persisted": false,
+    "negative_source_semantics_only": true
+  },
+  "period": [
+    "2016-01-01",
+    "2025-12-31"
+  ],
+  "gage_count": 13,
+  "negative_record_count": 28,
+  "negative_gage_count": 2,
+  "per_gage": [
+    {
+      "gage": "USGS-03086000",
+      "records_returned_or_matched": 3653,
+      "negative_record_count": 0
+    },
+    {
+      "gage": "USGS-03114306",
+      "records_returned_or_matched": 3652,
+      "negative_record_count": 1
+    },
+    {
+      "gage": "USGS-03216600",
+      "records_returned_or_matched": 3648,
+      "negative_record_count": 0
+    },
+    {
+      "gage": "USGS-03277200",
+      "records_returned_or_matched": 3653,
+      "negative_record_count": 0
+    },
+    {
+      "gage": "USGS-03294500",
+      "records_returned_or_matched": 3650,
+      "negative_record_count": 0
+    },
+    {
+      "gage": "USGS-03303280",
+      "records_returned_or_matched": 3650,
+      "negative_record_count": 0
+    },
+    {
+      "gage": "USGS-03399800",
+      "records_returned_or_matched": 3651,
+      "negative_record_count": 0
+    },
+    {
+      "gage": "USGS-05378500",
+      "records_returned_or_matched": 3653,
+      "negative_record_count": 0
+    },
+    {
+      "gage": "USGS-05420500",
+      "records_returned_or_matched": 3653,
+      "negative_record_count": 0
+    },
+    {
+      "gage": "USGS-05474500",
+      "records_returned_or_matched": 2730,
+      "negative_record_count": 0
+    },
+    {
+      "gage": "USGS-05587450",
+      "records_returned_or_matched": 3652,
+      "negative_record_count": 0
+    },
+    {
+      "gage": "USGS-07010000",
+      "records_returned_or_matched": 3653,
+      "negative_record_count": 0
+    },
+    {
+      "gage": "USGS-07249455",
+      "records_returned_or_matched": 3653,
+      "negative_record_count": 27
+    }
+  ],
+  "negative_records": [
+    {
+      "monitoring_location_id": "USGS-03114306",
+      "time": "2023-06-10",
+      "value": "-76.6",
+      "unit_of_measure": "ft^3/s",
+      "approval_status": "Approved",
+      "qualifier": null,
+      "time_series_id": "2abc875c222243a3bd585e83c2f19be6",
+      "last_modified": "2025-02-26T12:08:09.497971+00:00",
+      "legacy_same_day": [
+        {
+          "value": "-76.6",
+          "qualifiers": [
+            "A"
+          ],
+          "dateTime": "2023-06-10T00:00:00.000",
+          "unit": "ft3/s",
+          "variableCode": [
+            "00060"
+          ]
+        }
+      ]
+    },
+    {
+      "monitoring_location_id": "USGS-07249455",
+      "time": "2016-12-23",
+      "value": "-399",
+      "unit_of_measure": "ft^3/s",
+      "approval_status": "Approved",
+      "qualifier": null,
+      "time_series_id": "156b681f5e5a4d9bb31c09abe8b2536b",
+      "last_modified": "2025-04-09T07:54:12.626420+00:00",
+      "legacy_same_day": [
+        {
+          "value": "-399",
+          "qualifiers": [
+            "A"
+          ],
+          "dateTime": "2016-12-23T00:00:00.000",
+          "unit": "ft3/s",
+          "variableCode": [
+            "00060"
+          ]
+        }
+      ]
+    },
+    {
+      "monitoring_location_id": "USGS-07249455",
+      "time": "2019-12-22",
+      "value": "-169",
+      "unit_of_measure": "ft^3/s",
+      "approval_status": "Approved",
+      "qualifier": null,
+      "time_series_id": "156b681f5e5a4d9bb31c09abe8b2536b",
+      "last_modified": "2025-04-09T07:54:12.626420+00:00",
+      "legacy_same_day": [
+        {
+          "value": "-169",
+          "qualifiers": [
+            "A"
+          ],
+          "dateTime": "2019-12-22T00:00:00.000",
+          "unit": "ft3/s",
+          "variableCode": [
+            "00060"
+          ]
+        }
+      ]
+    },
+    {
+      "monitoring_location_id": "USGS-07249455",
+      "time": "2018-02-15",
+      "value": "-233",
+      "unit_of_measure": "ft^3/s",
+      "approval_status": "Approved",
+      "qualifier": null,
+      "time_series_id": "156b681f5e5a4d9bb31c09abe8b2536b",
+      "last_modified": "2025-04-09T07:54:12.626420+00:00",
+      "legacy_same_day": [
+        {
+          "value": "-233",
+          "qualifiers": [
+            "A"
+          ],
+          "dateTime": "2018-02-15T00:00:00.000",
+          "unit": "ft3/s",
+          "variableCode": [
+            "00060"
+          ]
+        }
+      ]
+    },
+    {
+      "monitoring_location_id": "USGS-07249455",
+      "time": "2018-01-20",
+      "value": "-237",
+      "unit_of_measure": "ft^3/s",
+      "approval_status": "Approved",
+      "qualifier": null,
+      "time_series_id": "156b681f5e5a4d9bb31c09abe8b2536b",
+      "last_modified": "2025-04-09T07:54:12.626420+00:00",
+      "legacy_same_day": [
+        {
+          "value": "-237",
+          "qualifiers": [
+            "A"
+          ],
+          "dateTime": "2018-01-20T00:00:00.000",
+          "unit": "ft3/s",
+          "variableCode": [
+            "00060"
+          ]
+        }
+      ]
+    },
+    {
+      "monitoring_location_id": "USGS-07249455",
+      "time": "2017-12-16",
+      "value": "-158",
+      "unit_of_measure": "ft^3/s",
+      "approval_status": "Approved",
+      "qualifier": null,
+      "time_series_id": "156b681f5e5a4d9bb31c09abe8b2536b",
+      "last_modified": "2025-04-09T07:54:12.626420+00:00",
+      "legacy_same_day": [
+        {
+          "value": "-158",
+          "qualifiers": [
+            "A"
+          ],
+          "dateTime": "2017-12-16T00:00:00.000",
+          "unit": "ft3/s",
+          "variableCode": [
+            "00060"
+          ]
+        }
+      ]
+    },
+    {
+      "monitoring_location_id": "USGS-07249455",
+      "time": "2018-02-18",
+      "value": "-149",
+      "unit_of_measure": "ft^3/s",
+      "approval_status": "Approved",
+      "qualifier": null,
+      "time_series_id": "156b681f5e5a4d9bb31c09abe8b2536b",
+      "last_modified": "2025-04-09T07:54:12.626420+00:00",
+      "legacy_same_day": [
+        {
+          "value": "-149",
+          "qualifiers": [
+            "A"
+          ],
+          "dateTime": "2018-02-18T00:00:00.000",
+          "unit": "ft3/s",
+          "variableCode": [
+            "00060"
+          ]
+        }
+      ]
+    },
+    {
+      "monitoring_location_id": "USGS-07249455",
+      "time": "2017-09-08",
+      "value": "-740",
+      "unit_of_measure": "ft^3/s",
+      "approval_status": "Approved",
+      "qualifier": null,
+      "time_series_id": "156b681f5e5a4d9bb31c09abe8b2536b",
+      "last_modified": "2025-04-09T07:54:12.626420+00:00",
+      "legacy_same_day": [
+        {
+          "value": "-740",
+          "qualifiers": [
+            "A"
+          ],
+          "dateTime": "2017-09-08T00:00:00.000",
+          "unit": "ft3/s",
+          "variableCode": [
+            "00060"
+          ]
+        }
+      ]
+    },
+    {
+      "monitoring_location_id": "USGS-07249455",
+      "time": "2016-12-24",
+      "value": "-249",
+      "unit_of_measure": "ft^3/s",
+      "approval_status": "Approved",
+      "qualifier": null,
+      "time_series_id": "156b681f5e5a4d9bb31c09abe8b2536b",
+      "last_modified": "2025-04-09T07:54:12.626420+00:00",
+      "legacy_same_day": [
+        {
+          "value": "-249",
+          "qualifiers": [
+            "A"
+          ],
+          "dateTime": "2016-12-24T00:00:00.000",
+          "unit": "ft3/s",
+          "variableCode": [
+            "00060"
+          ]
+        }
+      ]
+    },
+    {
+      "monitoring_location_id": "USGS-07249455",
+      "time": "2018-01-26",
+      "value": "-528",
+      "unit_of_measure": "ft^3/s",
+      "approval_status": "Approved",
+      "qualifier": null,
+      "time_series_id": "156b681f5e5a4d9bb31c09abe8b2536b",
+      "last_modified": "2025-04-09T07:54:12.626420+00:00",
+      "legacy_same_day": [
+        {
+          "value": "-528",
+          "qualifiers": [
+            "A"
+          ],
+          "dateTime": "2018-01-26T00:00:00.000",
+          "unit": "ft3/s",
+          "variableCode": [
+            "00060"
+          ]
+        }
+      ]
+    },
+    {
+      "monitoring_location_id": "USGS-07249455",
+      "time": "2023-02-26",
+      "value": "-4510",
+      "unit_of_measure": "ft^3/s",
+      "approval_status": "Approved",
+      "qualifier": null,
+      "time_series_id": "156b681f5e5a4d9bb31c09abe8b2536b",
+      "last_modified": "2025-04-09T07:54:12.626420+00:00",
+      "legacy_same_day": [
+        {
+          "value": "-4510",
+          "qualifiers": [
+            "A"
+          ],
+          "dateTime": "2023-02-26T00:00:00.000",
+          "unit": "ft3/s",
+          "variableCode": [
+            "00060"
+          ]
+        }
+      ]
+    },
+    {
+      "monitoring_location_id": "USGS-07249455",
+      "time": "2022-09-25",
+      "value": "-1240",
+      "unit_of_measure": "ft^3/s",
+      "approval_status": "Approved",
+      "qualifier": null,
+      "time_series_id": "156b681f5e5a4d9bb31c09abe8b2536b",
+      "last_modified": "2025-04-09T07:54:12.626420+00:00",
+      "legacy_same_day": [
+        {
+          "value": "-1240",
+          "qualifiers": [
+            "A"
+          ],
+          "dateTime": "2022-09-25T00:00:00.000",
+          "unit": "ft3/s",
+          "variableCode": [
+            "00060"
+          ]
+        }
+      ]
+    },
+    {
+      "monitoring_location_id": "USGS-07249455",
+      "time": "2020-10-17",
+      "value": "-441",
+      "unit_of_measure": "ft^3/s",
+      "approval_status": "Approved",
+      "qualifier": null,
+      "time_series_id": "156b681f5e5a4d9bb31c09abe8b2536b",
+      "last_modified": "2025-04-09T07:54:12.626420+00:00",
+      "legacy_same_day": [
+        {
+          "value": "-441",
+          "qualifiers": [
+            "A"
+          ],
+          "dateTime": "2020-10-17T00:00:00.000",
+          "unit": "ft3/s",
+          "variableCode": [
+            "00060"
+          ]
+        }
+      ]
+    },
+    {
+      "monitoring_location_id": "USGS-07249455",
+      "time": "2022-11-22",
+      "value": "-72.3",
+      "unit_of_measure": "ft^3/s",
+      "approval_status": "Approved",
+      "qualifier": null,
+      "time_series_id": "156b681f5e5a4d9bb31c09abe8b2536b",
+      "last_modified": "2025-04-09T07:54:12.626420+00:00",
+      "legacy_same_day": [
+        {
+          "value": "-72.3",
+          "qualifiers": [
+            "A"
+          ],
+          "dateTime": "2022-11-22T00:00:00.000",
+          "unit": "ft3/s",
+          "variableCode": [
+            "00060"
+          ]
+        }
+      ]
+    },
+    {
+      "monitoring_location_id": "USGS-07249455",
+      "time": "2022-12-04",
+      "value": "-291",
+      "unit_of_measure": "ft^3/s",
+      "approval_status": "Approved",
+      "qualifier": null,
+      "time_series_id": "156b681f5e5a4d9bb31c09abe8b2536b",
+      "last_modified": "2025-04-09T07:54:12.626420+00:00",
+      "legacy_same_day": [
+        {
+          "value": "-291",
+          "qualifiers": [
+            "A"
+          ],
+          "dateTime": "2022-12-04T00:00:00.000",
+          "unit": "ft3/s",
+          "variableCode": [
+            "00060"
+          ]
+        }
+      ]
+    },
+    {
+      "monitoring_location_id": "USGS-07249455",
+      "time": "2017-10-01",
+      "value": "-678",
+      "unit_of_measure": "ft^3/s",
+      "approval_status": "Approved",
+      "qualifier": null,
+      "time_series_id": "156b681f5e5a4d9bb31c09abe8b2536b",
+      "last_modified": "2025-04-09T07:54:12.626420+00:00",
+      "legacy_same_day": [
+        {
+          "value": "-678",
+          "qualifiers": [
+            "A"
+          ],
+          "dateTime": "2017-10-01T00:00:00.000",
+          "unit": "ft3/s",
+          "variableCode": [
+            "00060"
+          ]
+        }
+      ]
+    },
+    {
+      "monitoring_location_id": "USGS-07249455",
+      "time": "2018-01-21",
+      "value": "-339",
+      "unit_of_measure": "ft^3/s",
+      "approval_status": "Approved",
+      "qualifier": null,
+      "time_series_id": "156b681f5e5a4d9bb31c09abe8b2536b",
+      "last_modified": "2025-04-09T07:54:12.626420+00:00",
+      "legacy_same_day": [
+        {
+          "value": "-339",
+          "qualifiers": [
+            "A"
+          ],
+          "dateTime": "2018-01-21T00:00:00.000",
+          "unit": "ft3/s",
+          "variableCode": [
+            "00060"
+          ]
+        }
+      ]
+    },
+    {
+      "monitoring_location_id": "USGS-07249455",
+      "time": "2018-01-07",
+      "value": "-125",
+      "unit_of_measure": "ft^3/s",
+      "approval_status": "Approved",
+      "qualifier": null,
+      "time_series_id": "156b681f5e5a4d9bb31c09abe8b2536b",
+      "last_modified": "2025-04-09T07:54:12.626420+00:00",
+      "legacy_same_day": [
+        {
+          "value": "-125",
+          "qualifiers": [
+            "A"
+          ],
+          "dateTime": "2018-01-07T00:00:00.000",
+          "unit": "ft3/s",
+          "variableCode": [
+            "00060"
+          ]
+        }
+      ]
+    },
+    {
+      "monitoring_location_id": "USGS-07249455",
+      "time": "2017-07-29",
+      "value": "-467",
+      "unit_of_measure": "ft^3/s",
+      "approval_status": "Approved",
+      "qualifier": null,
+      "time_series_id": "156b681f5e5a4d9bb31c09abe8b2536b",
+      "last_modified": "2025-04-09T07:54:12.626420+00:00",
+      "legacy_same_day": [
+        {
+          "value": "-467",
+          "qualifiers": [
+            "A"
+          ],
+          "dateTime": "2017-07-29T00:00:00.000",
+          "unit": "ft3/s",
+          "variableCode": [
+            "00060"
+          ]
+        }
+      ]
+    },
+    {
+      "monitoring_location_id": "USGS-07249455",
+      "time": "2022-11-23",
+      "value": "-200",
+      "unit_of_measure": "ft^3/s",
+      "approval_status": "Approved",
+      "qualifier": null,
+      "time_series_id": "156b681f5e5a4d9bb31c09abe8b2536b",
+      "last_modified": "2025-04-09T07:54:12.626420+00:00",
+      "legacy_same_day": [
+        {
+          "value": "-200",
+          "qualifiers": [
+            "A"
+          ],
+          "dateTime": "2022-11-23T00:00:00.000",
+          "unit": "ft3/s",
+          "variableCode": [
+            "00060"
+          ]
+        }
+      ]
+    },
+    {
+      "monitoring_location_id": "USGS-07249455",
+      "time": "2017-09-30",
+      "value": "-175",
+      "unit_of_measure": "ft^3/s",
+      "approval_status": "Approved",
+      "qualifier": null,
+      "time_series_id": "156b681f5e5a4d9bb31c09abe8b2536b",
+      "last_modified": "2025-04-09T07:54:12.626420+00:00",
+      "legacy_same_day": [
+        {
+          "value": "-175",
+          "qualifiers": [
+            "A"
+          ],
+          "dateTime": "2017-09-30T00:00:00.000",
+          "unit": "ft3/s",
+          "variableCode": [
+            "00060"
+          ]
+        }
+      ]
+    },
+    {
+      "monitoring_location_id": "USGS-07249455",
+      "time": "2018-02-19",
+      "value": "-69.4",
+      "unit_of_measure": "ft^3/s",
+      "approval_status": "Approved",
+      "qualifier": null,
+      "time_series_id": "156b681f5e5a4d9bb31c09abe8b2536b",
+      "last_modified": "2025-04-09T07:54:12.626420+00:00",
+      "legacy_same_day": [
+        {
+          "value": "-69.4",
+          "qualifiers": [
+            "A"
+          ],
+          "dateTime": "2018-02-19T00:00:00.000",
+          "unit": "ft3/s",
+          "variableCode": [
+            "00060"
+          ]
+        }
+      ]
+    },
+    {
+      "monitoring_location_id": "USGS-07249455",
+      "time": "2017-09-09",
+      "value": "-458",
+      "unit_of_measure": "ft^3/s",
+      "approval_status": "Approved",
+      "qualifier": null,
+      "time_series_id": "156b681f5e5a4d9bb31c09abe8b2536b",
+      "last_modified": "2025-04-09T07:54:12.626420+00:00",
+      "legacy_same_day": [
+        {
+          "value": "-458",
+          "qualifiers": [
+            "A"
+          ],
+          "dateTime": "2017-09-09T00:00:00.000",
+          "unit": "ft3/s",
+          "variableCode": [
+            "00060"
+          ]
+        }
+      ]
+    },
+    {
+      "monitoring_location_id": "USGS-07249455",
+      "time": "2017-12-23",
+      "value": "-384",
+      "unit_of_measure": "ft^3/s",
+      "approval_status": "Approved",
+      "qualifier": null,
+      "time_series_id": "156b681f5e5a4d9bb31c09abe8b2536b",
+      "last_modified": "2025-04-09T07:54:12.626420+00:00",
+      "legacy_same_day": [
+        {
+          "value": "-384",
+          "qualifiers": [
+            "A"
+          ],
+          "dateTime": "2017-12-23T00:00:00.000",
+          "unit": "ft3/s",
+          "variableCode": [
+            "00060"
+          ]
+        }
+      ]
+    },
+    {
+      "monitoring_location_id": "USGS-07249455",
+      "time": "2022-12-05",
+      "value": "-1190",
+      "unit_of_measure": "ft^3/s",
+      "approval_status": "Approved",
+      "qualifier": null,
+      "time_series_id": "156b681f5e5a4d9bb31c09abe8b2536b",
+      "last_modified": "2025-04-09T07:54:12.626420+00:00",
+      "legacy_same_day": [
+        {
+          "value": "-1190",
+          "qualifiers": [
+            "A"
+          ],
+          "dateTime": "2022-12-05T00:00:00.000",
+          "unit": "ft3/s",
+          "variableCode": [
+            "00060"
+          ]
+        }
+      ]
+    },
+    {
+      "monitoring_location_id": "USGS-07249455",
+      "time": "2016-12-25",
+      "value": "-259",
+      "unit_of_measure": "ft^3/s",
+      "approval_status": "Approved",
+      "qualifier": null,
+      "time_series_id": "156b681f5e5a4d9bb31c09abe8b2536b",
+      "last_modified": "2025-04-09T07:54:12.626420+00:00",
+      "legacy_same_day": [
+        {
+          "value": "-259",
+          "qualifiers": [
+            "A"
+          ],
+          "dateTime": "2016-12-25T00:00:00.000",
+          "unit": "ft3/s",
+          "variableCode": [
+            "00060"
+          ]
+        }
+      ]
+    },
+    {
+      "monitoring_location_id": "USGS-07249455",
+      "time": "2024-10-26",
+      "value": "-281",
+      "unit_of_measure": "ft^3/s",
+      "approval_status": "Approved",
+      "qualifier": null,
+      "time_series_id": "156b681f5e5a4d9bb31c09abe8b2536b",
+      "last_modified": "2025-04-09T07:54:12.626420+00:00",
+      "legacy_same_day": [
+        {
+          "value": "-281",
+          "qualifiers": [
+            "A"
+          ],
+          "dateTime": "2024-10-26T00:00:00.000",
+          "unit": "ft3/s",
+          "variableCode": [
+            "00060"
+          ]
+        }
+      ]
+    },
+    {
+      "monitoring_location_id": "USGS-07249455",
+      "time": "2018-02-14",
+      "value": "-493",
+      "unit_of_measure": "ft^3/s",
+      "approval_status": "Approved",
+      "qualifier": null,
+      "time_series_id": "156b681f5e5a4d9bb31c09abe8b2536b",
+      "last_modified": "2025-04-09T07:54:12.626420+00:00",
+      "legacy_same_day": [
+        {
+          "value": "-493",
+          "qualifiers": [
+            "A"
+          ],
+          "dateTime": "2018-02-14T00:00:00.000",
+          "unit": "ft3/s",
+          "variableCode": [
+            "00060"
+          ]
+        }
+      ]
+    }
+  ],
+  "incremental_monetary_cost_usd": 0
+}
