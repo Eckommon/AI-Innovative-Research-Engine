@@ -1,0 +1,29 @@
+name: US WATERWAY F01 source-route diagnostic
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/us-waterway-f01-source-route-diagnostic.yml'
+      - 'tools/us_waterway_f01_source_route_diagnostic.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  diagnostic:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate runner
+        run: python -m py_compile tools/us_waterway_f01_source_route_diagnostic.py
+      - name: Run outcome-blind source-route diagnostic
+        run: python tools/us_waterway_f01_source_route_diagnostic.py
+      - name: Commit derived diagnostics
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-WATERWAY-F01/SOURCE_ROUTE_DIAGNOSTIC.json research/US-WATERWAY-F01/SOURCE_ROUTE_DIAGNOSTIC.md
+          git commit -m 'Record US-WATERWAY-F01 source-route diagnostic'
+          git push
