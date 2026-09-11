@@ -1,10 +1,10 @@
 ---
-checkpoint_id: CHK-20260911-US-WATERWAY-F01-PASS-PORTFOLIO-RETURN
-active_issue: none
-active_research: NONE
-last_completed_issue: 98
-last_completed_research: US-WATERWAY-F01
-last_decision: DEC-135
+checkpoint_id: CHK-20260911-US-WATERWAY-E01-STAGE-A-ACTIVE
+active_issue: 100
+active_research: US-WATERWAY-E01
+last_completed_issue: 99
+last_completed_research: PORTFOLIO-R14
+last_decision: DEC-137
 updated: 2026-09-11
 ---
 
@@ -12,16 +12,13 @@ updated: 2026-09-11
 
 ## Canonical restart point / 정확한 재개점
 
-US-WATERWAY-F01 is complete under `DEC-135` with **`PASS_US_WATERWAY_F01_JOIN_READY`**.
+PORTFOLIO-R14 / Issue #99 selected `US-WATERWAY-E01`; Issue #100 is the sole active research gate.
 
-Do not rerun F01 by default. Do not open delay/hydrology magnitudes or compute a relationship automatically.
+Execute **Stage A only** before any outcome/exposure magnitude:
+1. extend USGS metadata support to 2016–2025 for Daily `00060`, statistic `00003`;
+2. confirm deterministic historical/current lock identity and all-year Annual Usage structural support;
+3. collapse shared gages to one exposure unit and persist gage↔lock-set mapping;
+4. PASS only if >=12 unique gages, >=20 all-year locks and >=120 prospective gage-year cells;
+5. otherwise HOLD and return Stage 0.
 
-Canonical evidence: `research/US-WATERWAY-F01/RESULT.md`, `USAGE_TOC_PREFLIGHT.md`, `HISTORICAL_HYDROLOGY_CROSSWALK.md`, `HYDROLOGY_METADATA_PREFLIGHT_V2.md`, `registry/CLM-141.md`, `registry/DEC-135.md`.
-
-Verified structure: 193 historical Usage lock identities; 25 deterministic USGS-qualified crosswalks; shared 2018–2020 support; official Annual Usage route spans 2016–2025.
-
-## Exact next action / 정확한 다음 행동
-
-Return to **Stage 0 portfolio control** with no active research Issue. Compare a prospective US-WATERWAY preregistered relationship design against independent alternatives before opening values.
-
-Cost remains **0 USD**; any potentially billable action requires explicit prior approval.
+Do not inspect Average Delay magnitudes or streamflow observations during Stage A. Cost remains 0 USD.

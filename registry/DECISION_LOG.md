@@ -53,3 +53,5 @@ Official artifacts comply with `LANG-001`, `COST-001`, and applicable governance
 - [DEC-134](DEC-134.md): R13 selects C-US-006 / US-WATERWAY-F01 historical LPMS delay × USGS hydrology source/identity feasibility; no outcome magnitudes opened. / 역사적 delay×수문 source feasibility를 결과값 비사용으로 선정.
 
 - `DEC-135` — Finalize US-WATERWAY-F01 as `PASS_US_WATERWAY_F01_JOIN_READY` and return to Stage 0; no automatic effect exposure. / US-WATERWAY-F01 구조 PASS 후 Stage 0 복귀.
+- [DEC-136](DEC-136.md): R14 selects US-WATERWAY first preregistered relationship descendant, with unique-gage Stage A required before magnitudes. / R14가 US-WATERWAY 첫 관계실험을 선정하되 unique-gage Stage A를 선행한다.
+- [DEC-137](DEC-137.md): Preregister US-WATERWAY-E01 extreme-flow burden × annual Average Delay and block Stage B until 2016–2025 panel support passes. / E01 사전등록 및 Stage A PASS 전 효과값 개방 금지.
