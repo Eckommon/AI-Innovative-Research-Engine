@@ -1,0 +1,29 @@
+name: Finalize PORTFOLIO R15
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/finalize_portfolio_r15.py'
+      - '.github/workflows/finalize-portfolio-r15.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate finalizer
+        run: python -m py_compile tools/finalize_portfolio_r15.py
+      - name: Finalize R15 and preregister E02
+        run: python tools/finalize_portfolio_r15.py
+      - name: Commit R15 durable state atomically
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/PORTFOLIO-R15/RESULT.md research/US-WATERWAY-E02/README.md registry/CLM-144.md registry/DEC-140.md registry/DEC-141.md registry/CLAIM_LEDGER.md registry/DECISION_LOG.md STATUS.md context/SESSION_HANDOFF.md context/checkpoint.json
+          git diff --cached --quiet || git commit -m 'Select US-WATERWAY-E02 in PORTFOLIO-R15 and preregister signed-flow test'
+          git push
