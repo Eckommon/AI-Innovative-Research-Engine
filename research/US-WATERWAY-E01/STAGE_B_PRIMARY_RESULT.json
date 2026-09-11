@@ -1,0 +1,6 @@
+{
+  "gate": "HOLD_US_WATERWAY_E01_SOURCE_PANEL_OR_INFERENCE_SUPPORT",
+  "reason": "RuntimeError: invalid USGS discharge value USGS-07249455 2016-12-23: '-399'",
+  "primary_gate_fixed_before_sensitivities": true,
+  "incremental_monetary_cost_usd": 0
+}

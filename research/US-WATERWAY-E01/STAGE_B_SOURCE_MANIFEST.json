@@ -1,0 +1,11 @@
+{
+  "boundary": {
+    "raw_external_bytes_persisted": false
+  },
+  "period": [
+    "2016-01-01",
+    "2025-12-31"
+  ],
+  "incremental_monetary_cost_usd": 0,
+  "error": "RuntimeError: invalid USGS discharge value USGS-07249455 2016-12-23: '-399'"
+}
