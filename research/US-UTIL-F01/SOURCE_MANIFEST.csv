@@ -1,0 +1,4 @@
+source,url,http,final_url,bytes,sha256
+EIA861_2024_FINAL_ZIP,https://www.eia.gov/electricity/data/eia861/zip/f8612024.zip,200,https://www.eia.gov/electricity/data/eia861/zip/f8612024.zip,4568208,77ce49c60ac5a6bad50c442fc401aad5404a21da875dc5cbaba353af5ede54de
+NOAA_STORM_EVENTS_2024_DETAILS,https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/StormEvents_details-ftp_v1.0_d2024_c20260728.csv.gz,200,https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/StormEvents_details-ftp_v1.0_d2024_c20260728.csv.gz,12693243,2070b83eccab041b36360ab73645b9a249c3eefc5b92b5b3fc0cbba4d9fcc09c
+NOAA_STORM_EVENTS_2024_LOCATIONS,https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/StormEvents_locations-ftp_v1.0_d2024_c20260728.csv.gz,200,https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/StormEvents_locations-ftp_v1.0_d2024_c20260728.csv.gz,983723,8847a6336e1af94000f7ecfb4a80c06bf0d5c1ac122fe39da5b2e379dc62c1b4
