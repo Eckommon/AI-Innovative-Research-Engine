@@ -1,0 +1,45 @@
+name: US UTIL F01 county FIPS join qualification
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/us-util-f01-join-qualification.yml'
+      - 'tools/us_util_f01_join_qualification.py'
+
+permissions:
+  contents: write
+
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate runners
+        run: |
+          python -m py_compile tools/us_util_f01_source_preflight.py
+          python -m py_compile tools/us_util_f01_source_preflight_sheetfix.py
+          python -m py_compile tools/us_util_f01_join_qualification.py
+
+      - name: Install workbook dependency
+        run: python -m pip install --disable-pip-version-check openpyxl
+
+      - name: Run outcome-blind county FIPS join qualification
+        run: python tools/us_util_f01_join_qualification.py
+
+      - name: Commit derived join qualification artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            research/US-UTIL-F01/UTILITY_COUNTY_JOIN_MAP.csv \
+            research/US-UTIL-F01/COUNTY_CROSSWALK_DIAGNOSTIC.csv \
+            research/US-UTIL-F01/JOIN_SOURCE_MANIFEST.csv \
+            research/US-UTIL-F01/JOIN_QUALIFICATION.md
+          git diff --cached --quiet && { echo 'No join qualification changes'; exit 1; }
+          git commit -m "Record US-UTIL-F01 county FIPS join qualification"
+          git push
