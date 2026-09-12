@@ -1,0 +1,154 @@
+{
+  "claim_boundary": "non-causal monitoring/compliance association; FOUND_VIOLATION is an inspection-result field",
+  "diagnostics_non_rescuing": {
+    "agency_status_pair_counts": {
+      "MULTI_OR_MISSING_AGENCY_AMBIGUOUS": 29,
+      "SINGLE_AGENCY_CHANGED": 38,
+      "SINGLE_AGENCY_SAME": 230
+    },
+    "hazard_contingencies": {
+      "Dam/Levee Break": {
+        "NN": 2,
+        "YN": 1
+      },
+      "Earthquake": {
+        "YY": 1
+      },
+      "Fire": {
+        "NN": 3,
+        "NY": 3,
+        "YN": 9,
+        "YY": 8
+      },
+      "Flood": {
+        "NN": 33,
+        "NY": 13,
+        "YN": 17,
+        "YY": 19
+      },
+      "Hurricane": {
+        "NN": 38,
+        "NY": 5,
+        "YN": 4,
+        "YY": 11
+      },
+      "Mud/Landslide": {
+        "YY": 2
+      },
+      "Severe Ice Storm": {
+        "NN": 14,
+        "NY": 6,
+        "YN": 7,
+        "YY": 8
+      },
+      "Severe Storm": {
+        "NN": 26,
+        "NY": 14,
+        "YN": 7,
+        "YY": 15
+      },
+      "Snowstorm": {
+        "NN": 2,
+        "NY": 1,
+        "YN": 3,
+        "YY": 2
+      },
+      "Tornado": {
+        "NN": 5,
+        "YN": 2,
+        "YY": 3
+      }
+    },
+    "post_cei_distance_days": {
+      "max": 728,
+      "mean": 235.73737373737373,
+      "min": 1
+    },
+    "pre_cei_distance_days": {
+      "max": 720,
+      "mean": 264.83838383838383,
+      "min": 1
+    },
+    "same_single_agency_subset": {
+      "discordant_pairs": 74,
+      "eligible_analyzable_pairs": 229,
+      "minimum_analyzable_for_sensitivity": 50,
+      "minimum_discordant_for_sensitivity": 10,
+      "n_NN": 103,
+      "n_NY": 33,
+      "n_YN": 41,
+      "n_YY": 52,
+      "p_exact_two_sided_mcnemar": 0.4159851975073048,
+      "post_risk": 0.37117903930131,
+      "pre_risk": 0.40611353711790393,
+      "risk_difference": -0.034934497816593885
+    }
+  },
+  "duplicate_resolution": {
+    "audit_file": "research/US-RCRA-E01/DUPLICATE_IDENTITY_AUDIT.json",
+    "duplicate_agree_count": 25,
+    "duplicate_conflict_count": 7,
+    "duplicate_identity_count": 32,
+    "frozen_rule": "all duplicate source rows must agree on preregistered coded class; disagreement => missing",
+    "multiagency_identity_count": 32,
+    "selected_identity_count": 594
+  },
+  "execution_integrity": {
+    "prior_failed_pass2_note": "An earlier implementation projected selected FOUND_VIOLATION fields into memory but failed before any value/statistic was surfaced, persisted, aggregated, or used to tune the contract; see Issue #125 integrity comment.",
+    "scientific_contract_changed_after_value_access": false
+  },
+  "gate": "NO_PREREGISTERED_POSITIVE_US_RCRA_E01_RELATIONSHIP",
+  "id": "US-RCRA-E01-EXECUTION-RESULT",
+  "incremental_monetary_cost_usd": 0,
+  "issue": 125,
+  "outcome_coding": {
+    "N": 0,
+    "U": "missing",
+    "Y": 1,
+    "blank_or_other": "missing",
+    "duplicate_conflict": "missing"
+  },
+  "pair_count_frozen": 297,
+  "pair_identity_drift": false,
+  "pair_identity_sha256": "d648d242e6adcddcac44dba7a61cab0ac9da2c4a5aa80e9d123d725aa7dfed73",
+  "primary": {
+    "materiality_floor": 0.05,
+    "n_NN": 123,
+    "n_NY": 42,
+    "n_YN": 50,
+    "n_YY": 69,
+    "p_exact_two_sided_mcnemar": 0.4657074457730625,
+    "post_risk": 0.3908450704225352,
+    "pre_risk": 0.41901408450704225,
+    "risk_difference": -0.028169014084507043
+  },
+  "primary_support": {
+    "analyzable_pairs": 284,
+    "discordant_pairs": 92,
+    "minimum_analyzable": 100,
+    "minimum_discordant": 20
+  },
+  "relationship_computed": true,
+  "selected_outcomes_opened": true,
+  "source": {
+    "bytes_transient": 119521095,
+    "raw_source_bytes_persisted": false,
+    "rcra_url": "https://echo.epa.gov/files/echodownloads/rcra_downloads.zip",
+    "sha256": "cd5a1d0557cb8b3535b17c09863e28c3448fd50d6361338a9e7a982cb65fadb0"
+  },
+  "state_territory_fips_count_frozen": 43,
+  "value_counts": {
+    "post": {
+      "DUPLICATE_CONFLICT_MISSING": 3,
+      "N": 177,
+      "U": 4,
+      "Y": 113
+    },
+    "pre": {
+      "DUPLICATE_CONFLICT_MISSING": 4,
+      "N": 169,
+      "U": 2,
+      "Y": 122
+    }
+  }
+}
