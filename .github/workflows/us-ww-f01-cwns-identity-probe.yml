@@ -1,0 +1,31 @@
+name: US WW F01 CWNS Identity Probe
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/probe_us_ww_f01_cwns_identities.py'
+      - '.github/workflows/us-ww-f01-cwns-identity-probe.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install zero-cost browser driver library
+        run: python -m pip install --disable-pip-version-check selenium
+      - name: Validate probe
+        run: python -m py_compile tools/probe_us_ww_f01_cwns_identities.py
+      - name: Probe CWNS identities and cardinality outcome-blind
+        run: python tools/probe_us_ww_f01_cwns_identities.py
+      - name: Commit identity manifest only
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-WW-F01/CWNS_IDENTITY_MANIFEST.json
+          git diff --cached --quiet || git commit -m 'Probe US-WW-F01 CWNS identity cardinality'
+          git push
