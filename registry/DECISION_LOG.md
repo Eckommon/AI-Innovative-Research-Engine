@@ -84,3 +84,6 @@ Official artifacts comply with `LANG-001`, `COST-001`, and applicable governance
 
 | `DEC-155` | 2026-09-12 | R20 resolves `NO_PROMOTION_EXISTING_SET`; reuse prior US-UTIL F01/F02 and close duplicate #112; do not force a recycled descendant. / 기존 후보 승격 없음. | Durable-state reconciliation plus current overlap/diminishing-return penalties. | Issue #111; `CLM-154`; `research/PORTFOLIO-R20/RESULT.md` | active |
 | `DEC-156` | 2026-09-12 | Authorize Issue #113 `DISCOVERY-R01` outcome-blind fresh opportunity scan. / 신규 후보 탐색 승인. | Fresh discovery now has higher expected marginal information value than the saturated ready set. | Issue #113; `research/DISCOVERY-R01/README.md` | active |
+
+| `DEC-157` | 2026-09-12 | DISCOVERY-R01 selects US-WW-001 at 43/45. / CWNS infrastructure need → later NPDES compliance 후보 선정. | Strong national direct-outcome/public-service value, official deterministic EPA identifiers and lower current near-identical overlap than screened alternatives. | Issue #113; `CLM-155`; `research/DISCOVERY-R01/RESULT.md` | active |
+| `DEC-158` | 2026-09-12 | Authorize Issue #114 outcome-blind CWNS×ICIS-NPDES source/join feasibility only. / US-WW-F01 값 비사용 join gate 승인. | Must prove national deterministic identifiers before any predictive/effect question. | Issue #114; `research/US-WW-F01/README.md` | active |
