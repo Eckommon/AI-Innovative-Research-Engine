@@ -1,0 +1,369 @@
+{
+  "id": "CA-GRAIN-E01-STAGE-A",
+  "issue": 108,
+  "boundary": {
+    "relationship_computed": false,
+    "grain_magnitudes_analyzed_or_persisted": false,
+    "dwell_magnitudes_analyzed_or_persisted": false,
+    "numeric_source_values_persisted": false
+  },
+  "frozen_interval": [
+    "2023-08-01",
+    "2025-07-31"
+  ],
+  "frozen_direction": "GSW upstream current-week delivery pressure at t-1 -> TC Canada All Western grain origin dwell at t",
+  "gsw": {
+    "2023-24": {
+      "download": {
+        "requested_url": "https://www.grainscanada.gc.ca/en/grain-research/statistics/grain-statistics-weekly/2023-24/gsw-shg-en.csv",
+        "final_url": "https://www.grainscanada.gc.ca/en/grain-research/statistics/grain-statistics-weekly/2023-24/gsw-shg-en.csv",
+        "status": 200,
+        "bytes": 20772429,
+        "sha256": "9581a40a6848dd30fe45fb358998f1a40261a006aad75e258361ec2a67463ab7",
+        "content_type": "application/octet-stream"
+      },
+      "headers": [
+        "grain_week",
+        "crop_year",
+        "week_ending_date",
+        "worksheet",
+        "metric",
+        "period",
+        "grain",
+        "grade",
+        "region",
+        "Ktonnes"
+      ],
+      "resolved_headers": {
+        "date": "week_ending_date",
+        "worksheet": "worksheet",
+        "metric": "metric",
+        "period": "period",
+        "grain": "grain",
+        "grade": "grade",
+        "region": "region",
+        "value": "Ktonnes"
+      },
+      "rows_in_frozen_interval": 191996
+    },
+    "2024-25": {
+      "download": {
+        "requested_url": "https://www.grainscanada.gc.ca/en/grain-research/statistics/grain-statistics-weekly/2024-25/gsw-shg-en.csv",
+        "final_url": "https://www.grainscanada.gc.ca/en/grain-research/statistics/grain-statistics-weekly/2024-25/gsw-shg-en.csv",
+        "status": 200,
+        "bytes": 24732752,
+        "sha256": "8da14483ed67cad415f63c69bacbde15684e9e3580ee56974b470335ab3f57da",
+        "content_type": "application/octet-stream"
+      },
+      "headers": [
+        "Crop Year",
+        "Grain Week",
+        "Week Ending Date",
+        "worksheet",
+        "metric",
+        "period",
+        "grain",
+        "grade",
+        "Region",
+        "Ktonnes"
+      ],
+      "resolved_headers": {
+        "date": "Week Ending Date",
+        "worksheet": "worksheet",
+        "metric": "metric",
+        "period": "period",
+        "grain": "grain",
+        "grade": "grade",
+        "region": "Region",
+        "value": "Ktonnes"
+      },
+      "rows_in_frozen_interval": 197612
+    },
+    "identity_catalog": {
+      "worksheet": [
+        "Feed Grains",
+        "Feed Grains Shipment Distribution",
+        "Imported Grains",
+        "Primary",
+        "Primary Shipment Distribution",
+        "Process",
+        "Producer Cars",
+        "Summary",
+        "Terminal Disposition",
+        "Terminal Exports",
+        "Terminal Receipts",
+        "Terminal Stocks"
+      ],
+      "metric": [
+        "Ab-Shipment Distribution",
+        "Canadian Domestic",
+        "Commercial Stocks",
+        "Condo Storage",
+        "Deliveries",
+        "Export Destinations",
+        "Exports",
+        "Feed Grain Shipment Distribution",
+        "In-Transit",
+        "Mb-Shipment Distribution",
+        "Milled/Mfg Grain",
+        "Other Deliveries",
+        "Port Terminals",
+        "Processed",
+        "Producer Deliveries",
+        "Provincial Deliveries",
+        "Receipts",
+        "Shipment Destinations",
+        "Shipment Distribution",
+        "Shipments",
+        "Sk-Shipment Distribution",
+        "Stocks"
+      ],
+      "period": [
+        "Crop Year",
+        "Current Week",
+        "Week Ago",
+        "Week Ago (Wk 52)"
+      ],
+      "grain": [
+        "Amber Durum",
+        "Barley",
+        "Beans",
+        "Canadian and Imported Origin Barley",
+        "Canadian and Imported Origin Beans",
+        "Canadian and Imported Origin Chick",
+        "Canadian and Imported Origin Corn",
+        "Canadian and Imported Origin Flax",
+        "Canadian and Imported Origin Mustar",
+        "Canaryseed",
+        "Canola",
+        "Chick Peas",
+        "Corn",
+        "European Rapeseed",
+        "Flaxseed",
+        "Lentils",
+        "Mustard Seed",
+        "Oats",
+        "Peas",
+        "Rye",
+        "Soybeans",
+        "Turkish Flaxseed",
+        "U.S. Beans",
+        "U.S. Canola",
+        "U.S. Chick Peas",
+        "U.S. Corn",
+        "U.S. Flax",
+        "U.S. Oats",
+        "U.S. Peas",
+        "U.S. Safflower Seed",
+        "U.S. Soybean",
+        "U.S. Sunflower",
+        "U.S. Wheat",
+        "Wheat"
+      ],
+      "grade": [
+        "All grades combined",
+        "FEED",
+        "FEED CE",
+        "FEED CW",
+        "FEED OTHER",
+        "No.1 C PS",
+        "No.1 CANADA",
+        "No.1 CE",
+        "No.1 CNHR",
+        "No.1 CW",
+        "No.1 CW AD",
+        "No.1 CW HWS",
+        "No.1 CW RS",
+        "No.1 CW RW",
+        "No.1 CW SWS",
+        "No.2 C PS",
+        "No.2 CANADA",
+        "No.2 CE",
+        "No.2 CNHR",
+        "No.2 CW",
+        "No.2 CW AD",
+        "No.2 CW HWS",
+        "No.2 CW RS",
+        "No.2 CW RW",
+        "No.2 CW SWS",
+        "No.3 CANADA",
+        "No.3 CE",
+        "No.3 CNHR",
+        "No.3 CW",
+        "No.3 CW AD",
+        "No.3 CW RS",
+        "No.3 CW RW",
+        "No.3 CW SWS",
+        "No.4 CANADA",
+        "No.4 CE",
+        "No.4 CW",
+        "No.4 CW AD",
+        "No.4 CW RS",
+        "No.5 CANADA",
+        "No.5 CE",
+        "No.5 CW AD",
+        "OTHER",
+        "Select CW 2-Row",
+        "Select CW 6-Row"
+      ],
+      "region": [
+        "Alberta",
+        "Bay & Lakes",
+        "British Columbia",
+        "Canada Container Loaders",
+        "Canada Feed Mills",
+        "Canada Not Specified",
+        "Canada Processors",
+        "Canada Terminals",
+        "Canadian Domestic",
+        "Churchill",
+        "Eastern Container",
+        "Eastern Terminals",
+        "Export",
+        "Export Destinations",
+        "Lake Vessels",
+        "Manitoba",
+        "Mexico Not Specified",
+        "Pacific",
+        "Prairies",
+        "Primary Elevators",
+        "Prince Rupert",
+        "Process Elevators",
+        "Saskatchewan",
+        "St. Lawrence",
+        "Thunder Bay",
+        "United States Feed Mills",
+        "United States Not Specified",
+        "United States Processors",
+        "Vancouver",
+        "Western Container"
+      ]
+    },
+    "upstream_current_week_families": [
+      {
+        "worksheet": "Primary",
+        "metric": "Deliveries",
+        "period": "Current Week",
+        "week_keys": 81,
+        "nonblank_presence_week_keys": 81,
+        "grains": [
+          "Amber Durum",
+          "Barley",
+          "Beans",
+          "Canaryseed",
+          "Canola",
+          "Chick Peas",
+          "Corn",
+          "Flaxseed",
+          "Lentils",
+          "Mustard Seed",
+          "Oats",
+          "Peas",
+          "Rye",
+          "Soybeans",
+          "Wheat"
+        ],
+        "grades": [
+          ""
+        ],
+        "regions": [
+          "Alberta",
+          "British Columbia",
+          "Manitoba",
+          "Saskatchewan"
+        ],
+        "explicit_grain_aggregates": [],
+        "explicit_region_aggregates": [],
+        "aggregate_grade_identities": [
+          ""
+        ]
+      },
+      {
+        "worksheet": "Process",
+        "metric": "Producer Deliveries",
+        "period": "Current Week",
+        "week_keys": 81,
+        "nonblank_presence_week_keys": 81,
+        "grains": [
+          "Amber Durum",
+          "Barley",
+          "Beans",
+          "Canaryseed",
+          "Canola",
+          "Chick Peas",
+          "Corn",
+          "Flaxseed",
+          "Lentils",
+          "Oats",
+          "Peas",
+          "Rye",
+          "Soybeans",
+          "Wheat"
+        ],
+        "grades": [
+          ""
+        ],
+        "regions": [],
+        "explicit_grain_aggregates": [],
+        "explicit_region_aggregates": [],
+        "aggregate_grade_identities": [
+          ""
+        ]
+      }
+    ],
+    "exposure_resolution": {
+      "status": "AMBIGUOUS_SEMANTIC_FAMILIES",
+      "family_count": 2
+    }
+  },
+  "transport_canada": {
+    "download": {
+      "requested_url": "https://tdih-cdit.tc.canada.ca/sites/default/files/ferroviaire-rail.zip",
+      "final_url": "https://tdih-cdit.tc.canada.ca/sites/default/files/ferroviaire-rail.zip",
+      "status": 200,
+      "bytes": 36520845,
+      "sha256": "d45b6e7fb85fa42a763c747c73661693638f5c934120ff67e68fe20dca4d9845",
+      "content_type": "application/zip"
+    },
+    "selected_members": [
+      "weekly_rail_system_performance_indicators_eng_2023.csv",
+      "weekly_rail_system_performance_indicators_eng_2024.csv",
+      "weekly_rail_system_performance_indicators_eng_2025.csv"
+    ],
+    "resolved_headers": {
+      "date": "Reference_Date",
+      "carrier": "Carrier",
+      "commodity": "Commodity",
+      "measure": "Measure",
+      "geography": "Geography",
+      "value": "Measure_Value"
+    },
+    "frozen_outcome": {
+      "commodity": "All Western grain",
+      "measure": "Average Dwell Time at Origin",
+      "geography": "Canada",
+      "carriers": [
+        "CN",
+        "CPKC"
+      ],
+      "carrier_week_keys": {
+        "CN": 104,
+        "CPKC": 104
+      },
+      "nonblank_presence_carrier_week_keys": {
+        "CN": 104,
+        "CPKC": 104
+      }
+    }
+  },
+  "incremental_monetary_cost_usd": 0,
+  "prospective_panel": {
+    "one_week_lag_support_by_carrier": {
+      "CN": 0,
+      "CPKC": 0
+    },
+    "min_carrier_lagged_weeks": 0,
+    "relationship_computed": false
+  },
+  "gate": "HOLD_CA_GRAIN_E01_EXPOSURE_IDENTITY_AMBIGUOUS"
+}
