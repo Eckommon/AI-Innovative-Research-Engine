@@ -1,0 +1,336 @@
+{
+  "duplicate_identity_count": 32,
+  "duplicates": [
+    {
+      "cei_date": "2018-07-10",
+      "differing_nonoutcome_columns": [
+        "EVALUATION_AGENCY"
+      ],
+      "evaluation_identifier": "001",
+      "id_number": "ALD070513767",
+      "source_row_count": 2,
+      "unique_nonoutcome_signatures": 2
+    },
+    {
+      "cei_date": "2018-03-21",
+      "differing_nonoutcome_columns": [
+        "EVALUATION_AGENCY"
+      ],
+      "evaluation_identifier": "001",
+      "id_number": "ALD079474037",
+      "source_row_count": 2,
+      "unique_nonoutcome_signatures": 2
+    },
+    {
+      "cei_date": "2019-02-12",
+      "differing_nonoutcome_columns": [
+        "EVALUATION_AGENCY"
+      ],
+      "evaluation_identifier": "001",
+      "id_number": "ALD079474037",
+      "source_row_count": 2,
+      "unique_nonoutcome_signatures": 2
+    },
+    {
+      "cei_date": "2021-06-17",
+      "differing_nonoutcome_columns": [
+        "EVALUATION_AGENCY"
+      ],
+      "evaluation_identifier": "001",
+      "id_number": "ALD094476793",
+      "source_row_count": 2,
+      "unique_nonoutcome_signatures": 2
+    },
+    {
+      "cei_date": "2018-02-27",
+      "differing_nonoutcome_columns": [
+        "EVALUATION_AGENCY"
+      ],
+      "evaluation_identifier": "001",
+      "id_number": "ALD981020894",
+      "source_row_count": 2,
+      "unique_nonoutcome_signatures": 2
+    },
+    {
+      "cei_date": "2019-04-02",
+      "differing_nonoutcome_columns": [
+        "EVALUATION_AGENCY"
+      ],
+      "evaluation_identifier": "001",
+      "id_number": "GA1570024330",
+      "source_row_count": 2,
+      "unique_nonoutcome_signatures": 2
+    },
+    {
+      "cei_date": "2024-02-27",
+      "differing_nonoutcome_columns": [
+        "EVALUATION_AGENCY"
+      ],
+      "evaluation_identifier": "001",
+      "id_number": "GA4170090001",
+      "source_row_count": 2,
+      "unique_nonoutcome_signatures": 2
+    },
+    {
+      "cei_date": "2018-05-07",
+      "differing_nonoutcome_columns": [
+        "EVALUATION_AGENCY"
+      ],
+      "evaluation_identifier": "001",
+      "id_number": "GA7170023694",
+      "source_row_count": 2,
+      "unique_nonoutcome_signatures": 2
+    },
+    {
+      "cei_date": "2017-10-19",
+      "differing_nonoutcome_columns": [
+        "EVALUATION_AGENCY"
+      ],
+      "evaluation_identifier": "001",
+      "id_number": "KY0001012012",
+      "source_row_count": 2,
+      "unique_nonoutcome_signatures": 2
+    },
+    {
+      "cei_date": "2018-11-27",
+      "differing_nonoutcome_columns": [
+        "EVALUATION_AGENCY"
+      ],
+      "evaluation_identifier": "001",
+      "id_number": "KY0001012012",
+      "source_row_count": 2,
+      "unique_nonoutcome_signatures": 2
+    },
+    {
+      "cei_date": "2018-04-23",
+      "differing_nonoutcome_columns": [
+        "EVALUATION_AGENCY"
+      ],
+      "evaluation_identifier": "001",
+      "id_number": "KY8890008982",
+      "source_row_count": 2,
+      "unique_nonoutcome_signatures": 2
+    },
+    {
+      "cei_date": "2020-09-28",
+      "differing_nonoutcome_columns": [
+        "EVALUATION_AGENCY"
+      ],
+      "evaluation_identifier": "001",
+      "id_number": "KYD000830851",
+      "source_row_count": 2,
+      "unique_nonoutcome_signatures": 2
+    },
+    {
+      "cei_date": "2021-06-29",
+      "differing_nonoutcome_columns": [
+        "EVALUATION_AGENCY"
+      ],
+      "evaluation_identifier": "001",
+      "id_number": "KYD000830851",
+      "source_row_count": 2,
+      "unique_nonoutcome_signatures": 2
+    },
+    {
+      "cei_date": "2017-05-17",
+      "differing_nonoutcome_columns": [
+        "EVALUATION_AGENCY"
+      ],
+      "evaluation_identifier": "001",
+      "id_number": "KYD006390017",
+      "source_row_count": 2,
+      "unique_nonoutcome_signatures": 2
+    },
+    {
+      "cei_date": "2019-02-12",
+      "differing_nonoutcome_columns": [
+        "EVALUATION_AGENCY"
+      ],
+      "evaluation_identifier": "001",
+      "id_number": "MSD077655876",
+      "source_row_count": 2,
+      "unique_nonoutcome_signatures": 2
+    },
+    {
+      "cei_date": "2018-06-27",
+      "differing_nonoutcome_columns": [
+        "EVALUATION_AGENCY"
+      ],
+      "evaluation_identifier": "001",
+      "id_number": "NDD000716738",
+      "source_row_count": 2,
+      "unique_nonoutcome_signatures": 2
+    },
+    {
+      "cei_date": "2018-08-01",
+      "differing_nonoutcome_columns": [
+        "EVALUATION_AGENCY"
+      ],
+      "evaluation_identifier": "001",
+      "id_number": "NED981495724",
+      "source_row_count": 2,
+      "unique_nonoutcome_signatures": 2
+    },
+    {
+      "cei_date": "2019-04-24",
+      "differing_nonoutcome_columns": [
+        "EVALUATION_AGENCY"
+      ],
+      "evaluation_identifier": "001",
+      "id_number": "NJ0170022172",
+      "source_row_count": 2,
+      "unique_nonoutcome_signatures": 2
+    },
+    {
+      "cei_date": "2018-11-28",
+      "differing_nonoutcome_columns": [
+        "EVALUATION_AGENCY"
+      ],
+      "evaluation_identifier": "001",
+      "id_number": "SC1750216169",
+      "source_row_count": 2,
+      "unique_nonoutcome_signatures": 2
+    },
+    {
+      "cei_date": "2018-11-29",
+      "differing_nonoutcome_columns": [
+        "EVALUATION_AGENCY"
+      ],
+      "evaluation_identifier": "001",
+      "id_number": "SC3570024460",
+      "source_row_count": 2,
+      "unique_nonoutcome_signatures": 2
+    },
+    {
+      "cei_date": "2017-12-05",
+      "differing_nonoutcome_columns": [
+        "EVALUATION_AGENCY"
+      ],
+      "evaluation_identifier": "001",
+      "id_number": "SC8170022620",
+      "source_row_count": 2,
+      "unique_nonoutcome_signatures": 2
+    },
+    {
+      "cei_date": "2019-11-19",
+      "differing_nonoutcome_columns": [
+        "EVALUATION_AGENCY"
+      ],
+      "evaluation_identifier": "001",
+      "id_number": "SCD003368891",
+      "source_row_count": 2,
+      "unique_nonoutcome_signatures": 2
+    },
+    {
+      "cei_date": "2019-08-22",
+      "differing_nonoutcome_columns": [
+        "EVALUATION_AGENCY"
+      ],
+      "evaluation_identifier": "001",
+      "id_number": "SCD043384072",
+      "source_row_count": 2,
+      "unique_nonoutcome_signatures": 2
+    },
+    {
+      "cei_date": "2021-06-09",
+      "differing_nonoutcome_columns": [
+        "EVALUATION_AGENCY"
+      ],
+      "evaluation_identifier": "001",
+      "id_number": "SCD069314045",
+      "source_row_count": 2,
+      "unique_nonoutcome_signatures": 2
+    },
+    {
+      "cei_date": "2023-02-02",
+      "differing_nonoutcome_columns": [
+        "EVALUATION_AGENCY"
+      ],
+      "evaluation_identifier": "001",
+      "id_number": "SCD077995488",
+      "source_row_count": 2,
+      "unique_nonoutcome_signatures": 2
+    },
+    {
+      "cei_date": "2019-07-16",
+      "differing_nonoutcome_columns": [
+        "EVALUATION_AGENCY"
+      ],
+      "evaluation_identifier": "001",
+      "id_number": "SCD981031040",
+      "source_row_count": 2,
+      "unique_nonoutcome_signatures": 2
+    },
+    {
+      "cei_date": "2018-04-10",
+      "differing_nonoutcome_columns": [
+        "EVALUATION_AGENCY"
+      ],
+      "evaluation_identifier": "001",
+      "id_number": "SCR000771451",
+      "source_row_count": 2,
+      "unique_nonoutcome_signatures": 2
+    },
+    {
+      "cei_date": "2018-05-01",
+      "differing_nonoutcome_columns": [
+        "EVALUATION_AGENCY"
+      ],
+      "evaluation_identifier": "001",
+      "id_number": "TN0210020582",
+      "source_row_count": 2,
+      "unique_nonoutcome_signatures": 2
+    },
+    {
+      "cei_date": "2019-02-11",
+      "differing_nonoutcome_columns": [
+        "EVALUATION_AGENCY"
+      ],
+      "evaluation_identifier": "001",
+      "id_number": "TN1890090003",
+      "source_row_count": 2,
+      "unique_nonoutcome_signatures": 2
+    },
+    {
+      "cei_date": "2019-03-12",
+      "differing_nonoutcome_columns": [
+        "EVALUATION_AGENCY"
+      ],
+      "evaluation_identifier": "001",
+      "id_number": "TND003095635",
+      "source_row_count": 2,
+      "unique_nonoutcome_signatures": 2
+    },
+    {
+      "cei_date": "2018-12-11",
+      "differing_nonoutcome_columns": [
+        "EVALUATION_AGENCY"
+      ],
+      "evaluation_identifier": "001",
+      "id_number": "TND003337292",
+      "source_row_count": 2,
+      "unique_nonoutcome_signatures": 2
+    },
+    {
+      "cei_date": "2020-12-09",
+      "differing_nonoutcome_columns": [
+        "EVALUATION_AGENCY"
+      ],
+      "evaluation_identifier": "001",
+      "id_number": "TND058660390",
+      "source_row_count": 2,
+      "unique_nonoutcome_signatures": 2
+    }
+  ],
+  "exact_duplicate_on_all_nonoutcome_columns": 0,
+  "id": "US-RCRA-E01-DUPLICATE-IDENTITY-AUDIT",
+  "incremental_monetary_cost_usd": 0,
+  "issue": 125,
+  "nonoutcome_differing_column_counts": {
+    "EVALUATION_AGENCY": 32
+  },
+  "outcome_field_persisted": false,
+  "outcome_field_read": false,
+  "resolved_identity_count": 594,
+  "selected_identity_count": 594
+}
