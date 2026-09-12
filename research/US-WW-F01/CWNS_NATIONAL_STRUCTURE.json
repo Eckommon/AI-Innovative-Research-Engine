@@ -1,0 +1,546 @@
+{
+  "id": "US-WW-F01-CWNS-NATIONAL-BROWSER-PROBE",
+  "issue": 114,
+  "relationship_computed": false,
+  "candidate_outcome_magnitudes_opened": false,
+  "source_url": "https://sdwis.epa.gov/ords/sfdw_pub/r/sfdw/cwns_pub/data-download",
+  "usage_category_submitted": "Researcher",
+  "download": {
+    "filename": "2022CWNS_NATIONAL_APR2024.zip",
+    "bytes": 7838001,
+    "sha256": "d238b864aef5a736c30e853c719bba7b8d5f9d76321361e1556d64ad9ff6a904",
+    "zip_valid": true
+  },
+  "members": [
+    {
+      "name": "AREAS_CONGRESS_DISTRICT.csv",
+      "uncompressed_bytes": 654088,
+      "headers": [
+        "CWNS_ID",
+        "FACILITY_ID",
+        "STATE_CODE",
+        "CONGRESSIONAL_DISTRICT_ID",
+        "CD_PRIMARY_FLAG"
+      ],
+      "row_count": 18736
+    },
+    {
+      "name": "AREAS_COUNTY.csv",
+      "uncompressed_bytes": 1004656,
+      "headers": [
+        "CWNS_ID",
+        "FACILITY_ID",
+        "STATE_CODE",
+        "COUNTY_FIPS",
+        "COUNTY_NAME",
+        "COUNTY_PRIMARY_FLAG"
+      ],
+      "row_count": 22896
+    },
+    {
+      "name": "AREAS_WATERSHED.csv",
+      "uncompressed_bytes": 1213009,
+      "headers": [
+        "CWNS_ID",
+        "FACILITY_ID",
+        "STATE_CODE",
+        "HUC",
+        "WATERSHED_NAME",
+        "WATERSHED_PRIMARY_FLAG"
+      ],
+      "row_count": 22807
+    },
+    {
+      "name": "ASSET_MANAGEMENT.csv",
+      "uncompressed_bytes": 60028,
+      "headers": [
+        "CWNS_ID",
+        "FACILITY_ID",
+        "STATE_CODE",
+        "IMPLEMENTATION_STATUS",
+        "REMAINING_COST",
+        "ANNUAL_COST"
+      ],
+      "row_count": 1052
+    },
+    {
+      "name": "CET_INPUTS_DECENTRALIZED.csv",
+      "uncompressed_bytes": 276221,
+      "headers": [
+        "CWNS_ID",
+        "FACILITY_ID",
+        "STATE_CODE",
+        "COST_METHOD",
+        "FACILITY_DOCUMENT_CET_ID",
+        "FACILITY_DOCUMENT_COST_ID",
+        "CONSTRUCTION_TYPE",
+        "SIZING_METHOD",
+        "COUNTY_ID",
+        "COUNTY_NAME",
+        "NUM_HOME_SERVED",
+        "POP_SERVED",
+        "POP_PER_HOUSEHOLD"
+      ],
+      "row_count": 2694
+    },
+    {
+      "name": "CET_INPUTS_NONPOINT.csv",
+      "uncompressed_bytes": 31626,
+      "headers": [
+        "CWNS_ID",
+        "FACILITY_ID",
+        "STATE_CODE",
+        "COST_METHOD",
+        "FACILITY_DOCUMENT_CET_ID",
+        "FACILITY_DOCUMENT_COST_ID",
+        "SCALE",
+        "INPUT_STATE",
+        "COUNTY_ID",
+        "COUNTY_NAME",
+        "ACRES_OF_FOREST",
+        "BMP_IMP_RATE",
+        "CROPLAND_ACRES",
+        "ACRES_OF_NEED",
+        "ACRES_TOOL_FLAG"
+      ],
+      "row_count": 349
+    },
+    {
+      "name": "CET_INPUTS_STORMWATER.csv",
+      "uncompressed_bytes": 3230,
+      "headers": [
+        "CWNS_ID",
+        "FACILITY_ID",
+        "STATE_CODE",
+        "COST_METHOD",
+        "FACILITY_DOCUMENT_CET_ID",
+        "FACILITY_DOCUMENT_COST_ID",
+        "ZIP_CODE",
+        "PRACTICE_TYPE",
+        "CONSTRUCTION_TYPE",
+        "SIZING_METHOD",
+        "QUANTITY",
+        "CAPACITY",
+        "PRACTICE_VOLUME",
+        "PRACTICE_AREA",
+        "DRAINAGE_AREA",
+        "PERCENT_IMP"
+      ],
+      "row_count": 28
+    },
+    {
+      "name": "CET_INPUTS_WASTEWATER.csv",
+      "uncompressed_bytes": 83956,
+      "headers": [
+        "CWNS_ID",
+        "FACILITY_ID",
+        "STATE_CODE",
+        "COST_METHOD",
+        "FACILITY_DOCUMENT_CET_ID",
+        "FACILITY_DOCUMENT_COST_ID",
+        "ZIP_CODE",
+        "PRACTICE_TYPE",
+        "CONSTRUCTION_TYPE",
+        "FUTURE_DESIGN_FLOW",
+        "PIPE_LENGTH",
+        "NUM_PUMP_STATION",
+        "PUMP_STATION_CAP"
+      ],
+      "row_count": 799
+    },
+    {
+      "name": "CET_INPUTS_WASTEWATER_CSO.csv",
+      "uncompressed_bytes": 751,
+      "headers": [
+        "CWNS_ID",
+        "FACILITY_ID",
+        "STATE_CODE",
+        "COST_METHOD",
+        "FACILITY_DOCUMENT_CET_ID",
+        "FACILITY_DOCUMENT_COST_ID",
+        "ZIP_CODE",
+        "PRACTICE_TYPE",
+        "CONSTRUCTION_TYPE",
+        "SIZING_METHOD",
+        "QUANTITY",
+        "CAPACITY",
+        "PRACTICE_VOLUME"
+      ],
+      "row_count": 5
+    },
+    {
+      "name": "DISCHARGES.csv",
+      "uncompressed_bytes": 1581772,
+      "headers": [
+        "CWNS_ID",
+        "FACILITY_ID",
+        "STATE_CODE",
+        "DISCHARGE_TYPE",
+        "PRESENT_DISCHARGE_PERCENTAGE",
+        "PROJECTED_DISCHARGE_PERCENTAGE",
+        "DISCHARGES_TO_CWNSID"
+      ],
+      "row_count": 24195
+    },
+    {
+      "name": "EFFLUENT.csv",
+      "uncompressed_bytes": 817230,
+      "headers": [
+        "CWNS_ID",
+        "FACILITY_ID",
+        "STATE_CODE",
+        "CURRENT_EFFLUENT_TREATMENT_LEVEL",
+        "CURRENT_DISINFECTION_FLAG",
+        "FUTURE_EFFLUENT_TREATMENT_LEVEL",
+        "FUTURE_DISINFECTION_FLAG"
+      ],
+      "row_count": 16786
+    },
+    {
+      "name": "FACILITIES.csv",
+      "uncompressed_bytes": 3233585,
+      "headers": [
+        "CWNS_ID",
+        "FACILITY_ID",
+        "STATE_CODE",
+        "INFRASTRUCTURE_TYPE",
+        "FACILITY_NAME",
+        "DESCRIPTION",
+        "OWNER_TYPE",
+        "SUPERFUND_FLAG",
+        "SEMS_ID",
+        "SCF_ELIGIBLE",
+        "REVIEW_STATUS",
+        "REVIEW_TYPE",
+        "DATE_LAST_MODIFIED",
+        "NO_NEEDS"
+      ],
+      "row_count": 30881
+    },
+    {
+      "name": "FACILITIES_CONFIRMED.csv",
+      "uncompressed_bytes": 229505,
+      "headers": [
+        "CWNS_ID",
+        "FACILITY_ID",
+        "STATE_CODE",
+        "INFRASTRUCTURE_TYPE",
+        "FACILITY_NAME",
+        "DESCRIPTION",
+        "OWNER_TYPE",
+        "SUPERFUND_FLAG",
+        "SEMS_ID",
+        "SCF_ELIGIBLE",
+        "REVIEW_STATUS",
+        "REVIEW_TYPE",
+        "DATE_LAST_MODIFIED",
+        "NO_NEEDS"
+      ],
+      "row_count": 2541
+    },
+    {
+      "name": "FACILITY_DOCUMENT_LINKAGES.csv",
+      "uncompressed_bytes": 3715972,
+      "headers": [
+        "FACILITY_DOCUMENT_ID",
+        "DOCUMENT_ID",
+        "CWNS_ID",
+        "FACILITY_ID",
+        "STATE_CODE",
+        "DOCUMENT_TYPE_ID",
+        "DOCUMENT_TYPE",
+        "PUBLISHED_DATE",
+        "BASE_MONTH_COST_INFO",
+        "CERT_FLAG",
+        "SELF_CERT_FLAG",
+        "AGE_CERT"
+      ],
+      "row_count": 34598
+    },
+    {
+      "name": "FACILITY_PERMIT.csv",
+      "uncompressed_bytes": 1267910,
+      "headers": [
+        "CWNS_ID",
+        "FACILITY_ID",
+        "STATE_CODE",
+        "PERMIT_NUMBER",
+        "PERMIT_SOURCE",
+        "PERMIT_TYPE"
+      ],
+      "row_count": 20017
+    },
+    {
+      "name": "FACILITY_TYPES.csv",
+      "uncompressed_bytes": 4743629,
+      "headers": [
+        "CWNS_ID",
+        "FACILITY_ID",
+        "STATE_CODE",
+        "FACILITY_TYPE",
+        "CHANGE_TYPE"
+      ],
+      "row_count": 75796
+    },
+    {
+      "name": "FLOW.csv",
+      "uncompressed_bytes": 3817178,
+      "headers": [
+        "CWNS_ID",
+        "FACILITY_ID",
+        "STATE_CODE",
+        "FLOW_TYPE",
+        "CURRENT_DESIGN_FLOW",
+        "FUTURE_DESIGN_FLOW"
+      ],
+      "row_count": 82385
+    },
+    {
+      "name": "NEEDS_COST_BY_CATEGORY.csv",
+      "uncompressed_bytes": 2999174,
+      "headers": [
+        "FACILITY_DOCUMENT_COST_ID",
+        "CWNS_ID",
+        "FACILITY_ID",
+        "STATE_CODE",
+        "DOCUMENT_ID",
+        "DOCUMENT_TYPE",
+        "NEEDS_CATEGORY",
+        "COST_METHOD",
+        "BASE_AMOUNT",
+        "OFFICIAL_AMOUNT",
+        "SOLUTION_YEAR_START",
+        "SOLUTION_YEAR_END",
+        "SSO_FLAG",
+        "TREATMENT_PLANT_TYPE",
+        "SSA_FLAG"
+      ],
+      "row_count": 35729
+    },
+    {
+      "name": "PHYSICAL_LOCATION.csv",
+      "uncompressed_bytes": 2910763,
+      "headers": [
+        "CWNS_ID",
+        "FACILITY_ID",
+        "LOCATION_TYPE",
+        "LATITUDE",
+        "LONGITUDE",
+        "DATUM",
+        "ADDRESS",
+        "ADDRESS_2",
+        "CITY",
+        "STATE_CODE",
+        "ZIP_CODE",
+        "COUNTY_FIPS",
+        "COUNTY_NAME"
+      ],
+      "row_count": 30881
+    },
+    {
+      "name": "POINT_OF_CONTACT.csv",
+      "uncompressed_bytes": 2283737,
+      "headers": [
+        "CWNS_ID",
+        "FACILITY_ID",
+        "STATE_CODE",
+        "RESPONSIBLE_ENTITY",
+        "AUTHORITY_NAME"
+      ],
+      "row_count": 46470
+    },
+    {
+      "name": "POPULATION_DECENTRALIZED.csv",
+      "uncompressed_bytes": 365038,
+      "headers": [
+        "CWNS_ID",
+        "FACILITY_ID",
+        "STATE_CODE",
+        "INFRASTRUCTURE_TYPE",
+        "POPULATION_TYPE",
+        "RES_POP_PER_UNIT",
+        "RES_NUM_OF_UNIT_2022",
+        "RES_NUM_OF_UNIT_2042",
+        "RESIDENTIAL_POP_2022",
+        "RESIDENTIAL_POP_2042",
+        "NONRES_POP_PER_UNIT",
+        "NONRES_NUM_OF_UNIT_2022",
+        "NONRES_NUM_OF_UNIT_2042",
+        "NONRESIDENTIAL_POP_2022",
+        "NONRESIDENTIAL_POP_2042"
+      ],
+      "row_count": 2795
+    },
+    {
+      "name": "POPULATION_WASTEWATER.csv",
+      "uncompressed_bytes": 2271280,
+      "headers": [
+        "CWNS_ID",
+        "FACILITY_ID",
+        "STATE_CODE",
+        "INFRASTRUCTURE_TYPE",
+        "POPULATION_TYPE",
+        "RESIDENTIAL_POP_2022",
+        "RESIDENTIAL_POP_2042",
+        "NONRESIDENTIAL_POP_2022",
+        "NONRESIDENTIAL_POP_2042",
+        "TOTAL_RES_POPULATION_2022",
+        "TOTAL_RES_POPULATION_2042",
+        "TOTAL_NONRES_POPULATION_2022",
+        "TOTAL_NONRES_POPULATION_2042",
+        "TREATED_DISCHARGE_PERCENTAGE_2022",
+        "TREATED_DISCHARGE_PERCENTAGE_2042",
+        "NET_TREATED_POPULATION_2022",
+        "NET_TREATED_POPULATION_2042",
+        "NO_DISCHARGE_PERCENTAGE_2022",
+        "NO_DISCHARGE_PERCENTAGE_2042",
+        "NO_DISCHARGE_POPULATION_2022",
+        "NO_DISCHARGE_POPULATION_2042",
+        "PART_OF_SEWERSHED",
+        "END_FACILITY"
+      ],
+      "row_count": 21641
+    },
+    {
+      "name": "POPULATION_WASTEWATER_CONFIRMED.csv",
+      "uncompressed_bytes": 275048,
+      "headers": [
+        "CWNS_ID",
+        "FACILITY_ID",
+        "STATE_CODE",
+        "INFRASTRUCTURE_TYPE",
+        "FACILITY_TYPE",
+        "POPULATION_TYPE",
+        "TOTAL_RES_POPULATION_2022",
+        "TOTAL_RES_POPULATION_2042",
+        "CURRENT_EFFLUENT_TREATMENT_LEVEL",
+        "FUTURE_EFFLUENT_TREATMENT_LEVEL",
+        "PART_OF_SEWERSHED",
+        "NO_DISCHARGE_PERCENTAGE_2022",
+        "NO_DISCHARGE_PERCENTAGE_2042",
+        "NO_DISCHARGE_POPULATION_2022",
+        "NO_DISCHARGE_POPULATION_2042",
+        "LOCATION_TYPE",
+        "LATITUDE",
+        "LONGITUDE",
+        "DATUM",
+        "ADDRESS",
+        "ADDRESS_2",
+        "CITY_ID",
+        "CITY",
+        "ZIP_CODE",
+        "COUNTY_FIPS",
+        "COUNTY_NAME"
+      ],
+      "row_count": 1425
+    },
+    {
+      "name": "REASON_FOR_NEEDS.csv",
+      "uncompressed_bytes": 3326002,
+      "headers": [
+        "CWNS_ID",
+        "FACILITY_ID",
+        "STATE_CODE",
+        "NEED_REASON"
+      ],
+      "row_count": 28729
+    },
+    {
+      "name": "REF_CHANGE_TYPES.csv",
+      "uncompressed_bytes": 370,
+      "headers": [
+        "CHANGE_TYPE",
+        "DISPLAY_ORDER"
+      ],
+      "row_count": 16
+    },
+    {
+      "name": "REF_DISCHARGE_TYPES.csv",
+      "uncompressed_bytes": 549,
+      "headers": [
+        "DISCHARGE_TYPE",
+        "DISPLAY_ORDER"
+      ],
+      "row_count": 17
+    },
+    {
+      "name": "REF_DOCUMENT_TYPES.csv",
+      "uncompressed_bytes": 3928,
+      "headers": [
+        "DOCUMENT_TYPE_ID",
+        "DOCUMENT_TYPE",
+        "DESIGNATION"
+      ],
+      "row_count": 64
+    },
+    {
+      "name": "REF_FACILITY_TYPE_CHANGE_TYPE_XREF.csv",
+      "uncompressed_bytes": 13528,
+      "headers": [
+        "FACILITY_TYPE",
+        "CHANGE_TYPE"
+      ],
+      "row_count": 342
+    },
+    {
+      "name": "REF_FACILITY_TYPES.csv",
+      "uncompressed_bytes": 1145,
+      "headers": [
+        "FACILITY_TYPE",
+        "INFRASTRUCTURE_TYPE",
+        "DISPLAY_ORDER"
+      ],
+      "row_count": 28
+    },
+    {
+      "name": "REF_NEEDS_CATEGORIES.csv",
+      "uncompressed_bytes": 1095,
+      "headers": [
+        "NEEDS_CATEGORY",
+        "CATEGORY_NAME",
+        "VALID_FOR_SSO_FLAG",
+        "DISPLAY_ORDER"
+      ],
+      "row_count": 24
+    },
+    {
+      "name": "REF_REVIEW_STATUS.csv",
+      "uncompressed_bytes": 74,
+      "headers": [
+        "REVIEW_STATUS",
+        "REVIEW_STATUS_NAME"
+      ],
+      "row_count": 2
+    },
+    {
+      "name": "REF_UNIT_PROCESSES.csv",
+      "uncompressed_bytes": 5160,
+      "headers": [
+        "TREATMENT_TYPE",
+        "UNIT_PROCESS",
+        "INFRASTRUCTURE_TYPE"
+      ],
+      "row_count": 81
+    },
+    {
+      "name": "UNIT_PROCESSES.csv",
+      "uncompressed_bytes": 742206,
+      "headers": [
+        "FACILITY_UNIT_PROCESS_ID",
+        "CWNS_ID",
+        "FACILITY_ID",
+        "STATE_CODE",
+        "INFRASTRUCTURE_TYPE",
+        "TREATMENT_TYPE",
+        "UNIT_PROCESS",
+        "EXISTING_FLAG",
+        "PLANNED_FLAG",
+        "UNIT_PROCESS_NOTES"
+      ],
+      "row_count": 7748
+    }
+  ],
+  "member_count": 33,
+  "raw_source_bytes_persisted": false,
+  "incremental_monetary_cost_usd": 0
+}
