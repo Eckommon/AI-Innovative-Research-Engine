@@ -1,19 +1,17 @@
 ---
-checkpoint_id: CHK-20260912-CA-GRAIN-E02-HOLD-PORTFOLIO-RETURN
-active_issue: none
-active_research: NONE
-last_completed_issue: 110
-last_completed_research: CA-GRAIN-E02
-last_decision: DEC-154
+checkpoint_id: CHK-20260912-DISCOVERY-R01-ACTIVE
+active_issue: 113
+active_research: DISCOVERY-R01
+last_completed_issue: 111
+last_completed_research: PORTFOLIO-R20
+last_decision: DEC-156
 updated: 2026-09-12
 ---
 
 # Session Handoff / 세션 인수인계
 
-CA-GRAIN-E02 / Issue #110 is terminal at **`HOLD_CA_GRAIN_E02_INSUFFICIENT_PANEL`**.
+R20 resolved **`NO_PROMOTION_EXISTING_SET`** and opened Issue #113 `DISCOVERY-R01`.
 
-Corrected Run `34689346777` did not fit the preregistered relationship model. Targeted value-blind audit Run `34690867196` proved the remaining structural collision is between distinct source week identities in the 2024-25 GSW file: Week 44 raw `08/06/2025` and Week 48 raw `07/06/2025`. The official CGC archive maps those week identities to 2025-06-08 and 2025-07-06. Issue #110 had frozen explicit source-date normalization, so switching post hoc to `grain_week` is not permitted.
+Important reconciliation: US-UTIL-F01 (#94) and F02 (#96) were already completed PASS assets; Issue #112 was a duplicate and was closed without execution. Do not rerun those gates. Generic AMI→reliability/storm-resilience questions now carry substantial contemporary overlap.
 
-Technical revalidation Run `34690978853`, using official crop-year week identities without values, yields **103** common GSW×TC weeks and 103 weeks for each E01 upstream semantic family. Therefore F01 PASS and E01 ambiguity HOLD remain valid, while their earlier raw-date-derived counts are superseded by errata.
-
-Canonical restart: **Stage 0 portfolio control**. E02 may not be repaired or rerun. A grain-week-keyed descendant, if ever considered, must be a new separately selected/preregistered branch. Cost: **0 USD**.
+Exact restart: conduct the fresh outcome-blind discovery scan required by #113, compare at least five new candidates, and promote at most one bounded F01/N01. No candidate outcome magnitudes may be opened during discovery. Cost: **0 USD**.
