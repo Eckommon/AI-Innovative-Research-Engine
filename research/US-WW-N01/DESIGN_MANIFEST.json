@@ -1,0 +1,125 @@
+{
+  "id": "US-WW-N01-DESIGN-MANIFEST",
+  "issue": 116,
+  "boundary": {
+    "future_2023_2025_outcome_counts_read_or_persisted": false,
+    "future_outcome_rates_computed": false,
+    "relationship_computed": false,
+    "need_dollar_magnitudes_read": false
+  },
+  "frozen_windows": {
+    "baseline": [
+      "2019-01-01",
+      "2021-12-31"
+    ],
+    "future_identity_only": [
+      "2023-01-01",
+      "2025-12-31"
+    ]
+  },
+  "population": {
+    "wastewater_facilities": 21679,
+    "official_npdes_linked_facilities": 14578,
+    "all_linked_permits_exact_in_icis_facilities": 14560,
+    "exact_link_support_fraction_of_linked": 0.9987652627246536
+  },
+  "exposure": {
+    "codes": [
+      "III-A",
+      "III-B",
+      "V"
+    ],
+    "documented_need_exact_linked_facilities": 7616,
+    "exposed_facilities": 5018,
+    "comparator_facilities": 2598,
+    "pass_500_each": true
+  },
+  "reason_for_needs": {
+    "labels": [
+      "The project(s) improves water efficiency, improves energy efficiency, improves water conservation, addresses climate change, or improves resiliency.",
+      "The project(s) is necessary to obtain compliance with a new permit requirement.",
+      "The project(s) is required to maintain compliance with a NPDES permit.",
+      "The project(s) is to achieve or maintain compliance with a TMDL.",
+      "The project(s) is to increase capacity or improve treatment in advance of anticipated new permit requirements.",
+      "The project(s) will prevent unregulated water quality or human health impacts."
+    ],
+    "structural_row_counts_by_label": {
+      "The project(s) improves water efficiency, improves energy efficiency, improves water conservation, addresses climate change, or improves resiliency.": 3290,
+      "The project(s) is necessary to obtain compliance with a new permit requirement.": 842,
+      "The project(s) is required to maintain compliance with a NPDES permit.": 5964,
+      "The project(s) is to achieve or maintain compliance with a TMDL.": 578,
+      "The project(s) is to increase capacity or improve treatment in advance of anticipated new permit requirements.": 1590,
+      "The project(s) will prevent unregulated water quality or human health impacts.": 5456
+    },
+    "compliance_like_label_candidates": [
+      "The project(s) is necessary to obtain compliance with a new permit requirement.",
+      "The project(s) is required to maintain compliance with a NPDES permit.",
+      "The project(s) is to achieve or maintain compliance with a TMDL.",
+      "The project(s) is to increase capacity or improve treatment in advance of anticipated new permit requirements.",
+      "The project(s) will prevent unregulated water quality or human health impacts."
+    ]
+  },
+  "baseline_identity": {
+    "violation_tables": [
+      {
+        "table": "NPDES_PS_VIOLATIONS.csv",
+        "date_identity_columns": [
+          "SCHEDULE_DATE",
+          "RNC_DETECTION_DATE",
+          "RNC_RESOLUTION_DATE",
+          "ACTUAL_DATE",
+          "REPORT_RECEIVED_DATE"
+        ],
+        "violation_type_identity_columns": [
+          "VIOLATION_TYPE_CODE",
+          "VIOLATION_CODE",
+          "VIOLATION_DESC"
+        ],
+        "baseline_2019_2021_date_identity_observed": true
+      },
+      {
+        "table": "NPDES_CS_VIOLATIONS.csv",
+        "date_identity_columns": [
+          "SCHEDULE_DATE",
+          "ACTUAL_DATE",
+          "RNC_DETECTION_DATE",
+          "RNC_RESOLUTION_DATE",
+          "REPORT_RECEIVED_DATE"
+        ],
+        "violation_type_identity_columns": [
+          "VIOLATION_TYPE_CODE",
+          "VIOLATION_CODE",
+          "VIOLATION_DESC"
+        ],
+        "baseline_2019_2021_date_identity_observed": true
+      },
+      {
+        "table": "NPDES_SE_VIOLATIONS.csv",
+        "date_identity_columns": [
+          "SINGLE_EVENT_VIOLATION_DATE",
+          "SINGLE_EVENT_END_DATE",
+          "RNC_DETECTION_DATE",
+          "RNC_RESOLUTION_DATE"
+        ],
+        "violation_type_identity_columns": [
+          "VIOLATION_TYPE_CODE",
+          "VIOLATION_CODE",
+          "VIOLATION_DESC"
+        ],
+        "baseline_2019_2021_date_identity_observed": true
+      }
+    ],
+    "baseline_violation_permit_identity_count": 43425,
+    "baseline_clean_exact_linked_facilities": 7710,
+    "baseline_clean_exposed_facilities": 2437,
+    "baseline_clean_comparator_facilities": 1189,
+    "pass_80pct_identity_route": true
+  },
+  "future_window": {
+    "identity_schema_available_from_F01": true,
+    "outcome_counts_intentionally_not_computed": true
+  },
+  "raw_source_bytes_persisted": false,
+  "echo_core_bytes_transient": 349905998,
+  "incremental_monetary_cost_usd": 0
+}
