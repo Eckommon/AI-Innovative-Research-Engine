@@ -1,0 +1,34 @@
+name: Finalize PORTFOLIO R25 and Open US RCRA E01
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/finalize_portfolio_r25_open_us_rcra_e01.py'
+      - '.github/workflows/finalize-portfolio-r25-open-us-rcra-e01.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Validate finalizer
+        run: python -m py_compile tools/finalize_portfolio_r25_open_us_rcra_e01.py
+      - name: Finalize R25 selection and authorize RCRA E01
+        run: python tools/finalize_portfolio_r25_open_us_rcra_e01.py
+      - name: Commit canonical transition atomically
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add STATUS.md context/SESSION_HANDOFF.md context/checkpoint.json registry/CLAIM_LEDGER.md registry/DECISION_LOG.md registry/CLM-165.md registry/DEC-172.md registry/DEC-173.md research/PORTFOLIO-R25/RESULT.md research/US-RCRA-E01/README.md
+          git diff --cached --quiet && { echo 'No changes to commit'; exit 1; }
+          git commit -m "Select US-RCRA-E01 and authorize preregistered paired test"
+          git push origin HEAD:main
