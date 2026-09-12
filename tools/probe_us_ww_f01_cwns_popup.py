@@ -27,26 +27,28 @@ out={'id':'US-WW-F01-CWNS-NATIONAL-CSV-POPUP-ROUTE','issue':114,'relationship_co
 try:
  main,final,status,nbytes,main_error=get(START)
  out['main_fetch']={'url':final,'status':status,'bytes':nbytes,'error':main_error}
- m=re.search(r"apex\.theme42\.dialog\('([^']*p2_location_id=NA[^']*p3_type=NA_CSV[^']*)'",main,re.I)
+ main_dec=html.unescape(main)
+ m=re.search(r"apex\.theme42\.dialog\('([^']*p2_location_id=NA[^']*p3_type=NA_CSV[^']*)'",main_dec,re.I)
  if not m:
-  out['stage_error']={'stage':'extract_popup','reason':'NA_CSV popup route not found','sample_matches':re.findall(r'p2_location_id=NA.{0,300}',main,re.I|re.S)[:5]}
+  out['stage_error']={'stage':'extract_popup','reason':'NA_CSV popup route not found','sample_matches':re.findall(r'p2_location_id=NA.{0,300}',main_dec,re.I|re.S)[:5]}
  else:
-  popup_rel=html.unescape(decode_js_url(m.group(1))); popup=urllib.parse.urljoin(final,popup_rel); out['popup_url']=popup
+  popup_rel=decode_js_url(m.group(1)); popup=urllib.parse.urljoin(final,popup_rel); out['popup_url']=popup
   text,pfinal,pstatus,pbytes,popup_error=get(popup,referer=final)
   out['popup_fetch']={'url':pfinal,'status':pstatus,'bytes':pbytes,'error':popup_error}
   out['session_cookie_names']=sorted({c.name for c in JAR})
+  text_dec=html.unescape(text)
   links=[]
-  for mm in re.finditer(r'''(?:href|action)\s*=\s*["']([^"']+)["']''',text,re.I):
-   u=html.unescape(decode_js_url(mm.group(1))); full=urllib.parse.urljoin(pfinal,u)
+  for mm in re.finditer(r'''(?:href|action)\s*=\s*["']([^"']+)["']''',text_dec,re.I):
+   u=decode_js_url(mm.group(1)); full=urllib.parse.urljoin(pfinal,u)
    if re.search(r'download|zip|csv|state-zip|location_id|NA_CSV|wwv_flow',full,re.I): links.append(full)
   controls=[]
-  for tag in re.findall(r'<(?:a|button|input|form)\b[^>]*>',text,re.I):
-   dec=html.unescape(decode_js_url(tag))
+  for tag in re.findall(r'<(?:a|button|input|form)\b[^>]*>',text_dec,re.I):
+   dec=decode_js_url(tag)
    if re.search(r'download|zip|csv|p_request|apex\.submit|wwv_flow|location_id',dec,re.I): controls.append(re.sub(r'\s+',' ',dec)[:3000])
   snips=[]
   for pat in ('Download','NA_CSV','download-state-zip','p2_location_id','apex.submit','p_request','error','checksum','session'):
-   for mm in re.finditer(re.escape(pat),text,re.I):
-    s=html.unescape(decode_js_url(text[max(0,mm.start()-700):min(len(text),mm.end()+1200)])); s=re.sub(r'\s+',' ',s)
+   for mm in re.finditer(re.escape(pat),text_dec,re.I):
+    s=decode_js_url(text_dec[max(0,mm.start()-700):min(len(text_dec),mm.end()+1200)]); s=re.sub(r'\s+',' ',s)
     if s not in snips: snips.append(s)
   out['candidate_links']=sorted(set(links)); out['controls']=controls[:100]; out['snippets']=snips[:50]
 except Exception as e:
