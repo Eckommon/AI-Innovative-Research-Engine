@@ -66,3 +66,6 @@ Official artifacts comply with `LANG-001`, `COST-001`, and applicable governance
 | `DEC-144` | 2026-09-11 | Authorize outcome-blind `EU-GRID-F01` for frozen 8-country ENTSO-E × E-OBS source/identity/time feasibility only. / EU-GRID-F01 값 비사용 feasibility 승인. | Prevent effect exposure before access and semantic alignment are reproducible. | Issue #104; `research/EU-GRID-F01/README.md` | active |
 
 - [DEC-145](DEC-145.md): finalize EU-GRID-F01 as source/identity-support HOLD; block effect testing and return to Stage 0. / F01 HOLD 확정·효과시험 차단·Stage 0 복귀.
+
+| `DEC-146` | 2026-09-12 | R17 selects C-CA-002 Grain Pressure × Rail Dwell source/join feasibility at 40/45. / R17에서 C-CA-002 source/join feasibility 선정. | Highest remaining marginal information value after EU-GRID-F01 terminal HOLD, with overlap explicitly penalized. | Issue #105; `CLM-148`; `research/PORTFOLIO-R17/RESULT.md` | active |
+| `DEC-147` | 2026-09-12 | Authorize outcome-blind `CA-GRAIN-F01` using TC weekly rail data × CGC GSW 2023-24/2024-25 source/join metadata only. / CA-GRAIN-F01 값 비사용 feasibility 승인. | Prevent value exposure before weekly source/schema/join semantics are reproducible. | Issue #106; `research/CA-GRAIN-F01/README.md` | active |

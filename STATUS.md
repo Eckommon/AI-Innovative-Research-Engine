@@ -1,21 +1,21 @@
 ---
-checkpoint_id: CHK-20260912-EU-GRID-F01-HOLD-PORTFOLIO-RETURN
-active_issue: none
-active_research: NONE
-last_completed_issue: 104
-last_completed_research: EU-GRID-F01
-last_decision: DEC-145
+checkpoint_id: CHK-20260912-CA-GRAIN-F01-ACTIVE
+active_issue: 106
+active_research: CA-GRAIN-F01
+last_completed_issue: 105
+last_completed_research: PORTFOLIO-R17
+last_decision: DEC-147
 updated: 2026-09-12
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `EU_GRID_F01_HOLD__PORTFOLIO_RETURN__NO_ACTIVE_RESEARCH_ISSUE`
+**State / 상태:** `PORTFOLIO_R17_SELECTED_C_CA_002__CA_GRAIN_F01_ACTIVE`
 
-EU-GRID-F01 completed outcome-blind with `HOLD_EU_GRID_F01_SOURCE_OR_IDENTITY_SUPPORT`. Every frozen country (`FR, BE, NL, ES, PT, PL, AT, CZ`) had `0/16` structurally supported fixed-anchor ENTSO-E pages; `0/8` frozen countries had structural cross-border support to another frozen country. E-OBS v33.0e / 1950–2025 / TG / regular-grid metadata support was available. No load, forecast, physical-flow or weather magnitudes and no relationship/effect model were opened.
+PORTFOLIO-R17 selected C-CA-002 at 40/45. Only outcome-blind CA-GRAIN-F01 source/schema/week-join feasibility is active. No grain-volume, dwell-time or relationship magnitude may be opened.
 
 ## Exact next action / 정확한 다음 행동
 
-Return to Stage 0 portfolio control. Compare independent alternatives and any separately preregistered source-route redesign on marginal information value before opening a new research issue. Do not open EU-GRID effect testing from F01.
+Execute Issue #106 for Transport Canada weekly rail-performance source identity and CGC GSW 2023-24/2024-25 schema/week support. Classify PASS/PARTIAL/HOLD without analyzing values.
 
 Incremental monetary cost remains **0 USD**.
