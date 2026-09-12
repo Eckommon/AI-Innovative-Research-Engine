@@ -1,0 +1,29 @@
+name: Finalize PORTFOLIO R20
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/finalize_portfolio_r20.py'
+      - '.github/workflows/finalize-portfolio-r20.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate finalizer
+        run: python -m py_compile tools/finalize_portfolio_r20.py
+      - name: Finalize R20 selection
+        run: python tools/finalize_portfolio_r20.py
+      - name: Commit canonical selection atomically
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add STATUS.md context/SESSION_HANDOFF.md context/checkpoint.json registry/CLAIM_LEDGER.md registry/DECISION_LOG.md registry/CLM-154.md registry/DEC-155.md registry/DEC-156.md research/PORTFOLIO-R20/RESULT.md research/US-UTIL-F01/README.md
+          git diff --cached --quiet || git commit -m 'Select US-UTIL-F01 in PORTFOLIO-R20'
+          git push
