@@ -1,0 +1,29 @@
+name: Finalize US WW F01
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/finalize_us_ww_f01.py'
+      - '.github/workflows/finalize-us-ww-f01.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate finalizer
+        run: python -m py_compile tools/finalize_us_ww_f01.py
+      - name: Finalize US-WW-F01 PASS and Stage 0 return
+        run: python tools/finalize_us_ww_f01.py
+      - name: Commit canonical closure atomically
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add STATUS.md context/SESSION_HANDOFF.md context/checkpoint.json registry/CLAIM_LEDGER.md registry/DECISION_LOG.md registry/CLM-156.md registry/DEC-159.md research/US-WW-F01/README.md research/US-WW-F01/RESULT.md
+          git diff --cached --quiet || git commit -m 'Finalize US-WW-F01 PASS and return to Stage 0'
+          git push
