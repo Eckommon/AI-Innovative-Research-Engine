@@ -74,3 +74,5 @@ Official artifacts comply with `LANG-001`, `COST-001`, and applicable governance
 
 | `DEC-149` | 2026-09-12 | R18 selects CA-GRAIN-E01 Stage A design identifiability at 41/45; no automatic effect exposure. / R18에서 CA-GRAIN-E01 Stage A 선정. | F01 source/join PASS raises information value, while monitoring overlap requires narrower preregistered design. | Issue #107; `CLM-150`; `research/PORTFOLIO-R18/RESULT.md` | active |
 | `DEC-150` | 2026-09-12 | Authorize only outcome-blind CA-GRAIN-E01 Stage A under Issue #108; Stage B remains blocked. / E01 Stage A 값 비사용 식별만 승인. | Fix upstream exposure identity, one-week lag and exact carrier/outcome support before values. | Issue #108; `research/CA-GRAIN-E01/README.md` | active |
+
+| `DEC-151` | 2026-09-12 | Finalize CA-GRAIN-E01 Stage A as `HOLD_CA_GRAIN_E01_EXPOSURE_IDENTITY_AMBIGUOUS`; no post-hoc narrowing and return Stage 0. / E01 exposure 모호성 HOLD·Stage 0 복귀. | Two same-level current-week upstream GSW families survive the frozen semantic screen; values remain unopened. | Issue #108; `CLM-151`; Run `34688813498` | active |

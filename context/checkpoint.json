@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260912-CA-GRAIN-E01-STAGE-A-ACTIVE",
-  "active_issue": 108,
-  "active_research": "CA-GRAIN-E01-STAGE-A",
-  "last_completed_issue": 107,
-  "last_completed_research": "PORTFOLIO-R18",
-  "last_decision": "DEC-150",
+  "checkpoint_id": "CHK-20260912-CA-GRAIN-E01-STAGE-A-HOLD-PORTFOLIO-RETURN",
+  "active_issue": "none",
+  "active_research": "NONE",
+  "last_completed_issue": 108,
+  "last_completed_research": "CA-GRAIN-E01-STAGE-A",
+  "last_decision": "DEC-151",
   "updated": "2026-09-12"
 }

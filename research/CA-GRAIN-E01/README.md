@@ -1,7 +1,7 @@
 ---
 id: CA-GRAIN-E01
 issue: 108
-state: ACTIVE_STAGE_A_DESIGN_IDENTIFIABILITY
+state: COMPLETED_HOLD_EXPOSURE_IDENTITY_AMBIGUOUS
 mission_anchor: MEM-054
 portfolio_decision: DEC-149
 authorization_decision: DEC-150
@@ -26,3 +26,15 @@ Possible Stage A dispositions:
 - `HOLD_CA_GRAIN_E01_NOVELTY_OVERLAP`
 
 Stage B remains blocked pending separate adjudication even after a Stage A PASS. Cost: **0 USD**.
+
+## Final Stage A disposition / Stage A 최종 판정
+
+- gate: **`HOLD_CA_GRAIN_E01_EXPOSURE_IDENTITY_AMBIGUOUS`**
+- Run: `34688813498`
+- surviving GSW families: `Primary / Deliveries / Current Week`; `Process / Producer Deliveries / Current Week`
+- outcome support: `CN=104`, `CPKC=104` nonblank weeks
+- relationship/effect values: **not opened**
+- decision: `DEC-151`
+- restart: **Stage 0 portfolio control**
+
+E01 is terminal under its frozen identity hierarchy. Any narrower exposure follow-up must be separately selected and preregistered.
