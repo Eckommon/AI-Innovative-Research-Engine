@@ -1,0 +1,29 @@
+name: Finalize PORTFOLIO R17
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/finalize_portfolio_r17.py'
+      - '.github/workflows/finalize-portfolio-r17.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate finalizer
+        run: python -m py_compile tools/finalize_portfolio_r17.py
+      - name: Finalize R17 selection and activate CA-GRAIN-F01
+        run: python tools/finalize_portfolio_r17.py
+      - name: Commit durable state atomically
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/PORTFOLIO-R17/RESULT.md research/CA-GRAIN-F01/README.md registry/CLM-148.md registry/DEC-146.md registry/DEC-147.md registry/CLAIM_LEDGER.md registry/DECISION_LOG.md STATUS.md context/SESSION_HANDOFF.md context/checkpoint.json
+          git diff --cached --quiet || git commit -m 'Select C-CA-002 in PORTFOLIO-R17 and activate CA-GRAIN-F01'
+          git push
