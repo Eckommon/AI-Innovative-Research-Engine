@@ -19,3 +19,7 @@ N01 may inspect operating-TSDF identity, exact county-FIPS, qualifying FEMA `DR`
 N01 must **not** read, aggregate, persist, rank or compare `FOUND_VIOLATION` values for the selected CEI pairs and must not compute any post-disaster violation outcome or relationship.
 
 PASS does not authorize E01. Cost: **0 USD**.
+
+## Terminal result / 최종 결과
+
+**`PASS_US_RCRA_N01_PAIRED_CEI_DESIGN_IDENTIFIABLE`** — see `RESULT.md`. PASS is design identifiability only; selected-pair `FOUND_VIOLATION` remains unopened and E01 requires separate authorization.

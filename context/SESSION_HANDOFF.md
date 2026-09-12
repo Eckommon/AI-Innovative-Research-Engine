@@ -1,17 +1,17 @@
 ---
-checkpoint_id: CHK-20260913-US-RCRA-N01-ACTIVE
-active_issue: 123
-active_research: US-RCRA-N01
-last_completed_issue: 122
-last_completed_research: PORTFOLIO-R24
-last_decision: DEC-170
+checkpoint_id: CHK-20260913-US-RCRA-N01-PASS-PORTFOLIO-RETURN
+active_issue: none
+active_research: NONE
+last_completed_issue: 123
+last_completed_research: US-RCRA-N01
+last_decision: DEC-171
 updated: 2026-09-13
 ---
 
 # Session Handoff / 세션 인수인계
 
-PORTFOLIO-R24 selected US-RCRA-N01 at 41/45 and authorized Issue #123 outcome-blind only.
+US-RCRA-N01 / Issue #123 resolves **`PASS_US_RCRA_N01_PAIRED_CEI_DESIGN_IDENTIFIABLE`** outcome-blind.
 
-F01 durable facts: 640 operating TSDFs; 640/640 exact county-FIPS qualification across 52 state/territory FIPS codes; broad FEMA overlap; RCRA evaluation/violation temporal support through 2025. No disaster-linked outcome was opened.
+Frozen structural facts: CEI = `COMPLIANCE EVALUATION INSPECTION` deterministically; 459 operating TSDFs receive a frozen qualifying index disaster after the 365-day washout; after no-pre/no-post and multi-disaster exclusions, 297 same-facility CEI pairs remain across 43 state/territory FIPS. Pre/post evaluation-agency identity is 100%. Literature adjudication is adjacent/not near-identical, not proof of novelty. `FOUND_VIOLATION` values were not accessed or persisted and no disaster-linked compliance relationship was computed.
 
-Exact restart: execute N01 using only facility, FEMA disaster and RCRA evaluation type/date/agency identities. Frozen exposure is FEMA `DR` acute physical hazards, index 2018-2023 after 365-day washout. Pair last CEI in prior 730 days with first CEI in next 730 days; exclude a pair if another qualifying disaster occurs before the selected post CEI. PASS requires >=100 pairs, >=20 states/territories and >=95% agency identity. `FOUND_VIOLATION` must remain unopened. Cost: **0 USD**.
+Exact restart: Stage 0 comparison before any E01. If US-RCRA-E01 is selected, preregister the exact paired statistical test/model, `FOUND_VIOLATION` N/U/Y treatment, agency-change diagnostic/handling, materiality threshold, missingness rules and non-causal claim boundary before opening selected-pair outcomes. Cost: **0 USD**.

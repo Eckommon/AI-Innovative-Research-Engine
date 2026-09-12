@@ -107,3 +107,5 @@ Official artifacts comply with `LANG-001`, `COST-001`, and applicable governance
 
 | `DEC-169` | 2026-09-13 | PORTFOLIO-R24 selects US-RCRA-N01 at 41/45. / F01 PASS 후 paired-CEI surveillance-control 설계 gate 선정. | F01 removed source/join risk; surveillance remains the highest-value unresolved validity threat. | Issue #122; `CLM-163`; `research/PORTFOLIO-R24/RESULT.md` | active |
 | `DEC-170` | 2026-09-13 | Authorize Issue #123 outcome-blind paired-CEI design-identifiability only. / `FOUND_VIOLATION` 비개방 N01 승인. | Must prove frozen disaster identity and same-facility pre/post CEI structural support before any compliance result is opened. | Issue #123; `research/US-RCRA-N01/README.md` | active |
+
+| `DEC-171` | 2026-09-13 | Finalize US-RCRA-N01 at `PASS_US_RCRA_N01_PAIRED_CEI_DESIGN_IDENTIFIABLE`; keep paired `FOUND_VIOLATION` unopened and return Stage 0. / N01 PASS 종결·paired 결과 미개방·Stage 0 복귀. | 297 frozen pairs across 43 state/territory FIPS and 100% agency identity satisfy every structural gate; E01 remains separately blocked. | Issue #123; `CLM-164`; Run `34721307603` | active |
