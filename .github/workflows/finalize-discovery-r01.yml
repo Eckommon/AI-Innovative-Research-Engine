@@ -1,0 +1,29 @@
+name: Finalize DISCOVERY R01
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/finalize_discovery_r01.py'
+      - '.github/workflows/finalize-discovery-r01.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate finalizer
+        run: python -m py_compile tools/finalize_discovery_r01.py
+      - name: Finalize discovery selection
+        run: python tools/finalize_discovery_r01.py
+      - name: Commit canonical selection atomically
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add STATUS.md context/SESSION_HANDOFF.md context/checkpoint.json registry/CLAIM_LEDGER.md registry/DECISION_LOG.md registry/CLM-155.md registry/DEC-157.md registry/DEC-158.md research/DISCOVERY-R01/RESULT.md research/US-WW-F01/README.md
+          git diff --cached --quiet || git commit -m 'Select US-WW-001 in DISCOVERY-R01'
+          git push
