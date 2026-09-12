@@ -1,0 +1,35 @@
+name: US RCRA F01 Outcome-Blind Feasibility
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/run_us_rcra_f01.py'
+      - '.github/workflows/us-rcra-f01.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Validate probe
+        run: python -m py_compile tools/run_us_rcra_f01.py
+      - name: Execute outcome-blind source/join/time probe
+        run: python tools/run_us_rcra_f01.py
+      - name: Commit derived feasibility manifest only
+        shell: bash
+        run: |
+          test -f research/US-RCRA-F01/FEASIBILITY_MANIFEST.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/US-RCRA-F01/FEASIBILITY_MANIFEST.json
+          git diff --cached --quiet && { echo 'No feasibility manifest to commit'; exit 1; }
+          git commit -m "Record US-RCRA-F01 outcome-blind feasibility result"
+          git push origin HEAD:main
