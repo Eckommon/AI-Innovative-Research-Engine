@@ -97,3 +97,5 @@ Official artifacts comply with `LANG-001`, `COST-001`, and applicable governance
 
 | `DEC-163` | 2026-09-13 | PORTFOLIO-R22 selects US-WW-E01 at 43/45. / N01 이후 incident-compliance E01 선정. | N01 removed most design-identifiability risk; one frozen relationship test now has highest marginal information value despite adjacent-literature penalty. | Issue #118; `CLM-159`; `research/PORTFOLIO-R22/RESULT.md` | active |
 | `DEC-164` | 2026-09-13 | Authorize Issue #119 plus its pre-outcome mixed-date two-pass execution clarification. / E01 사전등록 및 미래 outcome firewall 승인. | Preserve structural-first outcome firewall and all frozen event/date/model/materiality rules before future outcomes. | Issue #119; `research/US-WW-E01/README.md` | active |
+
+| `DEC-165` | 2026-09-13 | Finalize US-WW-E01 as `NO_PREREGISTERED_POSITIVE_US_WW_E01_RELATIONSHIP`; prohibit post-outcome rescue and return Stage 0. / E01 positive 관계 미지지·사후 구제 금지·Stage 0 복귀. | Structural gate passed, but frozen beta was negative and CI included zero; diagnostics cannot rescue primary. | Issue #119; `CLM-160`; Run `34708498104`; `research/US-WW-E01/RESULT.md` | active |

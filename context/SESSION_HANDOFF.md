@@ -1,17 +1,17 @@
 ---
-checkpoint_id: CHK-20260913-US-WW-E01-ACTIVE
-active_issue: 119
-active_research: US-WW-E01
-last_completed_issue: 118
-last_completed_research: PORTFOLIO-R22
-last_decision: DEC-164
+checkpoint_id: CHK-20260913-US-WW-E01-TERMINAL-PORTFOLIO-RETURN
+active_issue: none
+active_research: NONE
+last_completed_issue: 119
+last_completed_research: US-WW-E01
+last_decision: DEC-165
 updated: 2026-09-13
 ---
 
 # Session Handoff / 세션 인수인계
 
-PORTFOLIO-R22 selected US-WW-E01 at 43/45 and authorized Issue #119 under DEC-164.
+US-WW-E01 / Issue #119 is terminal at **`NO_PREREGISTERED_POSITIVE_US_WW_E01_RELATIONSHIP`**.
 
-Exact restart: execute the two-pass preregistered E01. Pass 1 may derive only baseline-clean, lifecycle-at-risk, exposure/comparator/leakage and state/design support. Future-window membership/count/rate must not be stored or computed before structural PASS. If PASS, Pass 2 derives the 2023–2025 facility-level binary incident outcome and fits the one frozen state-FE HC1 LPM.
+Primary: n=3,725; beta=−0.0221841; HC1 95% CI [−0.0544964,+0.0101283]; p=0.178427. Raw risks: 29.3648% exposed vs 33.9607% comparator. The result is non-causal and does not establish a protective effect. The preregistered L=0 sensitivity did not run because it failed the >=500-each diagnostic threshold. A shared-permit structural limitation was recorded but cannot alter the primary result post hoc.
 
-Canonical occurrence dates are PS/CS `SCHEDULE_DATE` and SE `SINGLE_EVENT_VIOLATION_DATE`. Detection/resolution/actual/report/end dates cannot rescue or shift primary event timing. Hanyi Yi's adjacent work limits novelty. Cost: **0 USD**.
+Exact restart: Stage 0 independent-candidate comparison. Do not rerun/rescue E01 with modified categories, date semantics, windows, leakage handling, model, covariance or materiality threshold. Cost: **0 USD**.
