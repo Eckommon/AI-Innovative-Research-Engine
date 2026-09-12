@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260912-CA-GRAIN-F01-ACTIVE",
-  "active_issue": 106,
-  "active_research": "CA-GRAIN-F01",
-  "last_completed_issue": 105,
-  "last_completed_research": "PORTFOLIO-R17",
-  "last_decision": "DEC-147",
+  "checkpoint_id": "CHK-20260912-CA-GRAIN-F01-PASS-PORTFOLIO-RETURN",
+  "active_issue": "none",
+  "active_research": "NONE",
+  "last_completed_issue": 106,
+  "last_completed_research": "CA-GRAIN-F01",
+  "last_decision": "DEC-148",
   "updated": "2026-09-12"
 }

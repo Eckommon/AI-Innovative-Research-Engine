@@ -1,17 +1,19 @@
 ---
-checkpoint_id: CHK-20260912-CA-GRAIN-F01-ACTIVE
-active_issue: 106
-active_research: CA-GRAIN-F01
-last_completed_issue: 105
-last_completed_research: PORTFOLIO-R17
-last_decision: DEC-147
+checkpoint_id: CHK-20260912-CA-GRAIN-F01-PASS-PORTFOLIO-RETURN
+active_issue: none
+active_research: NONE
+last_completed_issue: 106
+last_completed_research: CA-GRAIN-F01
+last_decision: DEC-148
 updated: 2026-09-12
 ---
 
 # Session Handoff / 세션 인수인계
 
-PORTFOLIO-R17 selected `C-CA-002 Grain Pressure × Rail Dwell` at 40/45 after EU-GRID-F01 terminated at its source/identity HOLD. Issue #106 `CA-GRAIN-F01` is the only active research gate.
+CA-GRAIN-F01 / Issue #106 is complete with **`PASS_CA_GRAIN_F01_WEEKLY_PANEL_FEASIBLE`**.
 
-Freeze Transport Canada weekly rail-performance data plus Canadian Grain Commission Grain Statistics Weekly crop years 2023-24 and 2024-25, structural interval 2023-08-01 through 2025-07-31. Inspect source/schema/textual identities/week semantics/nonblank booleans/join cardinality only. Persist no grain-volume or dwell-time magnitudes; compute no relationship.
+The first Run `34673025029` emitted a HOLD because the probe compared frozen textual identities against `*_SortId` columns and inspected only the first annual English Transport Canada CSV. `PROBE_AUDIT.md` invalidated that technical result before Issue closure. The corrected outcome-blind Run `34688361775` kept the frozen scientific contract unchanged and established 104 TC source dates/week keys, two carriers (`CN`, `CPKC`), 81 explicit-date GSW week keys and 81 common weekly keys across the frozen interval.
 
-Incremental monetary cost: **0 USD**.
+No grain-volume or dwell-time magnitude was analyzed or persisted and no relationship/effect model was computed. F01 PASS establishes source/schema/join feasibility only.
+
+Canonical restart: **Stage 0 portfolio control**. Do not automatically open a grain-pressure × rail-dwell effect test. Any relationship experiment must be separately selected, preregistered and authorized before magnitudes are opened. Incremental monetary cost: **0 USD**.

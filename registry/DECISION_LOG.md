@@ -69,3 +69,5 @@ Official artifacts comply with `LANG-001`, `COST-001`, and applicable governance
 
 | `DEC-146` | 2026-09-12 | R17 selects C-CA-002 Grain Pressure × Rail Dwell source/join feasibility at 40/45. / R17에서 C-CA-002 source/join feasibility 선정. | Highest remaining marginal information value after EU-GRID-F01 terminal HOLD, with overlap explicitly penalized. | Issue #105; `CLM-148`; `research/PORTFOLIO-R17/RESULT.md` | active |
 | `DEC-147` | 2026-09-12 | Authorize outcome-blind `CA-GRAIN-F01` using TC weekly rail data × CGC GSW 2023-24/2024-25 source/join metadata only. / CA-GRAIN-F01 값 비사용 feasibility 승인. | Prevent value exposure before weekly source/schema/join semantics are reproducible. | Issue #106; `research/CA-GRAIN-F01/README.md` | active |
+
+| `DEC-148` | 2026-09-12 | Finalize corrected `CA-GRAIN-F01` as `PASS_CA_GRAIN_F01_WEEKLY_PANEL_FEASIBLE` and return to Stage 0; no automatic effect exposure. / 교정 F01 구조 PASS 확정·Stage 0 복귀. | Initial HOLD was a technical probe defect; corrected frozen-contract run satisfies source/schema/join gate only. | Issue #106; `CLM-149`; Run `34688361775` | active |

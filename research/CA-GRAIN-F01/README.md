@@ -1,7 +1,7 @@
 ---
 id: CA-GRAIN-F01
 issue: 106
-state: ACTIVE_SOURCE_JOIN_FEASIBILITY
+state: COMPLETED_PASS
 mission_anchor: MEM-054
 portfolio_decision: DEC-146
 authorization_decision: DEC-147
@@ -23,3 +23,15 @@ Possible gates:
 - `HOLD_CA_GRAIN_F01_SOURCE_OR_IDENTITY_SUPPORT`
 
 Incremental monetary cost: **0 USD**.
+
+## Final disposition / 최종 종결
+
+- gate: **`PASS_CA_GRAIN_F01_WEEKLY_PANEL_FEASIBLE`**
+- corrected Run: `34688361775`
+- initial technical Run `34673025029`: **invalidated by `PROBE_AUDIT.md`**
+- claim: `CLM-149`
+- decision: `DEC-148`
+- relationship/effect testing: **not authorized**
+- canonical restart: **Stage 0 portfolio control**
+
+This PASS establishes only frozen weekly source/schema/join feasibility. It is not evidence that grain pressure affects rail dwell.
