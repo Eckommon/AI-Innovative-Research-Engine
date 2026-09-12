@@ -1,19 +1,17 @@
 ---
-checkpoint_id: CHK-20260912-CA-GRAIN-F01-PASS-PORTFOLIO-RETURN
-active_issue: none
-active_research: NONE
-last_completed_issue: 106
-last_completed_research: CA-GRAIN-F01
-last_decision: DEC-148
+checkpoint_id: CHK-20260912-CA-GRAIN-E01-STAGE-A-ACTIVE
+active_issue: 108
+active_research: CA-GRAIN-E01-STAGE-A
+last_completed_issue: 107
+last_completed_research: PORTFOLIO-R18
+last_decision: DEC-150
 updated: 2026-09-12
 ---
 
 # Session Handoff / 세션 인수인계
 
-CA-GRAIN-F01 / Issue #106 is complete with **`PASS_CA_GRAIN_F01_WEEKLY_PANEL_FEASIBLE`**.
+PORTFOLIO-R18 selected Issue #108 `CA-GRAIN-E01 Stage A` at **41/45**. Current Grain Monitor / Statistics Canada products create material overlap for simple grain-volume × dwell co-movement, so no effect values are authorized yet.
 
-The first Run `34673025029` emitted a HOLD because the probe compared frozen textual identities against `*_SortId` columns and inspected only the first annual English Transport Canada CSV. `PROBE_AUDIT.md` invalidated that technical result before Issue closure. The corrected outcome-blind Run `34688361775` kept the frozen scientific contract unchanged and established 104 TC source dates/week keys, two carriers (`CN`, `CPKC`), 81 explicit-date GSW week keys and 81 common weekly keys across the frozen interval.
+Execute only outcome-blind design identifiability. Freeze one GSW current-week producer/primary-elevator delivery-pressure identity under the Issue #108 hierarchy; outcome is Transport Canada `All Western grain` × `Average Dwell Time at Origin` × `Canada`, carriers exactly `CN` and `CPKC`. Primary timing skeleton is one-week lag; planned Stage B uses first weekly differences and week-clustered inference, but Stage B is blocked until separate adjudication.
 
-No grain-volume or dwell-time magnitude was analyzed or persisted and no relationship/effect model was computed. F01 PASS establishes source/schema/join feasibility only.
-
-Canonical restart: **Stage 0 portfolio control**. Do not automatically open a grain-pressure × rail-dwell effect test. Any relationship experiment must be separately selected, preregistered and authorized before magnitudes are opened. Incremental monetary cost: **0 USD**.
+No grain-volume or dwell-time magnitude may be persisted or analyzed in Stage A. Incremental monetary cost: **0 USD**.

@@ -1,21 +1,21 @@
 ---
-checkpoint_id: CHK-20260912-CA-GRAIN-F01-PASS-PORTFOLIO-RETURN
-active_issue: none
-active_research: NONE
-last_completed_issue: 106
-last_completed_research: CA-GRAIN-F01
-last_decision: DEC-148
+checkpoint_id: CHK-20260912-CA-GRAIN-E01-STAGE-A-ACTIVE
+active_issue: 108
+active_research: CA-GRAIN-E01-STAGE-A
+last_completed_issue: 107
+last_completed_research: PORTFOLIO-R18
+last_decision: DEC-150
 updated: 2026-09-12
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `CA_GRAIN_F01_PASS__PORTFOLIO_RETURN__NO_ACTIVE_RESEARCH_ISSUE`
+**State / 상태:** `PORTFOLIO_R18_SELECTED_C_CA_002__CA_GRAIN_E01_STAGE_A_ACTIVE`
 
-CA-GRAIN-F01 completed outcome-blind with `PASS_CA_GRAIN_F01_WEEKLY_PANEL_FEASIBLE`. After invalidating the initial technical-probe HOLD, corrected Run `34688361775` inspected exact textual source identities across the frozen 2023–2025 Transport Canada annual files and established 104 TC weekly keys, two rail carriers (`CN`, `CPKC`), 81 explicit-date GSW weekly keys, and 81 common weekly keys. No grain-volume or dwell-time magnitude was analyzed or persisted and no relationship was computed.
+PORTFOLIO-R18 selected CA-GRAIN-E01 Stage A at 41/45. F01 established the weekly source/join route, but current monitoring overlap makes naive grain-volume → dwell analysis insufficiently differentiated. Only outcome-blind exposure/outcome design identifiability is active; no grain-volume or dwell-time magnitude may be opened.
 
 ## Exact next action / 정확한 다음 행동
 
-Return to Stage 0 portfolio control. Compare a separately preregistered C-CA-002 relationship experiment against independent alternatives on marginal information value and overlap risk. Do not open grain-volume or dwell-time magnitudes until a new effect-stage issue and preregistration are explicitly authorized.
+Execute Issue #108 Stage A: identify one deterministic upstream GSW delivery-pressure metric/period/grain/region identity and verify the frozen Transport Canada `CN`/`CPKC` Canada-level outcome support on >=80 common weeks. Fail closed on exposure ambiguity. Stage B remains blocked after PASS until separate adjudication.
 
 Incremental monetary cost remains **0 USD**.
