@@ -1,21 +1,21 @@
 ---
-checkpoint_id: CHK-20260913-US-WW-N01-PASS-PORTFOLIO-RETURN
-active_issue: none
-active_research: NONE
-last_completed_issue: 116
-last_completed_research: US-WW-N01
-last_decision: DEC-162
+checkpoint_id: CHK-20260913-US-WW-E01-ACTIVE
+active_issue: 119
+active_research: US-WW-E01
+last_completed_issue: 118
+last_completed_research: PORTFOLIO-R22
+last_decision: DEC-164
 updated: 2026-09-13
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `US_WW_N01_PASS__PORTFOLIO_RETURN__NO_ACTIVE_RESEARCH_ISSUE`
+**State / 상태:** `PORTFOLIO_R22_SELECTED_US_WW_E01__US_WW_E01_ACTIVE`
 
-US-WW-N01 completed outcome-blind at **`PASS_US_WW_N01_INCIDENT_DESIGN_IDENTIFIABLE`**. The frozen design has strong exact-link, exposed/comparator and baseline-clean structural support, and explicit compliance-driven CWNS reasons can be handled as a pre-specified leakage stratum. Material adjacent CWNS×NPDES violation literature exists, so novelty claims remain bounded. No 2023–2025 future compliance outcome magnitude or relationship was opened.
+PORTFOLIO-R22 selected **US-WW-E01** at **43/45**. Issue #119 is the only active research gate. The test is fully preregistered, but 2023–2025 future compliance outcome membership/counts/rates remain unopened until the frozen structural gate passes.
 
 ## Exact next action / 정확한 다음 행동
 
-Return to Stage 0. Compare a separately preregistered US-WW-E01 incident-prediction experiment against independent alternatives. Future compliance outcomes remain blocked until exact outcome event semantics, model, inferential gate, leakage-stratum treatment and missingness rules are frozen in a new authorization.
+Execute Issue #119 in two passes: first baseline/structural qualification only, then—only if PASS—derive the frozen future binary incident outcome and fit the single preregistered model. No post-outcome source/date/model/threshold tuning.
 
 Incremental monetary cost remains **0 USD**.
