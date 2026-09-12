@@ -1,0 +1,29 @@
+name: Finalize PORTFOLIO R18
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/finalize_portfolio_r18.py'
+      - '.github/workflows/finalize-portfolio-r18.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate finalizer
+        run: python -m py_compile tools/finalize_portfolio_r18.py
+      - name: Finalize R18 selection
+        run: python tools/finalize_portfolio_r18.py
+      - name: Commit canonical selection atomically
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add STATUS.md context/SESSION_HANDOFF.md context/checkpoint.json registry/CLAIM_LEDGER.md registry/CLM-150.md registry/DEC-149.md registry/DEC-150.md registry/DECISION_LOG.md research/PORTFOLIO-R18/RESULT.md research/CA-GRAIN-E01/README.md
+          git diff --cached --quiet || git commit -m 'Select CA-GRAIN-E01 Stage A in PORTFOLIO-R18'
+          git push
