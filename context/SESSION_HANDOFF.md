@@ -1,17 +1,19 @@
 ---
-checkpoint_id: CHK-20260912-CA-GRAIN-E02-ACTIVE
-active_issue: 110
-active_research: CA-GRAIN-E02
-last_completed_issue: 109
-last_completed_research: PORTFOLIO-R19
-last_decision: DEC-153
+checkpoint_id: CHK-20260912-CA-GRAIN-E02-HOLD-PORTFOLIO-RETURN
+active_issue: none
+active_research: NONE
+last_completed_issue: 110
+last_completed_research: CA-GRAIN-E02
+last_decision: DEC-154
 updated: 2026-09-12
 ---
 
 # Session Handoff / 세션 인수인계
 
-PORTFOLIO-R19 selected Issue #110 `CA-GRAIN-E02` at **40/45**. E01 remains terminal HOLD; E02 is a separate descendant whose `Primary / Deliveries` exposure is justified prospectively by official Canadian elevator semantics.
+CA-GRAIN-E02 / Issue #110 is terminal at **`HOLD_CA_GRAIN_E02_INSUFFICIENT_PANEL`**.
 
-Execute the exact Issue #110 preregistration: frozen 15 grains × Alberta/British Columbia/Manitoba/Saskatchewan, GSW `Primary / Deliveries / Current Week`, Transport Canada `All Western grain / Average Dwell Time at Origin / Canada`, carriers CN+CPKC equal-weight, one-week lag, first differences, >=75 observations, OLS + Newey-West HAC lag 2, materiality +1.0 hour per +100 Ktonnes.
+Corrected Run `34689346777` did not fit the preregistered relationship model. Targeted value-blind audit Run `34690867196` proved the remaining structural collision is between distinct source week identities in the 2024-25 GSW file: Week 44 raw `08/06/2025` and Week 48 raw `07/06/2025`. The official CGC archive maps those week identities to 2025-06-08 and 2025-07-06. Issue #110 had frozen explicit source-date normalization, so switching post hoc to `grain_week` is not permitted.
 
-This is associational, not causal. No post-value tuning. Cost: **0 USD**.
+Technical revalidation Run `34690978853`, using official crop-year week identities without values, yields **103** common GSW×TC weeks and 103 weeks for each E01 upstream semantic family. Therefore F01 PASS and E01 ambiguity HOLD remain valid, while their earlier raw-date-derived counts are superseded by errata.
+
+Canonical restart: **Stage 0 portfolio control**. E02 may not be repaired or rerun. A grain-week-keyed descendant, if ever considered, must be a new separately selected/preregistered branch. Cost: **0 USD**.
