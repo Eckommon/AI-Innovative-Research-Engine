@@ -24,6 +24,6 @@ jobs:
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add STATUS.md context/SESSION_HANDOFF.md context/checkpoint.json registry/CLAIM_LEDGER.md registry/DECISION_LOG.md registry/CLM-154.md registry/DEC-155.md registry/DEC-156.md research/PORTFOLIO-R20/RESULT.md research/US-UTIL-F01/README.md
-          git diff --cached --quiet || git commit -m 'Select US-UTIL-F01 in PORTFOLIO-R20'
+          git add STATUS.md context/SESSION_HANDOFF.md context/checkpoint.json registry/CLAIM_LEDGER.md registry/DECISION_LOG.md registry/CLM-154.md registry/DEC-155.md registry/DEC-156.md research/PORTFOLIO-R20/RESULT.md research/DISCOVERY-R01/README.md
+          git diff --cached --quiet || git commit -m 'Finalize R20 no-promotion and open DISCOVERY-R01'
           git push
