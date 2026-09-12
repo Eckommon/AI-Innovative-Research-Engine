@@ -1,0 +1,34 @@
+name: Finalize PORTFOLIO R24 and Open US RCRA N01
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/finalize_portfolio_r24_open_us_rcra_n01.py'
+      - '.github/workflows/finalize-portfolio-r24-open-us-rcra-n01.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Validate finalizer
+        run: python -m py_compile tools/finalize_portfolio_r24_open_us_rcra_n01.py
+      - name: Select US-RCRA-N01 and authorize outcome-blind gate
+        run: python tools/finalize_portfolio_r24_open_us_rcra_n01.py
+      - name: Commit canonical transition atomically
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add STATUS.md context/SESSION_HANDOFF.md context/checkpoint.json registry/CLAIM_LEDGER.md registry/DECISION_LOG.md registry/CLM-163.md registry/DEC-169.md registry/DEC-170.md research/PORTFOLIO-R24/RESULT.md research/US-RCRA-N01/README.md
+          git diff --cached --quiet && { echo 'No changes to commit'; exit 1; }
+          git commit -m "Select US-RCRA-N01 and authorize paired-CEI design gate"
+          git push origin HEAD:main
