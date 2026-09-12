@@ -1,0 +1,304 @@
+{
+  "id": "US-WW-F01-SOURCE-ROUTE-PROBE",
+  "issue": 114,
+  "relationship_computed": false,
+  "candidate_outcome_magnitudes_opened": false,
+  "incremental_monetary_cost_usd": 0,
+  "pages": {
+    "cwns_download": {
+      "fetch": {
+        "requested_url": "https://sdwis.epa.gov/ords/sfdw_pub/r/sfdw/cwns_pub/data-download",
+        "final_url": "https://sdwis.epa.gov/ords/sfdw_pub/r/sfdw/cwns_pub/data-download",
+        "status": 200,
+        "bytes": 60291,
+        "content_type": "text/html;charset=utf-8"
+      },
+      "candidate_links": [
+        "https://sdwis.epa.gov/ords/sfdw_pub/r/sfdw/cwns_pub/about?session=5167749111026",
+        "https://sdwis.epa.gov/ords/sfdw_pub/r/sfdw/cwns_pub/areas-related-to-needs?session=5167749111026",
+        "https://sdwis.epa.gov/ords/sfdw_pub/r/sfdw/cwns_pub/cwns_needs?session=5167749111026",
+        "https://sdwis.epa.gov/ords/sfdw_pub/r/sfdw/cwns_pub/data-download",
+        "https://sdwis.epa.gov/ords/sfdw_pub/r/sfdw/cwns_pub/data-download#main",
+        "https://sdwis.epa.gov/ords/sfdw_pub/r/sfdw/cwns_pub/data-download#t_PageBody",
+        "https://sdwis.epa.gov/ords/sfdw_pub/r/sfdw/cwns_pub/data-download?session=5167749111026",
+        "https://sdwis.epa.gov/ords/sfdw_pub/r/sfdw/cwns_pub/download-state-zip?p2_location_id=DD&session=5167749111026&cs=16CohG879kRukk8FzXPo2CpQ-Ez8rWcdORFsaZepMCPL9Rk6_loMyAvIYmSLJUHd-gEClzliHaIuYCTJmScChcA",
+        "https://sdwis.epa.gov/ords/sfdw_pub/r/sfdw/cwns_pub/r/sfdw/148/files/static/v13/icons/app-icon-192.png",
+        "https://sdwis.epa.gov/ords/sfdw_pub/r/sfdw/cwns_pub/r/sfdw/148/files/static/v13/icons/app-icon-32.png",
+        "https://sdwis.epa.gov/ords/sfdw_pub/r/sfdw/cwns_pub/r/sfdw/files/static/v273/themes/epa_theme/css/epa_styles_2024.css",
+        "https://sdwis.epa.gov/ords/sfdw_pub/r/sfdw/cwns_pub/r/sfdw/files/static/v273/themes/epa_theme/images/sprite.artifact.svg#arrow",
+        "https://sdwis.epa.gov/ords/sfdw_pub/r/sfdw/cwns_pub/r/sfdw/files/static/v273/themes/epa_theme/images/sprite.artifact.svg#facebook-square",
+        "https://sdwis.epa.gov/ords/sfdw_pub/r/sfdw/cwns_pub/r/sfdw/files/static/v273/themes/epa_theme/images/sprite.artifact.svg#flickr-square",
+        "https://sdwis.epa.gov/ords/sfdw_pub/r/sfdw/cwns_pub/r/sfdw/files/static/v273/themes/epa_theme/images/sprite.artifact.svg#instagram-square",
+        "https://sdwis.epa.gov/ords/sfdw_pub/r/sfdw/cwns_pub/r/sfdw/files/static/v273/themes/epa_theme/images/sprite.artifact.svg#twitter-square",
+        "https://sdwis.epa.gov/ords/sfdw_pub/r/sfdw/cwns_pub/r/sfdw/files/static/v273/themes/epa_theme/images/sprite.artifact.svg#youtube-square",
+        "https://sdwis.epa.gov/ords/sfdw_pub/r/sfdw/cwns_pub/wastewater-dashboard?session=5167749111026",
+        "https://sdwis.epa.gov/ords/sfdw_pub/r/sfdw/cwns_pub/wwv_flow.accept?p_context=cwns_pub/data-download/5167749111026",
+        "https://www.epa.gov/cwns/forms/contact-us-about-clean-watersheds-needs-survey"
+      ],
+      "form_inputs": [
+        {
+          "type": "search",
+          "name": "querytext",
+          "id": "search-box"
+        },
+        {
+          "type": "hidden",
+          "name": "areaname",
+          "value": ""
+        },
+        {
+          "type": "hidden",
+          "name": "areacontacts",
+          "value": ""
+        },
+        {
+          "type": "hidden",
+          "name": "areasearchurl",
+          "value": ""
+        },
+        {
+          "type": "hidden",
+          "name": "typeofsearch",
+          "value": "epa"
+        },
+        {
+          "type": "hidden",
+          "name": "result_template",
+          "value": ""
+        },
+        {
+          "type": "hidden",
+          "name": "p_flow_id",
+          "id": "pFlowId",
+          "value": "148"
+        },
+        {
+          "type": "hidden",
+          "name": "p_flow_step_id",
+          "id": "pFlowStepId",
+          "value": "5"
+        },
+        {
+          "type": "hidden",
+          "name": "p_instance",
+          "id": "pInstance",
+          "value": "5167749111026"
+        },
+        {
+          "type": "hidden",
+          "name": "p_page_submission_id",
+          "id": "pPageSubmissionId",
+          "value": "MjM2Njk5Mjk5NDcyNjA1Mzg5OTExODE5Nzk3MTQ5NzQ4OTMzMDg2/vmxphmNNdeul5ro2bYVMHz0U04RHpNGqvklYmaNwS8lkUFAoWFhOG5hZ8yxlO1R8wZgvCBO-BZFuM-vO0y7CtQ"
+        },
+        {
+          "type": "hidden",
+          "name": "p_request",
+          "id": "pRequest",
+          "value": ""
+        },
+        {
+          "type": "hidden",
+          "name": "p_reload_on_submit",
+          "id": "pReloadOnSubmit",
+          "value": "S"
+        },
+        {
+          "type": "hidden",
+          "id": "pContext",
+          "value": "cwns_pub/data-download/5167749111026"
+        },
+        {
+          "type": "hidden",
+          "id": "pSalt",
+          "value": "236699299472605389911819797149748933086"
+        },
+        {
+          "type": "hidden",
+          "id": "pPageFormRegionChecksums",
+          "value": "[]"
+        },
+        {
+          "type": "hidden",
+          "id": "pPageItemsRowVersion",
+          "value": ""
+        },
+        {
+          "type": "hidden",
+          "id": "pPageItemsProtected",
+          "value": "/LqqM1mujHKgZfRFEQoxZDEQYOosXZf-UWgGdyK3zSZ0bKPCTCkOiXGTQcNIYzwu9xYriElDI2UVPiXRoAZ38Iw"
+        }
+      ]
+    },
+    "echo_downloads": {
+      "fetch": {
+        "requested_url": "https://echo.epa.gov/tools/data-downloads",
+        "final_url": "https://echo.epa.gov/tools/data-downloads",
+        "status": 200,
+        "bytes": 98683,
+        "content_type": "text/html; charset=UTF-8"
+      },
+      "candidate_links": [
+        "https://echo.epa.gov/facilities/npdes-noncompliance-search",
+        "https://echo.epa.gov/files/echodownloads/ALL_CSO_downloads.zip",
+        "https://echo.epa.gov/files/echodownloads/Data-Analytics/WQI/",
+        "https://echo.epa.gov/files/echodownloads/ICIS-AIR_downloads.zip",
+        "https://echo.epa.gov/files/echodownloads/POLL_RPT_COMBINED_EMISSIONS.zip",
+        "https://echo.epa.gov/files/echodownloads/SDWA_latest_downloads.zip",
+        "https://echo.epa.gov/files/echodownloads/afs_downloads.zip",
+        "https://echo.epa.gov/files/echodownloads/aim_triggering_events_dl.zip",
+        "https://echo.epa.gov/files/echodownloads/all_sewer_overflow_and_collection_systems_tables.zip",
+        "https://echo.epa.gov/files/echodownloads/biosolids_annual_report.zip",
+        "https://echo.epa.gov/files/echodownloads/case_downloads.zip",
+        "https://echo.epa.gov/files/echodownloads/current_sewer_overflow_and_collection_systems_tables.zip",
+        "https://echo.epa.gov/files/echodownloads/echo_demographics.zip",
+        "https://echo.epa.gov/files/echodownloads/echo_exporter.zip",
+        "https://echo.epa.gov/files/echodownloads/facility_tribal_spatial.zip",
+        "https://echo.epa.gov/files/echodownloads/frs_downloads.zip",
+        "https://echo.epa.gov/files/echodownloads/npdes_attains_downloads.zip",
+        "https://echo.epa.gov/files/echodownloads/npdes_biosolids_downloads.zip",
+        "https://echo.epa.gov/files/echodownloads/npdes_dmrs_fy2009.zip",
+        "https://echo.epa.gov/files/echodownloads/npdes_dmrs_fy2010.zip",
+        "https://echo.epa.gov/files/echodownloads/npdes_dmrs_fy2011.zip",
+        "https://echo.epa.gov/files/echodownloads/npdes_dmrs_fy2012.zip",
+        "https://echo.epa.gov/files/echodownloads/npdes_dmrs_fy2013.zip",
+        "https://echo.epa.gov/files/echodownloads/npdes_dmrs_fy2014.zip",
+        "https://echo.epa.gov/files/echodownloads/npdes_dmrs_fy2015.zip",
+        "https://echo.epa.gov/files/echodownloads/npdes_dmrs_fy2016.zip",
+        "https://echo.epa.gov/files/echodownloads/npdes_dmrs_fy2017.zip",
+        "https://echo.epa.gov/files/echodownloads/npdes_dmrs_fy2018.zip",
+        "https://echo.epa.gov/files/echodownloads/npdes_dmrs_fy2019.zip",
+        "https://echo.epa.gov/files/echodownloads/npdes_dmrs_fy2020.zip",
+        "https://echo.epa.gov/files/echodownloads/npdes_dmrs_fy2021.zip",
+        "https://echo.epa.gov/files/echodownloads/npdes_dmrs_fy2022.zip",
+        "https://echo.epa.gov/files/echodownloads/npdes_dmrs_fy2023.zip",
+        "https://echo.epa.gov/files/echodownloads/npdes_dmrs_fy2024.zip",
+        "https://echo.epa.gov/files/echodownloads/npdes_dmrs_fy2025.zip",
+        "https://echo.epa.gov/files/echodownloads/npdes_dmrs_fy2026.zip",
+        "https://echo.epa.gov/files/echodownloads/npdes_dmrs_prefy2009.zip",
+        "https://echo.epa.gov/files/echodownloads/npdes_downloads.zip",
+        "https://echo.epa.gov/files/echodownloads/npdes_eff_downloads.zip",
+        "https://echo.epa.gov/files/echodownloads/npdes_limits.zip",
+        "https://echo.epa.gov/files/echodownloads/npdes_master_general_permits.zip",
+        "https://echo.epa.gov/files/echodownloads/npdes_outfalls_layer.zip",
+        "https://echo.epa.gov/files/echodownloads/pipeline_caa_downloads.zip",
+        "https://echo.epa.gov/files/echodownloads/pipeline_rcra_downloads.zip",
+        "https://echo.epa.gov/files/echodownloads/rcra_downloads.zip",
+        "https://echo.epa.gov/help/loading-tool/monitoring-data-download-help",
+        "https://echo.epa.gov/npdes-noncompliance-annual-report",
+        "https://echo.epa.gov/system/files/AFS_Data_Download.pdf",
+        "https://echo.epa.gov/system/files/echo_exporter_columns_7-16-2025_0.xlsx",
+        "https://echo.epa.gov/tools/data-downloads",
+        "https://echo.epa.gov/tools/data-downloads#ECM",
+        "https://echo.epa.gov/tools/data-downloads#FRS",
+        "https://echo.epa.gov/tools/data-downloads#MSGP",
+        "https://echo.epa.gov/tools/data-downloads#NPDES",
+        "https://echo.epa.gov/tools/data-downloads#PFAS",
+        "https://echo.epa.gov/tools/data-downloads#WQI",
+        "https://echo.epa.gov/tools/data-downloads#air",
+        "https://echo.epa.gov/tools/data-downloads#biosolids",
+        "https://echo.epa.gov/tools/data-downloads#community",
+        "https://echo.epa.gov/tools/data-downloads#downloads",
+        "https://echo.epa.gov/tools/data-downloads#drinkingwater",
+        "https://echo.epa.gov/tools/data-downloads#exporter",
+        "https://echo.epa.gov/tools/data-downloads#hazardouswaste",
+        "https://echo.epa.gov/tools/data-downloads#main-content",
+        "https://echo.epa.gov/tools/data-downloads#seweroverflow",
+        "https://echo.epa.gov/tools/data-downloads#tribal",
+        "https://echo.epa.gov/tools/data-downloads/air-emissions-download-summary",
+        "https://echo.epa.gov/tools/data-downloads/biosolids-annual-report-download-summary",
+        "https://echo.epa.gov/tools/data-downloads/biosolids-download-summary",
+        "https://echo.epa.gov/tools/data-downloads/caa-pipeline-download-summary",
+        "https://echo.epa.gov/tools/data-downloads/cso-inventory-summary",
+        "https://echo.epa.gov/tools/data-downloads/demographic-download-summary",
+        "https://echo.epa.gov/tools/data-downloads/facility-and-tribal-download-summary",
+        "https://echo.epa.gov/tools/data-downloads/frs-download-summary",
+        "https://echo.epa.gov/tools/data-downloads/icis-air-download-summary",
+        "https://echo.epa.gov/tools/data-downloads/icis-fec-download-summary",
+        "https://echo.epa.gov/tools/data-downloads/icis-npdes-data-set",
+        "https://echo.epa.gov/tools/data-downloads/icis-npdes-discharge-points-download-summary",
+        "https://echo.epa.gov/tools/data-downloads/icis-npdes-dmr-and-limit-data-set",
+        "https://echo.epa.gov/tools/data-downloads/icis-npdes-dmr-summary",
+        "https://echo.epa.gov/tools/data-downloads/icis-npdes-download-summary",
+        "https://echo.epa.gov/tools/data-downloads/icis-npdes-limit-summary",
+        "https://echo.epa.gov/tools/data-downloads/msgp-aim-download-summary",
+        "https://echo.epa.gov/tools/data-downloads/national-pfas-datasets",
+        "https://echo.epa.gov/tools/data-downloads/npdes-catchment-attains-summary",
+        "https://echo.epa.gov/tools/data-downloads/rcra-pipeline-download-summary",
+        "https://echo.epa.gov/tools/data-downloads/rcrainfo-download-summary",
+        "https://echo.epa.gov/tools/data-downloads/sdwa-download-summary",
+        "https://echo.epa.gov/tools/data-downloads/sewer-overflow-all-versions-summary",
+        "https://echo.epa.gov/tools/data-downloads/sewer-overflow-download-summary",
+        "https://echo.epa.gov/trends/loading-tool/get-data/monitoring-data-download",
+        "https://echo.epa.gov/trends/npdes-dmr-non-receipt-status",
+        "https://www.epa.gov/npdes/combined-sewer-overflows-csos"
+      ],
+      "form_inputs": []
+    },
+    "echo_npdes_summary": {
+      "fetch": {
+        "requested_url": "https://echo.epa.gov/tools/data-downloads/icis-npdes-download-summary",
+        "final_url": "https://echo.epa.gov/tools/data-downloads/icis-npdes-download-summary",
+        "status": 200,
+        "bytes": 133917,
+        "content_type": "text/html; charset=UTF-8"
+      },
+      "candidate_links": [
+        "https://echo.epa.gov/facilities/npdes-noncompliance-search",
+        "https://echo.epa.gov/files/echodownloads/ref_tables/REF_STATISTICAL_BASE.csv",
+        "https://echo.epa.gov/npdes-noncompliance-annual-report",
+        "https://echo.epa.gov/tools/data-downloads",
+        "https://echo.epa.gov/tools/data-downloads#exporter",
+        "https://echo.epa.gov/tools/data-downloads/icis-npdes-download-summary",
+        "https://echo.epa.gov/tools/data-downloads/icis-npdes-download-summary#1",
+        "https://echo.epa.gov/tools/data-downloads/icis-npdes-download-summary#2",
+        "https://echo.epa.gov/tools/data-downloads/icis-npdes-download-summary#3",
+        "https://echo.epa.gov/tools/data-downloads/icis-npdes-download-summary#DataElements",
+        "https://echo.epa.gov/tools/data-downloads/icis-npdes-download-summary#Definitions",
+        "https://echo.epa.gov/tools/data-downloads/icis-npdes-download-summary#Description",
+        "https://echo.epa.gov/tools/data-downloads/icis-npdes-download-summary#Guidance",
+        "https://echo.epa.gov/tools/data-downloads/icis-npdes-download-summary#facilityUIN",
+        "https://echo.epa.gov/tools/data-downloads/icis-npdes-download-summary#main-content",
+        "https://echo.epa.gov/tools/data-downloads/icis-npdes-download-summary#monitorend",
+        "https://echo.epa.gov/tools/data-downloads/icis-npdes-download-summary#npdesid",
+        "https://echo.epa.gov/trends/npdes-dmr-non-receipt-status",
+        "https://www.epa.gov/npdes/all-npdes-program-areas"
+      ],
+      "form_inputs": []
+    },
+    "echo_dmr_summary": {
+      "fetch": {
+        "requested_url": "https://echo.epa.gov/tools/data-downloads/icis-npdes-dmr-summary",
+        "final_url": "https://echo.epa.gov/tools/data-downloads/icis-npdes-dmr-summary",
+        "status": 200,
+        "bytes": 98430,
+        "content_type": "text/html; charset=UTF-8"
+      },
+      "candidate_links": [
+        "https://echo.epa.gov/facilities/npdes-noncompliance-search",
+        "https://echo.epa.gov/files/echodownloads/ref_tables/REF_STATISTICAL_BASE.csv",
+        "https://echo.epa.gov/npdes-noncompliance-annual-report",
+        "https://echo.epa.gov/system/files/REF_FREQUENCY_OF_ANALYSIS.csv",
+        "https://echo.epa.gov/system/files/REF_Parameter.csv",
+        "https://echo.epa.gov/system/files/REF_SAMPLE_TYPE_0.csv",
+        "https://echo.epa.gov/tools/data-downloads",
+        "https://echo.epa.gov/tools/data-downloads#exporter",
+        "https://echo.epa.gov/tools/data-downloads/icis-npdes-dmr-summary",
+        "https://echo.epa.gov/tools/data-downloads/icis-npdes-dmr-summary#DataElements",
+        "https://echo.epa.gov/tools/data-downloads/icis-npdes-dmr-summary#Definitions",
+        "https://echo.epa.gov/tools/data-downloads/icis-npdes-dmr-summary#Description",
+        "https://echo.epa.gov/tools/data-downloads/icis-npdes-dmr-summary#main-content",
+        "https://echo.epa.gov/tools/data-downloads/icis-npdes-dmr-summary#monitorend",
+        "https://echo.epa.gov/tools/data-downloads/icis-npdes-dmr-summary#standardunitdesc",
+        "https://echo.epa.gov/tools/data-downloads/icis-npdes-download-summary",
+        "https://echo.epa.gov/trends/npdes-dmr-non-receipt-status"
+      ],
+      "form_inputs": []
+    }
+  },
+  "echo_schema_text_support": {
+    "npdes_id_present": true,
+    "registry_id_present": true,
+    "violation_id_present": true,
+    "violation_date_like_present": true
+  }
+}
