@@ -1,0 +1,1 @@
+US-WW-F01 is closed at `PASS_US_WW_F01_CWNS_NPDES_JOIN_READY` under `DEC-159`. This appendix exists only to preserve closure references after finalization; canonical status remains `STATUS.md` and `RESULT.md`.
