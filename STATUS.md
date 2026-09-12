@@ -1,21 +1,21 @@
 ---
-checkpoint_id: CHK-20260913-US-RCRA-N01-PASS-PORTFOLIO-RETURN
-active_issue: none
-active_research: NONE
-last_completed_issue: 123
-last_completed_research: US-RCRA-N01
-last_decision: DEC-171
+checkpoint_id: CHK-20260913-US-RCRA-E01-ACTIVE
+active_issue: 125
+active_research: US-RCRA-E01
+last_completed_issue: 124
+last_completed_research: PORTFOLIO-R25
+last_decision: DEC-173
 updated: 2026-09-13
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `US_RCRA_N01_PASS__PORTFOLIO_RETURN__NO_ACTIVE_RESEARCH_ISSUE`
+**State / 상태:** `PORTFOLIO_R25_SELECTED_US_RCRA_E01__US_RCRA_E01_ACTIVE`
 
-US-RCRA-N01 completed outcome-blind at **`PASS_US_RCRA_N01_PAIRED_CEI_DESIGN_IDENTIFIABLE`**. CEI identity is deterministic; 297 operating TSDFs satisfy the frozen same-facility last-pre/first-post CEI design across 43 state/territory FIPS, with 100% pre/post evaluation-agency identity. Selected-pair `FOUND_VIOLATION` values and disaster-linked compliance relationships remain unopened.
+PORTFOLIO-R25 selected **US-RCRA-E01** at **42/45**. Issue #125 is the only active research gate. N01's 297 selected CEI pairs remain outcome-blind until E01 first reproduces the exact pair structure and fingerprint.
 
 ## Exact next action / 정확한 다음 행동
 
-Return to Stage 0. Compare a separately preregistered US-RCRA-E01 paired-CEI experiment against independent alternatives. If US-RCRA remains selected, freeze the paired outcome test, `N/U/Y` handling, agency-change handling, materiality threshold and claim boundary before opening selected-pair `FOUND_VIOLATION` values. N01 PASS does not authorize E01.
+Execute Issue #125 in two passes: (1) reconstruct and fingerprint the exact 297 N01 pairs without reading `FOUND_VIOLATION`; stop on identity drift, then (2) only if identical, open only selected pre/post `FOUND_VIOLATION` values and execute the frozen Y/N exact McNemar test with the preregistered support/materiality gates. No post-value tuning.
 
 Incremental monetary cost remains **0 USD**.

@@ -125,3 +125,6 @@ Official artifacts comply with `LANG-001`, `COST-001`, `FACT-001`, and `FRESH-00
 | `CLM-163` | US-RCRA-F01 exact source readiness plus EPA standardized CEI type/date/agency semantics support an outcome-blind paired-CEI surveillance-control design gate without opening `FOUND_VIOLATION`. / F01과 CEI 표준 의미로 감시편향 통제 설계 gate가 값 비사용으로 가능하다. | `OBSERVED/DERIVED` | `V2/V3_DESIGN_GATE_READY` | US-RCRA-F01; EPA RCRA compliance-monitoring semantics; PORTFOLIO-R24 | 2026-09-13 | active |
 
 | `CLM-164` | US-RCRA-N01 establishes sufficient outcome-blind same-facility paired-CEI disaster design support: 297 pairs across 43 state/territory FIPS with 100% agency identity; paired compliance results remain unopened. / paired CEI 재해 설계의 구조적 식별 가능성이 충분하다. | `OBSERVED/DERIVED/VALIDATED` | `V3_OUTCOME_BLIND_DESIGN_GATE` | Run `34721307603`; `research/US-RCRA-N01/DESIGN_MANIFEST.json`; Issue #123 | 2026-09-13 | active |
+
+
+| `CLM-165` | N01 PASS concentrates the remaining US-RCRA uncertainty into one bounded preregistered paired-CEI outcome test, making E01 the highest-value next gate while selected outcomes remain unopened. / N01 PASS 후 E01 paired test가 최고 정보가치 다음 gate다. | `DERIVED` | `V2_PORTFOLIO_CONTROL` | US-RCRA-N01; PORTFOLIO-R25; Issue #124 | 2026-09-13 | active |

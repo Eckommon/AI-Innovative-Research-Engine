@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260913-US-RCRA-N01-PASS-PORTFOLIO-RETURN",
-  "active_issue": "none",
-  "active_research": "NONE",
-  "last_completed_issue": 123,
-  "last_completed_research": "US-RCRA-N01",
-  "last_decision": "DEC-171",
+  "checkpoint_id": "CHK-20260913-US-RCRA-E01-ACTIVE",
+  "active_issue": 125,
+  "active_research": "US-RCRA-E01",
+  "last_completed_issue": 124,
+  "last_completed_research": "PORTFOLIO-R25",
+  "last_decision": "DEC-173",
   "updated": "2026-09-13"
 }
