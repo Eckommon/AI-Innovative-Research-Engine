@@ -1,0 +1,35 @@
+name: US WW F01 CWNS Browser Probe
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/probe_us_ww_f01_cwns_browser.py'
+      - '.github/workflows/us-ww-f01-cwns-browser-probe.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Show browser capability
+        run: |
+          google-chrome --version || chromium --version || chromium-browser --version
+          python --version
+      - name: Install zero-cost browser driver library
+        run: python -m pip install --disable-pip-version-check selenium
+      - name: Validate probe
+        run: python -m py_compile tools/probe_us_ww_f01_cwns_browser.py
+      - name: Download and inspect CWNS national CSV ZIP structurally
+        run: python tools/probe_us_ww_f01_cwns_browser.py
+      - name: Commit structural manifest only
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-WW-F01/CWNS_NATIONAL_STRUCTURE.json
+          git diff --cached --quiet || git commit -m 'Probe US-WW-F01 CWNS national structure'
+          git push
