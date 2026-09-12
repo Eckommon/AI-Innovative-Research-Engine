@@ -92,3 +92,5 @@ Official artifacts comply with `LANG-001`, `COST-001`, and applicable governance
 
 | `DEC-160` | 2026-09-12 | PORTFOLIO-R21 selects US-WW-N01 at 42/45. | F01 removed source/join risk; leakage-control identifiability is now the highest-value bounded question. | Issue #115; `CLM-157`; `research/PORTFOLIO-R21/RESULT.md` | active |
 | `DEC-161` | 2026-09-12 | Authorize Issue #116 outcome-blind leakage-control design gate only. | Future compliance outcomes remain blocked until leakage/baseline/comparator rules are frozen. | Issue #116; `research/US-WW-N01/README.md` | active |
+
+| `DEC-162` | 2026-09-13 | Finalize US-WW-N01 as `PASS_US_WW_N01_INCIDENT_DESIGN_IDENTIFIABLE`; freeze four exact compliance-reason labels as leakage stratum; return Stage 0 without opening future outcomes. / N01 PASS·leakage 규칙 고정·Stage 0 복귀. | Exact-link/exposure/comparator/baseline-clean support passes; adjacent literature is material but not near-identical under the bounded design. | Issue #116; `CLM-158`; Run `34693662600`; `research/US-WW-N01/RESULT.md` | active |

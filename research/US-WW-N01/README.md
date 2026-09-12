@@ -1,9 +1,10 @@
 ---
 id: US-WW-N01
 issue: 116
-state: ACTIVE_OUTCOME_BLIND_DESIGN_IDENTIFIABILITY
+state: COMPLETED_PASS_DESIGN_IDENTIFIABLE
 selection_decision: DEC-160
 authorization_decision: DEC-161
+final_decision: DEC-162
 future_outcome_magnitudes_opened: false
 relationship_computed: false
 incremental_monetary_cost_usd: 0
@@ -11,6 +12,8 @@ incremental_monetary_cost_usd: 0
 
 # US-WW-N01 — Leakage-Controlled Incident Compliance Design Identifiability
 
-Canonical contract is Issue #116. N01 may inspect CWNS need-category membership, `REASON_FOR_NEEDS` text identities, official NPDES linkage, pre-2022 violation identity availability and structural/cardinality support. It must not report 2023–2025 future-window violation counts/rates, exposed-vs-comparator outcome prevalence or relationship statistics.
+**Final disposition:** `PASS_US_WW_N01_INCIDENT_DESIGN_IDENTIFIABLE`
 
-PASS does not authorize an effect test. Cost: **0 USD**.
+The branch proves only that a bounded facility-level incident-compliance predictive design can be preregistered with exact CWNS→NPDES→ICIS identities, documented exposure/comparator support, 2019–2021 baseline-clean handling, and an exact-label compliance-reason leakage stratum. It does not establish predictive value or causality and does not authorize 2023–2025 future outcome magnitudes.
+
+See `RESULT.md`, `DESIGN_MANIFEST.json`, `SEMANTIC_ADJUDICATION.md`, and `LITERATURE_OVERLAP.md`. Cost: **0 USD**.
