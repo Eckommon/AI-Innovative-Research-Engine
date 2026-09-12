@@ -1,0 +1,29 @@
+name: Audit CA GRAIN E02 Target Duplicate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/audit_ca_grain_e02_target_duplicate.py'
+      - '.github/workflows/audit-ca-grain-e02-target-duplicate.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate targeted audit
+        run: python -m py_compile tools/audit_ca_grain_e02_target_duplicate.py
+      - name: Audit 2025-06-02 duplicate provenance without values
+        run: python tools/audit_ca_grain_e02_target_duplicate.py
+      - name: Commit targeted provenance artifact
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/CA-GRAIN-E02/TARGET_DUPLICATE_PROVENANCE.json
+          git diff --cached --quiet || git commit -m 'Audit CA-GRAIN-E02 target duplicate provenance'
+          git push
