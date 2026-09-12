@@ -1,0 +1,38 @@
+name: US RCRA E01 Frozen-Pair Outcome Test
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/run_us_rcra_e01_outcomes_v2.py'
+      - '.github/workflows/us-rcra-e01-outcome.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Validate outcome runner and frozen pair manifest
+        run: |
+          python -m py_compile tools/run_us_rcra_e01_outcomes_v2.py
+          test -f research/US-RCRA-E01/PAIR_MANIFEST.json
+      - name: Execute preregistered selected-pair outcome test
+        run: python tools/run_us_rcra_e01_outcomes_v2.py
+      - name: Commit derived execution result only
+        shell: bash
+        run: |
+          test -f research/US-RCRA-E01/EXECUTION_RESULT.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/US-RCRA-E01/EXECUTION_RESULT.json
+          git diff --cached --quiet && { echo 'No execution result to commit'; exit 1; }
+          git commit -m "Record US-RCRA-E01 preregistered paired outcome result"
+          git pull --rebase origin main
+          git push origin HEAD:main
