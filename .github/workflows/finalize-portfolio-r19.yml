@@ -1,0 +1,29 @@
+name: Finalize PORTFOLIO R19
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/finalize_portfolio_r19.py'
+      - '.github/workflows/finalize-portfolio-r19.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate finalizer
+        run: python -m py_compile tools/finalize_portfolio_r19.py
+      - name: Finalize R19 selection
+        run: python tools/finalize_portfolio_r19.py
+      - name: Commit canonical selection atomically
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add STATUS.md context/SESSION_HANDOFF.md context/checkpoint.json registry/CLAIM_LEDGER.md registry/CLM-152.md registry/DEC-152.md registry/DEC-153.md registry/DECISION_LOG.md research/PORTFOLIO-R19/RESULT.md research/CA-GRAIN-E02/README.md
+          git diff --cached --quiet || git commit -m 'Select CA-GRAIN-E02 in PORTFOLIO-R19'
+          git push
