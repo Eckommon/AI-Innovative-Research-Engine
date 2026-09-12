@@ -1,0 +1,35 @@
+name: US RCRA E01 Pair Freeze
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/freeze_us_rcra_e01_pairs.py'
+      - '.github/workflows/us-rcra-e01-pair-freeze.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  freeze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Validate freezer
+        run: python -m py_compile tools/freeze_us_rcra_e01_pairs.py
+      - name: Reconstruct and freeze exact N01 pairs outcome-blind
+        run: python tools/freeze_us_rcra_e01_pairs.py
+      - name: Commit pair manifest only
+        shell: bash
+        run: |
+          test -f research/US-RCRA-E01/PAIR_MANIFEST.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/US-RCRA-E01/PAIR_MANIFEST.json
+          git diff --cached --quiet && { echo 'No pair manifest to commit'; exit 1; }
+          git commit -m "Freeze US-RCRA-E01 outcome-blind pair identities"
+          git push origin HEAD:main
