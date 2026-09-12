@@ -1,0 +1,1304 @@
+{
+  "id": "CA-GRAIN-E02-TARGET-DUPLICATE-PROVENANCE",
+  "issue": 110,
+  "target_normalized_week": "2025-06-02",
+  "values_read": false,
+  "relationship_computed": false,
+  "date_semantics": "GSW slash dates parsed DD/MM/YYYY",
+  "matching_rows": 120,
+  "distinct_component_keys": 60,
+  "expected_component_keys": 60,
+  "all_expected_components_present": true,
+  "all_components_duplicate": true,
+  "crop_files": [
+    "2024-25"
+  ],
+  "raw_week_ending_dates": [
+    "07/06/2025",
+    "08/06/2025"
+  ],
+  "source_identities": [
+    {
+      "crop_file": "2024-25",
+      "crop_year": "2024-2025",
+      "grain_week": "44",
+      "raw_week_ending_date": "08/06/2025",
+      "parsed_week_ending_date": "2025-06-08",
+      "row_count": 60
+    },
+    {
+      "crop_file": "2024-25",
+      "crop_year": "2024-2025",
+      "grain_week": "48",
+      "raw_week_ending_date": "07/06/2025",
+      "parsed_week_ending_date": "2025-06-07",
+      "row_count": 60
+    }
+  ],
+  "duplicate_component_count": 60,
+  "duplicate_components": [
+    {
+      "grain": "Amber Durum",
+      "region": "Alberta",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Amber Durum",
+      "region": "British Columbia",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Amber Durum",
+      "region": "Manitoba",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Amber Durum",
+      "region": "Saskatchewan",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Barley",
+      "region": "Alberta",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Barley",
+      "region": "British Columbia",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Barley",
+      "region": "Manitoba",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Barley",
+      "region": "Saskatchewan",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Beans",
+      "region": "Alberta",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Beans",
+      "region": "British Columbia",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Beans",
+      "region": "Manitoba",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Beans",
+      "region": "Saskatchewan",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Canaryseed",
+      "region": "Alberta",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Canaryseed",
+      "region": "British Columbia",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Canaryseed",
+      "region": "Manitoba",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Canaryseed",
+      "region": "Saskatchewan",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Canola",
+      "region": "Alberta",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Canola",
+      "region": "British Columbia",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Canola",
+      "region": "Manitoba",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Canola",
+      "region": "Saskatchewan",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Chick Peas",
+      "region": "Alberta",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Chick Peas",
+      "region": "British Columbia",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Chick Peas",
+      "region": "Manitoba",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Chick Peas",
+      "region": "Saskatchewan",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Corn",
+      "region": "Alberta",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Corn",
+      "region": "British Columbia",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Corn",
+      "region": "Manitoba",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Corn",
+      "region": "Saskatchewan",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Flaxseed",
+      "region": "Alberta",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Flaxseed",
+      "region": "British Columbia",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Flaxseed",
+      "region": "Manitoba",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Flaxseed",
+      "region": "Saskatchewan",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Lentils",
+      "region": "Alberta",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Lentils",
+      "region": "British Columbia",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Lentils",
+      "region": "Manitoba",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Lentils",
+      "region": "Saskatchewan",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Mustard Seed",
+      "region": "Alberta",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Mustard Seed",
+      "region": "British Columbia",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Mustard Seed",
+      "region": "Manitoba",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Mustard Seed",
+      "region": "Saskatchewan",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Oats",
+      "region": "Alberta",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Oats",
+      "region": "British Columbia",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Oats",
+      "region": "Manitoba",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Oats",
+      "region": "Saskatchewan",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Peas",
+      "region": "Alberta",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Peas",
+      "region": "British Columbia",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Peas",
+      "region": "Manitoba",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Peas",
+      "region": "Saskatchewan",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Rye",
+      "region": "Alberta",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Rye",
+      "region": "British Columbia",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Rye",
+      "region": "Manitoba",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Rye",
+      "region": "Saskatchewan",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Soybeans",
+      "region": "Alberta",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Soybeans",
+      "region": "British Columbia",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Soybeans",
+      "region": "Manitoba",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Soybeans",
+      "region": "Saskatchewan",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Wheat",
+      "region": "Alberta",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Wheat",
+      "region": "British Columbia",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Wheat",
+      "region": "Manitoba",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    },
+    {
+      "grain": "Wheat",
+      "region": "Saskatchewan",
+      "occurrence_count": 2,
+      "source_identities": [
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "44",
+          "raw_week_ending_date": "08/06/2025",
+          "parsed_week_ending_date": "2025-06-08"
+        },
+        {
+          "crop_file": "2024-25",
+          "crop_year": "2024-2025",
+          "grain_week": "48",
+          "raw_week_ending_date": "07/06/2025",
+          "parsed_week_ending_date": "2025-06-07"
+        }
+      ]
+    }
+  ],
+  "classification": "MONDAY_COLLISION_DISTINCT_SOURCE_DATES",
+  "adjudication_rule": "The frozen ISO-Monday mapping itself creates the collision; do not repair E02 post-value. E02 remains HOLD unless a new separately preregistered descendant changes temporal identity prospectively.",
+  "incremental_monetary_cost_usd": 0
+}
