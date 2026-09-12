@@ -1,17 +1,17 @@
 ---
-checkpoint_id: CHK-20260913-US-RCRA-F01-PASS-PORTFOLIO-RETURN
-active_issue: none
-active_research: NONE
-last_completed_issue: 121
-last_completed_research: US-RCRA-F01
-last_decision: DEC-168
+checkpoint_id: CHK-20260913-US-RCRA-N01-ACTIVE
+active_issue: 123
+active_research: US-RCRA-N01
+last_completed_issue: 122
+last_completed_research: PORTFOLIO-R24
+last_decision: DEC-170
 updated: 2026-09-13
 ---
 
 # Session Handoff / 세션 인수인계
 
-US-RCRA-F01 / Issue #121 is terminal **PASS** at `PASS_US_RCRA_F01_DISASTER_COMPLIANCE_JOIN_READY`.
+PORTFOLIO-R24 selected US-RCRA-N01 at 41/45 and authorized Issue #123 outcome-blind only.
 
-Outcome-blind evidence: 640 current operating TSDFs; 640/640 (100.0%) exact `ID_NUMBER == SOURCE_ID` county-FIPS qualification; 52 qualified state/territory FIPS codes; 52 FEMA-overlap states/territories; RCRA evaluation/violation temporal identity complete for 2015-2025. No disaster-linked compliance outcome or relationship was computed.
+F01 durable facts: 640 operating TSDFs; 640/640 exact county-FIPS qualification across 52 state/territory FIPS codes; broad FEMA overlap; RCRA evaluation/violation temporal support through 2025. No disaster-linked outcome was opened.
 
-Exact restart: Stage 0. If US-RCRA remains selected, next work is N01 design identifiability only. Freeze disaster incident/declaration semantics, baseline compliance, surveillance/evaluation handling, multi-disaster rules, comparator, outcome and model before opening outcomes. Cost: **0 USD**.
+Exact restart: execute N01 using only facility, FEMA disaster and RCRA evaluation type/date/agency identities. Frozen exposure is FEMA `DR` acute physical hazards, index 2018-2023 after 365-day washout. Pair last CEI in prior 730 days with first CEI in next 730 days; exclude a pair if another qualifying disaster occurs before the selected post CEI. PASS requires >=100 pairs, >=20 states/territories and >=95% agency identity. `FOUND_VIOLATION` must remain unopened. Cost: **0 USD**.

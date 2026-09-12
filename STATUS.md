@@ -1,21 +1,21 @@
 ---
-checkpoint_id: CHK-20260913-US-RCRA-F01-PASS-PORTFOLIO-RETURN
-active_issue: none
-active_research: NONE
-last_completed_issue: 121
-last_completed_research: US-RCRA-F01
-last_decision: DEC-168
+checkpoint_id: CHK-20260913-US-RCRA-N01-ACTIVE
+active_issue: 123
+active_research: US-RCRA-N01
+last_completed_issue: 122
+last_completed_research: PORTFOLIO-R24
+last_decision: DEC-170
 updated: 2026-09-13
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `US_RCRA_F01_PASS__PORTFOLIO_RETURN__NO_ACTIVE_RESEARCH_ISSUE`
+**State / 상태:** `PORTFOLIO_R24_SELECTED_US_RCRA_N01__US_RCRA_N01_ACTIVE`
 
-US-RCRA-F01 completed outcome-blind at **`PASS_US_RCRA_F01_DISASTER_COMPLIANCE_JOIN_READY`**. The current source route identifies 640 operating TSDFs with 640/640 (100.0%) exact ECHO county-FIPS qualification across 52 state/territory FIPS codes; FEMA county/time and RCRA 2015-2025 compliance temporal identities are structurally ready. No disaster-linked compliance outcome or relationship was opened.
+PORTFOLIO-R24 selected **US-RCRA-N01** at **41/45**. Issue #123 is the only active research gate. F01 source/join/time feasibility is already PASS; N01 now tests whether a same-facility paired pre/post CEI design has sufficient structural support while `FOUND_VIOLATION` and all disaster-linked compliance outcomes remain unopened.
 
 ## Exact next action / 정확한 다음 행동
 
-Return to Stage 0. Compare an outcome-blind US-RCRA N01 design gate against independent alternatives. Do not open disaster-linked compliance outcomes until disaster timing, baseline compliance, evaluation/inspection surveillance handling, multi-disaster rules, comparator, outcome identity and model are frozen in a new authorization.
+Execute Issue #123 outcome-blind. Enumerate deterministic CEI identity; assign frozen qualifying FEMA DR events; construct last-pre/first-post CEI pairs with the fixed washout, ±730-day and multi-disaster rules; then adjudicate structural thresholds only. Do not open selected-pair compliance results.
 
 Incremental monetary cost remains **0 USD**.
