@@ -1,0 +1,35 @@
+name: US RCRA N01 Paired CEI Design Probe
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/run_us_rcra_n01.py'
+      - '.github/workflows/us-rcra-n01.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Validate probe
+        run: python -m py_compile tools/run_us_rcra_n01.py
+      - name: Execute outcome-blind paired CEI design probe
+        run: python tools/run_us_rcra_n01.py
+      - name: Commit derived design manifest only
+        shell: bash
+        run: |
+          test -f research/US-RCRA-N01/DESIGN_MANIFEST.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/US-RCRA-N01/DESIGN_MANIFEST.json
+          git diff --cached --quiet && { echo 'No design manifest to commit'; exit 1; }
+          git commit -m "Record US-RCRA-N01 outcome-blind paired CEI design result"
+          git push origin HEAD:main
