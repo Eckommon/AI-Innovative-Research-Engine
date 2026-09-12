@@ -76,3 +76,6 @@ Official artifacts comply with `LANG-001`, `COST-001`, and applicable governance
 | `DEC-150` | 2026-09-12 | Authorize only outcome-blind CA-GRAIN-E01 Stage A under Issue #108; Stage B remains blocked. / E01 Stage A 값 비사용 식별만 승인. | Fix upstream exposure identity, one-week lag and exact carrier/outcome support before values. | Issue #108; `research/CA-GRAIN-E01/README.md` | active |
 
 | `DEC-151` | 2026-09-12 | Finalize CA-GRAIN-E01 Stage A as `HOLD_CA_GRAIN_E01_EXPOSURE_IDENTITY_AMBIGUOUS`; no post-hoc narrowing and return Stage 0. / E01 exposure 모호성 HOLD·Stage 0 복귀. | Two same-level current-week upstream GSW families survive the frozen semantic screen; values remain unopened. | Issue #108; `CLM-151`; Run `34688813498` | active |
+
+| `DEC-152` | 2026-09-12 | R19 selects new CA-GRAIN-E02 at 40/45 with `Primary/Deliveries` prospectively fixed from official semantics; E01 remains terminal. / R19에서 새 E02 선정. | Resolves semantic ambiguity without numeric feedback while preserving overlap penalty. | Issue #109; `CLM-152`; `research/PORTFOLIO-R19/RESULT.md` | active |
+| `DEC-153` | 2026-09-12 | Authorize Issue #110 exactly as preregistered; structural gate first, then one frozen association test only. / E02 사전등록 그대로 승인. | Prevent post-value source/model/threshold tuning; diagnostics cannot rescue primary. | Issue #110; `research/CA-GRAIN-E02/README.md` | active |
