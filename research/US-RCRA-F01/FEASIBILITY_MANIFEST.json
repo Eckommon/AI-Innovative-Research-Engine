@@ -1,7 +1,7 @@
 {
   "id": "US-RCRA-F01-FEASIBILITY-MANIFEST",
   "issue": 121,
-  "gate": "HOLD_US_RCRA_F01_SOURCE_OR_JOIN_SUPPORT",
+  "gate": "PASS_US_RCRA_F01_DISASTER_COMPLIANCE_JOIN_READY",
   "relationship_computed": false,
   "disaster_linked_compliance_outcomes_opened": false,
   "disaster_linked_violation_or_evaluation_counts_computed": false,
@@ -60,8 +60,10 @@
     "echo_rcra_gis": {
       "query_url": "https://echogeo.epa.gov/arcgis/rest/services/ECHO/Facilities/MapServer/3/query",
       "queried_only_operating_tsdf_ids": true,
-      "returned_feature_count": 0,
-      "epa_system_label_counts_for_returned_features": {}
+      "returned_feature_count": 640,
+      "epa_system_label_counts_for_returned_features": {
+        "RCR": 640
+      }
     },
     "fema": {
       "endpoint": "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries",
@@ -103,7 +105,7 @@
   },
   "rcra_operating_tsdf": {
     "definition": "OPERATING_TSDF nonblank valid combination of L/I/B/S/T with optional H; H alone excluded",
-    "unique_ids": 0,
+    "unique_ids": 640,
     "operating_code_counts": {
       "------": 1620691,
       "----T-": 33,
@@ -128,27 +130,7 @@
       "LIBST-": 1
     },
     "invalid_nonblank_code_counts": {
-      "------": 1620691,
-      "----T-": 33,
-      "---S--": 262,
-      "---ST-": 209,
-      "--B---": 16,
-      "--BS--": 21,
-      "--BST-": 12,
-      "-I----": 1,
-      "-I-S--": 9,
-      "-I-ST-": 7,
-      "-IBST-": 1,
-      "L-----": 18,
-      "L--S--": 14,
-      "L--ST-": 27,
-      "L-B---": 1,
-      "L-BS--": 3,
-      "L-BST-": 1,
-      "LI-S--": 1,
-      "LI-ST-": 2,
-      "LIBS--": 1,
-      "LIBST-": 1
+      "------": 1620691
     },
     "active_site_label_domain": [
       "-----",
@@ -179,17 +161,17 @@
       "HPACS"
     ],
     "facility_rows_with_valid_latlon": 1517096,
-    "pass_min_500": false
+    "pass_min_500": true
   },
   "exact_gis_join": {
-    "qualified_unique_id_with_one_fips": 0,
-    "coverage_fraction": 0.0,
+    "qualified_unique_id_with_one_fips": 640,
+    "coverage_fraction": 1.0,
     "missing_or_invalid_fips_ids": 0,
     "conflicting_multi_fips_ids": 0,
-    "qualified_state_fips_count": 0,
-    "qualified_county_fips_count": 0,
-    "pass_80pct": false,
-    "pass_30_states": false,
+    "qualified_state_fips_count": 52,
+    "qualified_county_fips_count": 396,
+    "pass_80pct": true,
+    "pass_30_states": true,
     "no_fuzzy_matching": true
   },
   "fema_modern_identity": {
@@ -221,10 +203,10 @@
       "Volcanic Eruption",
       "Winter Storm"
     ],
-    "overlap_state_fips_count_with_qualified_tsdf": 0,
-    "overlap_county_fips_count_with_qualified_tsdf": 0,
-    "qualified_tsdf_facilities_in_any_modern_fema_county": 0,
-    "pass_30_overlap_states": false
+    "overlap_state_fips_count_with_qualified_tsdf": 52,
+    "overlap_county_fips_count_with_qualified_tsdf": 395,
+    "qualified_tsdf_facilities_in_any_modern_fema_county": 639,
+    "pass_30_overlap_states": true
   },
   "rcra_compliance_temporal_identity": {
     "required_years": [
