@@ -1,0 +1,29 @@
+name: Finalize PORTFOLIO R21
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/finalize_portfolio_r21.py'
+      - '.github/workflows/finalize-portfolio-r21.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate finalizer
+        run: python -m py_compile tools/finalize_portfolio_r21.py
+      - name: Finalize R21 selection
+        run: python tools/finalize_portfolio_r21.py
+      - name: Commit canonical selection atomically
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add STATUS.md context/SESSION_HANDOFF.md context/checkpoint.json registry/CLAIM_LEDGER.md registry/DECISION_LOG.md registry/CLM-157.md registry/DEC-160.md registry/DEC-161.md research/PORTFOLIO-R21/RESULT.md research/US-WW-N01/README.md
+          git diff --cached --quiet || git commit -m 'Select US-WW-N01 in PORTFOLIO-R21'
+          git push
