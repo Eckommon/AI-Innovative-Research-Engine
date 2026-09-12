@@ -1,0 +1,151 @@
+{
+  "id": "CA-GRAIN-F01",
+  "issue": 106,
+  "boundary": {
+    "relationship_computed": false,
+    "grain_magnitudes_parsed_or_persisted": false,
+    "dwell_magnitudes_parsed_or_persisted": false,
+    "numeric_source_values_persisted": false
+  },
+  "frozen_interval": [
+    "2023-08-01",
+    "2025-07-31"
+  ],
+  "transport_canada": {
+    "download": {
+      "requested_url": "https://tdih-cdit.tc.canada.ca/sites/default/files/ferroviaire-rail.zip",
+      "final_url": "https://tdih-cdit.tc.canada.ca/sites/default/files/ferroviaire-rail.zip",
+      "status": 200,
+      "bytes": 36520845,
+      "sha256": "d45b6e7fb85fa42a763c747c73661693638f5c934120ff67e68fe20dca4d9845",
+      "content_type": "application/zip"
+    },
+    "csv_members": [
+      "Indicateurs_hebdomadaires_de_performance_du_systeme_ferroviaire_2023.csv",
+      "Indicateurs_hebdomadaires_de_performance_du_systeme_ferroviaire_2024.csv",
+      "weekly_rail_system_performance_indicators_eng_2023.csv",
+      "weekly_rail_system_performance_indicators_eng_2024.csv",
+      "Indicateurs_hebdomadaires_de_performance_du_systeme_ferroviaire_2025.csv",
+      "weekly_rail_system_performance_indicators_eng_2025.csv",
+      "Indicateurs_hebdomadaires_de_performance_du_systeme_ferroviaire_2026.csv",
+      "weekly_rail_system_performance_indicators_eng_2026.csv"
+    ],
+    "selected_member": "weekly_rail_system_performance_indicators_eng_2023.csv",
+    "headers": [
+      "Reference_Date",
+      "Carrier_SortId",
+      "Carrier",
+      "Measure_SortId",
+      "Measure",
+      "Unit_of_Measure",
+      "Geography_SortId",
+      "Geography",
+      "Segment_Distance_km",
+      "Commodity_SortId",
+      "Commodity",
+      "Car_Type_SortId",
+      "Car_Type",
+      "Dwell_Time_Range_SortId",
+      "Dwell_Time_Range",
+      "Fleet_Status_SortId",
+      "Fleet_Status",
+      "Employee_Type_SortId",
+      "Employee_Type",
+      "Measure_Value",
+      "Status_of_Value",
+      "Rowid",
+      "Coordinate_Dimension",
+      "Coordinate_Sort",
+      "Last_Updated"
+    ],
+    "resolved_headers": {
+      "reference_date": "Reference_Date",
+      "carrier": "Carrier_SortId",
+      "commodity": "Commodity_SortId",
+      "measure": "Measure_SortId",
+      "geography": "Geography_SortId",
+      "status": "Fleet_Status_SortId"
+    },
+    "target_identity": {
+      "commodity": "All Western grain",
+      "measure": "Average Dwell Time at Origin",
+      "candidate_rows": 0,
+      "available_presence_rows": 0,
+      "distinct_dates": 0,
+      "carriers": [],
+      "geographies": []
+    }
+  },
+  "gsw": {
+    "2023-24": {
+      "download": {
+        "requested_url": "https://www.grainscanada.gc.ca/en/grain-research/statistics/grain-statistics-weekly/2023-24/gsw-shg-en.csv",
+        "final_url": "https://www.grainscanada.gc.ca/en/grain-research/statistics/grain-statistics-weekly/2023-24/gsw-shg-en.csv",
+        "status": 200,
+        "bytes": 20772429,
+        "sha256": "9581a40a6848dd30fe45fb358998f1a40261a006aad75e258361ec2a67463ab7",
+        "content_type": "application/octet-stream"
+      },
+      "headers": [
+        "grain_week",
+        "crop_year",
+        "week_ending_date",
+        "worksheet",
+        "metric",
+        "period",
+        "grain",
+        "grade",
+        "region",
+        "Ktonnes"
+      ],
+      "temporal_headers": [
+        "grain_week",
+        "crop_year",
+        "week_ending_date",
+        "period"
+      ],
+      "rows": 211116,
+      "detected_date_identities": 46,
+      "detected_week_labels": 52
+    },
+    "2024-25": {
+      "download": {
+        "requested_url": "https://www.grainscanada.gc.ca/en/grain-research/statistics/grain-statistics-weekly/2024-25/gsw-shg-en.csv",
+        "final_url": "https://www.grainscanada.gc.ca/en/grain-research/statistics/grain-statistics-weekly/2024-25/gsw-shg-en.csv",
+        "status": 200,
+        "bytes": 24732752,
+        "sha256": "8da14483ed67cad415f63c69bacbde15684e9e3580ee56974b470335ab3f57da",
+        "content_type": "application/octet-stream"
+      },
+      "headers": [
+        "Crop Year",
+        "Grain Week",
+        "Week Ending Date",
+        "worksheet",
+        "metric",
+        "period",
+        "grain",
+        "grade",
+        "Region",
+        "Ktonnes"
+      ],
+      "temporal_headers": [
+        "Crop Year",
+        "Grain Week",
+        "Week Ending Date",
+        "period"
+      ],
+      "rows": 219182,
+      "detected_date_identities": 47,
+      "detected_week_labels": 52
+    }
+  },
+  "incremental_monetary_cost_usd": 0,
+  "prospective_join": {
+    "tc_week_keys": 0,
+    "gsw_week_keys_from_explicit_dates": 81,
+    "common_week_keys_from_explicit_dates": 0,
+    "calendar_rule": "normalize explicit source dates to ISO Monday week key; if GSW cumulative CSV lacks explicit dates, do not infer them from magnitudes or repair post hoc"
+  },
+  "gate": "HOLD_CA_GRAIN_F01_SOURCE_OR_IDENTITY_SUPPORT"
+}
