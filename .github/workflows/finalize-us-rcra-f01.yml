@@ -1,0 +1,34 @@
+name: Finalize US RCRA F01
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/finalize_us_rcra_f01.py'
+      - '.github/workflows/finalize-us-rcra-f01.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Validate finalizer
+        run: python -m py_compile tools/finalize_us_rcra_f01.py
+      - name: Finalize US-RCRA-F01 PASS and return Stage 0
+        run: python tools/finalize_us_rcra_f01.py
+      - name: Commit canonical closure atomically
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add STATUS.md context/SESSION_HANDOFF.md context/checkpoint.json registry/CLAIM_LEDGER.md registry/DECISION_LOG.md registry/CLM-162.md registry/DEC-168.md research/US-RCRA-F01/README.md research/US-RCRA-F01/RESULT.md
+          git diff --cached --quiet && { echo 'No changes to commit'; exit 1; }
+          git commit -m "Finalize US-RCRA-F01 PASS and return Stage 0"
+          git push origin HEAD:main
