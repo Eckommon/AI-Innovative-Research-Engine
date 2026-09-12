@@ -1,0 +1,29 @@
+name: CA GRAIN E01 Stage A
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/run_ca_grain_e01_stage_a.py'
+      - '.github/workflows/ca-grain-e01-stage-a.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  stage-a:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate runner
+        run: python -m py_compile tools/run_ca_grain_e01_stage_a.py
+      - name: Execute outcome-blind Stage A
+        run: python tools/run_ca_grain_e01_stage_a.py
+      - name: Commit derived Stage A artifacts
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/CA-GRAIN-E01/STAGE_A_MANIFEST.json research/CA-GRAIN-E01/STAGE_A_RESULT.md
+          git diff --cached --quiet || git commit -m 'Record CA-GRAIN-E01 Stage A design identifiability'
+          git push
