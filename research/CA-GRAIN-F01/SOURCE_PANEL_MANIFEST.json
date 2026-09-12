@@ -1,10 +1,19 @@
 {
   "id": "CA-GRAIN-F01",
   "issue": 106,
+  "probe_revision": 2,
+  "technical_correction": {
+    "supersedes_initial_run": 34673025029,
+    "reason": [
+      "initial header substring resolution selected *_SortId fields instead of textual label fields",
+      "initial probe inspected only the first English annual Transport Canada CSV rather than all 2023-2025 members covering the frozen interval"
+    ],
+    "frozen_contract_changed": false
+  },
   "boundary": {
     "relationship_computed": false,
-    "grain_magnitudes_parsed_or_persisted": false,
-    "dwell_magnitudes_parsed_or_persisted": false,
+    "grain_magnitudes_analyzed_or_persisted": false,
+    "dwell_magnitudes_analyzed_or_persisted": false,
     "numeric_source_values_persisted": false
   },
   "frozen_interval": [
@@ -30,50 +39,177 @@
       "Indicateurs_hebdomadaires_de_performance_du_systeme_ferroviaire_2026.csv",
       "weekly_rail_system_performance_indicators_eng_2026.csv"
     ],
-    "selected_member": "weekly_rail_system_performance_indicators_eng_2023.csv",
-    "headers": [
-      "Reference_Date",
-      "Carrier_SortId",
-      "Carrier",
-      "Measure_SortId",
-      "Measure",
-      "Unit_of_Measure",
-      "Geography_SortId",
-      "Geography",
-      "Segment_Distance_km",
-      "Commodity_SortId",
-      "Commodity",
-      "Car_Type_SortId",
-      "Car_Type",
-      "Dwell_Time_Range_SortId",
-      "Dwell_Time_Range",
-      "Fleet_Status_SortId",
-      "Fleet_Status",
-      "Employee_Type_SortId",
-      "Employee_Type",
-      "Measure_Value",
-      "Status_of_Value",
-      "Rowid",
-      "Coordinate_Dimension",
-      "Coordinate_Sort",
-      "Last_Updated"
+    "selected_members": [
+      "weekly_rail_system_performance_indicators_eng_2023.csv",
+      "weekly_rail_system_performance_indicators_eng_2024.csv",
+      "weekly_rail_system_performance_indicators_eng_2025.csv"
+    ],
+    "member_summaries": [
+      {
+        "member": "weekly_rail_system_performance_indicators_eng_2023.csv",
+        "headers": [
+          "Reference_Date",
+          "Carrier_SortId",
+          "Carrier",
+          "Measure_SortId",
+          "Measure",
+          "Unit_of_Measure",
+          "Geography_SortId",
+          "Geography",
+          "Segment_Distance_km",
+          "Commodity_SortId",
+          "Commodity",
+          "Car_Type_SortId",
+          "Car_Type",
+          "Dwell_Time_Range_SortId",
+          "Dwell_Time_Range",
+          "Fleet_Status_SortId",
+          "Fleet_Status",
+          "Employee_Type_SortId",
+          "Employee_Type",
+          "Measure_Value",
+          "Status_of_Value",
+          "Rowid",
+          "Coordinate_Dimension",
+          "Coordinate_Sort",
+          "Last_Updated"
+        ],
+        "resolved_headers": {
+          "reference_date": "Reference_Date",
+          "carrier": "Carrier",
+          "commodity": "Commodity",
+          "measure": "Measure",
+          "geography": "Geography",
+          "status": "Status_of_Value",
+          "measure_value_presence_only": "Measure_Value"
+        },
+        "target_rows": 336,
+        "distinct_dates": 21,
+        "carriers": [
+          "CN",
+          "CPKC"
+        ]
+      },
+      {
+        "member": "weekly_rail_system_performance_indicators_eng_2024.csv",
+        "headers": [
+          "Reference_Date",
+          "Carrier_SortId",
+          "Carrier",
+          "Measure_SortId",
+          "Measure",
+          "Unit_of_Measure",
+          "Geography_SortId",
+          "Geography",
+          "Segment_Distance_km",
+          "Commodity_SortId",
+          "Commodity",
+          "Car_Type_SortId",
+          "Car_Type",
+          "Dwell_Time_Range_SortId",
+          "Dwell_Time_Range",
+          "Fleet_Status_SortId",
+          "Fleet_Status",
+          "Employee_Type_SortId",
+          "Employee_Type",
+          "Measure_Value",
+          "Status_of_Value",
+          "Rowid",
+          "Coordinate_Dimension",
+          "Coordinate_Sort",
+          "Last_Updated"
+        ],
+        "resolved_headers": {
+          "reference_date": "Reference_Date",
+          "carrier": "Carrier",
+          "commodity": "Commodity",
+          "measure": "Measure",
+          "geography": "Geography",
+          "status": "Status_of_Value",
+          "measure_value_presence_only": "Measure_Value"
+        },
+        "target_rows": 848,
+        "distinct_dates": 53,
+        "carriers": [
+          "CN",
+          "CPKC"
+        ]
+      },
+      {
+        "member": "weekly_rail_system_performance_indicators_eng_2025.csv",
+        "headers": [
+          "Reference_Date",
+          "Carrier_SortId",
+          "Carrier",
+          "Measure_SortId",
+          "Measure",
+          "Unit_of_Measure",
+          "Geography_SortId",
+          "Geography",
+          "Segment_Distance_km",
+          "Commodity_SortId",
+          "Commodity",
+          "Car_Type_SortId",
+          "Car_Type",
+          "Dwell_Time_Range_SortId",
+          "Dwell_Time_Range",
+          "Fleet_Status_SortId",
+          "Fleet_Status",
+          "Employee_Type_SortId",
+          "Employee_Type",
+          "Measure_Value",
+          "Status_of_Value",
+          "Rowid",
+          "Coordinate_Dimension",
+          "Coordinate_Sort",
+          "Last_Updated"
+        ],
+        "resolved_headers": {
+          "reference_date": "Reference_Date",
+          "carrier": "Carrier",
+          "commodity": "Commodity",
+          "measure": "Measure",
+          "geography": "Geography",
+          "status": "Status_of_Value",
+          "measure_value_presence_only": "Measure_Value"
+        },
+        "target_rows": 480,
+        "distinct_dates": 30,
+        "carriers": [
+          "CN",
+          "CPKC"
+        ]
+      }
     ],
     "resolved_headers": {
       "reference_date": "Reference_Date",
-      "carrier": "Carrier_SortId",
-      "commodity": "Commodity_SortId",
-      "measure": "Measure_SortId",
-      "geography": "Geography_SortId",
-      "status": "Fleet_Status_SortId"
+      "carrier": "Carrier",
+      "commodity": "Commodity",
+      "measure": "Measure",
+      "geography": "Geography",
+      "status": "Status_of_Value",
+      "measure_value_presence_only": "Measure_Value"
     },
     "target_identity": {
       "commodity": "All Western grain",
       "measure": "Average Dwell Time at Origin",
-      "candidate_rows": 0,
-      "available_presence_rows": 0,
-      "distinct_dates": 0,
-      "carriers": [],
-      "geographies": []
+      "candidate_rows": 1664,
+      "nonblank_measure_presence_rows": 1664,
+      "distinct_dates": 104,
+      "carriers": [
+        "CN",
+        "CPKC"
+      ],
+      "geographies": [
+        "Alberta and Northwest Territories",
+        "British Columbia",
+        "Canada",
+        "Manitoba",
+        "New Brunswick and Nova Scotia",
+        "Ontario",
+        "Quebec",
+        "Saskatchewan"
+      ]
     }
   },
   "gsw": {
@@ -142,10 +278,10 @@
   },
   "incremental_monetary_cost_usd": 0,
   "prospective_join": {
-    "tc_week_keys": 0,
+    "tc_week_keys": 104,
     "gsw_week_keys_from_explicit_dates": 81,
-    "common_week_keys_from_explicit_dates": 0,
-    "calendar_rule": "normalize explicit source dates to ISO Monday week key; if GSW cumulative CSV lacks explicit dates, do not infer them from magnitudes or repair post hoc"
+    "common_week_keys_from_explicit_dates": 81,
+    "calendar_rule": "normalize explicit source dates to ISO Monday week key; do not infer missing dates from magnitudes"
   },
-  "gate": "HOLD_CA_GRAIN_F01_SOURCE_OR_IDENTITY_SUPPORT"
+  "gate": "PASS_CA_GRAIN_F01_WEEKLY_PANEL_FEASIBLE"
 }
