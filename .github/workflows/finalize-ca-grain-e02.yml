@@ -1,0 +1,29 @@
+name: Finalize CA GRAIN E02
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/finalize_ca_grain_e02.py'
+      - '.github/workflows/finalize-ca-grain-e02.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate finalizer
+        run: python -m py_compile tools/finalize_ca_grain_e02.py
+      - name: Finalize E02 HOLD and technical errata
+        run: python tools/finalize_ca_grain_e02.py
+      - name: Commit canonical closure atomically
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add STATUS.md context/SESSION_HANDOFF.md context/checkpoint.json registry/CLAIM_LEDGER.md registry/DECISION_LOG.md registry/CLM-153.md registry/DEC-154.md research/CA-GRAIN-E02/README.md research/CA-GRAIN-E02/TECHNICAL_ADJUDICATION.md research/CA-GRAIN-F01/TECHNICAL_ERRATUM_GSW_DATE_SEMANTICS.md research/CA-GRAIN-E01/TECHNICAL_ERRATUM_GSW_DATE_SEMANTICS.md
+          git diff --cached --quiet || git commit -m 'Finalize CA-GRAIN-E02 structural HOLD and date-semantics errata'
+          git push
