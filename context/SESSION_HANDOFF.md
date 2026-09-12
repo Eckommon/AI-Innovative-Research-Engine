@@ -1,17 +1,17 @@
 ---
-checkpoint_id: CHK-20260912-US-WW-F01-ACTIVE
-active_issue: 114
-active_research: US-WW-F01
-last_completed_issue: 113
-last_completed_research: DISCOVERY-R01
-last_decision: DEC-158
+checkpoint_id: CHK-20260912-US-WW-F01-PASS-PORTFOLIO-RETURN
+active_issue: none
+active_research: NONE
+last_completed_issue: 114
+last_completed_research: US-WW-F01
+last_decision: DEC-159
 updated: 2026-09-12
 ---
 
 # Session Handoff / 세션 인수인계
 
-DISCOVERY-R01 / Issue #113 selected **US-WW-001** at 43/45 and authorized Issue #114 `US-WW-F01`.
+US-WW-F01 / Issue #114 is terminal **PASS** at `PASS_US_WW_F01_CWNS_NPDES_JOIN_READY`.
 
-Exact restart: perform source/schema/identity/cardinality qualification only for EPA 2022 CWNS nationwide data and ECHO/ICIS-NPDES. Prove deterministic `CWNS ID → NPDES ID → permit/compliance-record identity` support and need-category-label support. Do not read/persist needs dollars, effluent values, violation rates/counts by need group, or any relationship.
+Verified outcome-blind structure: 14,578 CWNS wastewater facilities with official NPDES linkage across 56 jurisdictions, 14,067 distinct official NPDES IDs, and 99.8720% exact `ICIS_PERMITS` coverage. Post-2022 compliance violation date/type identities exist. No needs-dollar/compliance outcome magnitude or relationship was opened.
 
-PASS/PARTIAL returns to Stage 0 and does not authorize an effect. Cost: **0 USD**.
+Exact restart: Stage 0 portfolio/design control. A US-WW descendant, if selected, must use a new preregistration and explicitly address pre-existing-compliance leakage/reverse-direction risk before any future compliance outcome count/rate is opened. Cost: **0 USD**.

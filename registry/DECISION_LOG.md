@@ -87,3 +87,5 @@ Official artifacts comply with `LANG-001`, `COST-001`, and applicable governance
 
 | `DEC-157` | 2026-09-12 | DISCOVERY-R01 selects US-WW-001 at 43/45. / CWNS infrastructure need → later NPDES compliance 후보 선정. | Strong national direct-outcome/public-service value, official deterministic EPA identifiers and lower current near-identical overlap than screened alternatives. | Issue #113; `CLM-155`; `research/DISCOVERY-R01/RESULT.md` | active |
 | `DEC-158` | 2026-09-12 | Authorize Issue #114 outcome-blind CWNS×ICIS-NPDES source/join feasibility only. / US-WW-F01 값 비사용 join gate 승인. | Must prove national deterministic identifiers before any predictive/effect question. | Issue #114; `research/US-WW-F01/README.md` | active |
+
+| `DEC-159` | 2026-09-12 | Finalize US-WW-F01 at `PASS_US_WW_F01_CWNS_NPDES_JOIN_READY`; return to Stage 0 without authorizing an effect test. / US-WW-F01 PASS 종결 후 Stage 0 복귀. | 14,578 official-NPDES-linked wastewater facilities, 56 jurisdictions and 99.8720% exact ICIS permit coverage satisfy the preregistered source/join gate; predictive/causal evidence remains unopened. | Issue #114; `CLM-156`; `research/US-WW-F01/RESULT.md` | active |

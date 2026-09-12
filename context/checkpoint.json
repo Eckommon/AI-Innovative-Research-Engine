@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260912-US-WW-F01-ACTIVE",
-  "active_issue": 114,
-  "active_research": "US-WW-F01",
-  "last_completed_issue": 113,
-  "last_completed_research": "DISCOVERY-R01",
-  "last_decision": "DEC-158",
+  "checkpoint_id": "CHK-20260912-US-WW-F01-PASS-PORTFOLIO-RETURN",
+  "active_issue": null,
+  "active_research": "NONE",
+  "last_completed_issue": 114,
+  "last_completed_research": "US-WW-F01",
+  "last_decision": "DEC-159",
   "updated": "2026-09-12"
 }
