@@ -1,21 +1,21 @@
 ---
-checkpoint_id: CHK-20260913-US-WW-E01-TERMINAL-PORTFOLIO-RETURN
-active_issue: none
-active_research: NONE
-last_completed_issue: 119
-last_completed_research: US-WW-E01
-last_decision: DEC-165
+checkpoint_id: CHK-20260913-US-RCRA-F01-ACTIVE
+active_issue: 121
+active_research: US-RCRA-F01
+last_completed_issue: 120
+last_completed_research: PORTFOLIO-R23
+last_decision: DEC-167
 updated: 2026-09-13
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `US_WW_E01_NO_POSITIVE__PORTFOLIO_RETURN__NO_ACTIVE_RESEARCH_ISSUE`
+**State / 상태:** `PORTFOLIO_R23_SELECTED_US_RCRA_F01__US_RCRA_F01_ACTIVE`
 
-US-WW-E01 completed at **`NO_PREREGISTERED_POSITIVE_US_WW_E01_RELATIONSHIP`**. Structural support passed, but the frozen primary exposure coefficient was −2.218pp (95% CI −5.450pp to +1.013pp; p=0.1784), so the positive hypothesis failed. This is non-causal and does not establish a protective effect.
+After terminal US-WW-E01, PORTFOLIO-R23 selected **US-RCRA-F01** at **40/45**. Issue #121 is the only active research gate. No disaster-linked RCRA compliance outcome has been opened.
 
 ## Exact next action / 정확한 다음 행동
 
-Return to Stage 0 and compare independent alternatives. Do not rescue US-WW-E01 with post-outcome category/date/model/threshold changes.
+Execute Issue #121 outcome-blind. Prove the operating-TSDF source universe, exact RCRA-ID→ECHO county-FIPS coverage, FEMA county/time overlap, and RCRA compliance temporal identity. Do not compute a disaster→compliance relationship.
 
 Incremental monetary cost remains **0 USD**.
