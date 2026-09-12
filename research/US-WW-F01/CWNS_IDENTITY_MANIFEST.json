@@ -1,0 +1,397 @@
+{
+  "id": "US-WW-F01-CWNS-IDENTITY-CARDINALITY",
+  "issue": 114,
+  "relationship_computed": false,
+  "need_dollar_magnitudes_read": false,
+  "candidate_outcome_magnitudes_opened": false,
+  "facility_count": 30881,
+  "infrastructure_type_counts": {
+    "Decentralized Wastewater Treatment": 2718,
+    "Nonpoint Source": 1736,
+    "Stormwater": 4748,
+    "Wastewater": 21679
+  },
+  "facility_type_catalog": {
+    "Agriculture - Animals": 345,
+    "Agriculture - Cropland": 571,
+    "Biosolids Handling Facility": 846,
+    "Brownfields": 142,
+    "Clustered System": 255,
+    "Collection: Combined Sewers": 1451,
+    "Collection: Interceptor Sewers": 1109,
+    "Collection: Pump Stations": 3804,
+    "Collection: Separate Sewers": 26641,
+    "Desalination - WW": 3,
+    "Estuary Management": 39,
+    "Ground Water - Unknown Source": 334,
+    "Honey Bucket Lagoon": 15,
+    "Hydromodification": 1076,
+    "Marinas": 16,
+    "Non-traditional MS4": 159,
+    "Onsite Wastewater Treatment System": 3886,
+    "Phase I MS4": 1327,
+    "Phase II MS4": 5528,
+    "Resource Extraction": 34,
+    "Sanitary Landfills": 277,
+    "Silviculture": 133,
+    "Storage Facility": 87,
+    "Storage Tanks": 175,
+    "Treatment Plant": 22787,
+    "Unregulated Community Stormwater": 3928,
+    "Water Reuse": 828
+  },
+  "reference_facility_types": [
+    {
+      "facility_type": "Desalination - NPS",
+      "infrastructure_type": "Nonpoint Source"
+    },
+    {
+      "facility_type": "Treatment Plant",
+      "infrastructure_type": "Wastewater"
+    },
+    {
+      "facility_type": "Collection: Combined Sewers",
+      "infrastructure_type": "Wastewater"
+    },
+    {
+      "facility_type": "Collection: Separate Sewers",
+      "infrastructure_type": "Wastewater"
+    },
+    {
+      "facility_type": "Biosolids Handling Facility",
+      "infrastructure_type": "Wastewater"
+    },
+    {
+      "facility_type": "Onsite Wastewater Treatment System",
+      "infrastructure_type": "Decentralized Wastewater Treatment"
+    },
+    {
+      "facility_type": "Clustered System",
+      "infrastructure_type": "Decentralized Wastewater Treatment"
+    },
+    {
+      "facility_type": "Unregulated Community Stormwater",
+      "infrastructure_type": "Stormwater"
+    },
+    {
+      "facility_type": "Phase I MS4",
+      "infrastructure_type": "Stormwater"
+    },
+    {
+      "facility_type": "Phase II MS4",
+      "infrastructure_type": "Stormwater"
+    },
+    {
+      "facility_type": "Non-traditional MS4",
+      "infrastructure_type": "Stormwater"
+    },
+    {
+      "facility_type": "Agriculture - Cropland",
+      "infrastructure_type": "Nonpoint Source"
+    },
+    {
+      "facility_type": "Agriculture - Animals",
+      "infrastructure_type": "Nonpoint Source"
+    },
+    {
+      "facility_type": "Silviculture",
+      "infrastructure_type": "Nonpoint Source"
+    },
+    {
+      "facility_type": "Marinas",
+      "infrastructure_type": "Nonpoint Source"
+    },
+    {
+      "facility_type": "Resource Extraction",
+      "infrastructure_type": "Nonpoint Source"
+    },
+    {
+      "facility_type": "Brownfields",
+      "infrastructure_type": "Nonpoint Source"
+    },
+    {
+      "facility_type": "Storage Tanks",
+      "infrastructure_type": "Nonpoint Source"
+    },
+    {
+      "facility_type": "Sanitary Landfills",
+      "infrastructure_type": "Nonpoint Source"
+    },
+    {
+      "facility_type": "Ground Water - Unknown Source",
+      "infrastructure_type": "Nonpoint Source"
+    },
+    {
+      "facility_type": "Hydromodification",
+      "infrastructure_type": "Nonpoint Source"
+    },
+    {
+      "facility_type": "Estuary Management",
+      "infrastructure_type": "Nonpoint Source"
+    },
+    {
+      "facility_type": "Collection: Interceptor Sewers",
+      "infrastructure_type": "Wastewater"
+    },
+    {
+      "facility_type": "Water Reuse",
+      "infrastructure_type": "Wastewater"
+    },
+    {
+      "facility_type": "Collection: Pump Stations",
+      "infrastructure_type": "Wastewater"
+    },
+    {
+      "facility_type": "Storage Facility",
+      "infrastructure_type": "Wastewater"
+    },
+    {
+      "facility_type": "Honey Bucket Lagoon",
+      "infrastructure_type": "Wastewater"
+    },
+    {
+      "facility_type": "Desalination - WW",
+      "infrastructure_type": "Wastewater"
+    }
+  ],
+  "permit_source_counts": {
+    "NPDES": 17596,
+    "Non-NPDES": 2421
+  },
+  "permit_type_counts": {
+    "Associated Permit Record": 56,
+    "Discharge": 20,
+    "General": 10,
+    "General Permit Covered Facility": 3073,
+    "Individual IU Permit (Non-NPDES)": 2,
+    "Individual Permit": 13886,
+    "Individual State Issued Permit (Non-NPDES)": 123,
+    "Land Application": 128,
+    "Other": 171,
+    "Permit not found in NPDES lookup": 1108,
+    "Standard": 6,
+    "State": 271,
+    "State - Groundwater": 106,
+    "State - Land Application": 175,
+    "State - Other": 462,
+    "State Individual Non-NPDES Permits": 66,
+    "State-wide General Permits": 5,
+    "Storm Water": 229,
+    "Storm Water General": 120
+  },
+  "wastewater_facility_identities": 21679,
+  "wastewater_with_permit_linkage": 16052,
+  "linked_state_count": 56,
+  "linked_states": {
+    "AK": 145,
+    "AL": 311,
+    "AR": 384,
+    "AS": 3,
+    "AZ": 83,
+    "CA": 522,
+    "CO": 336,
+    "CT": 88,
+    "DC": 1,
+    "DE": 13,
+    "FL": 378,
+    "GA": 524,
+    "GU": 5,
+    "HI": 9,
+    "IA": 773,
+    "ID": 155,
+    "IL": 778,
+    "IN": 499,
+    "KS": 574,
+    "KY": 314,
+    "LA": 329,
+    "MA": 127,
+    "MD": 205,
+    "ME": 143,
+    "MI": 399,
+    "MN": 574,
+    "MO": 1034,
+    "MP": 2,
+    "MS": 68,
+    "MT": 112,
+    "NC": 337,
+    "ND": 281,
+    "NE": 283,
+    "NH": 99,
+    "NJ": 181,
+    "NM": 96,
+    "NV": 24,
+    "NY": 644,
+    "OH": 829,
+    "OK": 275,
+    "OR": 194,
+    "PA": 182,
+    "PR": 54,
+    "RI": 22,
+    "SC": 46,
+    "SD": 52,
+    "TN": 283,
+    "TX": 1314,
+    "UT": 63,
+    "VA": 249,
+    "VI": 7,
+    "VT": 101,
+    "WA": 264,
+    "WI": 821,
+    "WV": 380,
+    "WY": 83
+  },
+  "distinct_linked_permit_ids": 15844,
+  "linked_npdes_ids_sha256_only": "0b0b8163f02bc7c6a130f9571d605ebac048408fd9b21848417703b956e7927f",
+  "need_category_catalog": [
+    {
+      "needs_category": "I",
+      "category_name": "Secondary Wastewater Treatment",
+      "valid_for_sso_flag": "Y"
+    },
+    {
+      "needs_category": "II",
+      "category_name": "Advanced Wastewater Treatment",
+      "valid_for_sso_flag": "Y"
+    },
+    {
+      "needs_category": "III-A",
+      "category_name": "Infiltration/Inflow (I/I) Correction",
+      "valid_for_sso_flag": "Y"
+    },
+    {
+      "needs_category": "III-B",
+      "category_name": "Sewer Replacement/ Rehabilitation",
+      "valid_for_sso_flag": "Y"
+    },
+    {
+      "needs_category": "IV-A",
+      "category_name": "New Collector Sewers and Appurtenances",
+      "valid_for_sso_flag": "Y"
+    },
+    {
+      "needs_category": "IV-B",
+      "category_name": "New Interceptor Sewers and Appurtenances",
+      "valid_for_sso_flag": "Y"
+    },
+    {
+      "needs_category": "V",
+      "category_name": "Combined Sewer Overflow (CSO) Correction",
+      "valid_for_sso_flag": "N"
+    },
+    {
+      "needs_category": "VI-A",
+      "category_name": "Gray Infrastructure",
+      "valid_for_sso_flag": "N"
+    },
+    {
+      "needs_category": "VI-B",
+      "category_name": "Green Infrastructure",
+      "valid_for_sso_flag": "N"
+    },
+    {
+      "needs_category": "VI-C",
+      "category_name": "General Stormwater Management",
+      "valid_for_sso_flag": "N"
+    },
+    {
+      "needs_category": "VII-A",
+      "category_name": "NPS Control: Agriculture (Cropland)",
+      "valid_for_sso_flag": "N"
+    },
+    {
+      "needs_category": "VII-B",
+      "category_name": "NPS Control: Agriculture (Animals)",
+      "valid_for_sso_flag": "N"
+    },
+    {
+      "needs_category": "VII-C",
+      "category_name": "NPS Control: Silviculture",
+      "valid_for_sso_flag": "N"
+    },
+    {
+      "needs_category": "VII-F",
+      "category_name": "NPS Control: Marinas",
+      "valid_for_sso_flag": "N"
+    },
+    {
+      "needs_category": "VII-G",
+      "category_name": "NPS Control: Resource Extraction",
+      "valid_for_sso_flag": "N"
+    },
+    {
+      "needs_category": "VII-H",
+      "category_name": "NPS Control: Brownfields/Superfund",
+      "valid_for_sso_flag": "N"
+    },
+    {
+      "needs_category": "VII-I",
+      "category_name": "NPS Control: Storage Tanks",
+      "valid_for_sso_flag": "N"
+    },
+    {
+      "needs_category": "VII-J",
+      "category_name": "NPS Control: Sanitary Landfills",
+      "valid_for_sso_flag": "N"
+    },
+    {
+      "needs_category": "VII-K",
+      "category_name": "NPS Control: Hydromodification",
+      "valid_for_sso_flag": "N"
+    },
+    {
+      "needs_category": "VII-M",
+      "category_name": "NPS Control: Other Estuary Management Activities",
+      "valid_for_sso_flag": "N"
+    },
+    {
+      "needs_category": "X",
+      "category_name": "Water Reuse",
+      "valid_for_sso_flag": "N"
+    },
+    {
+      "needs_category": "XII",
+      "category_name": "Decentralized Wastewater Treatment Systems",
+      "valid_for_sso_flag": "N"
+    },
+    {
+      "needs_category": "XIV",
+      "category_name": "Desalination",
+      "valid_for_sso_flag": "N"
+    },
+    {
+      "needs_category": "VII-E",
+      "category_name": "NPS Control:Groundwater Protection(Unknown Source)",
+      "valid_for_sso_flag": "N"
+    }
+  ],
+  "need_category_structural_usage_counts": {
+    "I": 4207,
+    "II": 3438,
+    "III-A": 2384,
+    "III-B": 7649,
+    "IV-A": 2699,
+    "IV-B": 943,
+    "V": 686,
+    "VI-A": 4109,
+    "VI-B": 2340,
+    "VI-C": 3082,
+    "VII-A": 409,
+    "VII-B": 193,
+    "VII-C": 89,
+    "VII-E": 166,
+    "VII-F": 7,
+    "VII-G": 29,
+    "VII-H": 46,
+    "VII-I": 48,
+    "VII-J": 154,
+    "VII-K": 673,
+    "VII-M": 31,
+    "X": 418,
+    "XII": 1926,
+    "XIV": 3
+  },
+  "pass_threshold_3000_facilities": true,
+  "pass_threshold_30_states": true,
+  "raw_source_bytes_persisted": false,
+  "incremental_monetary_cost_usd": 0
+}
