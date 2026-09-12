@@ -1,0 +1,20 @@
+{
+  "id": "US-WW-F01-CWNS-NATIONAL-CSV-POPUP-ROUTE",
+  "issue": 114,
+  "relationship_computed": false,
+  "candidate_outcome_magnitudes_opened": false,
+  "incremental_monetary_cost_usd": 0,
+  "main_fetch": {
+    "url": "https://sdwis.epa.gov/ords/sfdw_pub/r/sfdw/cwns_pub/data-download",
+    "status": 200,
+    "bytes": 60289,
+    "error": null
+  },
+  "stage_error": {
+    "stage": "extract_popup",
+    "reason": "NA_CSV popup route not found",
+    "sample_matches": [
+      "p2_location_id=NA\\u0026p3_type=NA_CSV\\u0026session=8008328671305\\u0026cs=1zlfEAKWGoJqJLYqhtMO9e0RsmAIUi_hRUkVPVpAreqLVo5SibntlCqt52mBkOVfYS9r2dlutMDNf3NWsrFVZcg\\u0026dialogCs=n-3-7KFqodGsWMexDfPu3EA08LHdTsU1ojRWOspSnlXCYaDn50FpBkXixeXJbYlwMxSY8wjFdWwmdrqPLBaidQ&#x27;,{title:&#x27;Help us learn more about who uses ou"
+    ]
+  }
+}
