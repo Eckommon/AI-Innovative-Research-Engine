@@ -1,0 +1,29 @@
+name: Finalize EU GRID F01
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/finalize_eu_grid_f01.py'
+      - '.github/workflows/finalize-eu-grid-f01.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate finalizer
+        run: python -m py_compile tools/finalize_eu_grid_f01.py
+      - name: Finalize F01 source-operability classification
+        run: python tools/finalize_eu_grid_f01.py
+      - name: Commit final durable state atomically
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/EU-GRID-F01/README.md registry/CLM-147.md registry/DEC-145.md registry/CLAIM_LEDGER.md registry/DECISION_LOG.md STATUS.md context/SESSION_HANDOFF.md context/checkpoint.json
+          git diff --cached --quiet || git commit -m 'Finalize EU-GRID-F01 HOLD and return to Stage 0'
+          git push
