@@ -32,4 +32,5 @@ jobs:
           git add research/US-RCRA-E01/PAIR_MANIFEST.json
           git diff --cached --quiet && { echo 'No pair manifest to commit'; exit 1; }
           git commit -m "Freeze US-RCRA-E01 outcome-blind pair identities"
+          git pull --rebase origin main
           git push origin HEAD:main
