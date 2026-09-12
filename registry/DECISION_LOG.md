@@ -89,3 +89,6 @@ Official artifacts comply with `LANG-001`, `COST-001`, and applicable governance
 | `DEC-158` | 2026-09-12 | Authorize Issue #114 outcome-blind CWNS×ICIS-NPDES source/join feasibility only. / US-WW-F01 값 비사용 join gate 승인. | Must prove national deterministic identifiers before any predictive/effect question. | Issue #114; `research/US-WW-F01/README.md` | active |
 
 | `DEC-159` | 2026-09-12 | Finalize US-WW-F01 at `PASS_US_WW_F01_CWNS_NPDES_JOIN_READY`; return to Stage 0 without authorizing an effect test. / US-WW-F01 PASS 종결 후 Stage 0 복귀. | 14,578 official-NPDES-linked wastewater facilities, 56 jurisdictions and 99.8720% exact ICIS permit coverage satisfy the preregistered source/join gate; predictive/causal evidence remains unopened. | Issue #114; `CLM-156`; `research/US-WW-F01/RESULT.md` | active |
+
+| `DEC-160` | 2026-09-12 | PORTFOLIO-R21 selects US-WW-N01 at 42/45. | F01 removed source/join risk; leakage-control identifiability is now the highest-value bounded question. | Issue #115; `CLM-157`; `research/PORTFOLIO-R21/RESULT.md` | active |
+| `DEC-161` | 2026-09-12 | Authorize Issue #116 outcome-blind leakage-control design gate only. | Future compliance outcomes remain blocked until leakage/baseline/comparator rules are frozen. | Issue #116; `research/US-WW-N01/README.md` | active |
