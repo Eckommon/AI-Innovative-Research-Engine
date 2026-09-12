@@ -1,0 +1,138 @@
+{
+  "id": "US-WW-F01-ECHO-EXACT-JOIN",
+  "issue": 114,
+  "relationship_computed": false,
+  "candidate_outcome_magnitudes_opened": false,
+  "cwns_official_npdes_ids": 14067,
+  "echo_download": {
+    "url": "https://echo.epa.gov/files/echodownloads/npdes_downloads.zip",
+    "bytes": 349905998,
+    "zip_valid": true
+  },
+  "echo_identity_route": {
+    "permit_member": "ICIS_PERMITS.csv",
+    "permit_ids": 1213916,
+    "facility_member": "ICIS_FACILITIES.csv",
+    "facility_ids": 1212660
+  },
+  "exact_match": {
+    "permit_route_matches": 14049,
+    "permit_route_coverage": 0.9987204094689699,
+    "facility_route_matches": 14048,
+    "facility_route_coverage": 0.9986493211061349,
+    "union_matches": 14049,
+    "union_coverage": 0.9987204094689699,
+    "pass_80pct_on_permit_route": true
+  },
+  "compliance_identity": {
+    "violation_tables": [
+      {
+        "member": "NPDES_PS_VIOLATIONS.csv",
+        "headers": [
+          "NPDES_ID",
+          "NPDES_VIOLATION_ID",
+          "PERM_SCHEDULE_EVENT_ID",
+          "VIOLATION_TYPE_CODE",
+          "VIOLATION_CODE",
+          "VIOLATION_DESC",
+          "SCHEDULE_EVENT_CODE",
+          "SCHEDULE_EVENT_DESC",
+          "SCHEDULE_DATE",
+          "RNC_DETECTION_CODE",
+          "RNC_DETECTION_DESC",
+          "RNC_DETECTION_DATE",
+          "RNC_RESOLUTION_CODE",
+          "RNC_RESOLUTION_DESC",
+          "RNC_RESOLUTION_DATE",
+          "ACTUAL_DATE",
+          "REPORT_RECEIVED_DATE"
+        ],
+        "date_identity_columns": [
+          "SCHEDULE_DATE",
+          "RNC_DETECTION_DATE",
+          "RNC_RESOLUTION_DATE",
+          "ACTUAL_DATE",
+          "REPORT_RECEIVED_DATE"
+        ],
+        "violation_type_identity_columns": [
+          "VIOLATION_TYPE_CODE",
+          "VIOLATION_CODE",
+          "VIOLATION_DESC"
+        ],
+        "post_2022_date_identity_observed": true
+      },
+      {
+        "member": "NPDES_CS_VIOLATIONS.csv",
+        "headers": [
+          "NPDES_ID",
+          "NPDES_VIOLATION_ID",
+          "VIOLATION_TYPE_CODE",
+          "COMP_SCHEDULE_EVENT_ID",
+          "COMP_SCHEDULE_NMBR",
+          "VIOLATION_CODE",
+          "VIOLATION_DESC",
+          "SCHEDULE_EVENT_CODE",
+          "SCHEDULE_EVENT_DESC",
+          "SCHEDULE_DATE",
+          "ACTUAL_DATE",
+          "RNC_DETECTION_CODE",
+          "RNC_DETECTION_DESC",
+          "RNC_DETECTION_DATE",
+          "RNC_RESOLUTION_CODE",
+          "RNC_RESOLUTION_DESC",
+          "RNC_RESOLUTION_DATE",
+          "REPORT_RECEIVED_DATE"
+        ],
+        "date_identity_columns": [
+          "SCHEDULE_DATE",
+          "ACTUAL_DATE",
+          "RNC_DETECTION_DATE",
+          "RNC_RESOLUTION_DATE",
+          "REPORT_RECEIVED_DATE"
+        ],
+        "violation_type_identity_columns": [
+          "VIOLATION_TYPE_CODE",
+          "VIOLATION_CODE",
+          "VIOLATION_DESC"
+        ],
+        "post_2022_date_identity_observed": true
+      },
+      {
+        "member": "NPDES_SE_VIOLATIONS.csv",
+        "headers": [
+          "NPDES_ID",
+          "NPDES_VIOLATION_ID",
+          "VIOLATION_TYPE_CODE",
+          "VIOLATION_CODE",
+          "VIOLATION_DESC",
+          "SINGLE_EVENT_VIOLATION_DATE",
+          "SINGLE_EVENT_END_DATE",
+          "SINGLE_EVENT_VIOLATION_COMMENT",
+          "SINGLE_EVENT_AGENCY_TYPE_CODE",
+          "RNC_DETECTION_CODE",
+          "RNC_DETECTION_DESC",
+          "RNC_DETECTION_DATE",
+          "RNC_RESOLUTION_CODE",
+          "RNC_RESOLUTION_DESC",
+          "RNC_RESOLUTION_DATE"
+        ],
+        "date_identity_columns": [
+          "SINGLE_EVENT_VIOLATION_DATE",
+          "SINGLE_EVENT_END_DATE",
+          "RNC_DETECTION_DATE",
+          "RNC_RESOLUTION_DATE"
+        ],
+        "violation_type_identity_columns": [
+          "VIOLATION_TYPE_CODE",
+          "VIOLATION_CODE",
+          "VIOLATION_DESC"
+        ],
+        "post_2022_date_identity_observed": true
+      }
+    ],
+    "post_2022_date_and_type_identity_available": true
+  },
+  "no_fuzzy_matching": true,
+  "raw_source_bytes_persisted": false,
+  "incremental_monetary_cost_usd": 0
+}
