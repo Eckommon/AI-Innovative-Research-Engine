@@ -1,0 +1,29 @@
+name: CA GRAIN E02 Date-Corrected Preregistered Test
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/run_ca_grain_e02_date_corrected.py'
+      - '.github/workflows/ca-grain-e02-date-corrected.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  stage-b-r2:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate corrected runner
+        run: python -m py_compile tools/run_ca_grain_e02_date_corrected.py
+      - name: Execute unchanged preregistration with corrected GSW date semantics
+        run: python tools/run_ca_grain_e02_date_corrected.py
+      - name: Commit corrected derived result
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/CA-GRAIN-E02/STAGE_B_PRIMARY_RESULT.json research/CA-GRAIN-E02/RESULT.md
+          git diff --cached --quiet || git commit -m 'Record date-corrected preregistered CA-GRAIN-E02 result'
+          git push
