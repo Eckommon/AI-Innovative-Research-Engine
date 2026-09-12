@@ -1,0 +1,32 @@
+name: US RCRA E01 Duplicate Identity Audit
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/audit_us_rcra_e01_duplicate_identities.py'
+      - '.github/workflows/us-rcra-e01-duplicate-audit.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Validate audit
+        run: python -m py_compile tools/audit_us_rcra_e01_duplicate_identities.py
+      - name: Audit selected identities without outcome field
+        run: python tools/audit_us_rcra_e01_duplicate_identities.py
+      - name: Commit audit only
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/US-RCRA-E01/DUPLICATE_IDENTITY_AUDIT.json
+          git diff --cached --quiet && { echo 'No audit to commit'; exit 1; }
+          git commit -m "Audit US-RCRA-E01 duplicate selected identities"
+          git pull --rebase origin main
+          git push origin HEAD:main
