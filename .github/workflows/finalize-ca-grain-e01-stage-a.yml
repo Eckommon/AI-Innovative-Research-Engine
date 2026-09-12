@@ -1,0 +1,29 @@
+name: Finalize CA GRAIN E01 Stage A
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/finalize_ca_grain_e01_stage_a.py'
+      - '.github/workflows/finalize-ca-grain-e01-stage-a.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate finalizer
+        run: python -m py_compile tools/finalize_ca_grain_e01_stage_a.py
+      - name: Finalize Stage A HOLD
+        run: python tools/finalize_ca_grain_e01_stage_a.py
+      - name: Commit canonical closure atomically
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add STATUS.md context/SESSION_HANDOFF.md context/checkpoint.json registry/CLAIM_LEDGER.md registry/CLM-151.md registry/DEC-151.md registry/DECISION_LOG.md research/CA-GRAIN-E01/README.md
+          git diff --cached --quiet || git commit -m 'Finalize CA-GRAIN-E01 Stage A HOLD and return to Stage 0'
+          git push
