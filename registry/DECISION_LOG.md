@@ -113,3 +113,6 @@ Official artifacts comply with `LANG-001`, `COST-001`, and applicable governance
 
 | `DEC-172` | 2026-09-13 | PORTFOLIO-R25 selects US-RCRA-E01 at 42/45. / R25에서 US-RCRA-E01 선정. | N01 fixed 297 outcome-blind paired CEIs; a one-shot paired test now has highest marginal information value. | Issue #124; `CLM-165`; `research/PORTFOLIO-R25/RESULT.md` | active |
 | `DEC-173` | 2026-09-13 | Authorize Issue #125 exactly as preregistered; reconstruct/fingerprint pairs before opening selected outcomes. / E01 사전등록 그대로 승인. | Prevent post-value pair/outcome/test/threshold tuning. | Issue #125; `research/US-RCRA-E01/README.md` | active |
+
+
+| `DEC-174` | 2026-09-13 | Finalize US-RCRA-E01 at `NO_PREREGISTERED_POSITIVE_US_RCRA_E01_RELATIONSHIP`; prohibit post-value rescue and return Stage 0. / E01 positive 관계 미지지 종결·사후 구제 금지·Stage 0 복귀. | Frozen paired test gives negative RD and non-significant exact McNemar result; duplicate ambiguity handled under pre-frozen agreement-or-missing rule. | Issue #125; `CLM-166`; Run `34722366631` | active |

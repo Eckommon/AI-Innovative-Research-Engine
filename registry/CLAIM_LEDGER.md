@@ -128,3 +128,6 @@ Official artifacts comply with `LANG-001`, `COST-001`, `FACT-001`, and `FRESH-00
 
 
 | `CLM-165` | N01 PASS concentrates the remaining US-RCRA uncertainty into one bounded preregistered paired-CEI outcome test, making E01 the highest-value next gate while selected outcomes remain unopened. / N01 PASS 후 E01 paired test가 최고 정보가치 다음 gate다. | `DERIVED` | `V2_PORTFOLIO_CONTROL` | US-RCRA-N01; PORTFOLIO-R25; Issue #124 | 2026-09-13 | active |
+
+
+| `CLM-166` | US-RCRA-E01 does not support the preregistered positive same-facility paired-CEI disaster association: n=284, RD=-0.028169, exact McNemar p=0.465707. / 사전등록 positive paired 관계는 지지되지 않는다. | `OBSERVED/DERIVED/VALIDATED` | `V3_PREREGISTERED_RELATIONSHIP_GATE` | Run `34722366631`; `research/US-RCRA-E01/EXECUTION_RESULT.json`; `RESULT.md` | 2026-09-13 | active |
