@@ -1,0 +1,79 @@
+name: US-BRIDGE-F01 Outcome-Blind Feasibility
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/run_us_bridge_f01.py'
+      - '.github/workflows/us-bridge-f01.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  run-f01:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compile outcome-blind runner
+        run: python -m py_compile tools/run_us_bridge_f01.py
+
+      - name: Run frozen US-BRIDGE-F01 feasibility gate
+        run: python tools/run_us_bridge_f01.py
+
+      - name: Verify no condition-rating outcome access
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p = Path('research/US-BRIDGE-F01/EXECUTION_RESULT.json')
+          m = Path('research/US-BRIDGE-F01/SOURCE_MANIFEST.json')
+          r = json.loads(p.read_text())
+          s = json.loads(m.read_text())
+          allowed = {
+              'PASS_US_BRIDGE_F01_HAZARD_CONDITION_PANEL_JOIN_READY',
+              'PARTIAL_US_BRIDGE_F01_PANEL_READY_INSPECTION_IDENTITY_PENDING',
+              'HOLD_US_BRIDGE_F01_SOURCE_OR_IDENTITY_SUPPORT',
+          }
+          assert r['gate'] in allowed
+          assert r['condition_rating_values_opened'] is False
+          assert r['condition_rating_row_bytes_sliced'] is False
+          assert r['relationship_computed'] is False
+          assert r['fuzzy_repair_used'] is False
+          assert r['incremental_monetary_cost_usd'] == 0
+          assert r['raw_source_bytes_persisted'] is False
+          assert s['condition_values_accessed'] is False
+          assert all(x['condition_values_accessed'] is False for x in s['annual_sources'])
+          print('US_BRIDGE_F01_OUTCOME_BLIND_VERIFY_PASS', r['gate'])
+          PY
+
+      - name: Commit durable derived evidence only
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-BRIDGE-F01/EXECUTION_RESULT.json research/US-BRIDGE-F01/SOURCE_MANIFEST.json
+          if git diff --cached --quiet; then
+            echo 'No durable evidence change.'
+            exit 0
+          fi
+          git commit -m 'Execute US-BRIDGE-F01 outcome-blind feasibility gate'
+          for attempt in 1 2 3 4; do
+            if git pull --rebase origin main && git push origin HEAD:main; then
+              exit 0
+            fi
+            echo "push attempt ${attempt} failed; retrying" >&2
+            sleep $((attempt * 4))
+          done
+          exit 1
+
+      - name: Confirm COST-001 boundary
+        run: |
+          echo 'Standard public-repository GitHub-hosted runner only.'
+          echo 'No paid API, larger/GPU runner, or artifact upload.'
