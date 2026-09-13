@@ -1,21 +1,21 @@
 ---
-checkpoint_id: CHK-20260913-US-RCRA-E01-TERMINAL-PORTFOLIO-RETURN
-active_issue: none
-active_research: NONE
-last_completed_issue: 125
-last_completed_research: US-RCRA-E01
+checkpoint_id: CHK-20260914-PORTFOLIO-R26-US-BRIDGE-F01-ACTIVE
+active_issue: 127
+active_research: US-BRIDGE-F01
+last_completed_issue: 126
+last_completed_research: PORTFOLIO-R26
 last_decision: DEC-174
-updated: 2026-09-13
+updated: 2026-09-14
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `US_RCRA_E01_NO_POSITIVE__PORTFOLIO_RETURN__NO_ACTIVE_RESEARCH_ISSUE`
+**State / 상태:** `PORTFOLIO_R26_COMPLETE__US_BRIDGE_F01_ACTIVE`
 
-US-RCRA-E01 completed at **`NO_PREREGISTERED_POSITIVE_US_RCRA_E01_RELATIONSHIP`**. The frozen complete-pair test had 284 analyzable pairs and 92 discordant pairs; pre violation-found risk 41.90% vs post 39.08%, RD −2.817pp, exact McNemar p=0.4657. This is non-causal and does not establish a protective effect.
+PORTFOLIO-R26 selected **US-BRIDGE-F01** at 41/45 and Issue #126 is completed. Issue #127 is the sole intended active research gate.
+
+`DEC-175.md`, `DEC-176.md`, and `CLM-167.md` are already materialized. Because the connector path for appending the large canonical ledgers is temporarily constrained, `last_decision` remains the latest already-indexed decision (`DEC-174`) until ledger synchronization is completed. This is an operational indexing limitation only; the frozen scientific authorization is `DEC-176.md` and must not be changed after execution.
 
 ## Exact next action / 정확한 다음 행동
 
-Return to Stage 0 and compare independent alternatives. Do not rescue US-RCRA-E01 with post-outcome changes to disaster definition, inspection pairing/window, duplicate handling, outcome coding, statistical test or materiality threshold.
-
-Incremental monetary cost remains **0 USD**.
+Execute US-BRIDGE-F01 outcome-blind source/identity/time feasibility over FHWA NBI 2015–2025 and FEMA 2015–2024. Do not parse, convert, summarize, rank, persist, or compare bridge condition-rating values. Raw source bytes remain transient under RAW-001. Incremental monetary cost remains **0 USD**.

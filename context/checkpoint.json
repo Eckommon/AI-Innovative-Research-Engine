@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260913-US-RCRA-E01-TERMINAL-PORTFOLIO-RETURN",
-  "active_issue": "none",
-  "active_research": "NONE",
-  "last_completed_issue": 125,
-  "last_completed_research": "US-RCRA-E01",
+  "checkpoint_id": "CHK-20260914-PORTFOLIO-R26-US-BRIDGE-F01-ACTIVE",
+  "active_issue": 127,
+  "active_research": "US-BRIDGE-F01",
+  "last_completed_issue": 126,
+  "last_completed_research": "PORTFOLIO-R26",
   "last_decision": "DEC-174",
-  "updated": "2026-09-13"
+  "updated": "2026-09-14"
 }
