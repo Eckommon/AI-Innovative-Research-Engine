@@ -69,5 +69,13 @@ jobs:
             research/US-RCRA-E01/README.md
           git diff --cached --quiet && { echo 'No terminal state changes to commit'; exit 1; }
           git commit -m "Finalize US-RCRA-E01 no-positive terminal state"
-          git pull --rebase origin main
-          git push origin HEAD:main
+          for attempt in 1 2 3 4 5; do
+            echo "push attempt ${attempt}/5"
+            git pull --rebase origin main
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            sleep $((attempt * 5))
+          done
+          echo 'Terminal-state push failed after bounded retries'
+          exit 1
