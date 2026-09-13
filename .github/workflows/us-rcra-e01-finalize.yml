@@ -1,0 +1,73 @@
+name: US RCRA E01 Terminal Finalizer
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/finalize_us_rcra_e01.py'
+      - '.github/workflows/us-rcra-e01-finalize.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate finalizer and terminal evidence
+        run: |
+          python -m py_compile tools/finalize_us_rcra_e01.py
+          test -f research/US-RCRA-E01/EXECUTION_RESULT.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('research/US-RCRA-E01/EXECUTION_RESULT.json').read_text())
+          assert r['gate']=='NO_PREREGISTERED_POSITIVE_US_RCRA_E01_RELATIONSHIP'
+          assert r['pair_identity_drift'] is False
+          assert r['primary_support']['analyzable_pairs']==284
+          assert r['primary_support']['discordant_pairs']==92
+          assert r['primary']['n_NY']==42 and r['primary']['n_YN']==50
+          assert r['incremental_monetary_cost_usd']==0
+          PY
+
+      - name: Materialize terminal canonical state
+        run: python tools/finalize_us_rcra_e01.py
+
+      - name: Validate generated state
+        run: |
+          test -f research/US-RCRA-E01/RESULT.md
+          test -f registry/CLM-166.md
+          test -f registry/DEC-174.md
+          grep -q 'active_issue: none' STATUS.md
+          grep -q 'last_completed_issue: 125' STATUS.md
+          grep -q 'last_decision: DEC-174' STATUS.md
+          grep -q 'NO_PREREGISTERED_POSITIVE_US_RCRA_E01_RELATIONSHIP' research/US-RCRA-E01/RESULT.md
+          grep -q 'CLM-166' registry/CLAIM_LEDGER.md
+          grep -q 'DEC-174' registry/DECISION_LOG.md
+          git diff --check
+
+      - name: Commit terminal canonical state
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            STATUS.md \
+            context/SESSION_HANDOFF.md \
+            context/checkpoint.json \
+            registry/CLAIM_LEDGER.md \
+            registry/DECISION_LOG.md \
+            registry/CLM-166.md \
+            registry/DEC-174.md \
+            research/US-RCRA-E01/RESULT.md \
+            research/US-RCRA-E01/README.md
+          git diff --cached --quiet && { echo 'No terminal state changes to commit'; exit 1; }
+          git commit -m "Finalize US-RCRA-E01 no-positive terminal state"
+          git pull --rebase origin main
+          git push origin HEAD:main
