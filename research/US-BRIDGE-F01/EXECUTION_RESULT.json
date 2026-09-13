@@ -1,0 +1,53 @@
+{
+  "all_years_schema_supported": true,
+  "all_years_zero_duplicate_canonical_keys": false,
+  "annual_sources": 11,
+  "canonical_bridges_ge_6_of_11": 0,
+  "condition_rating_row_bytes_sliced": false,
+  "condition_rating_values_opened": false,
+  "county_qualification_rate": 0.0,
+  "county_qualified_repeated_bridges": 0,
+  "fema": {
+    "api": "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries",
+    "incident_type_counts": {
+      "Coastal Storm": 176,
+      "Dam/Levee Break": 10,
+      "Earthquake": 122,
+      "Fire": 753,
+      "Flood": 2296,
+      "Hurricane": 5201,
+      "Mud/Landslide": 32,
+      "Severe Ice Storm": 1053,
+      "Severe Storm": 3553,
+      "Snowstorm": 259,
+      "Straight-Line Winds": 2,
+      "Tornado": 239,
+      "Tropical Storm": 1046,
+      "Typhoon": 28,
+      "Volcanic Eruption": 1,
+      "Winter Storm": 114
+    },
+    "pages": 71,
+    "qualifying_identity_rows": 14885,
+    "records_scanned": 70402,
+    "unique_qualified_counties": 2826
+  },
+  "fema_declaration_type_restriction_added": false,
+  "fema_overlap_counties": 0,
+  "fema_overlap_state_fips_count": 0,
+  "fuzzy_repair_used": false,
+  "gate": "HOLD_US_BRIDGE_F01_SOURCE_OR_IDENTITY_SUPPORT",
+  "implementation_rule": "stable single county across all retained repeated-support observations",
+  "incremental_monetary_cost_usd": 0,
+  "issue": 127,
+  "qualified_nbi_counties": 0,
+  "raw_source_bytes_persisted": false,
+  "relationship_computed": false,
+  "repeated_bridges_ge_2_distinct_inspection_dates": 0,
+  "repeated_support_state_fips_count": 0,
+  "research_id": "US-BRIDGE-F01",
+  "years": [
+    2015,
+    2025
+  ]
+}
