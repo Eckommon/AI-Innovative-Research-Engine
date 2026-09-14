@@ -1,0 +1,72 @@
+name: Finalize US-BRIDGE-N01 Terminal Gate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/finalize_us_bridge_n01.py'
+      - '.github/workflows/finalize-us-bridge-n01.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Compile finalizer
+        run: python -m py_compile tools/finalize_us_bridge_n01.py
+      - name: Finalize N01 gate
+        run: python tools/finalize_us_bridge_n01.py
+      - name: Verify terminal invariants
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('research/US-BRIDGE-N01/DESIGN_RESULT.json').read_text())
+          assert r['gate'] == 'PASS_US_BRIDGE_N01_MATCHED_INTERVAL_DESIGN_IDENTIFIABLE'
+          assert r['condition_rating_values_opened'] is False
+          assert r['relationship_computed'] is False
+          s=Path('STATUS.md').read_text()
+          assert 'active_issue: none' in s
+          assert 'last_completed_issue: 131' in s
+          assert 'last_decision: DEC-179' in s
+          assert Path('registry/CLM-169.md').exists()
+          assert Path('registry/DEC-179.md').exists()
+          assert '`CLM-169`' in Path('registry/CLAIM_LEDGER.md').read_text()
+          assert '`DEC-179`' in Path('registry/DECISION_LOG.md').read_text()
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert set(c) == {'checkpoint_id','active_issue','active_research','last_completed_issue','last_completed_research','last_decision','updated'}
+          print('US_BRIDGE_N01_FINALIZE_VERIFY_PASS', r['matched_pairs'], r['pair_identity_sha256'])
+          PY
+      - name: Commit canonical closure atomically
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            STATUS.md \
+            context/SESSION_HANDOFF.md \
+            context/checkpoint.json \
+            registry/CLAIM_LEDGER.md \
+            registry/DECISION_LOG.md \
+            registry/CLM-169.md \
+            registry/DEC-179.md \
+            research/US-BRIDGE-N01/README.md \
+            research/US-BRIDGE-N01/RESULT.md
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Finalize US-BRIDGE-N01 PASS and freeze matched pair design'
+          for attempt in 1 2 3 4; do
+            if git pull --rebase origin main && git push origin HEAD:main; then exit 0; fi
+            sleep $((attempt * 3))
+          done
+          exit 1
+      - name: Confirm COST-001 boundary
+        run: |
+          echo 'Incremental monetary cost: 0 USD.'
