@@ -5,9 +5,5 @@
   "last_completed_issue": 127,
   "last_completed_research": "US-BRIDGE-F01",
   "last_decision": "DEC-177",
-  "updated": "2026-09-14",
-  "terminal_gate": "PASS_US_BRIDGE_F01_HAZARD_CONDITION_PANEL_JOIN_READY",
-  "execution_run": 34791209726,
-  "superseded_technical_run": 34790222911,
-  "incremental_monetary_cost_usd": 0
+  "updated": "2026-09-14"
 }
