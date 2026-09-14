@@ -124,3 +124,5 @@ Official artifacts comply with `LANG-001`, `COST-001`, and applicable governance
 
 
 | `DEC-178` | 2026-09-14 | Authorize Issue #131 / US-BRIDGE-N01 outcome-blind matched inspection-interval design gate; keep condition Items 58/59/60/62 closed. / #131 N01 결과 비개봉 매칭 점검구간 설계 gate 승인. | F01 established national panel join readiness; N01 must prospectively freeze interval exposure, reconstruction exclusion and deterministic control matching before any condition value access. | Issue #131; `research/US-BRIDGE-N01/README.md`; `registry/DEC-178.md` | active |
+
+| `DEC-179` | 2026-09-14 | Finalize US-BRIDGE-N01 at `PASS_US_BRIDGE_N01_MATCHED_INTERVAL_DESIGN_IDENTIFIABLE` and preserve exact pair fingerprint; no post-execution rescue. / N01 최종 판정 및 pair fingerprint 고정. | Frozen outcome-blind design Run `34791950311`; condition values remain closed. | Issue #131; `CLM-169`; `research/US-BRIDGE-N01/RESULT.md` | active |

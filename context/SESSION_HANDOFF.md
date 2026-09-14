@@ -1,19 +1,19 @@
 ---
-checkpoint_id: CHK-20260914-US-BRIDGE-N01-ACTIVE
-active_issue: 131
-active_research: US-BRIDGE-N01
-last_completed_issue: 127
-last_completed_research: US-BRIDGE-F01
-last_decision: DEC-178
+checkpoint_id: CHK-20260914-US-BRIDGE-N01-TERMINAL
+active_issue: none
+active_research: NONE
+last_completed_issue: 131
+last_completed_research: US-BRIDGE-N01
+last_decision: DEC-179
 updated: 2026-09-14
 ---
 
 # Session Handoff / 세션 인수인계
 
-Issue #127 / US-BRIDGE-F01 closed completed at `PASS_US_BRIDGE_F01_HAZARD_CONDITION_PANEL_JOIN_READY`. Corrected F01 execution Run `34791209726` established 618,357 bridges with >=6/11-year support, 618,168 with >=2 distinct inspection dates, and FEMA geography overlap across 53 states/territories and 2,764 counties. Condition values were not opened.
+US-BRIDGE-N01 / Issue #131 is terminal at **`PASS_US_BRIDGE_N01_MATCHED_INTERVAL_DESIGN_IDENTIFIABLE`** under Run `34791950311`.
 
-Current active work is Issue #131 / **US-BRIDGE-N01** under `DEC-178` and `research/US-BRIDGE-N01/README.md`.
+Outcome-blind design support: 619,599 bridges with eligible intervals; 494,625 exposed bridges; 124,974 control-candidate bridges; 89,800 deterministic matched pairs across 52 states/territories. Pair fingerprint `a35d38c8219de527a72c5d4975c6f6c2fed63e92711632fd5adc4b16056269b9`.
 
-Frozen N01 design: consecutive 180–1095-day inspection intervals; stable county/class; reconstruction-year exclusion; FEMA `DR` physical-hazard exposure; one exposed interval per bridge; controls must have no exposed eligible interval; deterministic 1:1 exact-stratum matching by state × bridge class × pre-inspection year without replacement. Items 58/59/60/62 remain forbidden.
+Condition Items 58/59/60/62 remained unopened; no relationship statistic was computed.
 
-Exact restart: execute N01 outcome-blind and persist exact matched-pair identities/fingerprint. Cost: **0 USD**.
+Exact restart: Open a separate US-BRIDGE-E01 authorization that reproduces the exact N01 pair fingerprint before opening condition values; then execute only the prospectively frozen deterioration/McNemar contract. Cost: **0 USD**.

@@ -136,3 +136,6 @@ Official artifacts comply with `LANG-001`, `COST-001`, `FACT-001`, and `FRESH-00
 | `CLM-167` | PORTFOLIO-R26 selects US-BRIDGE-F01 at 41/45 as the next independent outcome-blind feasibility branch; no condition value opened. / R26에서 US-BRIDGE-F01을 41/45로 선정. | `DERIVED/VALIDATED` | `V2_PRIMARY_VERIFIED` | Issue #126; `research/PORTFOLIO-R26/RESULT.md`; `registry/CLM-167.md` | 2026-09-13 | active |
 
 | `CLM-168` | US-BRIDGE-F01 terminates at `PASS_US_BRIDGE_F01_HAZARD_CONDITION_PANEL_JOIN_READY` under corrected key-year duplicate fail-closed semantics; condition values remain unopened. / 수정된 key-year fail-closed 규칙으로 F01 종결. | `OBSERVED/DERIVED/VALIDATED` | `V3_OUTCOME_BLIND_FEASIBILITY_GATE` | Run `34791209726`; `research/US-BRIDGE-F01/EXECUTION_RESULT.json`; `RESULT.md` | 2026-09-14 | active |
+
+
+| `CLM-169` | US-BRIDGE-N01 terminates at `PASS_US_BRIDGE_N01_MATCHED_INTERVAL_DESIGN_IDENTIFIABLE` with 89,800 outcome-blind deterministic matched pairs and fingerprint `a35d38c8219de527a72c5d4975c6f6c2fed63e92711632fd5adc4b16056269b9`. / 결과 비개봉 매칭 설계 종결. | `OBSERVED/DERIVED/VALIDATED` | `V3_OUTCOME_BLIND_DESIGN_GATE` | Run `34791950311`; `research/US-BRIDGE-N01/DESIGN_RESULT.json`; `PAIR_MANIFEST.json`; `RESULT.md` | 2026-09-14 | active |

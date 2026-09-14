@@ -146,3 +146,8 @@ A negative estimate cannot be reversed into a protective-effect claim.
 Any later E01 is non-causal county-declaration/inspection-condition association evidence only. It cannot establish that disasters caused bridge deterioration. County exposure error, inspection ascertainment, maintenance/repair, severity, aging, traffic/environment, and unobserved intervention remain limitations. Static bridge-hazard mapping and generic deterioration prediction are not novelty claims.
 
 Incremental monetary cost: **0 USD**.
+
+
+## Terminal N01 result / N01 최종 결과
+
+**`PASS_US_BRIDGE_N01_MATCHED_INTERVAL_DESIGN_IDENTIFIABLE`** — see `RESULT.md`. Exact pair fingerprint: `a35d38c8219de527a72c5d4975c6f6c2fed63e92711632fd5adc4b16056269b9`. Condition Items 58/59/60/62 remained unopened.
