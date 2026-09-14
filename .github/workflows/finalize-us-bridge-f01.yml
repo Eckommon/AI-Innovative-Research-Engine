@@ -1,0 +1,73 @@
+name: Finalize US-BRIDGE-F01 Terminal Gate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/finalize_us_bridge_f01.py'
+      - '.github/workflows/finalize-us-bridge-f01.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Compile finalizer
+        run: python -m py_compile tools/finalize_us_bridge_f01.py
+      - name: Finalize corrected F01 gate
+        run: python tools/finalize_us_bridge_f01.py
+      - name: Verify terminal state invariants
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('research/US-BRIDGE-F01/EXECUTION_RESULT.json').read_text())
+          assert r['gate'] == 'PASS_US_BRIDGE_F01_HAZARD_CONDITION_PANEL_JOIN_READY'
+          assert r['condition_rating_values_opened'] is False
+          assert r['relationship_computed'] is False
+          s=Path('STATUS.md').read_text()
+          assert 'active_issue: none' in s
+          assert 'last_completed_issue: 127' in s
+          assert 'last_decision: DEC-177' in s
+          assert Path('registry/CLM-168.md').exists()
+          assert Path('registry/DEC-177.md').exists()
+          assert '`CLM-167`' in Path('registry/CLAIM_LEDGER.md').read_text()
+          assert '`CLM-168`' in Path('registry/CLAIM_LEDGER.md').read_text()
+          d=Path('registry/DECISION_LOG.md').read_text()
+          assert '`DEC-175`' in d and '`DEC-176`' in d and '`DEC-177`' in d
+          print('US_BRIDGE_F01_FINALIZE_VERIFY_PASS')
+          PY
+      - name: Commit canonical closure atomically
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            STATUS.md \
+            context/SESSION_HANDOFF.md \
+            context/checkpoint.json \
+            registry/CLAIM_LEDGER.md \
+            registry/DECISION_LOG.md \
+            registry/CLM-168.md \
+            registry/DEC-177.md \
+            research/US-BRIDGE-F01/README.md \
+            research/US-BRIDGE-F01/RESULT.md
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Finalize US-BRIDGE-F01 PASS and return to N01 design gate'
+          for attempt in 1 2 3 4; do
+            if git pull --rebase origin main && git push origin HEAD:main; then exit 0; fi
+            sleep $((attempt * 3))
+          done
+          exit 1
+      - name: Confirm COST-001 boundary
+        run: |
+          echo 'Standard public-repository GitHub-hosted runner only.'
+          echo 'Incremental monetary cost: 0 USD.'
