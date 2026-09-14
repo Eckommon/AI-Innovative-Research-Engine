@@ -1,0 +1,185 @@
+{
+  "component_pattern_count": 10,
+  "condition_byte_slices_zero_based": {
+    "58": [
+      258,
+      259
+    ],
+    "59": [
+      259,
+      260
+    ],
+    "60": [
+      260,
+      261
+    ],
+    "62": [
+      262,
+      263
+    ]
+  },
+  "incremental_monetary_cost_usd": 0,
+  "issue": 132,
+  "outcome_contract": {
+    "CULVERT": "Item 62 numeric 0-9 both endpoints; deterioration iff post <= pre-1",
+    "NON_CULVERT": "Items 58/59/60; same common numeric set at both endpoints; >=2 components; score=min; deterioration iff post <= pre-1",
+    "estimand": "RD = exposed deterioration risk - control deterioration risk",
+    "positive_materiality": "RD >= +0.05",
+    "primary_pair_rule": "both exposed and control analyzable",
+    "significance": "p < 0.05",
+    "test": "exact two-sided McNemar/binomial on discordant pairs"
+  },
+  "pair_validation": {
+    "expected_class_counts": {
+      "CULVERT": 15245,
+      "NON_CULVERT": 74555
+    },
+    "expected_compressed_sha256": "4de3b8cbc7152725f72e4a93a0990a26e92579607cca8ecfe3390eba5d69e6e3",
+    "expected_pair_count": 89800,
+    "expected_pair_identity_sha256": "a35d38c8219de527a72c5d4975c6f6c2fed63e92711632fd5adc4b16056269b9",
+    "observed_class_counts": {
+      "CULVERT": 15245,
+      "NON_CULVERT": 74555
+    },
+    "observed_compressed_sha256": "4de3b8cbc7152725f72e4a93a0990a26e92579607cca8ecfe3390eba5d69e6e3",
+    "observed_pair_count": 89800,
+    "observed_pair_identity_sha256": "a35d38c8219de527a72c5d4975c6f6c2fed63e92711632fd5adc4b16056269b9",
+    "passed_before_outcome_access": true
+  },
+  "raw_source_bytes_persisted": false,
+  "research_id": "US-BRIDGE-E01",
+  "source_audit": [
+    {
+      "matched_endpoint_rows": 45553,
+      "member_bytes": 266152619,
+      "member_name": "slubkin_992016-20160125134839.txt",
+      "member_sha256": "361d33eef5c6102a282bff40ee0c763b627b0eb81f2adbdc7ed7294c3385af21",
+      "resolved_data_url": "https://www.fhwa.dot.gov/bridge/nbi/2015onefilenodel.zip",
+      "source_hash_matches_n01": true,
+      "target_bridge_endpoints": 45553,
+      "year": 2015,
+      "zip_bytes": 50009179,
+      "zip_sha256": "8eec151be2270662d7830139c2a6102d2857a2e8cc4fec987c3e62fad556e063"
+    },
+    {
+      "matched_endpoint_rows": 46138,
+      "member_bytes": 267872776,
+      "member_name": "slubkin_992016-20170106152613.txt",
+      "member_sha256": "cdebac22ff45517574abe8e0a02d6e236ce490a6c693f90ef105ca47547b06b4",
+      "resolved_data_url": "https://www.fhwa.dot.gov/bridge/nbi/2016onefilenodel.zip",
+      "source_hash_matches_n01": true,
+      "target_bridge_endpoints": 46138,
+      "year": 2016,
+      "zip_bytes": 50567999,
+      "zip_sha256": "746f85c0455c3856268a1c66f3a7f2386130a9c1e150f4983e06474917555e17"
+    },
+    {
+      "matched_endpoint_rows": 51182,
+      "member_bytes": 274905938,
+      "member_name": "2017HwyBridgesNoDelimiterAllStates.txt",
+      "member_sha256": "7638669f73d9b8899ff0e7e168f8d8779f75f34cf5ac5311de7d32bc687aabf9",
+      "resolved_data_url": "https://www.fhwa.dot.gov/bridge/nbi/2017onefilenodel.zip",
+      "source_hash_matches_n01": true,
+      "target_bridge_endpoints": 51182,
+      "year": 2017,
+      "zip_bytes": 53531159,
+      "zip_sha256": "c5d6838baaf5cd7a16c0c76b8519a6b5882c9b4f90d07254b8622e9c9b3abfc2"
+    },
+    {
+      "matched_endpoint_rows": 50450,
+      "member_bytes": 275394956,
+      "member_name": "2018HwyBridgesNoDelimiterAllStates.txt",
+      "member_sha256": "4425889d4cfec51f9f1aa0c249493a3353da34615ac966a726861c484decfc99",
+      "resolved_data_url": "https://www.fhwa.dot.gov/bridge/nbi/2018hwybronefilenodel.zip",
+      "source_hash_matches_n01": true,
+      "target_bridge_endpoints": 50450,
+      "year": 2018,
+      "zip_bytes": 53908787,
+      "zip_sha256": "50b10eff3bb140689cc0dc0d780af4b72672943c5de34bf82bb975fbbbe0211f"
+    },
+    {
+      "matched_endpoint_rows": 46922,
+      "member_bytes": 275835874,
+      "member_name": "2019HwyBridgesNoDelimiterAllStates.txt",
+      "member_sha256": "aecb5eeb75a40c587b0a6f2dcc5a0efe405099c45ab53852d7b19e5856014978",
+      "resolved_data_url": "https://www.fhwa.dot.gov/bridge/nbi/2019hwybronefilenodel.zip",
+      "source_hash_matches_n01": true,
+      "target_bridge_endpoints": 46922,
+      "year": 2019,
+      "zip_bytes": 52622859,
+      "zip_sha256": "eaca19e4ff00700f3835fb07b918e9e49786d543df28c9ce09c2c712d57f5bb3"
+    },
+    {
+      "matched_endpoint_rows": 22889,
+      "member_bytes": 276449832,
+      "member_name": "2020HwyBridgesNoDelimiterAllStates.txt",
+      "member_sha256": "e76b30d34d0112614953a6f310f19399fed665b6c7cb95df9683f9446b141202",
+      "resolved_data_url": "https://www.fhwa.dot.gov/bridge/nbi/2020hwybronefilenodel.zip",
+      "source_hash_matches_n01": true,
+      "target_bridge_endpoints": 22889,
+      "year": 2020,
+      "zip_bytes": 52966022,
+      "zip_sha256": "eb5b5acee57dfa40e27ac7a0fbf330a0dad6bdf9b9ad31c68744b54949c61687"
+    },
+    {
+      "matched_endpoint_rows": 22874,
+      "member_bytes": 276971034,
+      "member_name": "2021HwyBridgesNoDelimiterAllStates.txt",
+      "member_sha256": "588df11ba4e9ec5ad9c678f13fa651ea366edadede6ac97f3a5920695a5a6f50",
+      "resolved_data_url": "https://www.fhwa.dot.gov/bridge/nbi/2021hwybronefilenodel.zip",
+      "source_hash_matches_n01": true,
+      "target_bridge_endpoints": 22874,
+      "year": 2021,
+      "zip_bytes": 53153337,
+      "zip_sha256": "19aa6480322f1bbea3460ab4afff6418973c21af79222b1c659abf3b888d3ae5"
+    },
+    {
+      "matched_endpoint_rows": 18678,
+      "member_bytes": 277439043,
+      "member_name": "2022HwyBridgesNoDelimiterAllStates.txt",
+      "member_sha256": "89927aa9fe24d117c4bc384651c238408a07d14f0d772992e065b055291aff8b",
+      "resolved_data_url": "https://www.fhwa.dot.gov/bridge/nbi/2022hwybronefilenodel.zip",
+      "source_hash_matches_n01": true,
+      "target_bridge_endpoints": 18678,
+      "year": 2022,
+      "zip_bytes": 53336134,
+      "zip_sha256": "acfbcaa3a5869391862351e7d46703b5d9da20e484d7e6f0826db847b5018560"
+    },
+    {
+      "matched_endpoint_rows": 20849,
+      "member_bytes": 277846707,
+      "member_name": "2023HighwayBridgesNoDelimiter.txt",
+      "member_sha256": "b79b13365fedb32b3f4527994881c8b58b02892e1d0518bfcf9b50b808cc403d",
+      "resolved_data_url": "https://www.fhwa.dot.gov/bridge/nbi/2023hwybronefilenodel.zip",
+      "source_hash_matches_n01": true,
+      "target_bridge_endpoints": 20849,
+      "year": 2023,
+      "zip_bytes": 53539280,
+      "zip_sha256": "828e3dd641b18b7ac1c1d2d9acb5b2746681c5a68ed2d8fee88e6131cda3f311"
+    },
+    {
+      "matched_endpoint_rows": 16995,
+      "member_bytes": 278578446,
+      "member_name": "2024HighwayBridgesNoDelimiter.txt",
+      "member_sha256": "f70f25845aea39dd3feeb1bfd67d36b7c328c3b496490ed5549f2788c3492e98",
+      "resolved_data_url": "https://www.fhwa.dot.gov/bridge/nbi/2024hwybronefilenodel.zip",
+      "source_hash_matches_n01": true,
+      "target_bridge_endpoints": 16995,
+      "year": 2024,
+      "zip_bytes": 53663481,
+      "zip_sha256": "93902ddd52b5365784ececcaf7125336ed5ee848eb6f54aa99754f3c518f764c"
+    },
+    {
+      "matched_endpoint_rows": 16670,
+      "member_bytes": 279014247,
+      "member_name": "2025HighwayBridgesNoDelimiter.txt",
+      "member_sha256": "c23e36cf0c16fb7155491fb303cb899dc60eaf0353e6879acc6a7172dd8a48ae",
+      "resolved_data_url": "https://www.fhwa.dot.gov/bridge/nbi/2025hwybronefilenodel.zip",
+      "source_hash_matches_n01": true,
+      "target_bridge_endpoints": 16670,
+      "year": 2025,
+      "zip_bytes": 52990580,
+      "zip_sha256": "9caf6f7944bc772c7448ab61128005889f750b6885323212564e02d089a3bb33"
+    }
+  ]
+}

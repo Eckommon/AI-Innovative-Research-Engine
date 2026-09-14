@@ -1,0 +1,54 @@
+{
+  "analyzable_class_counts": {
+    "CULVERT": 15239,
+    "NON_CULVERT": 74480
+  },
+  "causal_claim_authorized": false,
+  "complete_analyzable_pairs": 89719,
+  "complete_pair_rate": 0.999097995545657,
+  "condition_access_after_pair_identity_pass": true,
+  "condition_row_bytes_sliced": true,
+  "condition_values_opened": true,
+  "control_deterioration_count": 11152,
+  "control_deterioration_risk": 0.12429920083817252,
+  "exact_two_sided_mcnemar_binomial": {
+    "discordant_n": 17919,
+    "p_decimal_50": "0.0000000000000000000000000000038729315284838527299511746654322881580031536420307",
+    "p_less_than_0_05_exact": true,
+    "p_value": 3.8729315284838525e-30,
+    "tail_k": 8196
+  },
+  "exposed_deterioration_count": 9625,
+  "exposed_deterioration_risk": 0.10727939455410783,
+  "frozen_positive_materiality_rd": 0.05,
+  "frozen_significance_threshold": 0.05,
+  "gate": "NO_PREREGISTERED_POSITIVE_US_BRIDGE_E01_RELATIONSHIP",
+  "incomplete_pair_class_counts": {
+    "CULVERT": 6,
+    "NON_CULVERT": 75
+  },
+  "incremental_monetary_cost_usd": 0,
+  "issue": 132,
+  "n01_class_counts": {
+    "CULVERT": 15245,
+    "NON_CULVERT": 74555
+  },
+  "n01_pair_artifact_gzip_sha256": "4de3b8cbc7152725f72e4a93a0990a26e92579607cca8ecfe3390eba5d69e6e3",
+  "n01_pair_count": 89800,
+  "n01_pair_identity_sha256": "a35d38c8219de527a72c5d4975c6f6c2fed63e92711632fd5adc4b16056269b9",
+  "nbi_source_hashes_match_n01": true,
+  "negative_rd_protective_interpretation_authorized": false,
+  "pair_identity_revalidated_before_outcome_access": true,
+  "paired_cells": {
+    "both_11": 1429,
+    "control_only_01": 9723,
+    "exposed_only_10": 8196,
+    "neither_00": 70371
+  },
+  "post_value_rescue_used": false,
+  "raw_source_bytes_persisted": false,
+  "relationship_computed": true,
+  "research_id": "US-BRIDGE-E01",
+  "risk_difference": -0.017019806284064687,
+  "risk_difference_percentage_points": -1.7019806284064687
+}
