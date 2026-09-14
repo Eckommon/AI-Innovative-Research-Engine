@@ -74,3 +74,8 @@ PASS means `PANEL_JOIN_READY` only. A later N01 must prospectively resolve disas
 BTS already publishes static natural-hazard exposure for NHS bridges by combining NBI with FEMA/USGS/NOAA/USDA, and NBI deterioration modeling with environmental covariates is established. Static mapping and generic deterioration prediction are not novelty claims.
 
 Incremental monetary cost: **0 USD**.
+
+
+## Terminal F01 result / F01 최종 결과
+
+**`PASS_US_BRIDGE_F01_HAZARD_CONDITION_PANEL_JOIN_READY`** — see `RESULT.md`. Run `34791209726` is the corrected outcome-blind terminal F01 execution; Run `34790222911` is retained as a superseded implementation-nonconformity run. Bridge condition-rating values remained unopened.

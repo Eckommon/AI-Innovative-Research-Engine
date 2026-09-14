@@ -1,9 +1,13 @@
 {
-  "checkpoint_id": "CHK-20260914-PORTFOLIO-R26-US-BRIDGE-F01-ACTIVE",
-  "active_issue": 127,
-  "active_research": "US-BRIDGE-F01",
-  "last_completed_issue": 126,
-  "last_completed_research": "PORTFOLIO-R26",
-  "last_decision": "DEC-174",
-  "updated": "2026-09-14"
+  "checkpoint_id": "CHK-20260914-US-BRIDGE-F01-TERMINAL",
+  "active_issue": "none",
+  "active_research": "NONE",
+  "last_completed_issue": 127,
+  "last_completed_research": "US-BRIDGE-F01",
+  "last_decision": "DEC-177",
+  "updated": "2026-09-14",
+  "terminal_gate": "PASS_US_BRIDGE_F01_HAZARD_CONDITION_PANEL_JOIN_READY",
+  "execution_run": 34791209726,
+  "superseded_technical_run": 34790222911,
+  "incremental_monetary_cost_usd": 0
 }

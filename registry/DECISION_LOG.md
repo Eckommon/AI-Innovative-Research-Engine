@@ -116,3 +116,8 @@ Official artifacts comply with `LANG-001`, `COST-001`, and applicable governance
 
 
 | `DEC-174` | 2026-09-13 | Finalize US-RCRA-E01 at `NO_PREREGISTERED_POSITIVE_US_RCRA_E01_RELATIONSHIP`; prohibit post-value rescue and return Stage 0. / E01 positive 관계 미지지 종결·사후 구제 금지·Stage 0 복귀. | Frozen paired test gives negative RD and non-significant exact McNemar result; duplicate ambiguity handled under pre-frozen agreement-or-missing rule. | Issue #125; `CLM-166`; Run `34722366631` | active |
+
+
+| `DEC-175` | 2026-09-13 | PORTFOLIO-R26 selects US-BRIDGE-F01 at 41/45. / R26에서 US-BRIDGE-F01 선정. | Highest next-gate information gain among preserved independent candidates while retaining overlap penalty. | Issue #126; `CLM-167`; `research/PORTFOLIO-R26/RESULT.md` | active |
+| `DEC-176` | 2026-09-13 | Authorize Issue #127 / US-BRIDGE-F01 outcome-blind feasibility only. / F01 outcome-blind feasibility만 승인. | Prove source/bridge/county/inspection identity without opening condition-rating values. | Issue #127; `research/US-BRIDGE-F01/README.md` | active |
+| `DEC-177` | 2026-09-14 | Finalize US-BRIDGE-F01 at `PASS_US_BRIDGE_F01_HAZARD_CONDITION_PANEL_JOIN_READY` using corrected key-year duplicate fail-closed semantics. / 수정된 key-year 규칙으로 F01 종결. | Run `34791209726` satisfies outcome-blind integrity; Run `34790222911` is preserved as superseded implementation nonconformity. | Issue #127; `CLM-168`; `research/US-BRIDGE-F01/RESULT.md` | active |
