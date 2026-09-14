@@ -1,0 +1,13 @@
+{
+  "compressed_bytes": 2410685,
+  "compressed_sha256": "4de3b8cbc7152725f72e4a93a0990a26e92579607cca8ecfe3390eba5d69e6e3",
+  "condition_values_accessed": false,
+  "issue": 131,
+  "ordering": "state_fips, bridge_class, pre_year, exposed pre_date, exposed bridge_key; deterministic control tie-breaks per README",
+  "pair_count": 89800,
+  "pair_file": "research/US-BRIDGE-N01/PAIR_IDENTITIES.jsonl.gz",
+  "pair_identity_sha256": "a35d38c8219de527a72c5d4975c6f6c2fed63e92711632fd5adc4b16056269b9",
+  "relationship_computed": false,
+  "research_id": "US-BRIDGE-N01",
+  "serialization": "canonical JSONL, gzip-compressed after fingerprinting"
+}
