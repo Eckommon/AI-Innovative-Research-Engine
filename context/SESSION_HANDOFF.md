@@ -1,21 +1,19 @@
 ---
-checkpoint_id: CHK-20260914-US-BRIDGE-F01-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20260914-US-BRIDGE-N01-ACTIVE
+active_issue: 131
+active_research: US-BRIDGE-N01
 last_completed_issue: 127
 last_completed_research: US-BRIDGE-F01
-last_decision: DEC-177
+last_decision: DEC-178
 updated: 2026-09-14
 ---
 
 # Session Handoff / 세션 인수인계
 
-US-BRIDGE-F01 / Issue #127 is terminal at **`PASS_US_BRIDGE_F01_HAZARD_CONDITION_PANEL_JOIN_READY`**.
+Issue #127 / US-BRIDGE-F01 closed completed at `PASS_US_BRIDGE_F01_HAZARD_CONDITION_PANEL_JOIN_READY`. Corrected F01 execution Run `34791209726` established 618,357 bridges with >=6/11-year support, 618,168 with >=2 distinct inspection dates, and FEMA geography overlap across 53 states/territories and 2,764 counties. Condition values were not opened.
 
-Corrected Run `34791209726` used the frozen FHWA NBI 2015–2025 and FEMA 2015–2024 outcome-blind contract. Support: 618,357 bridge identities in >=6/11 annual archives; 618,168 with >=2 distinct inspection dates; county qualification 96.7524%; FEMA overlap 53 states/territories and 2,764 counties.
+Current active work is Issue #131 / **US-BRIDGE-N01** under `DEC-178` and `research/US-BRIDGE-N01/README.md`.
 
-Run `34790222911` is retained as superseded because it discarded whole annual files when 1–4 duplicate bridge keys existed. The correction was recorded before rerun and excludes only ambiguous duplicate key-years. No threshold/source/window/hazard change occurred.
+Frozen N01 design: consecutive 180–1095-day inspection intervals; stable county/class; reconstruction-year exclusion; FEMA `DR` physical-hazard exposure; one exposed interval per bridge; controls must have no exposed eligible interval; deterministic 1:1 exact-stratum matching by state × bridge class × pre-inspection year without replacement. Items 58/59/60/62 remain forbidden.
 
-Condition-rating values were never opened for F01 and no relationship was computed.
-
-Exact restart: Open a separately preregistered US-BRIDGE-N01 design-identifiability gate before any bridge condition-rating value is opened. Cost: **0 USD**.
+Exact restart: execute N01 outcome-blind and persist exact matched-pair identities/fingerprint. Cost: **0 USD**.
