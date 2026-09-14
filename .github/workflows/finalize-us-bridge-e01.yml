@@ -1,0 +1,88 @@
+name: Finalize US-BRIDGE-E01 Canonical Result
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/finalize-us-bridge-e01.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Compile finalizer
+        run: python -m py_compile tools/finalize_us_bridge_e01.py
+      - name: Verify Issue 132 remains open and staging evidence is immutable input
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          state=$(gh api repos/${{ github.repository }}/issues/132 --jq .state)
+          test "$state" = "open"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('research/US-BRIDGE-E01/STAGING_RESULT.json').read_text())
+          assert r['gate'] == 'NO_PREREGISTERED_POSITIVE_US_BRIDGE_E01_RELATIONSHIP'
+          assert r['complete_analyzable_pairs'] == 89719
+          assert r['pair_identity_revalidated_before_outcome_access'] is True
+          assert r['nbi_source_hashes_match_n01'] is True
+          assert r['post_value_rescue_used'] is False
+          assert r['negative_rd_protective_interpretation_authorized'] is False
+          assert r['incremental_monetary_cost_usd'] == 0
+          print('US_BRIDGE_E01_FINALIZER_INPUT_VERIFY_PASS')
+          PY
+      - name: Finalize canonical E01 state
+        run: python tools/finalize_us_bridge_e01.py
+      - name: Verify canonical mirrors
+        run: |
+          python tools/check_checkpoint.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c['active_issue'] == 'none'
+          assert c['active_research'] == 'NONE'
+          assert c['last_completed_issue'] == 132
+          assert c['last_completed_research'] == 'US-BRIDGE-E01'
+          assert c['last_decision'] == 'DEC-181'
+          assert '`CLM-170`' in Path('registry/CLAIM_LEDGER.md').read_text()
+          assert '`DEC-181`' in Path('registry/DECISION_LOG.md').read_text()
+          assert 'US_BRIDGE_E01_NO_POSITIVE_RELATIONSHIP__PORTFOLIO_RETURN' in Path('STATUS.md').read_text()
+          r=json.loads(Path('research/US-BRIDGE-E01/RESULT.json').read_text())
+          assert r['workflow_run'] == 34796095655
+          assert r['gate'] == 'NO_PREREGISTERED_POSITIVE_US_BRIDGE_E01_RELATIONSHIP'
+          print('US_BRIDGE_E01_CANONICAL_VERIFY_PASS')
+          PY
+      - name: Commit canonical finalization atomically
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add STATUS.md context/SESSION_HANDOFF.md context/checkpoint.json registry/CLAIM_LEDGER.md registry/DECISION_LOG.md registry/CLM-170.md registry/DEC-181.md research/US-BRIDGE-E01/README.md research/US-BRIDGE-E01/RESULT.json research/US-BRIDGE-E01/RESULT.md
+          git commit -m 'Finalize US-BRIDGE-E01 preregistered outcome result'
+          for attempt in 1 2 3 4; do
+            if git pull --rebase origin main && git push origin HEAD:main; then exit 0; fi
+            sleep $((attempt * 3))
+          done
+          exit 1
+      - name: Close Issue 132 completed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api -X PATCH repos/${{ github.repository }}/issues/132 -f state=closed -f state_reason=completed >/dev/null
+          test "$(gh api repos/${{ github.repository }}/issues/132 --jq .state)" = "closed"
+      - name: Confirm COST-001 boundary
+        run: |
+          echo 'Standard public-repository GitHub-hosted runner only.'
+          echo 'Incremental monetary cost: 0 USD.'
