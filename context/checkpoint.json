@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260914-US-BRIDGE-E01-ACTIVE",
-  "active_issue": 132,
-  "active_research": "US-BRIDGE-E01",
-  "last_completed_issue": 131,
-  "last_completed_research": "US-BRIDGE-N01",
-  "last_decision": "DEC-180",
+  "checkpoint_id": "CHK-20260914-US-BRIDGE-E01-TERMINAL",
+  "active_issue": "none",
+  "active_research": "NONE",
+  "last_completed_issue": 132,
+  "last_completed_research": "US-BRIDGE-E01",
+  "last_decision": "DEC-181",
   "updated": "2026-09-14"
 }

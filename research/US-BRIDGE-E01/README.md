@@ -51,3 +51,8 @@ A negative RD does not authorize a protective interpretation. No alternative out
 ## Interpretation boundary
 
 Even a positive result is a non-causal association under the frozen matched design. County exposure error, event severity, inspection ascertainment, maintenance/repair, aging, traffic/environment and unobserved interventions remain limitations.
+
+
+## Terminal E01 result / E01 최종 결과
+
+**`NO_PREREGISTERED_POSITIVE_US_BRIDGE_E01_RELATIONSHIP`** — Run `34796095655`; complete matched pairs **89,719**; RD **-1.7020pp**; exact two-sided p **0.0000000000000000000000000000038729315284838527299511746654322881580031536420307**. Negative RD is not a protective-effect claim. See `RESULT.md`.

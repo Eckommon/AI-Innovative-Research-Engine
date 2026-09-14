@@ -129,3 +129,5 @@ Official artifacts comply with `LANG-001`, `COST-001`, and applicable governance
 
 
 | `DEC-180` | 2026-09-14 | Authorize Issue #132 / US-BRIDGE-E01 single preregistered matched-pair outcome test after exact N01 pair identity revalidation. / #132 E01 단일 사전등록 결과검정 승인. | N01 fixed 89,800 outcome-blind pairs; E01 may open Items 58/59/60/62 only after exact pair fingerprint and artifact-hash PASS, with frozen deterioration/McNemar/+5pp gates and no post-value rescue. | Issue #132; `research/US-BRIDGE-E01/README.md`; `registry/DEC-180.md` | active |
+
+| `DEC-181` | 2026-09-14 | Finalize US-BRIDGE-E01 at `NO_PREREGISTERED_POSITIVE_US_BRIDGE_E01_RELATIONSHIP`; preserve the frozen outcome/test/materiality contract and prohibit protective reverse interpretation. / E01 최종 판정, 역방향 보호효과 해석 금지. | Preregistered Run `34796095655`; pair/source identity PASS; no post-value rescue. | Issue #132; `CLM-170`; `research/US-BRIDGE-E01/RESULT.md` | active |

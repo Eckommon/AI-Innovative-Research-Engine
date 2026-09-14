@@ -139,3 +139,6 @@ Official artifacts comply with `LANG-001`, `COST-001`, `FACT-001`, and `FRESH-00
 
 
 | `CLM-169` | US-BRIDGE-N01 terminates at `PASS_US_BRIDGE_N01_MATCHED_INTERVAL_DESIGN_IDENTIFIABLE` with 89,800 outcome-blind deterministic matched pairs and fingerprint `a35d38c8219de527a72c5d4975c6f6c2fed63e92711632fd5adc4b16056269b9`. / 결과 비개봉 매칭 설계 종결. | `OBSERVED/DERIVED/VALIDATED` | `V3_OUTCOME_BLIND_DESIGN_GATE` | Run `34791950311`; `research/US-BRIDGE-N01/DESIGN_RESULT.json`; `PAIR_MANIFEST.json`; `RESULT.md` | 2026-09-14 | active |
+
+
+| `CLM-170` | US-BRIDGE-E01 terminates at `NO_PREREGISTERED_POSITIVE_US_BRIDGE_E01_RELATIONSHIP`: 89,719 complete matched pairs, exposed deterioration 10.7279%, control 12.4299%, RD -1.7020pp, exact two-sided p 0.0000000000000000000000000000038729315284838527299511746654322881580031536420307; negative RD is not a protective claim. / E01 사전등록 결과검정 종결. | `OBSERVED/DERIVED/VALIDATED` | `V4_PREREGISTERED_MATCHED_OUTCOME` | Run `34796095655`; `research/US-BRIDGE-E01/RESULT.json`; `RESULT.md`; `STAGING_SOURCE_AUDIT.json` | 2026-09-14 | active |
