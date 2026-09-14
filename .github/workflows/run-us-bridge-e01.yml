@@ -1,0 +1,80 @@
+name: Run US-BRIDGE-E01 Preregistered Outcome Test
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/run-us-bridge-e01.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: read
+
+jobs:
+  experiment:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Compile frozen runner
+        run: python -m py_compile tools/run_us_bridge_e01.py
+      - name: Verify E01 authorization and active canonical state
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          state=$(gh api repos/${{ github.repository }}/issues/132 --jq .state)
+          test "$state" = "open"
+          grep -q 'active_issue: 132' STATUS.md
+          grep -q 'active_research: US-BRIDGE-E01' STATUS.md
+          grep -q 'last_decision: DEC-180' STATUS.md
+          grep -q 'US_BRIDGE_E01_ACTIVE__PAIR_IDENTITY_REVALIDATION_FIRST' STATUS.md
+          grep -q 'a35d38c8219de527a72c5d4975c6f6c2fed63e92711632fd5adc4b16056269b9' research/US-BRIDGE-E01/README.md
+      - name: Execute single preregistered outcome test
+        run: python tools/run_us_bridge_e01.py
+      - name: Verify staging result contract
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('research/US-BRIDGE-E01/STAGING_RESULT.json').read_text())
+          assert r['pair_identity_revalidated_before_outcome_access'] is True
+          assert r['n01_pair_count'] == 89800
+          assert r['n01_pair_identity_sha256'] == 'a35d38c8219de527a72c5d4975c6f6c2fed63e92711632fd5adc4b16056269b9'
+          assert r['n01_pair_artifact_gzip_sha256'] == '4de3b8cbc7152725f72e4a93a0990a26e92579607cca8ecfe3390eba5d69e6e3'
+          assert r['n01_class_counts'] == {'CULVERT':15245,'NON_CULVERT':74555}
+          assert r['condition_values_opened'] is True
+          assert r['condition_access_after_pair_identity_pass'] is True
+          assert r['nbi_source_hashes_match_n01'] is True
+          assert r['relationship_computed'] is True
+          assert r['post_value_rescue_used'] is False
+          assert r['negative_rd_protective_interpretation_authorized'] is False
+          assert r['causal_claim_authorized'] is False
+          assert r['incremental_monetary_cost_usd'] == 0
+          assert r['gate'] in {
+            'PASS_POSITIVE_MATERIAL_US_BRIDGE_E01_RELATIONSHIP',
+            'POSITIVE_BELOW_MATERIALITY_US_BRIDGE_E01_RELATIONSHIP',
+            'NO_PREREGISTERED_POSITIVE_US_BRIDGE_E01_RELATIONSHIP',
+          }
+          print('US_BRIDGE_E01_STAGING_VERIFY_PASS', r['gate'], r['complete_analyzable_pairs'])
+          PY
+      - name: Commit staging evidence atomically
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-BRIDGE-E01/STAGING_RESULT.json research/US-BRIDGE-E01/STAGING_SOURCE_AUDIT.json research/US-BRIDGE-E01/STAGING_RESULT.md
+          git commit -m 'Execute US-BRIDGE-E01 preregistered matched-pair outcome test'
+          for attempt in 1 2 3 4; do
+            if git pull --rebase origin main && git push origin HEAD:main; then exit 0; fi
+            sleep $((attempt * 3))
+          done
+          exit 1
+      - name: Confirm COST-001 boundary
+        run: |
+          echo 'Standard public-repository GitHub-hosted runner only.'
+          echo 'Incremental monetary cost: 0 USD.'
