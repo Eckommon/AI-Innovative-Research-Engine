@@ -1,0 +1,126 @@
+name: US-BRIDGE-N01 Outcome-Blind Matched-Interval Design
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/run_us_bridge_n01.py'
+      - '.github/workflows/us-bridge-n01.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: read
+
+jobs:
+  run-n01:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Compile outcome-blind runner
+        run: python -m py_compile tools/run_us_bridge_n01.py
+
+      - name: Verify active contract and forbidden condition-byte slices
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -q 'active_issue: 131' STATUS.md
+          grep -q 'active_research: US-BRIDGE-N01' STATUS.md
+          grep -q 'last_decision: DEC-178' STATUS.md
+          python - <<'PY'
+          from pathlib import Path
+          s=Path('tools/run_us_bridge_n01.py').read_text()
+          forbidden=['line[258', 'line[259', 'line[260', 'line[262']
+          hits=[x for x in forbidden if x in s]
+          assert not hits, f'forbidden condition byte slice detected: {hits}'
+          for item in ('DECK_COND_058','SUPERSTRUCTURE_COND_059','SUBSTRUCTURE_COND_060','CULVERT_COND_062'):
+              assert item in s  # named only in explicit forbidden metadata
+          print('US_BRIDGE_N01_SOURCE_OUTCOME_BLIND_SCAN_PASS')
+          PY
+
+      - name: Run frozen US-BRIDGE-N01 design gate
+        run: python tools/run_us_bridge_n01.py
+
+      - name: Compress exact pair identities without changing canonical fingerprint
+        run: |
+          gzip -9 research/US-BRIDGE-N01/PAIR_IDENTITIES.jsonl
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          p=Path('research/US-BRIDGE-N01/PAIR_MANIFEST.json')
+          d=json.loads(p.read_text())
+          gz=Path('research/US-BRIDGE-N01/PAIR_IDENTITIES.jsonl.gz')
+          h=hashlib.sha256(gz.read_bytes()).hexdigest()
+          d['pair_file']='research/US-BRIDGE-N01/PAIR_IDENTITIES.jsonl.gz'
+          d['serialization']='canonical JSONL, gzip-compressed after fingerprinting'
+          d['compressed_sha256']=h
+          d['compressed_bytes']=gz.stat().st_size
+          p.write_text(json.dumps(d, indent=2, sort_keys=True)+'\n')
+          print('PAIR_GZIP', gz.stat().st_size, h)
+          PY
+
+      - name: Verify N01 outcome-blind and frozen-gate invariants
+        run: |
+          python - <<'PY'
+          import gzip, hashlib, json
+          from pathlib import Path
+          r=json.loads(Path('research/US-BRIDGE-N01/DESIGN_RESULT.json').read_text())
+          m=json.loads(Path('research/US-BRIDGE-N01/SOURCE_MANIFEST.json').read_text())
+          p=json.loads(Path('research/US-BRIDGE-N01/PAIR_MANIFEST.json').read_text())
+          allowed={
+            'PASS_US_BRIDGE_N01_MATCHED_INTERVAL_DESIGN_IDENTIFIABLE',
+            'PARTIAL_US_BRIDGE_N01_INTERVAL_DESIGN_READY_MATCH_SUPPORT_PENDING',
+            'HOLD_US_BRIDGE_N01_DESIGN_NOT_IDENTIFIABLE',
+          }
+          assert r['gate'] in allowed
+          assert r['condition_rating_values_opened'] is False
+          assert r['condition_rating_row_bytes_sliced'] is False
+          assert r['relationship_computed'] is False
+          assert r['fuzzy_repair_used'] is False
+          assert r['outcome_dependent_inclusion_used'] is False
+          assert r['raw_source_bytes_persisted'] is False
+          assert r['incremental_monetary_cost_usd'] == 0
+          assert m['condition_values_accessed'] is False
+          assert m['condition_row_bytes_sliced'] is False
+          assert all(x['condition_values_accessed'] is False and x['condition_row_bytes_sliced'] is False for x in m['annual_sources'])
+          assert p['pair_count'] == r['matched_pairs']
+          assert p['condition_values_accessed'] is False
+          assert p['relationship_computed'] is False
+          # Reconstruct canonical uncompressed fingerprint from gzip.
+          h=hashlib.sha256(); lines=0
+          with gzip.open(p['pair_file'], 'rb') as f:
+              for line in f:
+                  h.update(line); lines += 1
+          assert lines == p['pair_count']
+          assert h.hexdigest() == p['pair_identity_sha256'] == r['pair_identity_sha256']
+          print('US_BRIDGE_N01_OUTCOME_BLIND_VERIFY_PASS', r['gate'], r['matched_pairs'], r['pair_identity_sha256'])
+          PY
+
+      - name: Commit durable derived evidence only
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add \
+            research/US-BRIDGE-N01/DESIGN_RESULT.json \
+            research/US-BRIDGE-N01/SOURCE_MANIFEST.json \
+            research/US-BRIDGE-N01/PAIR_MANIFEST.json \
+            research/US-BRIDGE-N01/PAIR_IDENTITIES.jsonl.gz
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m 'Execute US-BRIDGE-N01 outcome-blind matched-interval design gate'
+          for attempt in 1 2 3 4; do
+            if git pull --rebase origin main && git push origin HEAD:main; then exit 0; fi
+            sleep $((attempt * 5))
+          done
+          exit 1
+
+      - name: Confirm COST-001 boundary
+        run: |
+          echo 'Standard public-repository GitHub-hosted runner only.'
+          echo 'No paid API, larger/GPU runner, or artifact upload.'
+          echo 'Incremental monetary cost: 0 USD.'
