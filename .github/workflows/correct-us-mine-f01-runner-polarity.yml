@@ -1,0 +1,100 @@
+name: Correct US-MINE-F01 Runner Polarity and Re-execute Frozen Gate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/correct-us-mine-f01-runner-polarity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: read
+
+jobs:
+  correct-and-rerun:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify superseded run is implementation-only nonconformity
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          test "$(gh api repos/${{ github.repository }}/issues/134 --jq .state)" = "open"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('research/US-MINE-F01/STAGING_RESULT.json').read_text())
+          a=json.loads(Path('research/US-MINE-F01/STAGING_SOURCE_AUDIT.json').read_text())
+          assert r['gate'] == 'PARTIAL_US_MINE_F01_IDENTITY_READY__JOIN_OR_HOURS_SUPPORT_PENDING'
+          substantive=[
+            'sources_accessible','mine_id_unique','employment_key_no_conflicts','repeated_operator_mines_ge_3000',
+            'both_c_and_m_present','hours_nonblank_c_ge_95pct','hours_nonblank_m_ge_95pct',
+            'operator_accident_key_overlap_ge_80pct','overlap_states_ge_30','production_scope_restricted'
+          ]
+          assert all(r['requirements'][k] is True for k in substantive)
+          assert r['requirements']['prohibited_outcome_fields_accessed'] is False
+          assert r['requirements']['relationship_computed'] is False
+          assert r['injury_outcome_values_opened'] is False
+          assert r['prohibited_outcome_fields_accessed'] is False
+          assert r['relationship_computed'] is False
+          assert a['forbidden_fields_selected'] == []
+          Path('/tmp/us_mine_original_staging.json').write_text(json.dumps(r, sort_keys=True))
+          print('POLARITY_NONCONFORMITY_CONFIRMED')
+          PY
+      - name: Correct only compliance-predicate polarity
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('tools/run_us_mine_f01.py')
+          s=p.read_text()
+          old='''        "production_scope_restricted": True,\n        "prohibited_outcome_fields_accessed": False,\n        "relationship_computed": False,\n    }\n\n    hard_identity'''
+          new='''        "production_scope_restricted": True,\n        "no_prohibited_outcome_fields_accessed": True,\n        "no_relationship_computed": True,\n    }\n\n    hard_identity'''
+          assert s.count(old) == 1
+          s=s.replace(old,new)
+          p.write_text(s)
+          PY
+          python -m py_compile tools/run_us_mine_f01.py
+      - name: Re-execute unchanged preregistered F01 gate
+        run: python tools/run_us_mine_f01.py
+      - name: Verify corrected gate and exact source stability
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          old=json.loads(Path('/tmp/us_mine_original_staging.json').read_text())
+          new=json.loads(Path('research/US-MINE-F01/STAGING_RESULT.json').read_text())
+          a=json.loads(Path('research/US-MINE-F01/STAGING_SOURCE_AUDIT.json').read_text())
+          assert new['source_manifest'] == old['source_manifest'], 'source drift between superseded and corrected runs'
+          assert new['support_window'] == old['support_window'] == {'start_year':2019,'end_year':2025}
+          assert new['gate'] == 'PASS_US_MINE_F01_STRUCTURAL_JOIN_READY__PRODUCTION_SCOPE_RESTRICTED'
+          assert all(new['requirements'].values())
+          assert new['injury_outcome_values_opened'] is False
+          assert new['prohibited_outcome_fields_accessed'] is False
+          assert new['relationship_computed'] is False
+          assert new['post_execution_rescue_used'] is False
+          assert a['forbidden_fields_selected'] == []
+          assert a['raw_source_bytes_persisted'] is False
+          print('US_MINE_F01_CORRECTED_GATE_PASS')
+          PY
+      - name: Commit corrected runner and staging evidence
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add tools/run_us_mine_f01.py research/US-MINE-F01/STAGING_RESULT.json research/US-MINE-F01/STAGING_SOURCE_AUDIT.json
+          git commit -m 'Correct US-MINE-F01 gate polarity and rerun frozen contract'
+          for attempt in 1 2 3 4; do
+            if git pull --rebase origin main && git push origin HEAD:main; then exit 0; fi
+            sleep $((attempt * 3))
+          done
+          exit 1
+      - name: Confirm no scientific rescue and COST-001 boundary
+        run: |
+          echo 'Only boolean compliance-predicate polarity changed; no threshold/source/window/identity rule changed.'
+          echo 'Incremental monetary cost: 0 USD.'
