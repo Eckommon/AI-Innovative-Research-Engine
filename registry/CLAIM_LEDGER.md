@@ -142,3 +142,6 @@ Official artifacts comply with `LANG-001`, `COST-001`, `FACT-001`, and `FRESH-00
 
 
 | `CLM-170` | US-BRIDGE-E01 terminates at `NO_PREREGISTERED_POSITIVE_US_BRIDGE_E01_RELATIONSHIP`: 89,719 complete matched pairs, exposed deterioration 10.7279%, control 12.4299%, RD -1.7020pp, exact two-sided p 0.0000000000000000000000000000038729315284838527299511746654322881580031536420307; negative RD is not a protective claim. / E01 사전등록 결과검정 종결. | `OBSERVED/DERIVED/VALIDATED` | `V4_PREREGISTERED_MATCHED_OUTCOME` | Run `34796095655`; `research/US-BRIDGE-E01/RESULT.json`; `RESULT.md`; `STAGING_SOURCE_AUDIT.json` | 2026-09-14 | active |
+
+
+| `CLM-171` | PORTFOLIO-R27 selects US-MINE-001 at 39/45 for one outcome-blind US-MINE-F01 structural feasibility gate; no injury or exposure magnitude was opened. / R27에서 US-MINE-001을 결과 비개봉 F01로 선정. | `DERIVED/PORTFOLIO_CONTROL` | `V2_PRIMARY_VERIFIED` | Issue #133; `research/PORTFOLIO-R27/RESULT.md`; `registry/CLM-171.md` | 2026-09-16 | active |
