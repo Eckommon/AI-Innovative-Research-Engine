@@ -1,0 +1,78 @@
+name: Run C-EU-F01 Outcome-Blind Site-Heat Feasibility
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/run-c-eu-f01.yml'
+      - 'tools/run_c_eu_f01.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  run-feasibility:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify active frozen contract
+        run: |
+          python -m py_compile tools/run_c_eu_f01.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c['active_issue'] == 139
+          assert c['active_research'] == 'C-EU-F01'
+          assert c['last_completed_issue'] == 138
+          assert c['last_decision'] == 'DEC-191'
+          r=Path('research/C-EU-F01/README.md').read_text()
+          assert 'InspireSiteId' in r
+          assert 'ERA5-Land `2m temperature`' in r
+          assert 'industrial_outcomes_opened: false' in r
+          assert 'temperature_magnitudes_opened: false' in r
+          assert 'PARTIAL_C_EU_F01_SITE_IDENTITY_READY__CDS_CREDENTIAL_REQUIRED' in r
+          print('C_EU_F01_FROZEN_CONTRACT_VERIFY_PASS')
+          PY
+      - name: Execute source access and identity gate
+        run: python tools/run_c_eu_f01.py
+      - name: Verify outcome-blind staging
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('research/C-EU-F01/STAGING_RESULT.json').read_text())
+          assert r['gate'] in {
+            'PASS_C_EU_F01_SITE_HEAT_JOIN_READY',
+            'PARTIAL_C_EU_F01_SITE_IDENTITY_READY__CDS_CREDENTIAL_REQUIRED',
+            'HOLD_C_EU_F01_SOURCE_OR_IDENTITY',
+          }
+          assert r['industrial_outcome_or_thematic_magnitudes_opened'] is False
+          assert r['site_temperature_magnitudes_opened'] is False
+          assert r['relationship_computed'] is False
+          assert r['fuzzy_identity_repair_used'] is False
+          assert r['unofficial_mirror_used'] is False
+          assert r['authentication_bypass_used'] is False
+          assert r['post_execution_rescue_used'] is False
+          assert r['incremental_monetary_cost_usd'] == 0
+          assert Path('research/C-EU-F01/STAGING_SOURCE_AUDIT.json').exists()
+          print('C_EU_F01_STAGING_VERIFY_PASS', r['gate'])
+          PY
+      - name: Commit immutable staging evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/C-EU-F01/STAGING_RESULT.json research/C-EU-F01/STAGING_SOURCE_AUDIT.json
+          git commit -m 'Record C-EU-F01 outcome-blind staging evidence'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Confirm zero-cost boundary
+        run: |
+          echo 'Standard public-repository GitHub-hosted runner only.'
+          echo 'Official public EEA/ECMWF/Copernicus sources only.'
+          echo 'No paid source or service is used.'
+          echo 'Incremental monetary cost: 0 USD.'
