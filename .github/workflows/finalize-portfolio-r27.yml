@@ -1,0 +1,86 @@
+name: Finalize PORTFOLIO-R27 Canonical Selection
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/finalize-portfolio-r27.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Compile finalizer
+        run: python -m py_compile tools/finalize_portfolio_r27.py
+      - name: Verify Issue 133 and frozen selection inputs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          test "$(gh api repos/${{ github.repository }}/issues/133 --jq .state)" = "open"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c['active_issue'] == 'none'
+          assert c['active_research'] == 'NONE'
+          assert c['last_completed_issue'] == 132
+          assert c['last_completed_research'] == 'US-BRIDGE-E01'
+          assert c['last_decision'] == 'DEC-181'
+          r=Path('research/PORTFOLIO-R27/RESULT.md').read_text()
+          assert 'selected_candidate: US-MINE-001' in r
+          assert 'candidate_outcomes_opened: false' in r
+          assert '**39** | **SELECT_STAGE0_ONLY**' in r
+          print('PORTFOLIO_R27_INPUT_VERIFY_PASS')
+          PY
+      - name: Finalize R27 canonical state
+        run: python tools/finalize_portfolio_r27.py
+      - name: Verify canonical mirrors
+        run: |
+          python tools/check_checkpoint.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c['active_issue'] == 'none'
+          assert c['active_research'] == 'NONE'
+          assert c['last_completed_issue'] == 133
+          assert c['last_completed_research'] == 'PORTFOLIO-R27'
+          assert c['last_decision'] == 'DEC-182'
+          assert '`CLM-171`' in Path('registry/CLAIM_LEDGER.md').read_text()
+          assert '`DEC-182`' in Path('registry/DECISION_LOG.md').read_text()
+          assert 'PORTFOLIO_R27_SELECTED_US_MINE_F01__AUTHORIZATION_REQUIRED' in Path('STATUS.md').read_text()
+          print('PORTFOLIO_R27_CANONICAL_VERIFY_PASS')
+          PY
+      - name: Commit canonical R27 finalization atomically
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add STATUS.md context/SESSION_HANDOFF.md context/checkpoint.json registry/CLAIM_LEDGER.md registry/DECISION_LOG.md
+          git commit -m 'Finalize PORTFOLIO-R27 selection'
+          for attempt in 1 2 3 4; do
+            if git pull --rebase origin main && git push origin HEAD:main; then exit 0; fi
+            sleep $((attempt * 3))
+          done
+          exit 1
+      - name: Close Issue 133 completed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api -X PATCH repos/${{ github.repository }}/issues/133 -f state=closed -f state_reason=completed >/dev/null
+          test "$(gh api repos/${{ github.repository }}/issues/133 --jq .state)" = "closed"
+      - name: Confirm COST-001 boundary
+        run: |
+          echo 'Standard public-repository GitHub-hosted runner only.'
+          echo 'Incremental monetary cost: 0 USD.'
