@@ -1,10 +1,10 @@
 ---
-checkpoint_id: CHK-20260916-PORTFOLIO-R29-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20260916-C-EU-F01-ACTIVE
+active_issue: 139
+active_research: C-EU-F01
 last_completed_issue: 138
 last_completed_research: PORTFOLIO-R29
-last_decision: DEC-190
+last_decision: DEC-191
 updated: 2026-09-16
 ---
 
@@ -12,13 +12,26 @@ updated: 2026-09-16
 
 ## Canonical state / 정본 상태
 
-- state: `PORTFOLIO_R29_SELECTED_C_EU_004__F01_AUTHORIZATION_REQUIRED`
-- R29 selection: `SELECT_C_EU_004_INDUSTRIAL_SITE_CLIMATE_F01`
-- selected candidate: `C-EU-004`
-- candidate outcomes opened: `false`
+- checkpoint: `CHK-20260916-C-EU-F01-ACTIVE`
+- active issue: `#139`
+- active research: `C-EU-F01`
+- last completed issue: `#138`
+- last completed research: `PORTFOLIO-R29`
+- last decision: `DEC-191`
+- state: `C_EU_F01_ACTIVE__OUTCOME_BLIND_SITE_HEAT_FEASIBILITY`
+
+## Frozen contract / 고정 계약
+
+- exact industrial site identity: EEA `InspireSiteId`
+- coordinate route: `x_4258`, `y_4258`
+- hazard family: ERA5-Land `2m temperature`
+- industrial outcome/thematic magnitudes: closed
+- site temperature magnitudes: closed
+- relationship computation: forbidden
+- paid source/service: forbidden without explicit user approval
 
 ## Exact restart point / 정확한 재개점
 
-Open exactly one `C-EU-F01` outcome-blind source/access/identity feasibility gate. Verify the EEA site/facility identity and coordinate route, establish a zero-cost ERA5-Land access route, choose exactly one physical-hazard family from source semantics/support before any industrial outcome access, and freeze deterministic point-to-grid/time identity. No effect test is authorized.
+Execute only the preregistered F01 structural/access gate. Query EEA identity/coordinate fields, verify ERA5-Land semantic/grid/access metadata, probe the official programmatic route without authentication bypass, and apply the frozen PASS/PARTIAL/HOLD disposition. No effect test is authorized.
 
 Incremental monetary cost remains **0 USD**.
