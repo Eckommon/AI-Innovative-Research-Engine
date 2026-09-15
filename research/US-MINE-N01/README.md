@@ -46,6 +46,8 @@ Inside each exact `COAL_METAL_IND × CAL_YR × CAL_QTR` stratum:
 - control candidate = `ramp_t` between empirical 40th and 60th percentiles inclusive;
 - quantiles use exposure data only.
 
+**Quantile implementation is frozen before execution:** all 20/40/60/80-percentile cutpoints use the deterministic nearest-rank rule `Q(p)=x[ceil(p*n)-1]` on ascending values. Baseline-hours decile cutpoints use the same nearest-rank rule at p=0.1,...,0.9; a value exactly on a cutpoint remains in the lower decile. No interpolation or post-support alternative is allowed.
+
 ## Frozen deterministic matching / 고정 결정론적 매칭
 
 1:1 without replacement:
@@ -53,10 +55,10 @@ Inside each exact `COAL_METAL_IND × CAL_YR × CAL_QTR` stratum:
 2. exact exposure year-quarter;
 3. exact state;
 4. exact baseline-hours decile, computed from `HOURS_(t-1)` inside the same sector×quarter stratum;
-5. each mine used at most once, earliest eligible chronological role retained;
+5. each mine used at most once, earliest eligible chronological candidate role retained;
 6. choose control minimizing absolute difference in `ln(HOURS_(t-1))`; lexical `MINE_ID` tie-break.
 
-No fallback geography/sector/time rule is permitted after support is observed.
+Matching is processed by exposure quarter in chronological order, then exposed `MINE_ID` lexically. A mine used as either exposed or control is unavailable thereafter. No fallback geography/sector/time rule is permitted after support is observed.
 
 ## Frozen later outcome contract boundary / 후속 결과계약 경계
 
