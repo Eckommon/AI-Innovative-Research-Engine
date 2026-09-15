@@ -1,0 +1,103 @@
+{
+  "accident_structural_support": {
+    "distinct_document_ids": 41571,
+    "distinct_operator_mine_quarter_subunit_keys": 21491,
+    "duplicate_document_ids": 0,
+    "exact_employment_overlap_keys": 21426,
+    "exact_employment_overlap_rate": 0.9969754781071146,
+    "operator_attributed_valid_records": 36842,
+    "overlapping_mine_ids": 4882,
+    "overlapping_states": 53,
+    "window_records": 41571
+  },
+  "employment_structural_support": {
+    "coal_production_magnitude_parsed": false,
+    "coal_production_nonblank_rate_by_sector": {
+      "C": 0.9996727153714681,
+      "M": 0.9998536237175628
+    },
+    "conflicting_duplicate_keys": 0,
+    "distinct_keys": 663020,
+    "distinct_mines": 17633,
+    "duplicate_key_rows": 0,
+    "hours_worked_magnitude_parsed": false,
+    "hours_worked_nonblank_rate_by_sector": {
+      "C": 1.0,
+      "M": 0.999993421290677
+    },
+    "mines_with_ge_2_distinct_quarters": 17060,
+    "sector_rows": {
+      "C": 54998,
+      "M": 608022
+    },
+    "window_rows": 663020
+  },
+  "gate": "PARTIAL_US_MINE_F01_IDENTITY_READY__JOIN_OR_HOURS_SUPPORT_PENDING",
+  "incremental_monetary_cost_usd": 0,
+  "injury_outcome_values_opened": false,
+  "issue": 134,
+  "mine_identity": {
+    "conflicting_mine_ids": 0,
+    "distinct_mine_ids": 92007,
+    "duplicate_mine_id_rows": 0,
+    "rows": 92007
+  },
+  "post_execution_rescue_used": false,
+  "production_scope_restricted": true,
+  "prohibited_outcome_fields_accessed": false,
+  "relationship_computed": false,
+  "requirements": {
+    "both_c_and_m_present": true,
+    "employment_key_no_conflicts": true,
+    "hours_nonblank_c_ge_95pct": true,
+    "hours_nonblank_m_ge_95pct": true,
+    "mine_id_unique": true,
+    "operator_accident_key_overlap_ge_80pct": true,
+    "overlap_states_ge_30": true,
+    "production_scope_restricted": true,
+    "prohibited_outcome_fields_accessed": false,
+    "relationship_computed": false,
+    "repeated_operator_mines_ge_3000": true,
+    "sources_accessible": true
+  },
+  "research_id": "US-MINE-F01",
+  "source_manifest": {
+    "accidents": {
+      "definition_bytes": 10214,
+      "definition_sha256": "c7681808dd372b6c5bd95fdf70b01e856e0d2501b7e5d7cc9185f4c4e1f876e5",
+      "definition_url": "https://arlweb.msha.gov/OpenGovernmentData/DataSets/Accidents_Definition_File.txt",
+      "member_bytes": 228386708,
+      "member_name": "Accidents.txt",
+      "member_sha256": "d38daf0ae3b32ff8eca1ac7092528a699187ba2c1fcc342af65617aa0a8984c7",
+      "zip_bytes": 52175818,
+      "zip_sha256": "3381ee538b8e95d692f8906bbc615691d00992d88e1b700c8880a16bd93e9903",
+      "zip_url": "https://arlweb.msha.gov/OpenGovernmentData/DataSets/Accidents.zip"
+    },
+    "employment": {
+      "definition_bytes": 2055,
+      "definition_sha256": "9177770776652a8f3c3a120ab973799a69d333c5f0aa7b5eb51b5150d08e19f3",
+      "definition_url": "https://arlweb.msha.gov/OpenGovernmentData/DataSets/MineSProdQuarterly_Definition_File.txt",
+      "member_bytes": 261774954,
+      "member_name": "MinesProdQuarterly.txt",
+      "member_sha256": "4e29a5fcf6b6ef9c94b1f2485ab8da69ebbbe99baa01c361a30b0def75817b84",
+      "zip_bytes": 53941414,
+      "zip_sha256": "c8d218341e3247bbcfa2713c934c662f4449557ee403a1f0b5e52c773ee5d18a",
+      "zip_url": "https://arlweb.msha.gov/OpenGovernmentData/DataSets/MinesProdQuarterly.zip"
+    },
+    "mines": {
+      "definition_bytes": 10285,
+      "definition_sha256": "efd2bc2c493207a464be7c4e4795ffd08a221588b76b716ee334a75dfc14f1f9",
+      "definition_url": "https://arlweb.msha.gov/OpenGovernmentData/DataSets/Mines_Definition_File.txt",
+      "member_bytes": 39356194,
+      "member_name": "Mines.txt",
+      "member_sha256": "d735ce96c07933cae54000898d11e998911a1243a8787042feacc4566d9abb2c",
+      "zip_bytes": 7301188,
+      "zip_sha256": "732d6add18a68dd7ac03af9b76bb0ac10d2b78e36a9308e7ad92dba7acb27c45",
+      "zip_url": "https://arlweb.msha.gov/OpenGovernmentData/DataSets/Mines.zip"
+    }
+  },
+  "support_window": {
+    "end_year": 2025,
+    "start_year": 2019
+  }
+}
