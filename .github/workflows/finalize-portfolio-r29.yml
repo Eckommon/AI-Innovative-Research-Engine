@@ -1,0 +1,76 @@
+name: Finalize PORTFOLIO-R29 C-EU Selection
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/finalize-portfolio-r29.yml'
+      - 'tools/finalize_portfolio_r29.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify active R29 contract
+        run: |
+          python -m py_compile tools/finalize_portfolio_r29.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c['active_issue'] == 138
+          assert c['active_research'] == 'PORTFOLIO-R29'
+          assert c['last_completed_issue'] == 137
+          assert c['last_decision'] == 'DEC-189'
+          r=Path('research/PORTFOLIO-R29/README.md').read_text()
+          assert 'US-PIPE-001 = 36/45' in r
+          assert 'C-EU-004 = 36/45' in r
+          assert 'No candidate outcome magnitude or relationship is opened' in r
+          print('PORTFOLIO_R29_FROZEN_INPUT_VERIFY_PASS')
+          PY
+      - name: Finalize R29 selection
+        run: python tools/finalize_portfolio_r29.py
+      - name: Verify canonical mirrors and selection
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c == {
+            'checkpoint_id':'CHK-20260916-PORTFOLIO-R29-TERMINAL',
+            'active_issue':'none',
+            'active_research':'NONE',
+            'last_completed_issue':138,
+            'last_completed_research':'PORTFOLIO-R29',
+            'last_decision':'DEC-190',
+            'updated':'2026-09-16',
+          }
+          assert 'PORTFOLIO_R29_SELECTED_C_EU_004__F01_AUTHORIZATION_REQUIRED' in Path('STATUS.md').read_text()
+          assert 'SELECT_C_EU_004_INDUSTRIAL_SITE_CLIMATE_F01' in Path('research/PORTFOLIO-R29/RESULT.md').read_text()
+          assert Path('registry/DEC-190.md').exists()
+          assert Path('registry/CLM-176.md').exists()
+          assert '`DEC-190`' in Path('registry/DECISION_LOG.md').read_text()
+          assert '`CLM-176`' in Path('registry/CLAIM_LEDGER.md').read_text()
+          print('PORTFOLIO_R29_TERMINAL_VERIFY_PASS')
+          PY
+      - name: Commit R29 finalization
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/PORTFOLIO-R29/README.md research/PORTFOLIO-R29/RESULT.md registry/DEC-190.md registry/CLM-176.md registry/DECISION_LOG.md registry/CLAIM_LEDGER.md STATUS.md context/checkpoint.json context/SESSION_HANDOFF.md
+          git commit -m 'Finalize PORTFOLIO-R29 C-EU selection'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Confirm zero-cost boundary
+        run: |
+          echo 'Standard public-repository GitHub-hosted runner only.'
+          echo 'No paid source or service is used.'
+          echo 'Incremental monetary cost: 0 USD.'
