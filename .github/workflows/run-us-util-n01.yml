@@ -1,0 +1,71 @@
+name: Run US-UTIL-N01 Outcome-Blind AMI Design
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/run-us-util-n01.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  run-design:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify active frozen contract
+        run: |
+          python -m py_compile tools/run_us_util_n01.py tools/us_util_f02_longitudinal_preflight.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c['active_issue'] == 137
+          assert c['active_research'] == 'US-UTIL-N01'
+          assert c['last_decision'] == 'DEC-188'
+          r=Path('research/US-UTIL-N01/README.md').read_text()
+          assert 'UTILITY_STATE_AMI' not in r or 'AMI_SHARE_y' in r
+          assert 'reliability_magnitudes_opened: false' in r
+          assert 'No fallback or post-support rescue.' in r
+          print('US_UTIL_N01_FROZEN_CONTRACT_VERIFY_PASS')
+          PY
+      - name: Execute AMI exposure-only N01
+        run: python tools/run_us_util_n01.py
+      - name: Verify outcome-blind staging
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('research/US-UTIL-N01/STAGING_RESULT.json').read_text())
+          assert r['gate'] in {
+            'PASS_US_UTIL_N01_AMI_RAMP_MATCHED_DESIGN_IDENTIFIABLE',
+            'PARTIAL_US_UTIL_N01_AMI_EXPOSURE_IDENTIFIABLE__MATCH_SUPPORT_PENDING',
+            'HOLD_US_UTIL_N01_SOURCE_OR_DESIGN_SUPPORT',
+          }
+          assert r['reliability_magnitudes_opened'] is False
+          assert r['relationship_computed'] is False
+          assert r['noaa_storm_magnitudes_used'] is False
+          assert r['invented_county_weights'] is False
+          if r.get('source_hash_match_f02'):
+              assert Path('research/US-UTIL-N01/PAIR_IDENTITIES.jsonl.gz').exists()
+          print('US_UTIL_N01_STAGING_VERIFY_PASS', r['gate'])
+          PY
+      - name: Commit immutable staging evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-UTIL-N01/STAGING_RESULT.json research/US-UTIL-N01/STAGING_SOURCE_AUDIT.json
+          if test -f research/US-UTIL-N01/PAIR_IDENTITIES.jsonl.gz; then git add research/US-UTIL-N01/PAIR_IDENTITIES.jsonl.gz; fi
+          git commit -m 'Record US-UTIL-N01 outcome-blind staging evidence'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Confirm zero-cost boundary
+        run: |
+          echo 'Standard public-repository GitHub-hosted runner only.'
+          echo 'No paid source or service is used.'
+          echo 'Incremental monetary cost: 0 USD.'
