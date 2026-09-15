@@ -6,7 +6,7 @@ issue: 133
 state: COMPLETED_SELECT
 selected_candidate: US-MINE-001
 selected_gate: US-MINE-F01
-next_issue: PENDING_STAGE0_AUTHORIZATION
+next_issue: 134
 candidate_outcomes_opened: false
 incremental_monetary_cost_usd: 0
 ---

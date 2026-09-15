@@ -1,23 +1,23 @@
 ---
-checkpoint_id: CHK-20260916-PORTFOLIO-R27-COMPLETE
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20260916-US-MINE-F01-ACTIVE
+active_issue: 134
+active_research: US-MINE-F01
 last_completed_issue: 133
 last_completed_research: PORTFOLIO-R27
-last_decision: DEC-182
+last_decision: DEC-183
 updated: 2026-09-16
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `PORTFOLIO_R27_SELECTED_US_MINE_F01__AUTHORIZATION_REQUIRED`
+**State / 상태:** `US_MINE_F01_ACTIVE__OUTCOME_BLIND_STRUCTURAL_FEASIBILITY`
 
-PORTFOLIO-R27 / Issue #133 is complete. **US-MINE-001** is selected at **39/45** for one outcome-blind `US-MINE-F01` structural feasibility gate. The selection is a portfolio-control decision, not an injury finding. Candidate outcome magnitudes remain unopened.
+Issue #134 / US-MINE-F01 is authorized under DEC-183. Frozen support window: **2019–2025**. Exact structural identity: `MINE_ID + CAL_YR + CAL_QTR + SUBUNIT_CD`. Operator/contractor separation uses only `CONTRACTOR_ID` blank/nonblank.
 
-Key boundary: official MSHA documentation indicates that Metal/Nonmetal operators are not required to report production. A production-based national exposure therefore cannot be assumed; F01 must resolve sector/reporting comparability from source semantics/support before any outcome access.
+The MSHA semantic restriction is frozen: Metal/Nonmetal production is not required, so national Coal+MNM production-pressure comparability is not assumed. Injury outcome values remain closed.
 
 ## Exact next action / 정확한 다음 행동
 
-Open exactly one separate US-MINE-F01 outcome-blind feasibility authorization. Verify MSHA source, mine-quarter/subunit, operator/contractor and reporting-comparability semantics; do not open injury magnitudes or compute an exposure-to-injury relationship.
+Execute US-MINE-F01 exactly as preregistered: source/hash/schema/cardinality/exact structural join support only. Keep all prohibited injury outcome fields and exposure magnitudes unopened; no threshold/window/source rescue.
 
 Incremental monetary cost remains **0 USD**.
