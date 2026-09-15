@@ -1,7 +1,7 @@
 ---
-checkpoint_id: CHK-20260916-US-UTIL-N01-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20260916-PORTFOLIO-R29-ACTIVE
+active_issue: 138
+active_research: PORTFOLIO-R29
 last_completed_issue: 137
 last_completed_research: US-UTIL-N01
 last_decision: DEC-189
@@ -12,22 +12,26 @@ updated: 2026-09-16
 
 ## Canonical state / 정본 상태
 
-- checkpoint: `CHK-20260916-US-UTIL-N01-TERMINAL`
-- active issue: `none`
-- active research: `NONE`
+- checkpoint: `CHK-20260916-PORTFOLIO-R29-ACTIVE`
+- active issue: `#138`
+- active research: `PORTFOLIO-R29`
 - last completed issue: `#137`
 - last completed research: `US-UTIL-N01`
 - last decision: `DEC-189`
-- state: `US_UTIL_N01_HOLD__PORTFOLIO_RETURN`
+- state: `PORTFOLIO_R29_ACTIVE__OUTCOME_BLIND_RESELECTION`
 
-## Latest terminal result / 최신 종결 결과
+## Current mission / 현재 미션
 
-Corrected Run `35008869612` finalizes **`HOLD_US_UTIL_N01_SOURCE_OR_DESIGN_SUPPORT`**. Eligible Utility Numbers = **408**, exposed candidates = **259**, control candidates = **499**, exact AMI-key conflicts = **87**, matched pairs = **13**, matched states = **9**. Reliability magnitudes remained unopened; no AMI→Reliability relationship was computed.
+Compare only `US-PIPE-001` and `C-EU-004` under the frozen R26–R28 /45 rubric. The official source-access update rule is already frozen in Issue #138 and `research/PORTFOLIO-R29/README.md`. No candidate outcome magnitude may be opened.
 
-Runs `35007853296` and `35007936755` are implementation-invalid lineage and must not be treated as scientific results. / 두 선행 Run은 구현결함 이력이며 과학적 결과가 아니다.
+Prospective adjudicated totals entering tie-break:
+- `US-PIPE-001 = 36/45`
+- `C-EU-004 = 36/45`
+
+The unchanged tie-break is Total → Next-gate information gain → Low overlap/novelty risk → Direct outcome. Current information-gain scores are 3=3, so the next mechanical comparison is Low overlap/novelty risk.
 
 ## Exact restart point / 정확한 재개점
 
-Open a new Stage-0 portfolio reselection. Incorporate terminal information from US-MINE-N01 and US-UTIL-N01 into marginal-information/overlap scoring, compare surviving candidates prospectively, select exactly one next branch, and only then authorize its first outcome-blind gate. Do not reopen or rescue US-UTIL-N01 and do not open Reliability magnitudes.
+Apply the frozen tie-break without score changes, persist exactly one R29 winner, close Issue #138, then open only the selected candidate's separate outcome-blind Stage-0/F01 authorization. No effect test is authorized by R29.
 
 Incremental monetary cost remains **0 USD**.
