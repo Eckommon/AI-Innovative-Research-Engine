@@ -1,0 +1,45 @@
+{
+  "accident_source_read": false,
+  "incremental_monetary_cost_usd": 0,
+  "injury_outcome_values_opened": false,
+  "issue": 135,
+  "pair_identity_sha256": "e2fde0b16457f0b50397b638c96a363a9a0dcca6d4c9ccd49cba5d744f9ba116",
+  "production_magnitude_parsed": false,
+  "raw_source_bytes_persisted": false,
+  "research_id": "US-MINE-N01",
+  "selected_fields": {
+    "employment": [
+      "MINE_ID",
+      "SUBUNIT_CD",
+      "CAL_YR",
+      "CAL_QTR",
+      "HOURS_WORKED",
+      "COAL_METAL_IND"
+    ],
+    "mines": [
+      "MINE_ID",
+      "COAL_METAL_IND",
+      "STATE"
+    ]
+  },
+  "source_manifest": {
+    "employment": {
+      "definition_sha256": "9177770776652a8f3c3a120ab973799a69d333c5f0aa7b5eb51b5150d08e19f3",
+      "definition_url": "https://arlweb.msha.gov/OpenGovernmentData/DataSets/MineSProdQuarterly_Definition_File.txt",
+      "matches_f01": true,
+      "member_name": "MinesProdQuarterly.txt",
+      "member_sha256": "4e29a5fcf6b6ef9c94b1f2485ab8da69ebbbe99baa01c361a30b0def75817b84",
+      "zip_sha256": "c8d218341e3247bbcfa2713c934c662f4449557ee403a1f0b5e52c773ee5d18a",
+      "zip_url": "https://arlweb.msha.gov/OpenGovernmentData/DataSets/MinesProdQuarterly.zip"
+    },
+    "mines": {
+      "definition_sha256": "efd2bc2c493207a464be7c4e4795ffd08a221588b76b716ee334a75dfc14f1f9",
+      "definition_url": "https://arlweb.msha.gov/OpenGovernmentData/DataSets/Mines_Definition_File.txt",
+      "matches_f01": true,
+      "member_name": "Mines.txt",
+      "member_sha256": "d735ce96c07933cae54000898d11e998911a1243a8787042feacc4566d9abb2c",
+      "zip_sha256": "732d6add18a68dd7ac03af9b76bb0ac10d2b78e36a9308e7ad92dba7acb27c45",
+      "zip_url": "https://arlweb.msha.gov/OpenGovernmentData/DataSets/Mines.zip"
+    }
+  }
+}
