@@ -1,17 +1,19 @@
 ---
-checkpoint_id: CHK-20260916-US-MINE-F01-ACTIVE
-active_issue: 134
-active_research: US-MINE-F01
-last_completed_issue: 133
-last_completed_research: PORTFOLIO-R27
-last_decision: DEC-183
+checkpoint_id: CHK-20260916-US-MINE-F01-TERMINAL
+active_issue: none
+active_research: NONE
+last_completed_issue: 134
+last_completed_research: US-MINE-F01
+last_decision: DEC-184
 updated: 2026-09-16
 ---
 
 # Session Handoff / 세션 인수인계
 
-Issue #134 / US-MINE-F01 is active and outcome-blind under DEC-183. The 2019–2025 window and exact mine-quarter-subunit structural keys are frozen. Do not use injury degree, lost/restricted days, injury magnitude/rate/severity, production-per-hour, or any exposure→injury statistic.
+US-MINE-F01 / Issue #134 is terminal at **`PASS_US_MINE_F01_STRUCTURAL_JOIN_READY__PRODUCTION_SCOPE_RESTRICTED`** from corrected frozen-contract Run `35003865979`. Superseded Run `35003705306` is retained as an implementation-polarity nonconformity; exact source manifest and the scientific contract were unchanged.
 
-Exact restart: Execute US-MINE-F01 exactly as preregistered: source/hash/schema/cardinality/exact structural join support only. Keep all prohibited injury outcome fields and exposure magnitudes unopened; no threshold/window/source rescue.
+F01 established **663,020** exact 2019–2025 employment keys, **17,060** repeat-support mines, and **21,426/21,491 (99.6975%)** exact operator-accident structural key overlap across **53 states**. Injury outcomes and exposure magnitudes remained unopened; no relationship was computed.
+
+Exact restart: Open only a separately preregistered US-MINE-N01 outcome-blind design gate. Choose exactly one exposure family from source semantics/support before any injury outcome access, preserve PRODUCTION_SCOPE_RESTRICTED, and do not choose exposure using accident outcomes.
 
 Cost: **0 USD**.

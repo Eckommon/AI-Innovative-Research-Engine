@@ -68,3 +68,8 @@ No threshold/source/window rescue after execution.
 A later N01 must choose exactly one exposure family from source semantics/support before any injury values are opened. It must separately freeze sector scope, contractor handling, subunit aggregation, denominator, timing/lag, repeated-quarter eligibility, comparator/estimand, minimum support, materiality and non-causal claim boundaries.
 
 Incremental monetary cost: **0 USD**.
+
+
+## Terminal F01 result / F01 최종 결과
+
+**`PASS_US_MINE_F01_STRUCTURAL_JOIN_READY__PRODUCTION_SCOPE_RESTRICTED`** — corrected frozen-contract Run `35003865979`. Superseded Run `35003705306` is retained as a boolean-polarity implementation nonconformity, not a scientific failure. Exact employment overlap: **21,426/21,491 (99.6975%)** across **53 states**. Injury outcome values remained unopened and no relationship was computed. See `RESULT.md`.

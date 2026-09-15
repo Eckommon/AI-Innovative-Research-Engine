@@ -145,3 +145,6 @@ Official artifacts comply with `LANG-001`, `COST-001`, `FACT-001`, and `FRESH-00
 
 
 | `CLM-171` | PORTFOLIO-R27 selects US-MINE-001 at 39/45 for one outcome-blind US-MINE-F01 structural feasibility gate; no injury or exposure magnitude was opened. / R27에서 US-MINE-001을 결과 비개봉 F01로 선정. | `DERIVED/PORTFOLIO_CONTROL` | `V2_PRIMARY_VERIFIED` | Issue #133; `research/PORTFOLIO-R27/RESULT.md`; `registry/CLM-171.md` | 2026-09-16 | active |
+
+
+| `CLM-172` | US-MINE-F01 passes the frozen outcome-blind structural gate: 663,020 exact employment keys, 17,060 repeat-support mines, 21,426/21,491 (99.6975%) exact operator-accident structural overlap across 53 states; injury outcomes remain closed and production scope remains restricted. / US-MINE-F01 구조 feasibility PASS. | `OBSERVED/DERIVED/VALIDATED` | `V3_OUTCOME_BLIND_STRUCTURAL_GATE` | Run `35003865979`; superseded Run `35003705306`; `research/US-MINE-F01/RESULT.json`; `RESULT.md` | 2026-09-16 | active |
