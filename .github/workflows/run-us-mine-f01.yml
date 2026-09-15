@@ -1,0 +1,86 @@
+name: Run US-MINE-F01 Outcome-Blind Structural Gate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/run-us-mine-f01.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: read
+
+jobs:
+  run-f01:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Compile runner
+        run: python -m py_compile tools/run_us_mine_f01.py
+      - name: Verify canonical active authorization
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          test "$(gh api repos/${{ github.repository }}/issues/134 --jq .state)" = "open"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c['active_issue'] == 134
+          assert c['active_research'] == 'US-MINE-F01'
+          assert c['last_decision'] == 'DEC-183'
+          assert 'US_MINE_F01_ACTIVE__OUTCOME_BLIND_STRUCTURAL_FEASIBILITY' in Path('STATUS.md').read_text()
+          r=Path('research/US-MINE-F01/README.md').read_text()
+          assert 'support_window: 2019-2025' in r
+          assert 'injury_outcome_values_opened: false' in r
+          print('US_MINE_F01_ACTIVE_AUTHORIZATION_VERIFY_PASS')
+          PY
+      - name: Execute frozen F01 structural gate
+        run: python tools/run_us_mine_f01.py
+      - name: Verify staging evidence is outcome-blind and preregistered
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('research/US-MINE-F01/STAGING_RESULT.json').read_text())
+          a=json.loads(Path('research/US-MINE-F01/STAGING_SOURCE_AUDIT.json').read_text())
+          allowed={
+            'PASS_US_MINE_F01_STRUCTURAL_JOIN_READY__PRODUCTION_SCOPE_RESTRICTED',
+            'PARTIAL_US_MINE_F01_IDENTITY_READY__JOIN_OR_HOURS_SUPPORT_PENDING',
+            'HOLD_US_MINE_F01_SOURCE_OR_IDENTITY_SUPPORT',
+          }
+          assert r['gate'] in allowed
+          assert r['support_window'] == {'start_year': 2019, 'end_year': 2025}
+          assert r['production_scope_restricted'] is True
+          assert r['injury_outcome_values_opened'] is False
+          assert r['prohibited_outcome_fields_accessed'] is False
+          assert r['relationship_computed'] is False
+          assert r['post_execution_rescue_used'] is False
+          assert r['incremental_monetary_cost_usd'] == 0
+          assert a['forbidden_fields_selected'] == []
+          assert a['injury_outcome_values_opened'] is False
+          assert a['raw_source_bytes_persisted'] is False
+          print('US_MINE_F01_STAGING_VERIFY_PASS', r['gate'])
+          PY
+      - name: Commit staging evidence only
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-MINE-F01/STAGING_RESULT.json research/US-MINE-F01/STAGING_SOURCE_AUDIT.json
+          git commit -m 'Record US-MINE-F01 outcome-blind staging evidence'
+          for attempt in 1 2 3 4; do
+            if git pull --rebase origin main && git push origin HEAD:main; then exit 0; fi
+            sleep $((attempt * 3))
+          done
+          exit 1
+      - name: Confirm COST-001 boundary
+        run: |
+          echo 'Standard public-repository GitHub-hosted runner and public MSHA sources only.'
+          echo 'Incremental monetary cost: 0 USD.'
