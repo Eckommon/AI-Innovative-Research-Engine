@@ -1,0 +1,72 @@
+name: Finalize US-MINE-N01 Terminal HOLD
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/finalize-us-mine-n01.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify terminal inputs
+        run: |
+          python -m py_compile tools/finalize_us_mine_n01.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c['active_issue'] == 135
+          assert c['active_research'] == 'US-MINE-N01'
+          assert c['last_decision'] == 'DEC-185'
+          r=json.loads(Path('research/US-MINE-N01/STAGING_RESULT.json').read_text())
+          assert r['gate'] == 'HOLD_US_MINE_N01_SOURCE_OR_DESIGN_SUPPORT'
+          assert r['matching']['pairs'] == 2084
+          assert r['matching']['pairs_by_sector']['C'] == 214
+          assert r['structural_diagnostics']['sector_mine_mismatches'] == 60
+          assert r['accident_source_read'] is False
+          assert r['injury_outcome_values_opened'] is False
+          print('US_MINE_N01_TERMINAL_INPUT_VERIFY_PASS')
+          PY
+      - name: Finalize terminal state
+        run: python tools/finalize_us_mine_n01.py
+      - name: Verify canonical terminal mirrors
+        run: |
+          python tools/check_checkpoint.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c['active_issue'] == 'none'
+          assert c['active_research'] == 'NONE'
+          assert c['last_completed_issue'] == 135
+          assert c['last_completed_research'] == 'US-MINE-N01'
+          assert c['last_decision'] == 'DEC-186'
+          assert Path('registry/CLM-173.md').exists()
+          assert Path('registry/DEC-186.md').exists()
+          assert '`CLM-173`' in Path('registry/CLAIM_LEDGER.md').read_text()
+          assert '`DEC-186`' in Path('registry/DECISION_LOG.md').read_text()
+          assert 'US_MINE_N01_HOLD__PORTFOLIO_RETURN' in Path('STATUS.md').read_text()
+          print('US_MINE_N01_CANONICAL_TERMINAL_VERIFY_PASS')
+          PY
+      - name: Commit terminal state
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add STATUS.md context/SESSION_HANDOFF.md context/checkpoint.json registry/CLAIM_LEDGER.md registry/DECISION_LOG.md registry/CLM-173.md registry/DEC-186.md research/US-MINE-N01/README.md research/US-MINE-N01/RESULT.json research/US-MINE-N01/RESULT.md
+          git commit -m 'Finalize US-MINE-N01 at frozen design HOLD'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Confirm zero-cost boundary
+        run: |
+          echo 'Standard public-repository GitHub-hosted runner only.'
+          echo 'Incremental monetary cost: 0 USD.'
