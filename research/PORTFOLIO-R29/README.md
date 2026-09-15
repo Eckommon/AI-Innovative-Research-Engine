@@ -76,3 +76,8 @@ The result must be finalized mechanically under the frozen tie-break; no score m
 Apply the frozen tie-break to the two 36/45 candidates, persist exactly one winner, close R29, and open only that winner's separate outcome-blind source/access/identity feasibility gate. No effect test is authorized.
 
 Incremental monetary cost remains **0 USD**.
+
+
+## Final disposition / 최종 처분
+
+R29 mechanically selects **`SELECT_C_EU_004_INDUSTRIAL_SITE_CLIMATE_F01`** under DEC-190 / CLM-176. Total scores tie 36=36 and information gain ties 3=3; Low-overlap/novelty risk selects C-EU at 3>0. No candidate outcome magnitude was opened.
