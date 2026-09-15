@@ -154,3 +154,4 @@ Official artifacts comply with `LANG-001`, `COST-001`, `FACT-001`, and `FRESH-00
 
 
 | `CLM-174` | PORTFOLIO-R28 selects US-UTIL post-F02 for one outcome-blind US-UTIL-N01 descendant-design gate after a frozen 37=37 tie is resolved by the preregistered low-overlap tie-break; no candidate magnitude was opened. / R28에서 US-UTIL N01 결과 비개봉 설계 게이트를 선정. | `DERIVED/PORTFOLIO_CONTROL` | `V2_PRIMARY_VERIFIED` | Issue #136; `research/PORTFOLIO-R28/RESULT.md`; `registry/CLM-174.md` | 2026-09-16 | active |
+| `CLM-175` | Corrected US-UTIL-N01 outcome-blind AMI-ramp design fails frozen identifiability/support requirements; no Reliability magnitude opened. / 교정된 US-UTIL-N01 설계가 고정 support 요건을 충족하지 못했으며 Reliability 값은 개봉하지 않았다. | `DERIVED` | `V3_OUTCOME_BLIND_DESIGN_GATE` | Issue #137; Run `35008869612`; `research/US-UTIL-N01/RESULT.md` | 2026-09-16 | active |

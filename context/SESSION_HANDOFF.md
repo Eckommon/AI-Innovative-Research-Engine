@@ -1,19 +1,23 @@
----
-checkpoint_id: CHK-20260916-US-UTIL-N01-ACTIVE
-active_issue: 137
-active_research: US-UTIL-N01
-last_completed_issue: 136
-last_completed_research: PORTFOLIO-R28
-last_decision: DEC-188
-updated: 2026-09-16
----
+# Session Handoff / 세션 인계
 
-# Session Handoff / 세션 인수인계
+## Canonical state / 정본 상태
 
-Issue #137 / US-UTIL-N01 is active and outcome-blind under DEC-188. Unit, denominator, exposure quantiles, future SAIDI basis, materiality, calipers, global utility single-use rule, storm boundary and PASS/PARTIAL/HOLD thresholds are frozen in `research/US-UTIL-N01/README.md`.
+- checkpoint: `CHK-20260916-US-UTIL-N01-TERMINAL`
+- active issue: `none`
+- active research: `NONE`
+- last completed issue: `#137`
+- last completed research: `US-UTIL-N01`
+- last decision: `DEC-189`
+- state: `US_UTIL_N01_HOLD__PORTFOLIO_RETURN`
 
-Reliability magnitude access remains forbidden.
+## Latest terminal result / 최신 종결 결과
 
-Exact restart: Execute US-UTIL-N01 exactly as preregistered. Verify all 2019-2024 EIA-861 ZIP hashes against F02 first; then parse only Advanced Metering counts plus Reliability blank/nonblank IEEE-SAIDI-with-MED support, freeze deterministic pairs and fingerprint, and apply the frozen PASS/PARTIAL/HOLD gate without opening Reliability magnitudes or using NOAA storm magnitudes.
+Corrected Run `35008869612` finalizes **`HOLD_US_UTIL_N01_SOURCE_OR_DESIGN_SUPPORT`**. Eligible Utility Numbers = **408**, exposed candidates = **259**, control candidates = **499**, exact AMI-key conflicts = **87**, matched pairs = **13**, matched states = **9**. Reliability magnitudes remained unopened; no AMI→Reliability relationship was computed.
 
-Cost: **0 USD**.
+Runs `35007853296` and `35007936755` are implementation-invalid lineage and must not be treated as scientific results. / 두 선행 Run은 구현결함 이력이며 과학적 결과가 아니다.
+
+## Exact restart point / 정확한 재개점
+
+Open a new Stage-0 portfolio reselection. Incorporate terminal information from US-MINE-N01 and US-UTIL-N01 into marginal-information/overlap scoring, compare surviving candidates prospectively, select exactly one next branch, and only then authorize its first outcome-blind gate. Do not reopen or rescue US-UTIL-N01 and do not open Reliability magnitudes.
+
+Incremental monetary cost remains **0 USD**.

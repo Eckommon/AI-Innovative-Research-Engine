@@ -110,3 +110,8 @@ Global single-use of Utility Number is the primary pseudoreplication control.
 PASS would mean design identifiability only. It would not show that AMI improves reliability, reduces outages, creates resilience, or causes any outcome direction.
 
 Incremental monetary cost: **0 USD**.
+
+
+## Terminal disposition / 최종 처분
+
+Corrected Run `35008869612` terminates US-UTIL-N01 at **`HOLD_US_UTIL_N01_SOURCE_OR_DESIGN_SUPPORT`** under DEC-189 / CLM-175. Eligible Utility Numbers = **408**, exposed candidates = **259**, control candidates = **499**, exact-key AMI conflicts = **87**, deterministic pairs = **13** across **9 states**. Reliability magnitudes remained closed and no relationship was computed. / Reliability 값은 개봉되지 않았고 관계계산도 수행하지 않았다.

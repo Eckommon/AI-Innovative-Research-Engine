@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260916-US-UTIL-N01-ACTIVE",
-  "active_issue": 137,
-  "active_research": "US-UTIL-N01",
-  "last_completed_issue": 136,
-  "last_completed_research": "PORTFOLIO-R28",
-  "last_decision": "DEC-188",
+  "checkpoint_id": "CHK-20260916-US-UTIL-N01-TERMINAL",
+  "active_issue": "none",
+  "active_research": "NONE",
+  "last_completed_issue": 137,
+  "last_completed_research": "US-UTIL-N01",
+  "last_decision": "DEC-189",
   "updated": "2026-09-16"
 }
