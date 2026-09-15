@@ -1,23 +1,23 @@
 ---
-checkpoint_id: CHK-20260916-US-MINE-N01-TERMINAL
+checkpoint_id: CHK-20260916-PORTFOLIO-R28-COMPLETE
 active_issue: none
 active_research: NONE
-last_completed_issue: 135
-last_completed_research: US-MINE-N01
-last_decision: DEC-186
+last_completed_issue: 136
+last_completed_research: PORTFOLIO-R28
+last_decision: DEC-187
 updated: 2026-09-16
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `US_MINE_N01_HOLD__PORTFOLIO_RETURN`
+**State / 상태:** `PORTFOLIO_R28_SELECTED_US_UTIL_N01__AUTHORIZATION_REQUIRED`
 
-US-MINE-N01 / Issue #135 is terminal at **`HOLD_US_MINE_N01_SOURCE_OR_DESIGN_SUPPORT`** from frozen-contract Run `35006086876`.
+PORTFOLIO-R28 / Issue #136 is complete. **US-UTIL post-F02** is selected for one outcome-blind `US-UTIL-N01` descendant-design gate. US-UTIL and US-PIPE tied at 37/45; the prospectively frozen tie-break selected US-UTIL on Low overlap / novelty risk after Next-gate information gain remained tied.
 
-Exposure-only evidence: **15,179** eligible mines; **2,084** deterministic pairs across **49 states**; Coal **214** pairs and Metal/Nonmetal **1,870**. Frozen failures: Coal pair minimum **214 < 300** and **60** strict sector-identity mismatches. Accident/injury outcomes remained closed and no relationship was computed.
+No Reliability, AMI, storm-severity or candidate relationship magnitude was opened in R28. US-MINE remains terminal HOLD and is not rescued.
 
 ## Exact next action / 정확한 다음 행동
 
-Return to Stage 0 and open the next independent portfolio comparison. Do not open US-MINE-E01 or rescue N01 by changing the frozen Coal-pair floor, sector identity rule, matching, or thresholds after support was observed.
+Open exactly one separate US-UTIL-N01 outcome-blind descendant-design authorization. Freeze one AMI/adoption exposure family, one comparable Reliability basis, timing, repeated-unit/comparator structure, materiality, panel dependence handling and non-causal claim boundary before opening Reliability or AMI magnitudes.
 
 Incremental monetary cost remains **0 USD**.

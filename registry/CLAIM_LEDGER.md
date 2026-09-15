@@ -151,3 +151,6 @@ Official artifacts comply with `LANG-001`, `COST-001`, `FACT-001`, and `FRESH-00
 
 
 | `CLM-173` | US-MINE-N01 executed outcome-blind and identified 2,084 frozen hours-ramp pairs across 49 states, but the preregistered design is HOLD because Coal contributed 214 pairs (<300) and strict current-Mines-vs-historical-quarterly sector identity had 60 mismatches; injury outcomes were never opened. / US-MINE-N01 결과 비개봉 설계 HOLD. | `OBSERVED/DERIVED/VALIDATED` | `V3_OUTCOME_BLIND_DESIGN_GATE` | Run `35006086876`; `research/US-MINE-N01/RESULT.json`; `RESULT.md` | 2026-09-16 | active |
+
+
+| `CLM-174` | PORTFOLIO-R28 selects US-UTIL post-F02 for one outcome-blind US-UTIL-N01 descendant-design gate after a frozen 37=37 tie is resolved by the preregistered low-overlap tie-break; no candidate magnitude was opened. / R28에서 US-UTIL N01 결과 비개봉 설계 게이트를 선정. | `DERIVED/PORTFOLIO_CONTROL` | `V2_PRIMARY_VERIFIED` | Issue #136; `research/PORTFOLIO-R28/RESULT.md`; `registry/CLM-174.md` | 2026-09-16 | active |
