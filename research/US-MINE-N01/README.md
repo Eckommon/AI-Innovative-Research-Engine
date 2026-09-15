@@ -98,3 +98,8 @@ A PASS is design identifiability only. It is not evidence that operational ramp-
 Official source basis / 공식 근거: MSHA Open Government quarterly employment/production data and MSHA Part 50 subunit/worktime documentation.
 
 Incremental monetary cost: **0 USD**.
+
+
+## Terminal N01 result / N01 최종 결과
+
+**`HOLD_US_MINE_N01_SOURCE_OR_DESIGN_SUPPORT`** — Run `35006086876`. Exposure-only design produced **2,084** pairs across **49 states**, but failed frozen `coal_pairs_ge_300` (**214**) and strict `sector_matches_mines` (**60 mismatches**) requirements. Accidents/injury outcomes remained unopened and no relationship was computed. No rescue is permitted. See `RESULT.md`.

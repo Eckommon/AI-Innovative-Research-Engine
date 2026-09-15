@@ -148,3 +148,6 @@ Official artifacts comply with `LANG-001`, `COST-001`, `FACT-001`, and `FRESH-00
 
 
 | `CLM-172` | US-MINE-F01 passes the frozen outcome-blind structural gate: 663,020 exact employment keys, 17,060 repeat-support mines, 21,426/21,491 (99.6975%) exact operator-accident structural overlap across 53 states; injury outcomes remain closed and production scope remains restricted. / US-MINE-F01 구조 feasibility PASS. | `OBSERVED/DERIVED/VALIDATED` | `V3_OUTCOME_BLIND_STRUCTURAL_GATE` | Run `35003865979`; superseded Run `35003705306`; `research/US-MINE-F01/RESULT.json`; `RESULT.md` | 2026-09-16 | active |
+
+
+| `CLM-173` | US-MINE-N01 executed outcome-blind and identified 2,084 frozen hours-ramp pairs across 49 states, but the preregistered design is HOLD because Coal contributed 214 pairs (<300) and strict current-Mines-vs-historical-quarterly sector identity had 60 mismatches; injury outcomes were never opened. / US-MINE-N01 결과 비개봉 설계 HOLD. | `OBSERVED/DERIVED/VALIDATED` | `V3_OUTCOME_BLIND_DESIGN_GATE` | Run `35006086876`; `research/US-MINE-N01/RESULT.json`; `RESULT.md` | 2026-09-16 | active |

@@ -1,23 +1,23 @@
 ---
-checkpoint_id: CHK-20260916-US-MINE-N01-ACTIVE
-active_issue: 135
-active_research: US-MINE-N01
-last_completed_issue: 134
-last_completed_research: US-MINE-F01
-last_decision: DEC-185
+checkpoint_id: CHK-20260916-US-MINE-N01-TERMINAL
+active_issue: none
+active_research: NONE
+last_completed_issue: 135
+last_completed_research: US-MINE-N01
+last_decision: DEC-186
 updated: 2026-09-16
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `US_MINE_N01_ACTIVE__OUTCOME_BLIND_HOURS_RAMP_DESIGN`
+**State / 상태:** `US_MINE_N01_HOLD__PORTFOLIO_RETURN`
 
-Issue #135 / US-MINE-N01 is active under DEC-185. Exactly one exposure family is frozen: **`ALL_SECTOR_OPERATOR_HOURS_RAMP_UP`**, using operator `HOURS_WORKED` across Coal + Metal/Nonmetal with exact sector stratification.
+US-MINE-N01 / Issue #135 is terminal at **`HOLD_US_MINE_N01_SOURCE_OR_DESIGN_SUPPORT`** from frozen-contract Run `35006086876`.
 
-`PRODUCTION_SCOPE_RESTRICTED` remains binding. N01 must not read the Accidents source and must not access injury outcomes.
+Exposure-only evidence: **15,179** eligible mines; **2,084** deterministic pairs across **49 states**; Coal **214** pairs and Metal/Nonmetal **1,870**. Frozen failures: Coal pair minimum **214 < 300** and **60** strict sector-identity mismatches. Accident/injury outcomes remained closed and no relationship was computed.
 
 ## Exact next action / 정확한 다음 행동
 
-Execute US-MINE-N01 exactly as preregistered using Mines + MinesProdQuarterly only. Verify exact F01 source hashes first, then compute exposure-only three-quarter support, deterministic matching and pair fingerprint. Do not read the Accidents source or any injury field/value; no fallback/rescue.
+Return to Stage 0 and open the next independent portfolio comparison. Do not open US-MINE-E01 or rescue N01 by changing the frozen Coal-pair floor, sector identity rule, matching, or thresholds after support was observed.
 
 Incremental monetary cost remains **0 USD**.
