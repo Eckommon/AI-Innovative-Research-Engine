@@ -18,6 +18,8 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Install frozen parser dependency
+        run: python -m pip install 'openpyxl>=3.1,<4'
       - name: Verify active frozen contract
         run: |
           python -m py_compile tools/run_us_util_n01.py tools/us_util_f02_longitudinal_preflight.py
