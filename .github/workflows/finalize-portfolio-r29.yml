@@ -31,8 +31,8 @@ jobs:
           assert c['last_completed_issue'] == 137
           assert c['last_decision'] == 'DEC-189'
           r=Path('research/PORTFOLIO-R29/README.md').read_text()
-          assert 'US-PIPE-001 = 36/45' in r
-          assert 'C-EU-004 = 36/45' in r
+          assert '- US-PIPE-001: **36/45**' in r
+          assert '- C-EU-004: **36/45**' in r
           assert 'No candidate outcome magnitude or relationship is opened' in r
           print('PORTFOLIO_R29_FROZEN_INPUT_VERIFY_PASS')
           PY
