@@ -32,7 +32,7 @@
     },
     "window_rows": 663020
   },
-  "gate": "PARTIAL_US_MINE_F01_IDENTITY_READY__JOIN_OR_HOURS_SUPPORT_PENDING",
+  "gate": "PASS_US_MINE_F01_STRUCTURAL_JOIN_READY__PRODUCTION_SCOPE_RESTRICTED",
   "incremental_monetary_cost_usd": 0,
   "injury_outcome_values_opened": false,
   "issue": 134,
@@ -52,11 +52,11 @@
     "hours_nonblank_c_ge_95pct": true,
     "hours_nonblank_m_ge_95pct": true,
     "mine_id_unique": true,
+    "no_prohibited_outcome_fields_accessed": true,
+    "no_relationship_computed": true,
     "operator_accident_key_overlap_ge_80pct": true,
     "overlap_states_ge_30": true,
     "production_scope_restricted": true,
-    "prohibited_outcome_fields_accessed": false,
-    "relationship_computed": false,
     "repeated_operator_mines_ge_3000": true,
     "sources_accessible": true
   },

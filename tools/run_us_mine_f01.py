@@ -222,8 +222,8 @@ def main() -> None:
         "operator_accident_key_overlap_ge_80pct": overlap_rate >= 0.80,
         "overlap_states_ge_30": len(overlap_states) >= 30,
         "production_scope_restricted": True,
-        "prohibited_outcome_fields_accessed": False,
-        "relationship_computed": False,
+        "no_prohibited_outcome_fields_accessed": True,
+        "no_relationship_computed": True,
     }
 
     hard_identity = (
