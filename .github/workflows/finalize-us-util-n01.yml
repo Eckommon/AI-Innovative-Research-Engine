@@ -1,0 +1,81 @@
+name: Finalize US-UTIL-N01 Terminal HOLD
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/finalize-us-util-n01.yml'
+      - 'tools/finalize_us_util_n01.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify corrected evidence and active state
+        run: |
+          python -m py_compile tools/finalize_us_util_n01.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c['active_issue'] == 137
+          assert c['active_research'] == 'US-UTIL-N01'
+          assert c['last_decision'] == 'DEC-188'
+          r=json.loads(Path('research/US-UTIL-N01/STAGING_RESULT.json').read_text())
+          assert r['gate'] == 'HOLD_US_UTIL_N01_SOURCE_OR_DESIGN_SUPPORT'
+          assert r['execution_correction']['scientific_contract_changed'] is False
+          assert r['reliability_magnitudes_opened'] is False
+          assert r['relationship_computed'] is False
+          assert r['post_execution_rescue_used'] is False
+          print('US_UTIL_N01_TERMINAL_INPUT_VERIFY_PASS')
+          PY
+      - name: Finalize canonical terminal state
+        run: python tools/finalize_us_util_n01.py
+      - name: Verify mirrors and ledgers
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c == {
+            'checkpoint_id':'CHK-20260916-US-UTIL-N01-TERMINAL',
+            'active_issue':'none',
+            'active_research':'NONE',
+            'last_completed_issue':137,
+            'last_completed_research':'US-UTIL-N01',
+            'last_decision':'DEC-189',
+            'updated':'2026-09-16',
+          }
+          s=Path('STATUS.md').read_text()
+          h=Path('context/SESSION_HANDOFF.md').read_text()
+          assert 'US_UTIL_N01_HOLD__PORTFOLIO_RETURN' in s
+          assert 'CHK-20260916-US-UTIL-N01-TERMINAL' in h
+          assert Path('research/US-UTIL-N01/RESULT.json').exists()
+          assert Path('research/US-UTIL-N01/RESULT.md').exists()
+          assert Path('registry/DEC-189.md').exists()
+          assert Path('registry/CLM-175.md').exists()
+          assert '`DEC-189`' in Path('registry/DECISION_LOG.md').read_text()
+          assert '`CLM-175`' in Path('registry/CLAIM_LEDGER.md').read_text()
+          print('US_UTIL_N01_TERMINAL_MIRROR_VERIFY_PASS')
+          PY
+      - name: Commit terminalization
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-UTIL-N01/README.md research/US-UTIL-N01/RESULT.json research/US-UTIL-N01/RESULT.md registry/DEC-189.md registry/CLM-175.md registry/DECISION_LOG.md registry/CLAIM_LEDGER.md STATUS.md context/checkpoint.json context/SESSION_HANDOFF.md
+          git commit -m 'Finalize US-UTIL-N01 terminal HOLD'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Confirm zero-cost boundary
+        run: |
+          echo 'Standard public-repository GitHub-hosted runner only.'
+          echo 'No paid source or service is used.'
+          echo 'Incremental monetary cost: 0 USD.'
