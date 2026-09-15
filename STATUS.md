@@ -1,25 +1,23 @@
 ---
-checkpoint_id: CHK-20260916-US-MINE-F01-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20260916-US-MINE-N01-ACTIVE
+active_issue: 135
+active_research: US-MINE-N01
 last_completed_issue: 134
 last_completed_research: US-MINE-F01
-last_decision: DEC-184
+last_decision: DEC-185
 updated: 2026-09-16
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `US_MINE_F01_PASS__N01_AUTHORIZATION_REQUIRED`
+**State / 상태:** `US_MINE_N01_ACTIVE__OUTCOME_BLIND_HOURS_RAMP_DESIGN`
 
-US-MINE-F01 / Issue #134 is terminal at **`PASS_US_MINE_F01_STRUCTURAL_JOIN_READY__PRODUCTION_SCOPE_RESTRICTED`** under corrected frozen-contract Run `35003865979`. Run `35003705306` is preserved as a superseded boolean-polarity implementation nonconformity only.
+Issue #135 / US-MINE-N01 is active under DEC-185. Exactly one exposure family is frozen: **`ALL_SECTOR_OPERATOR_HOURS_RAMP_UP`**, using operator `HOURS_WORKED` across Coal + Metal/Nonmetal with exact sector stratification.
 
-Structural evidence: **663,020** exact employment keys; **17,060** repeat-support mines; **21,426/21,491 (99.6975%)** exact operator-accident structural overlap; **53 states**. Injury outcomes remained closed and no exposure relationship was computed.
-
-`PRODUCTION_SCOPE_RESTRICTED` remains binding.
+`PRODUCTION_SCOPE_RESTRICTED` remains binding. N01 must not read the Accidents source and must not access injury outcomes.
 
 ## Exact next action / 정확한 다음 행동
 
-Open only a separately preregistered US-MINE-N01 outcome-blind design gate. Choose exactly one exposure family from source semantics/support before any injury outcome access, preserve PRODUCTION_SCOPE_RESTRICTED, and do not choose exposure using accident outcomes.
+Execute US-MINE-N01 exactly as preregistered using Mines + MinesProdQuarterly only. Verify exact F01 source hashes first, then compute exposure-only three-quarter support, deterministic matching and pair fingerprint. Do not read the Accidents source or any injury field/value; no fallback/rescue.
 
 Incremental monetary cost remains **0 USD**.

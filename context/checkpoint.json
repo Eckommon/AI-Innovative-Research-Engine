@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260916-US-MINE-F01-TERMINAL",
-  "active_issue": "none",
-  "active_research": "NONE",
+  "checkpoint_id": "CHK-20260916-US-MINE-N01-ACTIVE",
+  "active_issue": 135,
+  "active_research": "US-MINE-N01",
   "last_completed_issue": 134,
   "last_completed_research": "US-MINE-F01",
-  "last_decision": "DEC-184",
+  "last_decision": "DEC-185",
   "updated": "2026-09-16"
 }
