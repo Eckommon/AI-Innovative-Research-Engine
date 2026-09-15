@@ -1,3 +1,13 @@
+---
+checkpoint_id: CHK-20260916-US-UTIL-N01-TERMINAL
+active_issue: none
+active_research: NONE
+last_completed_issue: 137
+last_completed_research: US-UTIL-N01
+last_decision: DEC-189
+updated: 2026-09-16
+---
+
 # Session Handoff / 세션 인계
 
 ## Canonical state / 정본 상태
