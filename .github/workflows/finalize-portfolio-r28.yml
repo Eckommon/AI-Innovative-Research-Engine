@@ -1,0 +1,69 @@
+name: Finalize PORTFOLIO-R28 Selection
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/finalize-portfolio-r28.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify R28 inputs
+        run: |
+          python -m py_compile tools/finalize_portfolio_r28.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c['active_issue'] == 'none'
+          assert c['last_completed_issue'] == 135
+          assert c['last_completed_research'] == 'US-MINE-N01'
+          assert c['last_decision'] == 'DEC-186'
+          r=Path('research/PORTFOLIO-R28/RESULT.md').read_text()
+          assert 'selected_candidate: US-UTIL-post-F02' in r
+          assert 'selected_gate: US-UTIL-N01' in r
+          assert 'candidate_outcomes_opened: false' in r
+          assert Path('registry/CLM-174.md').exists()
+          assert Path('registry/DEC-187.md').exists()
+          print('PORTFOLIO_R28_INPUT_VERIFY_PASS')
+          PY
+      - name: Finalize R28 canonical state
+        run: python tools/finalize_portfolio_r28.py
+      - name: Verify canonical mirrors
+        run: |
+          python tools/check_checkpoint.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c['active_issue'] == 'none'
+          assert c['last_completed_issue'] == 136
+          assert c['last_completed_research'] == 'PORTFOLIO-R28'
+          assert c['last_decision'] == 'DEC-187'
+          assert '`CLM-174`' in Path('registry/CLAIM_LEDGER.md').read_text()
+          assert '`DEC-187`' in Path('registry/DECISION_LOG.md').read_text()
+          assert 'PORTFOLIO_R28_SELECTED_US_UTIL_N01__AUTHORIZATION_REQUIRED' in Path('STATUS.md').read_text()
+          print('PORTFOLIO_R28_CANONICAL_VERIFY_PASS')
+          PY
+      - name: Commit selection atomically
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add STATUS.md context/SESSION_HANDOFF.md context/checkpoint.json registry/CLAIM_LEDGER.md registry/DECISION_LOG.md
+          git commit -m 'Finalize PORTFOLIO-R28 US-UTIL selection'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Confirm zero-cost boundary
+        run: |
+          echo 'Standard public-repository GitHub-hosted runner only.'
+          echo 'Incremental monetary cost: 0 USD.'
