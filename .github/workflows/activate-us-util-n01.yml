@@ -1,0 +1,66 @@
+name: Activate US-UTIL-N01 Canonical State
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/activate-us-util-n01.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  activate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify authorization inputs
+        run: |
+          python -m py_compile tools/activate_us_util_n01.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c['active_issue'] == 'none'
+          assert c['last_completed_issue'] == 136
+          assert c['last_decision'] == 'DEC-187'
+          r=Path('research/US-UTIL-N01/README.md').read_text()
+          assert 'state: AUTHORIZED_OUTCOME_BLIND_DESIGN' in r
+          assert 'reliability_magnitudes_opened: false' in r
+          assert 'AMI_SHARE_y' in r
+          assert Path('registry/DEC-188.md').exists()
+          print('US_UTIL_N01_AUTHORIZATION_INPUT_VERIFY_PASS')
+          PY
+      - name: Activate canonical state
+        run: python tools/activate_us_util_n01.py
+      - name: Verify canonical mirrors
+        run: |
+          python tools/check_checkpoint.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c['active_issue'] == 137
+          assert c['active_research'] == 'US-UTIL-N01'
+          assert c['last_completed_issue'] == 136
+          assert c['last_decision'] == 'DEC-188'
+          assert '`DEC-188`' in Path('registry/DECISION_LOG.md').read_text()
+          assert 'US_UTIL_N01_ACTIVE__OUTCOME_BLIND_AMI_RAMP_DESIGN' in Path('STATUS.md').read_text()
+          print('US_UTIL_N01_CANONICAL_ACTIVATION_VERIFY_PASS')
+          PY
+      - name: Commit activation
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add STATUS.md context/SESSION_HANDOFF.md context/checkpoint.json registry/DECISION_LOG.md
+          git commit -m 'Activate US-UTIL-N01 outcome-blind AMI-ramp design'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Confirm zero-cost boundary
+        run: |
+          echo 'Standard public-repository GitHub-hosted runner only.'
+          echo 'Incremental monetary cost: 0 USD.'
