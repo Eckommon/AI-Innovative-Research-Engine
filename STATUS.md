@@ -1,21 +1,21 @@
 ---
-checkpoint_id: CHK-20260916-PORTFOLIO-R29-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20260916-C-EU-F01-ACTIVE
+active_issue: 139
+active_research: C-EU-F01
 last_completed_issue: 138
 last_completed_research: PORTFOLIO-R29
-last_decision: DEC-190
+last_decision: DEC-191
 updated: 2026-09-16
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `PORTFOLIO_R29_SELECTED_C_EU_004__F01_AUTHORIZATION_REQUIRED`
+**State / 상태:** `C_EU_F01_ACTIVE__OUTCOME_BLIND_SITE_HEAT_FEASIBILITY`
 
-PORTFOLIO-R29 is completed with **`SELECT_C_EU_004_INDUSTRIAL_SITE_CLIMATE_F01`** under DEC-190 / CLM-176. No candidate outcome magnitude was opened.
+Issue #139 / C-EU-F01 is active under DEC-191. The only industrial identity is exact EEA `InspireSiteId`; the only physical-hazard family is ERA5-Land `2m temperature`. Industrial outcome/thematic magnitudes and site temperature magnitudes remain closed, and no relationship is authorized.
 
 ## Exact next action / 정확한 다음 행동
 
-Open exactly one separate `C-EU-F01` outcome-blind source/access/identity feasibility issue. Establish EEA industrial-site identities/coordinates, zero-cost ERA5-Land access, one prospectively selected physical-hazard variable family, and deterministic point-to-grid/time support. Do not open industrial outcomes or compute a climate-effect relationship.
+Execute C-EU-F01 exactly as preregistered: verify EEA layer/schema and exact-site coordinate support using only allowed identity fields; verify current official ERA5-Land 2m-temperature/grid/access semantics; probe the official programmatic climate route without bypassing authentication; then apply the frozen PASS/PARTIAL/HOLD gate. Do not open industrial outcomes or site temperature values.
 
 Incremental monetary cost remains **0 USD**.
