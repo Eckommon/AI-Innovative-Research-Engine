@@ -35,8 +35,8 @@ def main() -> None:
 
     readme_path = OUT / 'README.md'
     readme = readme_path.read_text(encoding='utf-8')
-    assert 'US-PIPE-001 = 36/45' in readme
-    assert 'C-EU-004 = 36/45' in readme
+    assert '- US-PIPE-001: **36/45**' in readme
+    assert '- C-EU-004: **36/45**' in readme
     assert 'No candidate outcome magnitude or relationship is opened' in readme
 
     result = f'''---
