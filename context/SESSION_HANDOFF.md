@@ -1,19 +1,19 @@
 ---
-checkpoint_id: CHK-20260916-PORTFOLIO-R28-COMPLETE
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20260916-US-UTIL-N01-ACTIVE
+active_issue: 137
+active_research: US-UTIL-N01
 last_completed_issue: 136
 last_completed_research: PORTFOLIO-R28
-last_decision: DEC-187
+last_decision: DEC-188
 updated: 2026-09-16
 ---
 
 # Session Handoff / 세션 인수인계
 
-PORTFOLIO-R28 / Issue #136 is complete at **`SELECT_US_UTIL_N01_OUTCOME_BLIND_DESCENDANT_DESIGN`**. The candidate pool and tie-break were frozen before scoring. US-UTIL post-F02 and US-PIPE scored 37/45; the tie resolved prospectively in favor of US-UTIL by Low overlap / novelty risk 1>0 after Next-gate information gain tied 2=2. C-EU-004 remains preserved at 36/45.
+Issue #137 / US-UTIL-N01 is active and outcome-blind under DEC-188. Unit, denominator, exposure quantiles, future SAIDI basis, materiality, calipers, global utility single-use rule, storm boundary and PASS/PARTIAL/HOLD thresholds are frozen in `research/US-UTIL-N01/README.md`.
 
-No candidate outcome magnitude was opened. US-MINE-N01 remains terminal HOLD with no rescue.
+Reliability magnitude access remains forbidden.
 
-Exact restart: Open exactly one separate US-UTIL-N01 outcome-blind descendant-design authorization. Freeze one AMI/adoption exposure family, one comparable Reliability basis, timing, repeated-unit/comparator structure, materiality, panel dependence handling and non-causal claim boundary before opening Reliability or AMI magnitudes.
+Exact restart: Execute US-UTIL-N01 exactly as preregistered. Verify all 2019-2024 EIA-861 ZIP hashes against F02 first; then parse only Advanced Metering counts plus Reliability blank/nonblank IEEE-SAIDI-with-MED support, freeze deterministic pairs and fingerprint, and apply the frozen PASS/PARTIAL/HOLD gate without opening Reliability magnitudes or using NOAA storm magnitudes.
 
 Cost: **0 USD**.
