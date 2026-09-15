@@ -1,9 +1,16 @@
 {
+  "execution_correction": {
+    "f02_largest_identity_sheet_reused": true,
+    "f02_primary_ieee_with_med_excluding_los_reused": true,
+    "invalid_meter_rows_retained_as_diagnostic_only": true,
+    "scientific_contract_changed": false,
+    "superseded_run": 35007936755
+  },
   "incremental_monetary_cost_usd": 0,
   "invented_county_weights": false,
   "issue": 137,
   "noaa_storm_magnitudes_used": false,
-  "pair_identity_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "pair_identity_sha256": "9210dcdadc76ba3c33963a18f29eb5b6afb5f39350f662fd8b8354f19e45037d",
   "raw_source_bytes_persisted": false,
   "relationship_computed": false,
   "reliability_magnitudes_opened": false,

@@ -1,40 +1,68 @@
 {
+  "base_runner_gate_before_contract_correction": "HOLD_US_UTIL_N01_SOURCE_OR_DESIGN_SUPPORT",
   "candidate_support": {
     "by_year": {
       "2020": {
-        "CONTROL": 0,
-        "EXPOSED": 0
+        "CONTROL": 62,
+        "EXPOSED": 62
       },
       "2021": {
-        "CONTROL": 0,
-        "EXPOSED": 0
+        "CONTROL": 144,
+        "EXPOSED": 64
       },
       "2022": {
-        "CONTROL": 0,
-        "EXPOSED": 0
+        "CONTROL": 150,
+        "EXPOSED": 67
       },
       "2023": {
-        "CONTROL": 0,
-        "EXPOSED": 0
+        "CONTROL": 143,
+        "EXPOSED": 66
       }
     },
-    "control": 0,
-    "exposed": 0,
+    "control": 499,
+    "exposed": 259,
     "quantiles": {
-      "2020": null,
-      "2021": null,
-      "2022": null,
-      "2023": null
+      "2020": {
+        "eligible": 306,
+        "q40": 1.8390079865593378e-06,
+        "q60": 0.0010179701057311252,
+        "q80": 0.09192407825384755
+      },
+      "2021": {
+        "eligible": 315,
+        "q40": 0.0,
+        "q60": 0.0006448715862362366,
+        "q80": 0.06128012549897961
+      },
+      "2022": {
+        "eligible": 330,
+        "q40": 0.0,
+        "q60": 0.00019928552125605438,
+        "q80": 0.022427811770893535
+      },
+      "2023": {
+        "eligible": 328,
+        "q40": 0.0,
+        "q60": 0.0002825541977411472,
+        "q80": 0.04708130724598225
+      }
     }
   },
   "diagnostics": {
-    "ami_duplicate_conflicts": 0,
+    "ami_duplicate_conflicts": 87,
     "ami_share_out_of_bounds": 0,
-    "eligible_transitions": 0,
-    "eligible_utilities": 0,
-    "invalid_meter_rows": 30,
+    "eligible_transitions": 1279,
+    "eligible_utilities": 408,
+    "invalid_meter_rows": 12429,
     "reliability_support_conflicts": 0,
     "zero_denominator_rows": 0
+  },
+  "execution_correction": {
+    "f02_largest_identity_sheet_reused": true,
+    "f02_primary_ieee_with_med_excluding_los_reused": true,
+    "invalid_meter_rows_retained_as_diagnostic_only": true,
+    "scientific_contract_changed": false,
+    "superseded_run": 35007936755
   },
   "exposure_family": "UTILITY_STATE_AMI_PENETRATION_RAMP",
   "exposure_years": [
@@ -43,18 +71,43 @@
     2022,
     2023
   ],
+  "frozen_issue_137_requirements": {
+    "ami_exact_route_all_years": true,
+    "control_candidates_ge_300": true,
+    "each_exposure_year_has_both_roles": true,
+    "each_represented_exposure_year_pairs_ge_30": false,
+    "eligible_utilities_ge_500": false,
+    "exposed_candidates_ge_300": false,
+    "incremental_monetary_cost_zero": true,
+    "invented_county_weights_not_used": true,
+    "matched_pairs_ge_150": false,
+    "matched_states_ge_25": false,
+    "no_conflicting_ami_duplicates": false,
+    "noaa_storm_magnitudes_not_used": true,
+    "pair_fingerprint_frozen": true,
+    "relationship_not_computed": true,
+    "reliability_ieee_saidi_with_med_route_all_years": true,
+    "reliability_magnitudes_not_opened": true,
+    "represented_exposure_years_ge_3": true,
+    "source_hash_match_f02": true
+  },
   "future_outcome_basis": "IEEE_SAIDI_WITH_MED_NEXT_YEAR_CHANGE",
   "gate": "HOLD_US_UTIL_N01_SOURCE_OR_DESIGN_SUPPORT",
   "incremental_monetary_cost_usd": 0,
   "invented_county_weights": false,
   "issue": 137,
   "matching": {
-    "globally_used_utilities": 0,
+    "globally_used_utilities": 26,
     "pair_identity_file": "research/US-UTIL-N01/PAIR_IDENTITIES.jsonl.gz",
-    "pair_identity_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-    "pairs": 0,
-    "pairs_by_exposure_year": {},
-    "states": 0
+    "pair_identity_sha256": "9210dcdadc76ba3c33963a18f29eb5b6afb5f39350f662fd8b8354f19e45037d",
+    "pairs": 13,
+    "pairs_by_exposure_year": {
+      "2020": 1,
+      "2021": 2,
+      "2022": 8,
+      "2023": 2
+    },
+    "states": 9
   },
   "noaa_storm_magnitudes_used": false,
   "post_execution_rescue_used": false,
@@ -63,9 +116,9 @@
   "requirements": {
     "ami_exact_route_all_years": true,
     "ami_share_bounds_valid": true,
-    "control_candidates_ge_300": false,
-    "each_exposure_year_has_both_roles": false,
-    "each_represented_exposure_year_pairs_ge_30": true,
+    "control_candidates_ge_300": true,
+    "each_exposure_year_has_both_roles": true,
+    "each_represented_exposure_year_pairs_ge_30": false,
     "eligible_utilities_ge_500": false,
     "exposed_candidates_ge_300": false,
     "incremental_monetary_cost_zero": true,
@@ -73,13 +126,13 @@
     "matched_pairs_ge_150": false,
     "matched_states_ge_25": false,
     "meter_values_parseable": false,
-    "no_conflicting_ami_duplicates": true,
+    "no_conflicting_ami_duplicates": false,
     "no_reliability_support_conflicts": true,
     "noaa_storm_magnitudes_not_used": true,
     "relationship_not_computed": true,
-    "reliability_ieee_saidi_with_med_route_all_years": false,
+    "reliability_ieee_saidi_with_med_route_all_years": true,
     "reliability_magnitudes_not_opened": true,
-    "represented_exposure_years_ge_3": false,
+    "represented_exposure_years_ge_3": true,
     "source_hash_match_f02": true
   },
   "research_id": "US-UTIL-N01",
@@ -88,13 +141,13 @@
       "ami": {
         "ami_total_col": 17,
         "amr_total_col": 12,
-        "conflicts": 0,
-        "exact_rows": 6,
+        "conflicts": 38,
+        "exact_rows": 1102,
         "header_row": 2,
-        "invalid_meter_rows": 2,
+        "invalid_meter_rows": 2000,
         "member": "Advanced_Meters_2019.xlsx",
         "route_ok": true,
-        "sheet": "territories",
+        "sheet": "states",
         "standard_total_col": 27,
         "state_col": 6,
         "utility_col": 2,
@@ -104,18 +157,16 @@
       "reliability": {
         "basis_labels": [
           "IEEE Standard | SAIDI With MED",
-          "IEEE Standard | SAIFI With MED",
-          "IEEE Standard | SAIDI With MED Minus LOS",
-          "IEEE Standard | SAIFI With MED Minus LOS"
+          "IEEE Standard | SAIFI With MED"
         ],
         "header_row": 2,
-        "ieee_with_med_saidi_col": "",
+        "ieee_with_med_saidi_col": 7,
         "member": "Reliability_2019.xlsx",
-        "route_ok": false,
-        "sheet": "Reliability_Territories",
+        "route_ok": true,
+        "sheet": "Reliability_States",
         "state_col": 4,
         "support_conflicts": 0,
-        "support_rows": 0,
+        "support_rows": 1184,
         "utility_col": 2,
         "workbook_sha256": "1644f962e7b4b550dc1b4081ebc7b533959f11fa156fca90934c2a6362537131",
         "year": 2019
@@ -125,13 +176,13 @@
       "ami": {
         "ami_total_col": 17,
         "amr_total_col": 12,
-        "conflicts": 0,
-        "exact_rows": 6,
+        "conflicts": 1,
+        "exact_rows": 608,
         "header_row": 2,
-        "invalid_meter_rows": 2,
+        "invalid_meter_rows": 2034,
         "member": "Advanced_Meters_2020.xlsx",
         "route_ok": true,
-        "sheet": "territories",
+        "sheet": "states",
         "standard_total_col": 27,
         "state_col": 6,
         "utility_col": 2,
@@ -141,18 +192,16 @@
       "reliability": {
         "basis_labels": [
           "IEEE Standard | SAIDI With MED",
-          "IEEE Standard | SAIFI With MED",
-          "IEEE Standard | SAIDI With MED Minus LOS",
-          "IEEE Standard | SAIFI With MED Minus LOS"
+          "IEEE Standard | SAIFI With MED"
         ],
         "header_row": 2,
-        "ieee_with_med_saidi_col": "",
+        "ieee_with_med_saidi_col": 6,
         "member": "Reliability_2020.xlsx",
-        "route_ok": false,
-        "sheet": "Reliability_Territories",
+        "route_ok": true,
+        "sheet": "Reliability_States",
         "state_col": 4,
         "support_conflicts": 0,
-        "support_rows": 0,
+        "support_rows": 944,
         "utility_col": 2,
         "workbook_sha256": "c934b2cfb458921f8b8b6e11bbc867835317d41e126b896d17a8fc3423a6cb84",
         "year": 2020
@@ -162,13 +211,13 @@
       "ami": {
         "ami_total_col": 17,
         "amr_total_col": 12,
-        "conflicts": 0,
-        "exact_rows": 4,
+        "conflicts": 41,
+        "exact_rows": 625,
         "header_row": 2,
-        "invalid_meter_rows": 5,
+        "invalid_meter_rows": 2000,
         "member": "Advanced_Meters_2021.xlsx",
         "route_ok": true,
-        "sheet": "territories",
+        "sheet": "states",
         "standard_total_col": 27,
         "state_col": 6,
         "utility_col": 2,
@@ -178,18 +227,16 @@
       "reliability": {
         "basis_labels": [
           "IEEE Standard | All Events (With Major Event Days) | SAIDI (minutes per year)",
-          "IEEE Standard | All Events (With Major Event Days) | SAIFI (times per year)",
-          "IEEE Standard | Loss of Supply Removed (With Major Event Days) | SAIDI (minutes per year)",
-          "IEEE Standard | Loss of Supply Removed (With Major Event Days) | SAIFI (times per year)"
+          "IEEE Standard | All Events (With Major Event Days) | SAIFI (times per year)"
         ],
         "header_row": 3,
-        "ieee_with_med_saidi_col": "",
+        "ieee_with_med_saidi_col": 6,
         "member": "Reliability_2021.xlsx",
-        "route_ok": false,
-        "sheet": "Reliability_Territories",
+        "route_ok": true,
+        "sheet": "Reliability_States",
         "state_col": 4,
         "support_conflicts": 0,
-        "support_rows": 0,
+        "support_rows": 958,
         "utility_col": 2,
         "workbook_sha256": "0cb35d9140067e7ce90eca007b7a07c7737f8bbd572562a3620422c15d12c80d",
         "year": 2021
@@ -199,13 +246,13 @@
       "ami": {
         "ami_total_col": 17,
         "amr_total_col": 12,
-        "conflicts": 0,
-        "exact_rows": 1,
+        "conflicts": 2,
+        "exact_rows": 555,
         "header_row": 2,
-        "invalid_meter_rows": 8,
+        "invalid_meter_rows": 2129,
         "member": "Advanced_Meters_2022.xlsx",
         "route_ok": true,
-        "sheet": "territories",
+        "sheet": "states",
         "standard_total_col": 27,
         "state_col": 6,
         "utility_col": 2,
@@ -215,18 +262,16 @@
       "reliability": {
         "basis_labels": [
           "IEEE Standard | All Events (With Major Event Days) | SAIDI (minutes per year)",
-          "IEEE Standard | All Events (With Major Event Days) | SAIFI (times per year)",
-          "IEEE Standard | Loss of Supply Removed (With Major Event Days) | SAIDI (minutes per year)",
-          "IEEE Standard | Loss of Supply Removed (With Major Event Days) | SAIFI (times per year)"
+          "IEEE Standard | All Events (With Major Event Days) | SAIFI (times per year)"
         ],
         "header_row": 3,
-        "ieee_with_med_saidi_col": "",
+        "ieee_with_med_saidi_col": 6,
         "member": "Reliability_2022.xlsx",
-        "route_ok": false,
-        "sheet": "Reliability_Territories",
+        "route_ok": true,
+        "sheet": "Reliability_States",
         "state_col": 4,
         "support_conflicts": 0,
-        "support_rows": 0,
+        "support_rows": 960,
         "utility_col": 2,
         "workbook_sha256": "6976b0324bc30ba0b01931c52800e06f3f1a4c7bd39888e35fd3897aa9af6332",
         "year": 2022
@@ -236,13 +281,13 @@
       "ami": {
         "ami_total_col": 17,
         "amr_total_col": 12,
-        "conflicts": 0,
-        "exact_rows": 2,
+        "conflicts": 3,
+        "exact_rows": 583,
         "header_row": 2,
-        "invalid_meter_rows": 6,
+        "invalid_meter_rows": 2105,
         "member": "Advanced_Meters_2023.xlsx",
         "route_ok": true,
-        "sheet": "territories",
+        "sheet": "states",
         "standard_total_col": 27,
         "state_col": 6,
         "utility_col": 2,
@@ -252,18 +297,16 @@
       "reliability": {
         "basis_labels": [
           "IEEE Standard | All Events (With Major Event Days) | SAIDI (minutes per year)",
-          "IEEE Standard | All Events (With Major Event Days) | SAIFI (times per year)",
-          "IEEE Standard | Loss of Supply Removed (With Major Event Days) | SAIDI (minutes per year)",
-          "IEEE Standard | Loss of Supply Removed (With Major Event Days) | SAIFI (times per year)"
+          "IEEE Standard | All Events (With Major Event Days) | SAIFI (times per year)"
         ],
         "header_row": 3,
-        "ieee_with_med_saidi_col": "",
+        "ieee_with_med_saidi_col": 6,
         "member": "Reliability_2023.xlsx",
-        "route_ok": false,
-        "sheet": "Reliability_Territories",
+        "route_ok": true,
+        "sheet": "Reliability_States",
         "state_col": 4,
         "support_conflicts": 0,
-        "support_rows": 0,
+        "support_rows": 967,
         "utility_col": 2,
         "workbook_sha256": "d619d47aac50c46a70a282ed8a09625262b7bc9ac7499db1c5bbfb784c401233",
         "year": 2023
@@ -273,13 +316,13 @@
       "ami": {
         "ami_total_col": 17,
         "amr_total_col": 12,
-        "conflicts": 0,
-        "exact_rows": 1,
+        "conflicts": 2,
+        "exact_rows": 561,
         "header_row": 2,
-        "invalid_meter_rows": 7,
+        "invalid_meter_rows": 2161,
         "member": "Advanced_Meters_2024.xlsx",
         "route_ok": true,
-        "sheet": "territories",
+        "sheet": "states",
         "standard_total_col": 27,
         "state_col": 6,
         "utility_col": 2,
@@ -289,18 +332,16 @@
       "reliability": {
         "basis_labels": [
           "IEEE Standard | All Events (With Major Event Days) | SAIDI (minutes per year)",
-          "IEEE Standard | All Events (With Major Event Days) | SAIFI (times per year)",
-          "IEEE Standard | Loss of Supply Removed (With Major Event Days) | SAIDI (minutes per year)",
-          "IEEE Standard | Loss of Supply Removed (With Major Event Days) | SAIFI (times per year)"
+          "IEEE Standard | All Events (With Major Event Days) | SAIFI (times per year)"
         ],
         "header_row": 3,
-        "ieee_with_med_saidi_col": "",
+        "ieee_with_med_saidi_col": 6,
         "member": "Reliability_2024.xlsx",
-        "route_ok": false,
-        "sheet": "Reliability_Territories",
+        "route_ok": true,
+        "sheet": "Reliability_States",
         "state_col": 4,
         "support_conflicts": 0,
-        "support_rows": 0,
+        "support_rows": 971,
         "utility_col": 2,
         "workbook_sha256": "ac2805354a0a56663c95d7ea02e83e544c22e7ecddb2fab00e792abdeb856ad1",
         "year": 2024
