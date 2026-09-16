@@ -1,0 +1,100 @@
+name: Finalize US-NHTSA-MC-F01 Source-Schema HOLD
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/finalize-us-nhtsa-mc-f01.yml'
+      - 'tools/finalize_us_nhtsa_mc_f01.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      SOURCE_RUN_ID: '35043099657'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify active frozen contract and valid HOLD staging
+        run: |
+          python -m py_compile tools/finalize_us_nhtsa_mc_f01.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c['active_issue'] == 143
+          assert c['active_research'] == 'US-NHTSA-MC-F01'
+          assert c['last_completed_issue'] == 142
+          assert c['last_decision'] == 'DEC-198'
+          r=json.loads(Path('research/US-NHTSA-MC-F01/STAGING_RESULT.json').read_text())
+          assert r['valid_execution'] is True
+          assert r['gate'] == 'HOLD_US_NHTSA_MC_F01_SOURCE_SCHEMA_OR_IDENTITY'
+          assert r['communication']['distinct_product_keys'] == 13729
+          assert r['recall']['distinct_product_keys'] == 40700
+          assert r['aggregate_product_key_overlap'] == 8263
+          assert r['communication']['full_frozen_required_schema_present'] is False
+          assert r['communication']['distinct_date_years'] == 0
+          assert r['recall_incidence_opened'] is False
+          assert r['future_recall_membership_conditioned_on_communications_opened'] is False
+          assert r['relationship_computed'] is False
+          print('US_NHTSA_MC_F01_VALID_HOLD_STAGING_VERIFY_PASS')
+          PY
+
+      - name: Finalize HOLD
+        run: python tools/finalize_us_nhtsa_mc_f01.py
+
+      - name: Verify terminal artifacts and mirrors
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c == {
+            'checkpoint_id':'CHK-20260916-US-NHTSA-MC-F01-TERMINAL',
+            'active_issue':'none',
+            'active_research':'NONE',
+            'last_completed_issue':143,
+            'last_completed_research':'US-NHTSA-MC-F01',
+            'last_decision':'DEC-199',
+            'updated':'2026-09-16',
+          }
+          assert 'US_NHTSA_MC_F01_HOLD__PORTFOLIO_RETURN' in Path('STATUS.md').read_text()
+          assert 'HOLD_US_NHTSA_MC_F01_SOURCE_SCHEMA_OR_IDENTITY' in Path('research/US-NHTSA-MC-F01/RESULT.md').read_text()
+          assert Path('research/US-NHTSA-MC-F01/RESULT.json').exists()
+          assert Path('registry/DEC-199.md').exists()
+          assert Path('registry/CLM-181.md').exists()
+          assert '`DEC-198`' in Path('registry/DECISION_LOG.md').read_text()
+          assert '`DEC-199`' in Path('registry/DECISION_LOG.md').read_text()
+          assert '`CLM-181`' in Path('registry/CLAIM_LEDGER.md').read_text()
+          print('US_NHTSA_MC_F01_TERMINAL_VERIFY_PASS')
+          PY
+
+      - name: Commit terminalization
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-NHTSA-MC-F01/README.md research/US-NHTSA-MC-F01/RESULT.md research/US-NHTSA-MC-F01/RESULT.json registry/DEC-199.md registry/CLM-181.md registry/DECISION_LOG.md registry/CLAIM_LEDGER.md STATUS.md context/checkpoint.json context/SESSION_HANDOFF.md
+          git commit -m 'Finalize US-NHTSA-MC-F01 source-schema HOLD'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Close Issue 143 as completed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api "repos/${GITHUB_REPOSITORY}/issues/143" -X PATCH -f state=closed -f state_reason=completed >/dev/null
+          echo 'Issue #143 closed completed.'
+
+      - name: Confirm zero-cost boundary
+        run: |
+          echo 'Official NHTSA public files only.'
+          echo 'No source substitution, unofficial mirror, paid API, or paid service.'
+          echo 'Incremental monetary cost: 0 USD.'
