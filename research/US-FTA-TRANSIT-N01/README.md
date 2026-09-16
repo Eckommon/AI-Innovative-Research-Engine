@@ -268,3 +268,8 @@ Even a future positive E01 would be **non-causal matched observational evidence*
 Bind this already-frozen N01 contract to one dedicated Issue, authorize it in canonical state, then execute only the exposure-side Breakdowns design runner. Major Safety/Security event row values must remain unopened throughout N01.
 
 Incremental monetary cost remains **0 USD**.
+
+
+## Terminal N01 result / N01 최종 결과
+
+**`HOLD_US_FTA_TRANSIT_N01_MATCHED_RELIABILITY_DESIGN_NOT_IDENTIFIABLE`** — Run `35138272269` retained 514 agencies and 103 deterministic pairs but failed frozen requirements 7, 9 and 10: 6<8 eligible strata, 3<5 matched modes, and 70.87%<80% VRM balance. E01 is not authorized. See `RESULT.md`. Manifest SHA-256: `7968b839b5b00bc9bdc3df2cf541c13205c66301967d77c54343575d297f2ef1`.

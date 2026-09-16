@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260916-US-FTA-TRANSIT-N01-ACTIVE",
-  "active_issue": 148,
-  "active_research": "US-FTA-TRANSIT-N01",
-  "last_completed_issue": 147,
-  "last_completed_research": "US-FTA-TRANSIT-F01",
-  "last_decision": "DEC-208",
-  "updated": "2026-09-16"
+  "checkpoint_id": "CHK-20260917-US-FTA-TRANSIT-N01-TERMINAL",
+  "active_issue": "none",
+  "active_research": "NONE",
+  "last_completed_issue": 148,
+  "last_completed_research": "US-FTA-TRANSIT-N01",
+  "last_decision": "DEC-209",
+  "updated": "2026-09-17"
 }
