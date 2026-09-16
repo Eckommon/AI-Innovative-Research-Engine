@@ -1,0 +1,91 @@
+name: Finalize PORTFOLIO-R32 FMCSA-HAZ Selection
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/finalize-portfolio-r32.yml'
+      - 'tools/finalize_portfolio_r32.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify active R32 and immutable scorecard
+        run: |
+          python -m py_compile tools/finalize_portfolio_r32.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c['active_issue'] == 144
+          assert c['active_research'] == 'PORTFOLIO-R32'
+          assert c['last_completed_issue'] == 143
+          assert c['last_decision'] == 'DEC-200'
+          s=Path('research/PORTFOLIO-R32/SCORECARD.md').read_text()
+          src=Path('research/PORTFOLIO-R32/SOURCE_REVALIDATION.md').read_text()
+          assert 'SELECT_US_FMCSA_HAZ_001_INSPECTION_TO_PHMSA_HAZMAT_F01' in s
+          assert '**42/45**' in s and '**37/45**' in s and s.count('**36/45**') >= 2
+          assert 'candidate_outcomes_opened: false' in s
+          assert 'issue: 144' in src
+          print('PORTFOLIO_R32_FROZEN_INPUT_VERIFY_PASS')
+          PY
+
+      - name: Ratify terminal selection
+        run: python tools/finalize_portfolio_r32.py
+
+      - name: Verify terminal mirrors and ledgers
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c == {
+            'checkpoint_id':'CHK-20260916-PORTFOLIO-R32-TERMINAL',
+            'active_issue':'none',
+            'active_research':'NONE',
+            'last_completed_issue':144,
+            'last_completed_research':'PORTFOLIO-R32',
+            'last_decision':'DEC-201',
+            'updated':'2026-09-16',
+          }
+          assert 'PORTFOLIO_R32_SELECTED_US_FMCSA_HAZ_001__F01_AUTHORIZATION_REQUIRED' in Path('STATUS.md').read_text()
+          assert 'SELECT_US_FMCSA_HAZ_001_INSPECTION_TO_PHMSA_HAZMAT_F01' in Path('research/PORTFOLIO-R32/RESULT.md').read_text()
+          assert Path('registry/DEC-201.md').exists()
+          assert Path('registry/CLM-182.md').exists()
+          assert '`DEC-201`' in Path('registry/DECISION_LOG.md').read_text()
+          assert '`CLM-182`' in Path('registry/CLAIM_LEDGER.md').read_text()
+          print('PORTFOLIO_R32_TERMINAL_VERIFY_PASS')
+          PY
+
+      - name: Commit terminalization
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/PORTFOLIO-R32/README.md research/PORTFOLIO-R32/RESULT.md registry/DEC-201.md registry/CLM-182.md registry/DECISION_LOG.md registry/CLAIM_LEDGER.md STATUS.md context/checkpoint.json context/SESSION_HANDOFF.md
+          git commit -m 'Finalize PORTFOLIO-R32 FMCSA-HAZ selection'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Close Issue 144 as completed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api "repos/${GITHUB_REPOSITORY}/issues/144" -X PATCH -f state=closed -f state_reason=completed >/dev/null
+          echo 'Issue #144 closed completed.'
+
+      - name: Confirm zero-cost boundary
+        run: |
+          echo 'Standard public-repository GitHub-hosted runner only.'
+          echo 'No paid source or service is used.'
+          echo 'Incremental monetary cost: 0 USD.'
