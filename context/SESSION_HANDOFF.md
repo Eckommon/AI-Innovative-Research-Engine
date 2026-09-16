@@ -1,10 +1,10 @@
 ---
-checkpoint_id: CHK-20260916-PORTFOLIO-R30-ACTIVE
-active_issue: 140
-active_research: PORTFOLIO-R30
-last_completed_issue: 139
-last_completed_research: C-EU-F01
-last_decision: DEC-192
+checkpoint_id: CHK-20260916-PORTFOLIO-R30-TERMINAL
+active_issue: none
+active_research: NONE
+last_completed_issue: 140
+last_completed_research: PORTFOLIO-R30
+last_decision: DEC-193
 updated: 2026-09-16
 ---
 
@@ -12,15 +12,15 @@ updated: 2026-09-16
 
 ## Canonical state / 정본 상태
 
-- state: `PORTFOLIO_R30_ACTIVE__FROZEN_SCORECARD_RATIFICATION`
-- active issue: `#140`
-- frozen winner: `US-FDA-MD-001`
-- winner score: `41/45`
+- state: `PORTFOLIO_R30_SELECTED_US_FDA_MD_001__F01_AUTHORIZATION_REQUIRED`
+- selected candidate: `US-FDA-MD-001`
+- selected gate: `US-FDA-MD-F01`
+- frozen score: `41/45`
 - candidate outcomes opened: `false`
-- process nonconformity: scorecard commit preceded Issue binding; rules/source facts preceded scoring; no outcome leakage; scorecard frozen against rescoring.
+- process nonconformity: candidate/rules/source facts frozen before score; scorecard persisted before Issue #140 binding; no outcome leakage; no rescoring.
 
 ## Exact restart point / 정확한 재개점
 
-Ratify the immutable R30 scorecard without changing scores. Persist `DEC-193` / `CLM-178`, terminal R30 result and synchronized mirrors; close Issue #140 and pass State Integrity. Only after that may a separate `US-FDA-MD-F01` source/schema/identity gate be opened. No inspection-classification→recall effect test is authorized.
+Open exactly one `US-FDA-MD-F01` outcome-blind source/schema/identity gate. Verify the current public FDA inspection dataset route, FEI and inspection classification/date/project-area schema, source-semantic CDRH/device-manufacturing filter, repeated inspection/project-area identity, and Device Recall exact `firm_fei_number`/event-date support. Do not open recall incidence by inspection class or compute a relationship.
 
 Incremental monetary cost remains **0 USD**.

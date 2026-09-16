@@ -84,3 +84,8 @@ Provisional selection frozen for ratification: **`SELECT_US_FDA_MD_001_INSPECTIO
 Ratify this immutable scorecard under Issue #140 without rescoring, persist the R30 terminal selection atomically, close Issue #140, pass State Integrity, and only then open a separate `US-FDA-MD-F01` outcome-blind source/schema/identity gate. No inspection-classification→recall effect test is authorized by R30.
 
 Incremental monetary cost remains **0 USD**.
+
+
+## Final disposition / 최종 처분
+
+Issue #140 ratifies the immutable scorecard without rescoring. **`SELECT_US_FDA_MD_001_INSPECTION_TO_RECALL_F01`** is selected at **41/45**, ahead of US-CMS-NH-001 at 37/45 and US-PIPE-001 at 36/45. The pre-Issue scorecard ordering nonconformity remains durably recorded; no candidate outcome was opened.
