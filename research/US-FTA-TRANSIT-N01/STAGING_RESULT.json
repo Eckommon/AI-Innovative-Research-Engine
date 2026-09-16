@@ -1,0 +1,193 @@
+{
+  "boundaries": {
+    "causal_claim_made": false,
+    "future_safety_event_membership_opened": false,
+    "major_safety_event_row_values_opened": false,
+    "manual_or_fuzzy_identity_repair_used": false,
+    "predictive_metric_computed": false,
+    "relationship_computed": false,
+    "row_level_breakdown_event_join_persisted": false
+  },
+  "checks": {
+    "1": {
+      "evidence": "Official amkt-4ehs metadata and actual rows readable; rows=3731.",
+      "pass": true
+    },
+    "10": {
+      "evidence": "Pairs with both exposure/follow-up HIGH:LOW VRM ratios in [1/3,3]=73/103=0.708738 (>=0.80 required).",
+      "pass": false
+    },
+    "11": {
+      "evidence": "Every final pair has HIGH intensity > LOW intensity=True.",
+      "pass": true
+    },
+    "12": {
+      "evidence": "No NTD ID reused in final manifest=True; manifest identities=206, unique=206.",
+      "pass": true
+    },
+    "13": {
+      "evidence": "Canonical pair manifest SHA-256=7968b839b5b00bc9bdc3df2cf541c13205c66301967d77c54343575d297f2ef1.",
+      "pass": true
+    },
+    "14": {
+      "evidence": "major_safety_event_row_values_opened=false; runner has no safety-event dataset endpoint.",
+      "pass": true
+    },
+    "15": {
+      "evidence": "future_safety_event_membership_opened=false.",
+      "pass": true
+    },
+    "16": {
+      "evidence": "relationship_computed=false; predictive_metric_computed=false; causal_claim_made=false.",
+      "pass": true
+    },
+    "17": {
+      "evidence": "Official zero-cost DOT/FTA source and standard public GitHub runner only; incremental monetary cost=0 USD.",
+      "pass": true
+    },
+    "2": {
+      "evidence": "Frozen fields present=True; exact metadata types match=True.",
+      "pass": true
+    },
+    "3": {
+      "evidence": "Malformed identity rows=0; out-of-scope rows=0; exact Full Reporter/DO-PT/2022-2024 rule enforced.",
+      "pass": true
+    },
+    "4": {
+      "evidence": "Whole agency-mode-year fail-closed quality rule enforced; quality-invalid agency-mode-years=93.",
+      "pass": true
+    },
+    "5": {
+      "evidence": "Conflicting source-grain keys=0; conflict-invalid agency-mode-years=0; none included in retained units=True.",
+      "pass": true
+    },
+    "6": {
+      "evidence": "Unique retained agencies after temporal eligibility and one-unit-per-agency=514 (>=400 required).",
+      "pass": true
+    },
+    "7": {
+      "evidence": "Design-eligible strict-separation strata=6 (>=8 required).",
+      "pass": false
+    },
+    "8": {
+      "evidence": "Deterministic HIGH/LOW matched pairs=103 (>=100 required).",
+      "pass": true
+    },
+    "9": {
+      "evidence": "Distinct matched mode codes=3: ['DR', 'MB', 'VP'] (>=5 required).",
+      "pass": false
+    }
+  },
+  "contract_commit": "c4a7f4ea05954fd013714ee6c891d489a6cfc82f",
+  "diagnostics": {
+    "all_strata": 34,
+    "canonical_source_grain_keys": 3731,
+    "conflict_invalid_agency_mode_years": 0,
+    "conflicting_source_grain_keys": 0,
+    "design_eligible_strata": 6,
+    "dropped_no_strict_separation_strata": 0,
+    "dropped_small_strata": 28,
+    "earliest_eligible_agency_modes": 1089,
+    "eligible_strata_summary": [
+      {
+        "exposure_year": 2022,
+        "high_min_intensity": 59.94964230046761,
+        "low_max_intensity": 8.013353452192733,
+        "mode": "DR",
+        "n": 39,
+        "quartile_k": 9,
+        "tos_profile": "DO"
+      },
+      {
+        "exposure_year": 2022,
+        "high_min_intensity": 33.20123267122027,
+        "low_max_intensity": 4.467542347514802,
+        "mode": "DR",
+        "n": 29,
+        "quartile_k": 7,
+        "tos_profile": "PT"
+      },
+      {
+        "exposure_year": 2022,
+        "high_min_intensity": 105.41805974204287,
+        "low_max_intensity": 20.850727826384148,
+        "mode": "MB",
+        "n": 196,
+        "quartile_k": 49,
+        "tos_profile": "DO"
+      },
+      {
+        "exposure_year": 2022,
+        "high_min_intensity": 118.905820168453,
+        "low_max_intensity": 30.51029938544734,
+        "mode": "MB",
+        "n": 39,
+        "quartile_k": 9,
+        "tos_profile": "DO+PT"
+      },
+      {
+        "exposure_year": 2022,
+        "high_min_intensity": 91.34879177789227,
+        "low_max_intensity": 14.43722262486032,
+        "mode": "MB",
+        "n": 100,
+        "quartile_k": 25,
+        "tos_profile": "PT"
+      },
+      {
+        "exposure_year": 2022,
+        "high_min_intensity": 2.7285613523841485,
+        "low_max_intensity": 0.0,
+        "mode": "VP",
+        "n": 19,
+        "quartile_k": 4,
+        "tos_profile": "PT"
+      }
+    ],
+    "identical_duplicate_rows": 0,
+    "matched_modes": [
+      "DR",
+      "MB",
+      "VP"
+    ],
+    "matched_pairs": 103,
+    "numeric_invalid_agency_mode_years": 25,
+    "quality_invalid_agency_mode_years": 93,
+    "retained_unique_agencies": 514,
+    "source_grain_keys": 3731,
+    "valid_exposure_agency_mode_years": 3307,
+    "valid_service_agency_mode_years": 3335,
+    "vrm_balance_fraction": 0.7087378640776699,
+    "vrm_balanced_pairs": 73
+  },
+  "disposition": "HOLD_US_FTA_TRANSIT_N01_MATCHED_RELIABILITY_DESIGN_NOT_IDENTIFIABLE",
+  "evaluated_at_utc": "2026-09-16T19:04:04+00:00",
+  "incremental_monetary_cost_usd": 0,
+  "issue": 148,
+  "manifest": {
+    "pairs": 103,
+    "path": "research/US-FTA-TRANSIT-N01/PAIR_MANIFEST.json",
+    "sha256": "7968b839b5b00bc9bdc3df2cf541c13205c66301967d77c54343575d297f2ef1"
+  },
+  "protocol": "US-FTA-TRANSIT-N01",
+  "source_evidence": {
+    "authorized_fields": [
+      "ntd_id",
+      "mode",
+      "type_of_service",
+      "reporter_type",
+      "report_year",
+      "major_mechanical_failures",
+      "major_mechanical_failures_1",
+      "vehicle_passenger_car_revenue",
+      "vehicle_passenger_car_miles_2"
+    ],
+    "dataset_id": "amkt-4ehs",
+    "metadata_bytes": 56674,
+    "metadata_name": "2022 - 2024 NTD Annual Data - Breakdowns",
+    "metadata_sha256": "2df283b3471513c984ac0da84c4a28c500abe6848f4b876e707fb8875e8e13d1",
+    "query_bytes": 682664,
+    "rows_read": 3731
+  },
+  "valid_evaluation": true
+}
