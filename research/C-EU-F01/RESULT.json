@@ -1,0 +1,18 @@
+{
+  "conflicting_site_ids": 38752,
+  "coordinate_qualified_rate": 0.6041230373177783,
+  "coordinate_qualified_site_ids": 59137,
+  "credential_blocked": true,
+  "distinct_site_ids": 97889,
+  "eea_records": 854731,
+  "era5_semantic_pass": true,
+  "gate": "HOLD_C_EU_F01_SOURCE_OR_IDENTITY",
+  "incremental_monetary_cost_usd": 0,
+  "industrial_outcomes_opened": false,
+  "issue": 139,
+  "qualified_country_codes": 34,
+  "relationship_computed": false,
+  "research_id": "C-EU-F01",
+  "source_run": 35039383396,
+  "temperature_magnitudes_opened": false
+}

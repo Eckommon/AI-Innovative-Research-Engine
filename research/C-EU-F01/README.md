@@ -75,3 +75,8 @@ PARTIAL is allowed only when requirements 1–7 and 10 pass and the sole blocker
 PASS/PARTIAL establishes only public-data source/access/identity readiness. It establishes no heat vulnerability, industrial-performance effect, emissions effect, predictive utility or causality.
 
 Incremental monetary cost remains **0 USD**.
+
+
+## Final disposition / 최종 처분
+
+Corrected Run `35039383396` terminates C-EU-F01 at **`HOLD_C_EU_F01_SOURCE_OR_IDENTITY`**. The complete EEA population was retrieved, but **38,752** exact `InspireSiteId` values have multiple distinct valid coordinate pairs and only **60.4123%** of exact site IDs satisfy the frozen invariant-coordinate rule versus **95% required**. ERA5 semantics passed and the unauthenticated ARCO probe returned 401, but credential access is not the sole blocker, so the frozen PARTIAL disposition does not apply. No industrial outcome or temperature magnitude was opened and no relationship was computed.
