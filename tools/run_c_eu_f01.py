@@ -4,6 +4,11 @@
 Reads only EEA site identity/coordinate fields. Never requests industrial outcome/thematic
 fields. Verifies ERA5-Land documentation/access metadata and probes the official ARCO
 Zarr metadata route without credentials or authentication bypass. Never reads t2m values.
+
+Execution correction after Run 35010687544: the scientific contract is unchanged. The
+EEA full-population scan now retrieves the layer's complete OBJECTID list first and then
+fetches the same allowed identity fields in bounded concurrent POST batches. This avoids
+expensive deep-offset pagination while preserving the exact nationwide population.
 """
 from __future__ import annotations
 
@@ -16,6 +21,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -38,14 +44,14 @@ def sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
-def fetch(url: str, *, timeout: int = 60, max_bytes: int | None = None):
+def fetch(url: str, *, timeout: int = 45, max_bytes: int | None = None):
     req = urllib.request.Request(url, headers={"User-Agent": UA})
     with urllib.request.urlopen(req, timeout=timeout) as r:
         data = r.read() if max_bytes is None else r.read(max_bytes)
         return data, getattr(r, "status", 200), r.geturl(), dict(r.headers)
 
 
-def fetch_retry(url: str, attempts: int = 3, timeout: int = 60):
+def fetch_retry(url: str, attempts: int = 3, timeout: int = 45):
     last = None
     for i in range(attempts):
         try:
@@ -53,17 +59,44 @@ def fetch_retry(url: str, attempts: int = 3, timeout: int = 60):
         except Exception as exc:
             last = exc
             if i + 1 < attempts:
-                time.sleep(2 * (i + 1))
+                time.sleep(1.5 * (i + 1))
     raise last
 
 
 def arcgis_json(base: str, params: dict[str, str | int]):
     url = base + "?" + urllib.parse.urlencode(params)
-    data, status, final, headers = fetch_retry(url, timeout=90)
+    data, status, final, headers = fetch_retry(url, timeout=45)
     obj = json.loads(data.decode("utf-8"))
     if "error" in obj:
         raise RuntimeError(f"ArcGIS error: {obj['error']}")
     return obj, {"url": url, "http": status, "final_url": final, "bytes": len(data), "sha256": sha256(data), "content_type": headers.get("Content-Type", "")}
+
+
+def arcgis_post_json(base: str, params: dict[str, str | int], attempts: int = 3):
+    payload = urllib.parse.urlencode(params).encode("utf-8")
+    last = None
+    for i in range(attempts):
+        try:
+            req = urllib.request.Request(
+                base,
+                data=payload,
+                headers={"User-Agent": UA, "Content-Type": "application/x-www-form-urlencoded"},
+                method="POST",
+            )
+            with urllib.request.urlopen(req, timeout=60) as r:
+                data = r.read()
+                status = getattr(r, "status", 200)
+                final = r.geturl()
+                headers = dict(r.headers)
+            obj = json.loads(data.decode("utf-8"))
+            if "error" in obj:
+                raise RuntimeError(f"ArcGIS error: {obj['error']}")
+            return obj, {"http": status, "final_url": final, "bytes": len(data), "sha256": sha256(data), "content_type": headers.get("Content-Type", "")}
+        except Exception as exc:
+            last = exc
+            if i + 1 < attempts:
+                time.sleep(1.5 * (i + 1))
+    raise last
 
 
 def finite_float(v):
@@ -83,7 +116,7 @@ def probe_unauth_arco():
     for url in ARCO_METADATA_CANDIDATES:
         req = urllib.request.Request(url, headers={"User-Agent": UA})
         try:
-            with urllib.request.urlopen(req, timeout=45) as r:
+            with urllib.request.urlopen(req, timeout=30) as r:
                 data = r.read(2_000_000)
                 attempts.append({"url": url, "http": getattr(r, "status", 200), "bytes_read": len(data), "sha256": sha256(data), "error": None})
                 if data:
@@ -94,6 +127,63 @@ def probe_unauth_arco():
         except Exception as exc:
             attempts.append({"url": url, "http": None, "bytes_read": 0, "sha256": None, "error": type(exc).__name__})
     return False, None, attempts
+
+
+def fetch_identity_population(total_records: int, layer_max: int):
+    ids_obj, ids_audit = arcgis_json(QUERY_URL, {"where": "1=1", "returnIdsOnly": "true", "f": "json"})
+    object_ids = sorted({int(x) for x in (ids_obj.get("objectIds") or [])})
+    if len(object_ids) != total_records:
+        raise RuntimeError(f"OBJECTID population mismatch: ids={len(object_ids)} count={total_records}")
+
+    # Keep each POST modest while allowing enough concurrency to avoid deep-offset timeouts.
+    batch_size = min(max(int(layer_max or 1000), 500), 1000)
+    batches = [object_ids[i:i + batch_size] for i in range(0, len(object_ids), batch_size)]
+
+    def one(batch_index: int, batch: list[int]):
+        page, audit = arcgis_post_json(QUERY_URL, {
+            "objectIds": ",".join(map(str, batch)),
+            "outFields": ",".join(ALLOWED_QUERY_FIELDS),
+            "returnGeometry": "false",
+            "orderByFields": "OBJECTID ASC",
+            "f": "json",
+        })
+        feats = page.get("features", [])
+        rows = []
+        for feat in feats:
+            attrs = feat.get("attributes") or {}
+            rows.append({k: attrs.get(k) for k in ALLOWED_QUERY_FIELDS})
+        return batch_index, batch, rows, audit
+
+    completed = []
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        futures = [pool.submit(one, i, batch) for i, batch in enumerate(batches)]
+        done_count = 0
+        for fut in as_completed(futures):
+            completed.append(fut.result())
+            done_count += 1
+            if done_count % 10 == 0 or done_count == len(batches):
+                print(f"EEA_IDENTITY_BATCH_PROGRESS {done_count}/{len(batches)}", flush=True)
+
+    completed.sort(key=lambda x: x[0])
+    rows = []
+    audits = []
+    for batch_index, batch, batch_rows, audit in completed:
+        rows.extend(batch_rows)
+        audits.append({
+            "batch_index": batch_index,
+            "first_objectid": batch[0],
+            "last_objectid": batch[-1],
+            "requested_ids": len(batch),
+            "rows": len(batch_rows),
+            "sha256": audit["sha256"],
+        })
+
+    returned_ids = [int(r["OBJECTID"]) for r in rows if r.get("OBJECTID") is not None]
+    if len(rows) != total_records or len(returned_ids) != total_records or set(returned_ids) != set(object_ids):
+        raise RuntimeError(
+            f"full population verification failed: rows={len(rows)} returned_ids={len(returned_ids)} expected={total_records}"
+        )
+    return rows, ids_audit, audits
 
 
 def main() -> None:
@@ -107,33 +197,7 @@ def main() -> None:
 
     count_obj, count_audit = arcgis_json(QUERY_URL, {"where": "1=1", "returnCountOnly": "true", "f": "json"})
     total_records = int(count_obj.get("count", 0))
-
-    page_size = min(int(layer.get("maxRecordCount") or 1000), 1000)
-    offset = 0
-    rows = []
-    page_hashes = []
-    while True:
-        params = {
-            "where": "1=1",
-            "outFields": ",".join(ALLOWED_QUERY_FIELDS),
-            "returnGeometry": "false",
-            "resultOffset": offset,
-            "resultRecordCount": page_size,
-            "orderByFields": "OBJECTID ASC",
-            "f": "json",
-        }
-        page, audit = arcgis_json(QUERY_URL, params)
-        feats = page.get("features", [])
-        page_hashes.append({"offset": offset, "rows": len(feats), "sha256": audit["sha256"]})
-        for feat in feats:
-            attrs = feat.get("attributes") or {}
-            # Persist/process only the explicitly allowed identity/support fields.
-            rows.append({k: attrs.get(k) for k in ALLOWED_QUERY_FIELDS})
-        if len(feats) < page_size:
-            break
-        offset += len(feats)
-        if offset > total_records + page_size:
-            raise RuntimeError("ArcGIS pagination exceeded reported count")
+    rows, ids_audit, page_hashes = fetch_identity_population(total_records, int(layer.get("maxRecordCount") or 1000))
 
     coords_by_id = defaultdict(set)
     countries_by_id = defaultdict(set)
@@ -161,10 +225,9 @@ def main() -> None:
     qualified_countries = {cc for sid in qualified_ids for cc in countries_by_id.get(sid, set()) if cc}
     coord_rate = len(qualified_ids) / len(all_ids) if all_ids else 0.0
 
-    # Official lineage/documentation pages. No thematic values are parsed.
-    eea_dataset_bytes, eea_http, eea_final, _ = fetch_retry(EEA_DATASET_URL, timeout=60)
-    ts_bytes, ts_http, ts_final, _ = fetch_retry(ERA5_TS_URL, timeout=60)
-    pug_bytes, pug_http, pug_final, _ = fetch_retry(ERA5_PUG_URL, timeout=90)
+    eea_dataset_bytes, eea_http, eea_final, _ = fetch_retry(EEA_DATASET_URL, attempts=2, timeout=35)
+    ts_bytes, ts_http, ts_final, _ = fetch_retry(ERA5_TS_URL, attempts=2, timeout=35)
+    pug_bytes, pug_http, pug_final, _ = fetch_retry(ERA5_PUG_URL, attempts=2, timeout=45)
     ts_text = norm_space(ts_bytes.decode("utf-8", errors="replace"))
     pug_text = norm_space(pug_bytes.decode("utf-8", errors="replace"))
     combined = ts_text + " " + pug_text
@@ -185,14 +248,12 @@ def main() -> None:
     statuses = {x.get("http") for x in arco_attempts}
     credential_blocked = (not unauth_ok) and bool(statuses & {401, 403}) and semantic_checks["cds_api_key_documented"]
 
-    # F01 may only freeze grid identities from actual official coordinate arrays.
-    # Without authenticated metadata/coordinate access we intentionally do not infer arrays from docs.
+    # F01 may freeze grid identities only from actual official coordinate arrays.
+    # Metadata bytes alone are not silently promoted into coordinate arrays.
     authoritative_grid_metadata_retrieved = False
     grid_identity_count = 0
     grid_fingerprint = None
     if unauth_ok and arco_meta_bytes:
-        # Metadata bytes alone are not assumed to contain authoritative coordinate values;
-        # a future implementation may parse actual arrays only if the same official route is openly executable.
         authoritative_grid_metadata_retrieved = False
 
     requirements = {
@@ -224,9 +285,17 @@ def main() -> None:
         gate = "HOLD_C_EU_F01_SOURCE_OR_IDENTITY"
 
     source_audit = {
+        "execution_correction": {
+            "superseded_run": 35010687544,
+            "reason": "20-minute timeout during serial deep-offset EEA pagination",
+            "full_population_preserved": True,
+            "allowed_fields_unchanged": True,
+            "scientific_contract_changed": False,
+        },
         "eea_layer_metadata": layer_audit,
         "eea_query_count": count_audit,
-        "eea_query_pages": page_hashes,
+        "eea_objectid_population": ids_audit,
+        "eea_query_batches": page_hashes,
         "eea_dataset_page": {"url": EEA_DATASET_URL, "http": eea_http, "final_url": eea_final, "bytes": len(eea_dataset_bytes), "sha256": sha256(eea_dataset_bytes)},
         "era5_timeseries_page": {"url": ERA5_TS_URL, "http": ts_http, "final_url": ts_final, "bytes": len(ts_bytes), "sha256": sha256(ts_bytes)},
         "era5_pug_page": {"url": ERA5_PUG_URL, "http": pug_http, "final_url": pug_final, "bytes": len(pug_bytes), "sha256": sha256(pug_bytes)},
@@ -261,6 +330,11 @@ def main() -> None:
             "grid_identity_count": grid_identity_count,
             "grid_fingerprint": grid_fingerprint,
         },
+        "execution_correction": {
+            "superseded_run": 35010687544,
+            "full_population_preserved": True,
+            "scientific_contract_changed": False,
+        },
         "industrial_outcome_or_thematic_magnitudes_opened": False,
         "site_temperature_magnitudes_opened": False,
         "relationship_computed": False,
@@ -285,7 +359,7 @@ def main() -> None:
         "industrial_outcomes_opened": False,
         "site_temperature_magnitudes_opened": False,
         "relationship_computed": False,
-    }, sort_keys=True))
+    }, sort_keys=True), flush=True)
 
 
 if __name__ == "__main__":
