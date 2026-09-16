@@ -1,0 +1,93 @@
+name: Finalize PORTFOLIO-R33 FTA Selection
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/finalize-portfolio-r33.yml'
+      - 'tools/finalize_portfolio_r33.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify active R33 and immutable scorecard
+        run: |
+          python -m py_compile tools/finalize_portfolio_r33.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c['active_issue'] == 146
+          assert c['active_research'] == 'PORTFOLIO-R33'
+          assert c['last_completed_issue'] == 145
+          assert c['last_decision'] == 'DEC-204'
+          s=Path('research/PORTFOLIO-R33/SCORECARD.md').read_text()
+          src=Path('research/PORTFOLIO-R33/SOURCE_REVALIDATION.md').read_text()
+          assert 'SELECT_US_FTA_TRANSIT_001_BREAKDOWNS_TO_MAJOR_SAFETY_F01' in s
+          assert '**US-FTA-TRANSIT-001**' in s and '**37/45**' in s
+          assert 'US-MSHA-001' in s and 'HOLD_DIRECT_OVERLAP_TIEBREAK' in s
+          assert 'FTA **3** > MSHA **0**' in s
+          assert 'candidate_outcomes_opened: false' in s
+          assert 'issue: 146' in src
+          print('PORTFOLIO_R33_FROZEN_INPUT_VERIFY_PASS')
+          PY
+
+      - name: Ratify terminal selection
+        run: python tools/finalize_portfolio_r33.py
+
+      - name: Verify terminal mirrors and ledgers
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c == {
+            'checkpoint_id':'CHK-20260916-PORTFOLIO-R33-TERMINAL',
+            'active_issue':'none',
+            'active_research':'NONE',
+            'last_completed_issue':146,
+            'last_completed_research':'PORTFOLIO-R33',
+            'last_decision':'DEC-205',
+            'updated':'2026-09-16',
+          }
+          assert 'PORTFOLIO_R33_SELECTED_US_FTA_TRANSIT_001__F01_AUTHORIZATION_REQUIRED' in Path('STATUS.md').read_text()
+          assert 'SELECT_US_FTA_TRANSIT_001_BREAKDOWNS_TO_MAJOR_SAFETY_F01' in Path('research/PORTFOLIO-R33/RESULT.md').read_text()
+          assert Path('registry/DEC-205.md').exists()
+          assert Path('registry/CLM-184.md').exists()
+          assert '`DEC-205`' in Path('registry/DECISION_LOG.md').read_text()
+          assert '`CLM-184`' in Path('registry/CLAIM_LEDGER.md').read_text()
+          print('PORTFOLIO_R33_TERMINAL_VERIFY_PASS')
+          PY
+
+      - name: Commit terminalization
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/PORTFOLIO-R33/README.md research/PORTFOLIO-R33/RESULT.md registry/DEC-205.md registry/CLM-184.md registry/DECISION_LOG.md registry/CLAIM_LEDGER.md STATUS.md context/checkpoint.json context/SESSION_HANDOFF.md
+          git commit -m 'Finalize PORTFOLIO-R33 FTA selection'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Close Issue 146 as completed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api "repos/${GITHUB_REPOSITORY}/issues/146" -X PATCH -f state=closed -f state_reason=completed >/dev/null
+          echo 'Issue #146 closed completed.'
+
+      - name: Confirm zero-cost boundary
+        run: |
+          echo 'Standard public-repository GitHub-hosted runner only.'
+          echo 'No paid source or service is used.'
+          echo 'Incremental monetary cost: 0 USD.'
