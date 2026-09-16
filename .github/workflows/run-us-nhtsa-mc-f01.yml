@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/workflows/run-us-nhtsa-mc-f01.yml'
       - 'tools/run_us_nhtsa_mc_f01.py'
+      - 'tools/run_us_nhtsa_mc_f01_corrected.py'
   workflow_dispatch:
 
 permissions:
@@ -22,7 +23,7 @@ jobs:
 
       - name: Verify frozen active contract
         run: |
-          python -m py_compile tools/run_us_nhtsa_mc_f01.py
+          python -m py_compile tools/run_us_nhtsa_mc_f01.py tools/run_us_nhtsa_mc_f01_corrected.py
           python - <<'PY'
           import json
           from pathlib import Path
@@ -41,11 +42,13 @@ jobs:
               'recall_incidence_opened: false',
           ]:
               assert s in r
+          nc=Path('research/US-NHTSA-MC-F01/SUPERSEDED_RUN_35042810534.md').read_text()
+          assert 'EXECUTION_INVALID_FOR_GATE' in nc
           print('US_NHTSA_MC_F01_FROZEN_CONTRACT_VERIFY_PASS')
           PY
 
-      - name: Execute official-source gate
-        run: python tools/run_us_nhtsa_mc_f01.py
+      - name: Execute corrected official-source gate
+        run: python tools/run_us_nhtsa_mc_f01_corrected.py
 
       - name: Verify outcome-blind staging
         run: |
@@ -58,6 +61,7 @@ jobs:
             'HOLD_US_NHTSA_MC_F01_SOURCE_SCHEMA_OR_IDENTITY',
             'IMPLEMENTATION_OR_SOURCE_PARSE_NOT_VALID_FOR_GATE',
           }
+          assert r.get('corrects_run') == 35042810534
           assert r['recall_incidence_opened'] is False
           assert r['future_recall_membership_conditioned_on_communications_opened'] is False
           assert r['relationship_computed'] is False
@@ -86,7 +90,7 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add registry/DECISION_LOG.md research/US-NHTSA-MC-F01/STAGING_RESULT.json research/US-NHTSA-MC-F01/STAGING_SOURCE_AUDIT.json
-          git commit -m 'Record US-NHTSA-MC-F01 outcome-blind staging evidence'
+          git commit -m 'Record corrected US-NHTSA-MC-F01 staging evidence'
           git pull --rebase origin main
           git push origin HEAD:main
 
