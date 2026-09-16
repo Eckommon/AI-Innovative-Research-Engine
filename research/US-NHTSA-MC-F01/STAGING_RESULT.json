@@ -1,0 +1,62 @@
+{
+  "aggregate_product_key_overlap": 0,
+  "authentication_bypass_used": false,
+  "causal_claim_made": false,
+  "communication": {
+    "date_parse_rate": 0.0,
+    "date_parse_success": 0,
+    "date_years": [],
+    "distinct_date_years": 0,
+    "distinct_normalized_makes": 0,
+    "distinct_product_keys": 0,
+    "total_rows": 0,
+    "valid_product_rows": 0
+  },
+  "fingerprints": {
+    "communication_product_keys": null,
+    "intersection_product_keys": null,
+    "recall_product_keys": null
+  },
+  "future_recall_membership_conditioned_on_communications_opened": false,
+  "gate": "IMPLEMENTATION_OR_SOURCE_PARSE_NOT_VALID_FOR_GATE",
+  "incremental_monetary_cost_usd": 0,
+  "issue": 143,
+  "multiplicity": {
+    "distinct_communication_or_document_ids": 0,
+    "distinct_recall_campaign_ids": 0,
+    "max_communication_rows_or_ids_per_product_key": 0,
+    "product_keys_with_multiple_communication_rows_or_ids": 0
+  },
+  "post_execution_rescue_used": false,
+  "predictive_metric_computed": false,
+  "recall": {
+    "date_parse_rate": 0.0,
+    "date_parse_success": 0,
+    "date_years": [],
+    "distinct_date_years": 0,
+    "distinct_normalized_makes": 0,
+    "distinct_product_keys": 0,
+    "total_rows": 0,
+    "valid_product_rows": 0
+  },
+  "recall_incidence_opened": false,
+  "relationship_computed": false,
+  "requirements": {
+    "aggregate_product_key_intersection_ge_1000": false,
+    "all_frozen_zip_sources_readable_hashed": true,
+    "communication_date_support_ge_5_years_and_95pct": false,
+    "communication_multiplicity_quantified_outcome_blind": false,
+    "communication_product_keys_ge_10000": false,
+    "communication_schema_verified": false,
+    "each_source_normalized_makes_ge_25": false,
+    "identity_fingerprints_frozen": false,
+    "official_metadata_dictionaries_reachable_hashed": false,
+    "outcome_boundary_and_cost_zero": true,
+    "recall_date_support_ge_10_years_and_95pct": false,
+    "recall_product_keys_ge_5000": false,
+    "recall_schema_verified": false
+  },
+  "research_id": "US-NHTSA-MC-F01",
+  "unofficial_mirror_used": false,
+  "valid_execution": false
+}

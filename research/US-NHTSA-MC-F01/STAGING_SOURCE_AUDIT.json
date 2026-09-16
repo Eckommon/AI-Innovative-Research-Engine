@@ -1,0 +1,72 @@
+{
+  "authentication_bypass_used": false,
+  "catalog": {
+    "bytes": 402,
+    "content_type": "text/html",
+    "error": "HTTPError",
+    "final_url": "https://www.nhtsa.gov/nhtsa-datasets-and-apis",
+    "http": 403,
+    "sha256": "ecd78e97faac0eb0626f7ab1f3baea9f88c5394bcaed38018824ea8e259ebfbe",
+    "url": "https://www.nhtsa.gov/nhtsa-datasets-and-apis"
+  },
+  "comm_2020_2024": {
+    "bytes": 11695292,
+    "content_type": "application/octet-stream",
+    "error": null,
+    "final_url": "https://static.nhtsa.gov/odi/ffdd/tsbs/MFR_COMMS_RECEIVED_2020-2024.zip",
+    "http": 200,
+    "sha256": "fba2fb0d7f43e5edaaca55312e7a8089911f2a1991c82213f02f3403e22f44a7",
+    "url": "https://static.nhtsa.gov/odi/ffdd/tsbs/MFR_COMMS_RECEIVED_2020-2024.zip"
+  },
+  "comm_2025_2026": {
+    "bytes": 5240968,
+    "content_type": "application/octet-stream",
+    "error": null,
+    "final_url": "https://static.nhtsa.gov/odi/ffdd/tsbs/MFR_COMMS_RECEIVED_2025-2026.zip",
+    "http": 200,
+    "sha256": "d0a938caa13c5d98c897bec8aa1258acf04221f081f34ddb8c7572d1900b8d64",
+    "url": "https://static.nhtsa.gov/odi/ffdd/tsbs/MFR_COMMS_RECEIVED_2025-2026.zip"
+  },
+  "comm_dictionary": {
+    "bytes": 5807,
+    "content_type": "text/plain",
+    "decoded_encoding": "utf-8-sig",
+    "error": null,
+    "final_url": "https://static.nhtsa.gov/odi/ffdd/tsbs/TSBS.txt",
+    "http": 200,
+    "sha256": "cae527673072d467b741f129086b468ee236e614270901a693bb5f15c096bbab",
+    "url": "https://static.nhtsa.gov/odi/ffdd/tsbs/TSBS.txt"
+  },
+  "communication_archives": [],
+  "dictionary_semantics": {
+    "communication_csv_product_row_semantics_confirmed": true,
+    "communication_dictionary_fields_confirmed": true,
+    "communication_unknown_year_9999_confirmed": true,
+    "recall_dictionary_campaign_confirmed": true,
+    "recall_dictionary_make_model_year_confirmed": true,
+    "recall_dictionary_rcdate_confirmed": true
+  },
+  "parse_error": null,
+  "raw_source_bytes_persisted": false,
+  "recall_archive": null,
+  "recall_dictionary": {
+    "bytes": 3053,
+    "content_type": "application/octet-stream",
+    "decoded_encoding": "utf-8-sig",
+    "error": null,
+    "final_url": "https://static.nhtsa.gov/odi/ffdd/rcl/RCL.txt",
+    "http": 200,
+    "sha256": "3438cc7e4131efa401dfe6437dbe035607e092c129155dfb411d459d58802203",
+    "url": "https://static.nhtsa.gov/odi/ffdd/rcl/RCL.txt"
+  },
+  "recall_post_2010": {
+    "bytes": 14842725,
+    "content_type": "application/octet-stream",
+    "error": null,
+    "final_url": "https://static.nhtsa.gov/odi/ffdd/rcl/FLAT_RCL_POST_2010.zip",
+    "http": 200,
+    "sha256": "4fcecd70de3dd042c4d6d9b5645f7d5416b5e43075a3ececb216f7bbea430ad2",
+    "url": "https://static.nhtsa.gov/odi/ffdd/rcl/FLAT_RCL_POST_2010.zip"
+  },
+  "unofficial_mirror_used": false
+}
