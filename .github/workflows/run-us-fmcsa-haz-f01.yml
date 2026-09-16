@@ -7,6 +7,7 @@ on:
       - '.github/workflows/run-us-fmcsa-haz-f01.yml'
       - 'tools/run_us_fmcsa_haz_f01.py'
       - 'tools/run_us_fmcsa_haz_f01_corrected.py'
+      - 'tools/run_us_fmcsa_haz_f01_corrected_v2.py'
   workflow_dispatch:
 
 permissions:
@@ -21,9 +22,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Verify frozen active contract and superseded implementation run
+      - name: Verify frozen active contract and superseded date-support classification
         run: |
-          python -m py_compile tools/run_us_fmcsa_haz_f01.py tools/run_us_fmcsa_haz_f01_corrected.py
+          python -m py_compile tools/run_us_fmcsa_haz_f01.py tools/run_us_fmcsa_haz_f01_corrected.py tools/run_us_fmcsa_haz_f01_corrected_v2.py
           python - <<'PY'
           import json
           from pathlib import Path
@@ -43,14 +44,18 @@ jobs:
           ]:
               assert s in r, s
           s=json.loads(Path('research/US-FMCSA-HAZ-F01/STAGING_RESULT.json').read_text())
-          assert s['gate'] == 'IMPLEMENTATION_OR_SOURCE_PARSE_NOT_VALID_FOR_GATE'
-          assert s['valid_execution'] is False
+          assert s['gate'] == 'HOLD_US_FMCSA_HAZ_F01_SOURCE_SCHEMA_OR_IDENTITY'
+          assert s['valid_execution'] is True
+          assert s['fmcsa']['date_field_type'].lower() == 'text'
+          assert s['fmcsa']['date_parse_rate'] == 1.0
+          assert s['fmcsa']['distinct_date_years'] == 0
           assert Path('research/US-FMCSA-HAZ-F01/SUPERSEDED_RUN_35045639924.md').exists()
-          print('US_FMCSA_HAZ_F01_CORRECTION_SCOPE_VERIFY_PASS')
+          assert Path('research/US-FMCSA-HAZ-F01/SUPERSEDED_RUN_35057504925.md').exists()
+          print('US_FMCSA_HAZ_F01_TEXT_DATE_CORRECTION_SCOPE_VERIFY_PASS')
           PY
 
-      - name: Execute corrected official-source gate
-        run: PYTHONPATH=. python tools/run_us_fmcsa_haz_f01_corrected.py
+      - name: Execute text-date corrected official-source gate
+        run: PYTHONPATH=. python tools/run_us_fmcsa_haz_f01_corrected_v2.py
 
       - name: Verify outcome-blind staging boundary
         run: |
@@ -64,7 +69,9 @@ jobs:
             'HOLD_US_FMCSA_HAZ_F01_SOURCE_SCHEMA_OR_IDENTITY',
             'IMPLEMENTATION_OR_SOURCE_PARSE_NOT_VALID_FOR_GATE',
           }
-          assert r.get('corrects_run') == 35045639924
+          assert r.get('corrects_run') == 35057504925
+          assert r.get('correction_chain') == [35045639924, 35057504925]
+          assert r.get('text_date_parser_correction') is True
           assert r['hazmat_incident_occurrence_by_inspection_profile_opened'] is False
           assert r['future_incident_membership_conditioned_on_fmcsa_opened'] is False
           assert r['carrier_level_join_membership_persisted'] is False
@@ -79,12 +86,12 @@ jobs:
           print('US_FMCSA_HAZ_F01_STAGING_BOUNDARY_VERIFY_PASS', r['gate'])
           PY
 
-      - name: Commit corrected immutable staging evidence
+      - name: Commit text-date corrected immutable staging evidence
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add research/US-FMCSA-HAZ-F01/STAGING_RESULT.json research/US-FMCSA-HAZ-F01/STAGING_SOURCE_AUDIT.json
-          git commit -m 'Record corrected US-FMCSA-HAZ-F01 staging evidence'
+          git commit -m 'Record text-date corrected US-FMCSA-HAZ-F01 staging evidence'
           git pull --rebase origin main
           git push origin HEAD:main
 
