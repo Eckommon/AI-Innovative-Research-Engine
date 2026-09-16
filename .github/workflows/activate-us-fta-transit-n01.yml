@@ -1,0 +1,96 @@
+name: Activate US-FTA-TRANSIT-N01
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/activate-us-fta-transit-n01.yml'
+      - 'tools/activate_us_fta_transit_n01.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: read
+
+jobs:
+  activate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify frozen contract and live Issue
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python -m py_compile tools/activate_us_fta_transit_n01.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c == {
+            'checkpoint_id':'CHK-20260916-US-FTA-TRANSIT-F01-TERMINAL',
+            'active_issue':'none',
+            'active_research':'NONE',
+            'last_completed_issue':147,
+            'last_completed_research':'US-FTA-TRANSIT-F01',
+            'last_decision':'DEC-207',
+            'updated':'2026-09-16',
+          }
+          s=Path('research/US-FTA-TRANSIT-N01/README.md').read_text()
+          assert 'status: CONTRACT_FROZEN_PRE_ISSUE' in s
+          assert 'safety_outcome_row_values_opened: false' in s
+          assert 'PASS_US_FTA_TRANSIT_N01_MATCHED_RELIABILITY_DESIGN_IDENTIFIABLE' in s
+          for p,k in [
+            ('SCHEMA_PREFLIGHT.json','outcome_values_opened'),
+            ('QUALITY_FLAG_PREFLIGHT.json','safety_outcome_values_opened'),
+            ('OUTCOME_SCHEMA_PREFLIGHT.json','outcome_row_values_opened'),
+          ]:
+            r=json.loads(Path('research/US-FTA-TRANSIT-N01',p).read_text())
+            assert r[k] is False
+            assert r['relationship_computed'] is False
+          print('US_FTA_TRANSIT_N01_PREISSUE_CONTRACT_VERIFY_PASS')
+          PY
+          test "$(git log -1 --format=%H -- research/US-FTA-TRANSIT-N01/README.md)" = "c4a7f4ea05954fd013714ee6c891d489a6cfc82f"
+          test "$(gh api repos/${GITHUB_REPOSITORY}/issues/148 --jq .state)" = "open"
+
+      - name: Activate N01 canonical state
+        run: python tools/activate_us_fta_transit_n01.py
+
+      - name: Verify active mirrors
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c == {
+            'checkpoint_id':'CHK-20260916-US-FTA-TRANSIT-N01-ACTIVE',
+            'active_issue':148,
+            'active_research':'US-FTA-TRANSIT-N01',
+            'last_completed_issue':147,
+            'last_completed_research':'US-FTA-TRANSIT-F01',
+            'last_decision':'DEC-208',
+            'updated':'2026-09-16',
+          }
+          assert 'US_FTA_TRANSIT_N01_ACTIVE__OUTCOME_BLIND_MATCHED_RELIABILITY_DESIGN' in Path('STATUS.md').read_text()
+          assert Path('registry/DEC-208.md').exists()
+          assert '`DEC-208`' in Path('registry/DECISION_LOG.md').read_text()
+          print('US_FTA_TRANSIT_N01_ACTIVATION_VERIFY_PASS')
+          PY
+
+      - name: Commit activation
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add registry/DEC-208.md registry/DECISION_LOG.md STATUS.md context/checkpoint.json context/SESSION_HANDOFF.md
+          git commit -m 'Activate US-FTA-TRANSIT-N01'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Confirm zero-cost boundary
+        run: |
+          echo 'No Major Safety/Security row endpoint is authorized.'
+          echo 'Incremental monetary cost: 0 USD.'
