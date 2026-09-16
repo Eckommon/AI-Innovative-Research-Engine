@@ -50,7 +50,7 @@ jobs:
           PY
 
       - name: Execute corrected official-source gate
-        run: python tools/run_us_fmcsa_haz_f01_corrected.py
+        run: PYTHONPATH=. python tools/run_us_fmcsa_haz_f01_corrected.py
 
       - name: Verify outcome-blind staging boundary
         run: |
