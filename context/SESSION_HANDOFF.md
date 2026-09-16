@@ -1,10 +1,10 @@
 ---
-checkpoint_id: CHK-20260916-PORTFOLIO-R32-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20260916-US-FMCSA-HAZ-F01-ACTIVE
+active_issue: 145
+active_research: US-FMCSA-HAZ-F01
 last_completed_issue: 144
 last_completed_research: PORTFOLIO-R32
-last_decision: DEC-201
+last_decision: DEC-202
 updated: 2026-09-16
 ---
 
@@ -12,13 +12,16 @@ updated: 2026-09-16
 
 ## Canonical state / 정본 상태
 
-- state: `PORTFOLIO_R32_SELECTED_US_FMCSA_HAZ_001__F01_AUTHORIZATION_REQUIRED`
-- selected candidate: `US-FMCSA-HAZ-001`
-- selected gate: `US-FMCSA-HAZ-F01`
-- frozen score: `42/45`
-- candidate outcomes opened: `false`
-- monetary cost: `0 USD`
+- state: `US_FMCSA_HAZ_F01_ACTIVE__OUTCOME_BLIND_SOURCE_SCHEMA_CARRIER_TIME`
+- active Issue: `#145`
+- authorization: `DEC-202`
+- FMCSA source IDs: `fx4q-ay7w`, `876r-jsdb`
+- PHMSA source: public Form 5800.1 Incident Detailed Report/export
+- exact join: FMCSA USDOT == PHMSA Highway FED DOT ID only
+- hazmat incident outcome by inspection profile: unopened
+- relationship computed: false
+- cost: 0 USD
 
 ## Exact restart point / 정확한 재개점
 
-Open exactly one `US-FMCSA-HAZ-F01` outcome-blind source/schema/carrier-identity/time gate. Verify current official FMCSA inspection/violation and PHMSA incident source bytes, exact Highway-mode USDOT↔FED-DOT-ID semantics, temporal support, public-cohort scope, aggregate overlap and fingerprints. Do not open hazmat incident occurrence/rates/counts conditioned on inspection history.
+Run the frozen source/schema/carrier-time feasibility gate. Preserve any implementation failure separately from scientific HOLD/PARTIAL/PASS and do not alter thresholds or switch to unofficial sources.
