@@ -12,10 +12,11 @@
     "total_rows": 0,
     "valid_product_rows": 0
   },
+  "corrects_run": 35042810534,
   "fingerprints": {
     "communication_product_keys": null,
     "intersection_product_keys": null,
-    "recall_product_keys": null
+    "recall_product_keys": "c32673c583c1eed32b432b007dcbddf05fc7bdb2203197c43b4a0a976d4272fa"
   },
   "future_recall_membership_conditioned_on_communications_opened": false,
   "gate": "IMPLEMENTATION_OR_SOURCE_PARSE_NOT_VALID_FOR_GATE",
@@ -23,21 +24,39 @@
   "issue": 143,
   "multiplicity": {
     "distinct_communication_or_document_ids": 0,
-    "distinct_recall_campaign_ids": 0,
+    "distinct_recall_campaign_ids": 13610,
     "max_communication_rows_or_ids_per_product_key": 0,
     "product_keys_with_multiple_communication_rows_or_ids": 0
   },
   "post_execution_rescue_used": false,
   "predictive_metric_computed": false,
   "recall": {
-    "date_parse_rate": 0.0,
-    "date_parse_success": 0,
-    "date_years": [],
-    "distinct_date_years": 0,
-    "distinct_normalized_makes": 0,
-    "distinct_product_keys": 0,
-    "total_rows": 0,
-    "valid_product_rows": 0
+    "date_parse_rate": 1.0,
+    "date_parse_success": 221007,
+    "date_years": [
+      2010,
+      2011,
+      2012,
+      2013,
+      2014,
+      2015,
+      2016,
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025,
+      2026
+    ],
+    "distinct_date_years": 17,
+    "distinct_normalized_makes": 1007,
+    "distinct_product_keys": 40700,
+    "total_rows": 245597,
+    "valid_product_rows": 221007
   },
   "recall_incidence_opened": false,
   "relationship_computed": false,
@@ -52,9 +71,9 @@
     "identity_fingerprints_frozen": false,
     "official_metadata_dictionaries_reachable_hashed": false,
     "outcome_boundary_and_cost_zero": true,
-    "recall_date_support_ge_10_years_and_95pct": false,
-    "recall_product_keys_ge_5000": false,
-    "recall_schema_verified": false
+    "recall_date_support_ge_10_years_and_95pct": true,
+    "recall_product_keys_ge_5000": true,
+    "recall_schema_verified": true
   },
   "research_id": "US-NHTSA-MC-F01",
   "unofficial_mirror_used": false,

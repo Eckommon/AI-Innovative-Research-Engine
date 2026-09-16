@@ -6,7 +6,7 @@
     "error": "HTTPError",
     "final_url": "https://www.nhtsa.gov/nhtsa-datasets-and-apis",
     "http": 403,
-    "sha256": "ecd78e97faac0eb0626f7ab1f3baea9f88c5394bcaed38018824ea8e259ebfbe",
+    "sha256": "631895d095cb238400ab94abedca252118909ebafbd0cfd0dac3e878c04f17bf",
     "url": "https://www.nhtsa.gov/nhtsa-datasets-and-apis"
   },
   "comm_2020_2024": {
@@ -37,7 +37,66 @@
     "sha256": "cae527673072d467b741f129086b468ee236e614270901a693bb5f15c096bbab",
     "url": "https://static.nhtsa.gov/odi/ffdd/tsbs/TSBS.txt"
   },
-  "communication_archives": [],
+  "communication_archives": [
+    {
+      "delimiter": ",",
+      "encoding": "utf-8-sig",
+      "field_map": {
+        "document_id": "TSB/Document ID",
+        "file_date": null,
+        "make": "Make",
+        "mfr_date": null,
+        "model": "Model",
+        "nhtsa_id": null,
+        "year": "Model Year"
+      },
+      "fieldnames": [
+        "TSB/Document ID",
+        "Make",
+        "Model",
+        "Model Year",
+        "Concise Summary"
+      ],
+      "label": "comm_2020_2024",
+      "schema_complete": false,
+      "selected_member": "MFR_COMMS_RECEIVED_2020-2024.csv",
+      "selected_member_bytes": 126537951,
+      "selected_member_sha256": "b935bad9a374f8f44770aedb7c173366e9b7fec49cc8186325d37bcb1f23d0ca",
+      "zip_members": [
+        "MFR_COMMS_RECEIVED_2020-2024.csv"
+      ]
+    },
+    {
+      "delimiter": ",",
+      "encoding": "utf-8-sig",
+      "field_map": {
+        "document_id": "TSB/Document ID",
+        "file_date": null,
+        "make": "Make",
+        "mfr_date": null,
+        "model": "Model",
+        "nhtsa_id": null,
+        "year": "Model Year"
+      },
+      "fieldnames": [
+        "TSB/Document ID",
+        "Make",
+        "Model",
+        "Model Year",
+        "Concise Summary"
+      ],
+      "label": "comm_2025_2026",
+      "schema_complete": false,
+      "selected_member": "MFR_COMMS_RECEIVED_2025-2026.csv",
+      "selected_member_bytes": 85295432,
+      "selected_member_sha256": "390bc5b9678f4ea81da338b889122acb3b27da61a8de90953293f4acd17a75a1",
+      "zip_members": [
+        "MFR_COMMS_RECEIVED_2025-2026.csv"
+      ]
+    }
+  ],
+  "correction_scope": "execution-control-flow-and-public-user-agent-only",
+  "corrects_run": 35042810534,
   "dictionary_semantics": {
     "communication_csv_product_row_semantics_confirmed": true,
     "communication_dictionary_fields_confirmed": true,
@@ -48,7 +107,25 @@
   },
   "parse_error": null,
   "raw_source_bytes_persisted": false,
-  "recall_archive": null,
+  "recall_archive": {
+    "delimiter": "TAB",
+    "encoding": "utf-8-sig",
+    "frozen_field_positions_zero_based": {
+      "campaign": 1,
+      "date": 15,
+      "make": 2,
+      "model": 3,
+      "year": 4
+    },
+    "observed_max_fields": 36,
+    "schema_structurally_readable": true,
+    "selected_member": "FLAT_RCL_POST_2010.txt",
+    "selected_member_bytes": 311124477,
+    "selected_member_sha256": "a0bfcfece8a6cbfbfa6fb5f66899d3c46c3d8e5f1806fa902c7f1de3960c4a23",
+    "zip_members": [
+      "FLAT_RCL_POST_2010.txt"
+    ]
+  },
   "recall_dictionary": {
     "bytes": 3053,
     "content_type": "application/octet-stream",
