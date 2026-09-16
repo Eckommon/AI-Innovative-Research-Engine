@@ -1,8 +1,12 @@
 {
   "authentication_bypass_used": false,
   "carrier_level_join_membership_persisted": false,
-  "correction_scope": "native-dot-number-alias-and-documentation-vs-export-access-control-flow-only",
-  "corrects_run": 35045639924,
+  "correction_chain": [
+    35045639924,
+    35057504925
+  ],
+  "correction_scope": "same-native-insp-date-deterministic-text-parsing-only",
+  "corrects_run": 35057504925,
   "fmcsa_docs": {
     "bytes": 436,
     "content_disposition": "",
@@ -10,7 +14,7 @@
     "error": "HTTPError",
     "final_url": "https://www.fmcsa.dot.gov/registration/fmcsa-data-dissemination-program",
     "http": 403,
-    "sha256": "7d61b6fc5fddb1895064b5078f1fc354c7124e4e1c439388b0d25f44d0a5f1ea",
+    "sha256": "2a831828a73da2a2caf99b4f68c93dcb6aa1e38b3ef0340e4847bd7dc673cd66",
     "url": "https://www.fmcsa.dot.gov/registration/fmcsa-data-dissemination-program"
   },
   "fmcsa_inspection_catalog": {
@@ -20,7 +24,7 @@
     "error": null,
     "final_url": "https://catalog.data.gov/dataset/vehicle-inspection-file",
     "http": 200,
-    "sha256": "3e39868da63b54c6f5c42b8249c9337330197d222460347f710d8e9758df729d",
+    "sha256": "00fa9c1060f869950ef08fe6928cb44da174c545e549d0276651e197a8dbcf8c",
     "url": "https://catalog.data.gov/dataset/vehicle-inspection-file"
   },
   "fmcsa_inspection_schema": {
@@ -301,18 +305,21 @@
       "url": "https://data.transportation.gov/resource/fx4q-ay7w.json?%24select=count%28%2A%29+as+n&%24where=dot_number+is+not+null"
     },
     {
-      "bytes": 18,
+      "bytes": 40918,
       "content_disposition": "",
       "content_type": "application/json;charset=utf-8",
       "error": null,
-      "final_url": "https://data.transportation.gov/resource/fx4q-ay7w.json?%24select=count%28%2A%29+as+n&%24where=dot_number+is+not+null+AND+insp_date+is+not+null",
+      "final_url": "https://data.transportation.gov/resource/fx4q-ay7w.json?%24select=insp_date%2C+count%28%2A%29+as+n&%24where=dot_number+is+not+null+AND+insp_date+is+not+null&%24group=insp_date&%24order=insp_date&%24limit=50000",
       "http": 200,
       "query_params": {
-        "$select": "count(*) as n",
+        "$group": "insp_date",
+        "$limit": 50000,
+        "$order": "insp_date",
+        "$select": "insp_date, count(*) as n",
         "$where": "dot_number is not null AND insp_date is not null"
       },
-      "sha256": "a03457dfa164dad89506957a96439a8a849a4744d02777dacda2dc50863a7c12",
-      "url": "https://data.transportation.gov/resource/fx4q-ay7w.json?%24select=count%28%2A%29+as+n&%24where=dot_number+is+not+null+AND+insp_date+is+not+null"
+      "sha256": "3d64d97a9f4061b8f9ebe64291fa34b27a9da149593e04a4b39fe6fa5e3b134e",
+      "url": "https://data.transportation.gov/resource/fx4q-ay7w.json?%24select=insp_date%2C+count%28%2A%29+as+n&%24where=dot_number+is+not+null+AND+insp_date+is+not+null&%24group=insp_date&%24order=insp_date&%24limit=50000"
     },
     {
       "bytes": 18,
@@ -394,7 +401,7 @@
     "error": null,
     "final_url": "https://catalog.data.gov/dataset/vehicle-inspections-and-violations",
     "http": 200,
-    "sha256": "ec1496a4af7844ffb0604cb6811576002c8e04d6e5ea8a6bb67c4ac27c04af98",
+    "sha256": "346353376724ae963378dfd038ec89b48def963f2474bd0ee951eb02899c202f",
     "url": "https://catalog.data.gov/dataset/vehicle-inspections-and-violations"
   },
   "fmcsa_violation_schema": {
@@ -414,7 +421,7 @@
     "error": null,
     "final_url": "https://catalog.data.gov/dataset/hazmat-incident-reports-data-mining-tool",
     "http": 200,
-    "sha256": "9981d252fd653e8e3e92bab6a759a84af77d7904c5719bc372900557f47194cf",
+    "sha256": "9a64c92427dec1da1d5a11738ef1f4cee84d12521de9ff546adc456190de8c8a",
     "url": "https://catalog.data.gov/dataset/hazmat-incident-reports-data-mining-tool"
   },
   "phmsa_dictionary": {
@@ -447,7 +454,7 @@
     "error": "HTTPError",
     "final_url": "https://www.phmsa.dot.gov/hazmat-program-management-data-and-statistics/data-operations/incident-statistics",
     "http": 403,
-    "sha256": "ef8783303393f86a46b63d77edf4d688e5f35ab54303889757ccea2994e1b66b",
+    "sha256": "1f324e1c56bd7038616b5031dcf5b352c49fe1f8b223cdaf4dbd6709af4f1754",
     "url": "https://www.phmsa.dot.gov/hazmat-program-management-data-and-statistics/data-operations/incident-statistics"
   },
   "raw_source_bytes_persisted": false,
@@ -462,5 +469,6 @@
     "phmsa_source": "Form 5800.1 official public Incident Detailed Report/export only",
     "raw_source_bytes_persisted": false
   },
+  "text_date_parser_correction": true,
   "unofficial_mirror_used": false
 }

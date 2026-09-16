@@ -3,7 +3,11 @@
   "authentication_bypass_used": false,
   "carrier_level_join_membership_persisted": false,
   "causal_claim_made": false,
-  "corrects_run": 35045639924,
+  "correction_chain": [
+    35045639924,
+    35057504925
+  ],
+  "corrects_run": 35057504925,
   "federal_safety_rating_claim_made": false,
   "fingerprints": {
     "fmcsa_usdot_carriers": "3d249b6c14e182d5d1757600f67e73b1140703b85dffaa5880f490268317c0eb",
@@ -13,11 +17,20 @@
   "fmcsa": {
     "carrier_fingerprint": "3d249b6c14e182d5d1757600f67e73b1140703b85dffaa5880f490268317c0eb",
     "date_field_type": "text",
+    "date_nonnull_rate": 1.0,
     "date_parse_rate": 1.0,
-    "date_years": [],
+    "date_parse_success_rows": 8302114,
+    "date_support_method": "exact-text-value-grouping-weighted-deterministic-parse",
+    "date_years": [
+      2023,
+      2024,
+      2025,
+      2026
+    ],
     "dated_valid_carrier_rows": 8302114,
-    "distinct_date_years": 0,
+    "distinct_date_years": 4,
     "distinct_inspection_ids": 8302114,
+    "distinct_raw_date_values": 1095,
     "distinct_valid_usdot_carriers": 662705,
     "distinct_violation_inspection_ids": 4592338,
     "field_map": {
@@ -95,6 +108,7 @@
     ],
     "max_inspections_per_carrier": 33470,
     "max_violation_rows_per_inspection_id": 80,
+    "parsed_distinct_raw_date_values": 1095,
     "repeated_inspection_carriers": 471908,
     "schema_complete": true,
     "valid_carrier_rows": 8302114,
@@ -122,7 +136,7 @@
     ]
   },
   "future_incident_membership_conditioned_on_fmcsa_opened": false,
-  "gate": "HOLD_US_FMCSA_HAZ_F01_SOURCE_SCHEMA_OR_IDENTITY",
+  "gate": "PARTIAL_US_FMCSA_HAZ_F01_SOURCE_SEMANTICS_READY__PHMSA_EXPORT_ACCESS_BLOCKED",
   "hazmat_incident_occurrence_by_inspection_profile_opened": false,
   "implementation_error": null,
   "incremental_monetary_cost_usd": 0,
@@ -139,7 +153,7 @@
     "required_schema_present": false
   },
   "phmsa_export_access_only_partial_condition": {
-    "fmcsa_empirical_requirements_pass": false,
+    "fmcsa_empirical_requirements_pass": true,
     "phmsa_docs_reachable": true,
     "phmsa_export_bytes_accessible": false,
     "phmsa_public_export_semantics_documented": true
@@ -150,7 +164,7 @@
   "requirements": {
     "carrier_level_join_membership_not_persisted": true,
     "exact_carrier_intersection_ge_300": false,
-    "fmcsa_date_support_ge_3_years_and_95pct": false,
+    "fmcsa_date_support_ge_3_years_and_95pct": true,
     "fmcsa_distinct_usdot_ge_50000": true,
     "fmcsa_inspection_machine_readable": true,
     "fmcsa_required_native_fields_present": true,
@@ -168,6 +182,7 @@
     "zero_cost_no_bypass": true
   },
   "research_id": "US-FMCSA-HAZ-F01",
+  "text_date_parser_correction": true,
   "unofficial_mirror_used": false,
   "valid_execution": true
 }
