@@ -211,3 +211,8 @@ F01 may not compute, inspect, persist or report:
 Bind this already-frozen contract to one dedicated Issue, create the next authorization decision, synchronize canonical mirrors, and only then build the official-source-only F01 runner. The runner must persist source/schema/cardinality/key-overlap/fingerprint evidence only and must keep all breakdown-conditioned Major Safety Event outcomes closed.
 
 Incremental monetary cost remains **0 USD**.
+
+
+## Terminal F01 result / F01 최종 결과
+
+**`PASS_US_FTA_TRANSIT_F01_AGENCY_MODE_TIME_JOIN_READY`** — all 19 frozen requirements passed in Run `35063556654`. See `RESULT.md`. Breakdown-conditioned Major Safety Event outcomes remain unopened. A separate N01 is required before any outcome gate.
