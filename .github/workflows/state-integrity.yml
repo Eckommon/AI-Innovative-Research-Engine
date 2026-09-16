@@ -2,6 +2,7 @@ name: State Integrity / 상태 무결성
 # Verification trigger: terminal-state push recheck after the Issue-event run remained queued.
 # E01 terminal-state recheck: verify canonical post-finalization state after bot-authored push suppression.
 # US-MINE-F01 terminal-state recheck: verify canonical post-finalization state after bot-authored push suppression.
+# C-EU-F01 terminal-state recheck: verify canonical post-finalization state after bot-authored push/issue suppression.
 
 on:
   push:
