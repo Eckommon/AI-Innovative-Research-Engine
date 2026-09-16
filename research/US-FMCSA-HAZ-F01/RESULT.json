@@ -1,0 +1,31 @@
+{
+  "authentication_bypass_used": false,
+  "carrier_level_join_membership_persisted": false,
+  "correction_chain": [
+    35045639924,
+    35057504925,
+    35057953144
+  ],
+  "fmcsa_date_parse_rate": 1.0,
+  "fmcsa_date_years": [
+    2023,
+    2024,
+    2025,
+    2026
+  ],
+  "fmcsa_distinct_valid_usdot_carriers": 662705,
+  "fmcsa_valid_inspection_rows": 8302114,
+  "fmcsa_violation_linkage_ready": true,
+  "gate": "PARTIAL_US_FMCSA_HAZ_F01_SOURCE_SEMANTICS_READY__PHMSA_EXPORT_ACCESS_BLOCKED",
+  "hazmat_incident_occurrence_by_inspection_profile_opened": false,
+  "incremental_monetary_cost_usd": 0,
+  "issue": 145,
+  "phmsa_byte_dependent_support": "uncomputed",
+  "phmsa_docs_reachable": true,
+  "phmsa_export_bytes_accessible": false,
+  "phmsa_public_export_semantics_documented": true,
+  "relationship_computed": false,
+  "research_id": "US-FMCSA-HAZ-F01",
+  "source_run": 35057953144,
+  "unofficial_mirror_used": false
+}

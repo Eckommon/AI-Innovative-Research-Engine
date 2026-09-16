@@ -1,10 +1,10 @@
 ---
-checkpoint_id: CHK-20260916-US-FMCSA-HAZ-F01-ACTIVE
-active_issue: 145
-active_research: US-FMCSA-HAZ-F01
-last_completed_issue: 144
-last_completed_research: PORTFOLIO-R32
-last_decision: DEC-202
+checkpoint_id: CHK-20260916-US-FMCSA-HAZ-F01-TERMINAL
+active_issue: none
+active_research: NONE
+last_completed_issue: 145
+last_completed_research: US-FMCSA-HAZ-F01
+last_decision: DEC-203
 updated: 2026-09-16
 ---
 
@@ -12,16 +12,23 @@ updated: 2026-09-16
 
 ## Canonical state / 정본 상태
 
-- state: `US_FMCSA_HAZ_F01_ACTIVE__OUTCOME_BLIND_SOURCE_SCHEMA_CARRIER_TIME`
-- active Issue: `#145`
-- authorization: `DEC-202`
-- FMCSA source IDs: `fx4q-ay7w`, `876r-jsdb`
-- PHMSA source: public Form 5800.1 Incident Detailed Report/export
-- exact join: FMCSA USDOT == PHMSA Highway FED DOT ID only
-- hazmat incident outcome by inspection profile: unopened
-- relationship computed: false
-- cost: 0 USD
+- state: `US_FMCSA_HAZ_F01_PARTIAL_PHMSA_EXPORT_BLOCKED__PORTFOLIO_RETURN`
+- terminal gate: `PARTIAL_US_FMCSA_HAZ_F01_SOURCE_SEMANTICS_READY__PHMSA_EXPORT_ACCESS_BLOCKED`
+- valid source run: `35057953144`
+- superseded implementation runs: `35045639924`, `35057504925`
+- FMCSA distinct valid USDOT carriers: `662705`
+- FMCSA valid inspections: `8302114`
+- FMCSA date support: `2023–2026`, parse rate `1.0`
+- FMCSA violation/OOS linkage: ready
+- official PHMSA export semantics: documented
+- PHMSA detailed-export bytes: inaccessible
+- PHMSA carrier/date/exact-intersection thresholds: uncomputed
+- carrier-level joined incident membership: not persisted
+- hazmat incident outcome by FMCSA profile: unopened
+- relationship/prediction/causality: closed
 
 ## Exact restart point / 정확한 재개점
 
-Run the frozen source/schema/carrier-time feasibility gate. Preserve any implementation failure separately from scientific HOLD/PARTIAL/PASS and do not alter thresholds or switch to unofficial sources.
+Open a new Stage-0 portfolio reselection. Keep US-FMCSA-HAZ-001 parked as an access-blocked asset. Do not auto-redesign the PHMSA source after observing F01, and do not use unofficial substitutes. Prospectively compare preserved and fresh candidates, then authorize exactly one next outcome-blind gate.
+
+Incremental monetary cost remains **0 USD**.

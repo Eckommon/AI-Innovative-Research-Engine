@@ -225,3 +225,8 @@ F01 may not compute or inspect:
 Bind this frozen contract to one dedicated Issue, create `DEC-202`, synchronize canonical mirrors, then build an official-source-only runner. The runner must first prove source/schema access and may persist only aggregate structural support/fingerprints—not joined carrier-level outcome membership.
 
 Incremental monetary cost remains **0 USD**.
+
+
+## Final disposition / 최종 처분
+
+Corrected Run `35057953144` finalizes **`PARTIAL_US_FMCSA_HAZ_F01_SOURCE_SEMANTICS_READY__PHMSA_EXPORT_ACCESS_BLOCKED`**. FMCSA empirical source/schema/carrier/date/violation-linkage requirements pass; the official PHMSA detailed-export bytes remain unavailable, so PHMSA cardinality/date/intersection requirements remain uncomputed. Runs `35045639924` and `35057504925` remain preserved as implementation nonconformities. No hazmat incident outcome or carrier-level joined membership was opened.
