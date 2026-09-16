@@ -1,0 +1,53 @@
+{
+  "distinct_values": {
+    "major_mechanical_failures_1": [
+      "",
+      "Q",
+      "W"
+    ],
+    "reporter_type": [
+      "Full Reporter"
+    ],
+    "type_of_service": [
+      "DO",
+      "PT"
+    ],
+    "vehicle_passenger_car_miles_2": [
+      "",
+      "Q",
+      "W"
+    ]
+  },
+  "evaluated_at_utc": "2026-09-16T06:32:09+00:00",
+  "exposure_magnitudes_persisted": false,
+  "fields": [
+    "type_of_service",
+    "reporter_type",
+    "major_mechanical_failures_1",
+    "vehicle_passenger_car_miles_2"
+  ],
+  "incremental_monetary_cost_usd": 0,
+  "protocol": "US-FTA-TRANSIT-N01-QUALITY-FLAG-PREFLIGHT",
+  "relationship_computed": false,
+  "rows_read": 3731,
+  "safety_outcome_values_opened": false,
+  "value_counts": {
+    "major_mechanical_failures_1": {
+      "": 3723,
+      "Q": 5,
+      "W": 3
+    },
+    "reporter_type": {
+      "Full Reporter": 3731
+    },
+    "type_of_service": {
+      "DO": 2008,
+      "PT": 1723
+    },
+    "vehicle_passenger_car_miles_2": {
+      "": 3639,
+      "Q": 68,
+      "W": 24
+    }
+  }
+}
