@@ -1,7 +1,7 @@
 ---
-checkpoint_id: CHK-20260916-C-EU-F01-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20260916-PORTFOLIO-R30-ACTIVE
+active_issue: 140
+active_research: PORTFOLIO-R30
 last_completed_issue: 139
 last_completed_research: C-EU-F01
 last_decision: DEC-192
@@ -10,21 +10,20 @@ updated: 2026-09-16
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `C_EU_F01_HOLD__PORTFOLIO_RETURN`
+**State / 상태:** `PORTFOLIO_R30_ACTIVE__FROZEN_SCORECARD_RATIFICATION`
 
-C-EU-F01 is terminal at **`HOLD_C_EU_F01_SOURCE_OR_IDENTITY`** under corrected Run `35039383396`, DEC-192 and CLM-177. The full EEA identity population was retrieved, but the frozen invariant-coordinate identity requirements fail. Industrial outcome/thematic magnitudes and site temperature magnitudes remained closed and no relationship was computed.
+PORTFOLIO-R30 / Issue #140 is active. The candidate pool, rubric, source revalidation and scorecard are frozen. A documented orchestration-order nonconformity occurred because the scorecard commit preceded Issue binding, but candidate rules were durably frozen before scoring and no candidate outcome magnitude was opened. No rescoring is allowed merely to repair that ordering.
 
-## Terminal evidence / 종결 근거
+## Frozen scorecard / 고정 점수
 
-- exact site IDs: **97,889**
-- coordinate-qualified exact IDs: **59,137 (60.4123%) / 95% required**
-- conflicting exact site IDs: **38,752 / 0 required**
-- coordinate-qualified countries: **34 / 25 required**
-- ERA5 semantic route: **PASS**
-- unauthenticated ARCO metadata: **HTTP 401**
+- **US-FDA-MD-001: 41/45**
+- US-CMS-NH-001: 37/45
+- US-PIPE-001: 36/45
+
+Provisional selection awaiting terminal ratification: **`SELECT_US_FDA_MD_001_INSPECTION_TO_RECALL_F01`**.
 
 ## Exact next action / 정확한 다음 행동
 
-Return to Stage 0 and open a new portfolio reselection only. Re-score surviving or newly discovered candidates using marginal information from terminal US-MINE-N01, US-UTIL-N01 and C-EU-F01. Do not automatically promote US-PIPE and do not redesign C-EU-F01 post hoc.
+Ratify the immutable R30 scorecard, persist `DEC-193` / `CLM-178` and terminal mirrors, close Issue #140, verify State Integrity, then open exactly one separate `US-FDA-MD-F01` outcome-blind source/schema/identity feasibility gate. Do not open recall incidence by inspection class in R30.
 
 Incremental monetary cost remains **0 USD**.
