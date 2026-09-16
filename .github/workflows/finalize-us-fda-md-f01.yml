@@ -1,0 +1,95 @@
+name: Finalize US-FDA-MD-F01 Access-Limited PARTIAL
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/finalize-us-fda-md-f01.yml'
+      - 'tools/finalize_us_fda_md_f01.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      SOURCE_RUN_ID: '35040935495'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify staging and active contract
+        run: |
+          python -m py_compile tools/finalize_us_fda_md_f01.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c['active_issue'] == 141
+          assert c['active_research'] == 'US-FDA-MD-F01'
+          assert c['last_completed_issue'] == 140
+          assert c['last_decision'] == 'DEC-194'
+          r=json.loads(Path('research/US-FDA-MD-F01/STAGING_RESULT.json').read_text())
+          assert r['gate'] == 'PARTIAL_US_FDA_MD_F01_SOURCE_SEMANTICS_READY__INSPECTION_BYTES_ACCESS_BLOCKED'
+          assert r['inspection_bytes_accessible'] is False
+          assert r['recall_public_route'] is True
+          assert all(r['semantics'].values())
+          assert r['recall_incidence_by_class_opened'] is False
+          assert r['class_specific_recall_membership_opened'] is False
+          assert r['relationship_computed'] is False
+          a=json.loads(Path('research/US-FDA-MD-F01/STAGING_SOURCE_AUDIT.json').read_text())
+          assert a['advertised_inspection_download_probes']
+          assert all(x['http'] == 404 for x in a['advertised_inspection_download_probes'])
+          print('US_FDA_MD_F01_TERMINAL_INPUT_VERIFY_PASS')
+          PY
+      - name: Finalize access-limited PARTIAL
+        run: python tools/finalize_us_fda_md_f01.py
+      - name: Verify terminal artifacts and mirrors
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c == {
+            'checkpoint_id':'CHK-20260916-US-FDA-MD-F01-TERMINAL',
+            'active_issue':'none',
+            'active_research':'NONE',
+            'last_completed_issue':141,
+            'last_completed_research':'US-FDA-MD-F01',
+            'last_decision':'DEC-195',
+            'updated':'2026-09-16',
+          }
+          rr=json.loads(Path('research/US-FDA-MD-F01/RESULT.json').read_text())
+          assert rr['gate'] == 'PARTIAL_US_FDA_MD_F01_SOURCE_SEMANTICS_READY__INSPECTION_BYTES_ACCESS_BLOCKED'
+          assert rr['recall_incidence_by_class_opened'] is False
+          assert rr['relationship_computed'] is False
+          assert Path('registry/CLM-179.md').exists()
+          assert Path('registry/DEC-195.md').exists()
+          assert '`CLM-179`' in Path('registry/CLAIM_LEDGER.md').read_text()
+          assert '`DEC-195`' in Path('registry/DECISION_LOG.md').read_text()
+          assert 'US_FDA_MD_F01_PARTIAL_ACCESS_BLOCKED__PORTFOLIO_RETURN' in Path('STATUS.md').read_text()
+          print('US_FDA_MD_F01_TERMINAL_VERIFY_PASS')
+          PY
+      - name: Commit terminalization
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-FDA-MD-F01/README.md research/US-FDA-MD-F01/RESULT.md research/US-FDA-MD-F01/RESULT.json registry/CLM-179.md registry/DEC-195.md registry/CLAIM_LEDGER.md registry/DECISION_LOG.md STATUS.md context/checkpoint.json context/SESSION_HANDOFF.md
+          git commit -m 'Finalize US-FDA-MD-F01 access-limited PARTIAL'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Close Issue 141 as completed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api "repos/${GITHUB_REPOSITORY}/issues/141" -X PATCH -f state=closed -f state_reason=completed >/dev/null
+          echo 'Issue #141 closed completed.'
+      - name: Confirm zero-cost boundary
+        run: |
+          echo 'Official FDA/openFDA sources only.'
+          echo 'No unofficial mirror, authentication bypass, or paid source.'
+          echo 'Incremental monetary cost: 0 USD.'
