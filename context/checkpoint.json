@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260916-US-FMCSA-HAZ-F01-TERMINAL",
-  "active_issue": "none",
-  "active_research": "NONE",
+  "checkpoint_id": "CHK-20260916-PORTFOLIO-R33-ACTIVE",
+  "active_issue": 146,
+  "active_research": "PORTFOLIO-R33",
   "last_completed_issue": 145,
   "last_completed_research": "US-FMCSA-HAZ-F01",
-  "last_decision": "DEC-203",
+  "last_decision": "DEC-204",
   "updated": "2026-09-16"
 }
