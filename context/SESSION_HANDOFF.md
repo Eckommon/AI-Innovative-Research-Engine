@@ -1,10 +1,10 @@
 ---
-checkpoint_id: CHK-20260916-PORTFOLIO-R30-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20260916-US-FDA-MD-F01-ACTIVE
+active_issue: 141
+active_research: US-FDA-MD-F01
 last_completed_issue: 140
 last_completed_research: PORTFOLIO-R30
-last_decision: DEC-193
+last_decision: DEC-194
 updated: 2026-09-16
 ---
 
@@ -12,15 +12,29 @@ updated: 2026-09-16
 
 ## Canonical state / 정본 상태
 
-- state: `PORTFOLIO_R30_SELECTED_US_FDA_MD_001__F01_AUTHORIZATION_REQUIRED`
-- selected candidate: `US-FDA-MD-001`
-- selected gate: `US-FDA-MD-F01`
-- frozen score: `41/45`
-- candidate outcomes opened: `false`
-- process nonconformity: candidate/rules/source facts frozen before score; scorecard persisted before Issue #140 binding; no outcome leakage; no rescoring.
+- state: `US_FDA_MD_F01_ACTIVE__OUTCOME_BLIND_SOURCE_SCHEMA_FEI`
+- active issue: `#141`
+- active research: `US-FDA-MD-F01`
+- last completed issue: `#140`
+- last completed research: `PORTFOLIO-R30`
+- last decision: `DEC-194`
+
+## Frozen contract / 고정 계약
+
+- exact establishment identity: FDA FEI;
+- structural inspection key: `FEI × inspection end date × FDA-native Project Area/equivalent`;
+- allowed final classification: `NAI`, `VAI`, `OAI`;
+- medical-device cohort: FDA-native inspection-source field only;
+- current advertised entire-inspections XLSX: preregistered as HTTP 404 in external verification;
+- remaining Dashboard API: documented credential/authorization requirement;
+- recall source: openFDA Device Recall `firm_fei_number` + event-date identities;
+- aggregate FEI overlap only; no NAI/VAI/OAI-stratified recall counts/membership;
+- recall incidence-by-class / relationship: forbidden;
+- population-wide manufacturer inference: forbidden;
+- unofficial mirror/auth bypass/paid source: forbidden.
 
 ## Exact restart point / 정확한 재개점
 
-Open exactly one `US-FDA-MD-F01` outcome-blind source/schema/identity gate. Verify the current public FDA inspection dataset route, FEI and inspection classification/date/project-area schema, source-semantic CDRH/device-manufacturing filter, repeated inspection/project-area identity, and Device Recall exact `firm_fei_number`/event-date support. Do not open recall incidence by inspection class or compute a relationship.
+Execute Issue #141 exactly as frozen. Probe official inspection download/access routes, verify documentation semantics and openFDA recall FEI/date route, then apply `PASS_US_FDA_MD_F01_FEI_JOIN_READY`, access-only `PARTIAL_US_FDA_MD_F01_SOURCE_SEMANTICS_READY__INSPECTION_BYTES_ACCESS_BLOCKED`, or `HOLD_US_FDA_MD_F01_SOURCE_SCHEMA_OR_IDENTITY` without rescue.
 
 Incremental monetary cost remains **0 USD**.
