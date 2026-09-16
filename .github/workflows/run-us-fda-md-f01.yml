@@ -33,7 +33,7 @@ jobs:
           assert c['last_completed_issue'] == 140
           assert c['last_decision'] == 'DEC-194'
           r=Path('research/US-FDA-MD-F01/README.md').read_text()
-          for s in ['>= **500 distinct FEIs**','>= **100 distinct FEIs**','PARTIAL_US_FDA_MD_F01_SOURCE_SEMANTICS_READY__INSPECTION_BYTES_ACCESS_BLOCKED','HOLD_US_FDA_MD_F01_SOURCE_SCHEMA_OR_IDENTITY']:
+          for s in ['>=500 distinct FEIs','>=100 distinct FEIs','PARTIAL_US_FDA_MD_F01_SOURCE_SEMANTICS_READY__INSPECTION_BYTES_ACCESS_BLOCKED','HOLD_US_FDA_MD_F01_SOURCE_SCHEMA_OR_IDENTITY']:
               assert s in r
           assert 'recall_incidence_by_class_opened: false' in r
           print('US_FDA_MD_F01_FROZEN_CONTRACT_VERIFY_PASS')
