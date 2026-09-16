@@ -1,21 +1,21 @@
 ---
-checkpoint_id: CHK-20260916-PORTFOLIO-R31-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20260916-US-NHTSA-MC-F01-ACTIVE
+active_issue: 143
+active_research: US-NHTSA-MC-F01
 last_completed_issue: 142
 last_completed_research: PORTFOLIO-R31
-last_decision: DEC-197
+last_decision: DEC-198
 updated: 2026-09-16
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `PORTFOLIO_R31_SELECTED_US_NHTSA_MC_001__F01_AUTHORIZATION_REQUIRED`
+**State / 상태:** `US_NHTSA_MC_F01_ACTIVE__OUTCOME_BLIND_PRODUCT_TIME_FEASIBILITY`
 
-PORTFOLIO-R31 is completed with **`SELECT_US_NHTSA_MC_001_COMMUNICATION_TO_RECALL_F01`** under DEC-197 / CLM-180. Frozen scores: NHTSA **39/45**, KR-GG-CHEM **36/45**, US-PIPE **36/45**. No candidate outcome magnitude was opened.
+US-NHTSA-MC-F01 is active under Issue #143 / DEC-198. The source files, deterministic product normalization, structural thresholds and outcome boundary were frozen before execution.
 
 ## Exact next action / 정확한 다음 행동
 
-Open exactly one separate `US-NHTSA-MC-F01` outcome-blind source/schema/product-identity/time feasibility Issue. Verify current NHTSA communication and recall flat-file routes, exact field schemas, deterministic Model Year × Make × Model normalization, repeated communication/component structure, temporal support and aggregate identity overlap. Do not count or compare recall incidence by any communication-derived exposure.
+Execute the official NHTSA Manufacturer Communications and Safety Recall source/schema/product-time gate. Persist only source audit, aggregate structural support and SHA-256 identity fingerprints. Do not compute recall incidence, future-recall membership conditional on communications, or any relationship/predictive statistic.
 
 Incremental monetary cost remains **0 USD**.
