@@ -1,0 +1,106 @@
+name: Finalize US-FMCSA-HAZ-F01 PHMSA-Export PARTIAL
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/finalize-us-fmcsa-haz-f01.yml'
+      - 'tools/finalize_us_fmcsa_haz_f01.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      SOURCE_RUN_ID: '35057953144'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify active contract and valid PARTIAL staging
+        run: |
+          python -m py_compile tools/finalize_us_fmcsa_haz_f01.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c['active_issue'] == 145
+          assert c['active_research'] == 'US-FMCSA-HAZ-F01'
+          assert c['last_completed_issue'] == 144
+          assert c['last_decision'] == 'DEC-202'
+          r=json.loads(Path('research/US-FMCSA-HAZ-F01/STAGING_RESULT.json').read_text())
+          assert r['gate'] == 'PARTIAL_US_FMCSA_HAZ_F01_SOURCE_SEMANTICS_READY__PHMSA_EXPORT_ACCESS_BLOCKED'
+          assert r['valid_execution'] is True
+          assert r['corrects_run'] == 35057504925
+          assert r['correction_chain'] == [35045639924,35057504925]
+          assert r['fmcsa']['distinct_valid_usdot_carriers'] == 662705
+          assert r['fmcsa']['valid_usdot_inspection_rows'] == 8302114
+          assert r['fmcsa']['date_parse_rate'] == 1.0
+          assert r['fmcsa']['date_years'] == [2023,2024,2025,2026]
+          assert r['fmcsa']['violation_linkage_ready'] is True
+          assert r['phmsa_export_access_only_partial_condition']['fmcsa_empirical_requirements_pass'] is True
+          assert r['phmsa']['docs_reachable'] is True
+          assert r['phmsa']['public_export_semantics_documented'] is True
+          assert r['phmsa']['export_bytes_accessible'] is False
+          assert r['hazmat_incident_occurrence_by_inspection_profile_opened'] is False
+          assert r['carrier_level_join_membership_persisted'] is False
+          assert r['relationship_computed'] is False
+          assert r['incremental_monetary_cost_usd'] == 0
+          print('US_FMCSA_HAZ_F01_VALID_PARTIAL_STAGING_VERIFY_PASS')
+          PY
+
+      - name: Finalize PARTIAL
+        run: python tools/finalize_us_fmcsa_haz_f01.py
+
+      - name: Verify terminal artifacts and mirrors
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c == {
+            'checkpoint_id':'CHK-20260916-US-FMCSA-HAZ-F01-TERMINAL',
+            'active_issue':'none',
+            'active_research':'NONE',
+            'last_completed_issue':145,
+            'last_completed_research':'US-FMCSA-HAZ-F01',
+            'last_decision':'DEC-203',
+            'updated':'2026-09-16',
+          }
+          assert 'US_FMCSA_HAZ_F01_PARTIAL_PHMSA_EXPORT_BLOCKED__PORTFOLIO_RETURN' in Path('STATUS.md').read_text()
+          assert 'PARTIAL_US_FMCSA_HAZ_F01_SOURCE_SEMANTICS_READY__PHMSA_EXPORT_ACCESS_BLOCKED' in Path('research/US-FMCSA-HAZ-F01/RESULT.md').read_text()
+          assert Path('research/US-FMCSA-HAZ-F01/RESULT.json').exists()
+          assert Path('registry/DEC-203.md').exists()
+          assert Path('registry/CLM-183.md').exists()
+          assert '`DEC-203`' in Path('registry/DECISION_LOG.md').read_text()
+          assert '`CLM-183`' in Path('registry/CLAIM_LEDGER.md').read_text()
+          print('US_FMCSA_HAZ_F01_TERMINAL_VERIFY_PASS')
+          PY
+
+      - name: Commit terminalization
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-FMCSA-HAZ-F01/README.md research/US-FMCSA-HAZ-F01/RESULT.md research/US-FMCSA-HAZ-F01/RESULT.json registry/DEC-203.md registry/CLM-183.md registry/DECISION_LOG.md registry/CLAIM_LEDGER.md STATUS.md context/checkpoint.json context/SESSION_HANDOFF.md
+          git commit -m 'Finalize US-FMCSA-HAZ-F01 PHMSA-export PARTIAL'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Close Issue 145 as completed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api "repos/${GITHUB_REPOSITORY}/issues/145" -X PATCH -f state=closed -f state_reason=completed >/dev/null
+          echo 'Issue #145 closed completed.'
+
+      - name: Confirm zero-cost boundary
+        run: |
+          echo 'Official public GitHub/DOT/FMCSA/PHMSA sources only.'
+          echo 'No unofficial mirror, authentication bypass, paid API, or paid source.'
+          echo 'Incremental monetary cost: 0 USD.'
