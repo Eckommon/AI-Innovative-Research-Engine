@@ -1,0 +1,27 @@
+{
+  "aggregate_product_key_overlap": 8263,
+  "catalog_http": 403,
+  "communication_date_field_present": false,
+  "communication_distinct_date_years": 0,
+  "communication_distinct_makes": 347,
+  "communication_distinct_product_keys": 13729,
+  "fingerprints": {
+    "communication_product_keys": "6f6644d254ffa1e180769032fde60a369e01f3acf46a0fcf849f0abf0947b6a6",
+    "intersection_product_keys": "1f69c366390c6b5be331bee725c786c1c7d24ce54cf5ba127286f45290d12649",
+    "recall_product_keys": "c32673c583c1eed32b432b007dcbddf05fc7bdb2203197c43b4a0a976d4272fa"
+  },
+  "future_recall_membership_conditioned_on_communications_opened": false,
+  "gate": "HOLD_US_NHTSA_MC_F01_SOURCE_SCHEMA_OR_IDENTITY",
+  "incremental_monetary_cost_usd": 0,
+  "issue": 143,
+  "recall_date_parse_rate": 1.0,
+  "recall_distinct_date_years": 17,
+  "recall_distinct_makes": 1007,
+  "recall_distinct_product_keys": 40700,
+  "recall_incidence_opened": false,
+  "relationship_computed": false,
+  "research_id": "US-NHTSA-MC-F01",
+  "source_run": 35043099657,
+  "unofficial_mirror_used": false,
+  "valid_execution": true
+}

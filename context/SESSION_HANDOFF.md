@@ -1,10 +1,10 @@
 ---
-checkpoint_id: CHK-20260916-US-NHTSA-MC-F01-ACTIVE
-active_issue: 143
-active_research: US-NHTSA-MC-F01
-last_completed_issue: 142
-last_completed_research: PORTFOLIO-R31
-last_decision: DEC-198
+checkpoint_id: CHK-20260916-US-NHTSA-MC-F01-TERMINAL
+active_issue: none
+active_research: NONE
+last_completed_issue: 143
+last_completed_research: US-NHTSA-MC-F01
+last_decision: DEC-199
 updated: 2026-09-16
 ---
 
@@ -12,16 +12,19 @@ updated: 2026-09-16
 
 ## Canonical state / 정본 상태
 
-- state: `US_NHTSA_MC_F01_ACTIVE__OUTCOME_BLIND_PRODUCT_TIME_FEASIBILITY`
-- active Issue: `#143`
-- authorization: `DEC-198`
-- frozen contract: `research/US-NHTSA-MC-F01/README.md`
-- recall incidence opened: `false`
-- future recall membership conditional on communications opened: `false`
-- relationship computed: `false`
+- state: `US_NHTSA_MC_F01_HOLD__PORTFOLIO_RETURN`
+- terminal gate: `HOLD_US_NHTSA_MC_F01_SOURCE_SCHEMA_OR_IDENTITY`
+- source run: `35043099657`
+- communication product keys: `13729`
+- recall product keys: `40700`
+- exact aggregate product-key overlap: `8263`
+- frozen communication date field: absent
+- NHTSA catalog from GitHub runner: HTTP 403
+- communication-conditioned recall outcome: unopened
+- relationship computed: false
 
 ## Exact restart point / 정확한 재개점
 
-Execute the frozen official-source gate using `MFR_COMMS_RECEIVED_2020-2024.zip`, `MFR_COMMS_RECEIVED_2025-2026.zip`, `FLAT_RCL_POST_2010.zip` and their official dictionaries. Apply only NFKC + trim + whitespace collapse + uppercase to Make/Model and exact four-digit non-9999 Model Year. Persist aggregate structural counts and fingerprints only; do not derive recall incidence or per-product future-recall membership from communication history.
+Open a new Stage-0 portfolio reselection. Incorporate the NHTSA finding that exact product identity/cardinality is strong but the frozen CSV source lacks time identity. Do not post-hoc switch this branch to TSV. Compare preserved/fresh candidates prospectively and authorize exactly one next outcome-blind gate.
 
 Incremental monetary cost remains **0 USD**.

@@ -125,3 +125,8 @@ PASS means only that current official NHTSA public files support a deterministic
 NHTSA's own use of manufacturer communications in Early Warning Reporting and defect analysis remains an explicit overlap constraint.
 
 Incremental monetary cost: **0 USD**.
+
+
+## Final disposition / 최종 처분
+
+Corrected Run `35043099657` validly resolves **`HOLD_US_NHTSA_MC_F01_SOURCE_SCHEMA_OR_IDENTITY`**. Product-key cardinality and aggregate exact overlap are strong, but the two prospectively frozen Manufacturer Communications CSV files lack any communication/addition date field and the frozen catalog HTML returns HTTP 403 to the zero-cost runner. The branch is terminal without switching post hoc to a richer TSV source. Recall incidence and relationship remain unopened.
