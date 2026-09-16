@@ -1,0 +1,66 @@
+name: Probe US-FTA-TRANSIT-N01 Outcome Schema
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/probe-us-fta-transit-n01-outcome-schema.yml'
+      - 'tools/probe_us_fta_transit_n01_outcome_schema.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify terminal/outcome-blind boundary
+        run: |
+          python -m py_compile tools/probe_us_fta_transit_n01_outcome_schema.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c['checkpoint_id']=='CHK-20260916-US-FTA-TRANSIT-F01-TERMINAL'
+          assert c['active_issue']=='none'
+          q=json.loads(Path('research/US-FTA-TRANSIT-N01/QUALITY_FLAG_PREFLIGHT.json').read_text())
+          assert q['safety_outcome_values_opened'] is False
+          print('N01_OUTCOME_SCHEMA_PREFLIGHT_BOUNDARY_PASS')
+          PY
+
+      - name: Probe downstream metadata names/descriptions only
+        run: python tools/probe_us_fta_transit_n01_outcome_schema.py
+
+      - name: Verify no row values
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('research/US-FTA-TRANSIT-N01/OUTCOME_SCHEMA_PREFLIGHT.json').read_text())
+          assert r['dataset_id']=='9ivb-8ae9'
+          assert r['outcome_row_values_opened'] is False
+          assert r['relationship_computed'] is False
+          assert r['incremental_monetary_cost_usd']==0
+          assert r['selected_schema_columns']
+          print('N01_OUTCOME_SCHEMA_PREFLIGHT_OUTPUT_PASS')
+          PY
+
+      - name: Commit outcome-schema preflight
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-FTA-TRANSIT-N01/OUTCOME_SCHEMA_PREFLIGHT.json
+          git commit -m 'Record US-FTA-TRANSIT-N01 outcome schema preflight'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Confirm zero-cost boundary
+        run: |
+          echo 'Metadata names/descriptions only; no event row values queried.'
+          echo 'Incremental monetary cost: 0 USD.'
