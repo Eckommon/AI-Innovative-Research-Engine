@@ -1,0 +1,94 @@
+name: Activate US-FTA-TRANSIT-F01
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/activate-us-fta-transit-f01.yml'
+      - 'tools/activate_us_fta_transit_f01.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: read
+
+jobs:
+  activate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify frozen pre-Issue contract and live Issue
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python -m py_compile tools/activate_us_fta_transit_f01.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c == {
+            'checkpoint_id':'CHK-20260916-PORTFOLIO-R33-TERMINAL',
+            'active_issue':'none',
+            'active_research':'NONE',
+            'last_completed_issue':146,
+            'last_completed_research':'PORTFOLIO-R33',
+            'last_decision':'DEC-205',
+            'updated':'2026-09-16',
+          }
+          p=Path('research/US-FTA-TRANSIT-F01/README.md')
+          s=p.read_text()
+          assert 'status: CONTRACT_FROZEN_PRE_ISSUE' in s
+          assert 'selected_by: PORTFOLIO-R33' in s
+          assert 'amkt-4ehs' in s and '5ti2-5uiv' in s and '9ivb-8ae9' in s
+          assert 'candidate_outcome_opened: false' in s
+          assert 'relationship_computed: false' in s
+          print('US_FTA_TRANSIT_F01_PREISSUE_CONTRACT_VERIFY_PASS')
+          PY
+          test "$(gh api repos/${GITHUB_REPOSITORY}/issues/147 --jq .state)" = "open"
+
+      - name: Activate canonical F01 state
+        run: python tools/activate_us_fta_transit_f01.py
+
+      - name: Verify active mirrors and authorization
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c == {
+            'checkpoint_id':'CHK-20260916-US-FTA-TRANSIT-F01-ACTIVE',
+            'active_issue':147,
+            'active_research':'US-FTA-TRANSIT-F01',
+            'last_completed_issue':146,
+            'last_completed_research':'PORTFOLIO-R33',
+            'last_decision':'DEC-206',
+            'updated':'2026-09-16',
+          }
+          assert 'US_FTA_TRANSIT_F01_ACTIVE__OUTCOME_BLIND_SOURCE_SCHEMA_AGENCY_MODE_TIME' in Path('STATUS.md').read_text()
+          assert Path('registry/DEC-206.md').exists()
+          assert '`DEC-206`' in Path('registry/DECISION_LOG.md').read_text()
+          handoff=Path('context/SESSION_HANDOFF.md').read_text()
+          assert 'active_issue: 147' in handoff
+          assert 'breakdown' in handoff.lower() and 'relationship computed: false' in handoff.lower()
+          print('US_FTA_TRANSIT_F01_ACTIVATION_VERIFY_PASS')
+          PY
+
+      - name: Commit activation
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add registry/DEC-206.md registry/DECISION_LOG.md STATUS.md context/checkpoint.json context/SESSION_HANDOFF.md
+          git commit -m 'Activate US-FTA-TRANSIT-F01'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Confirm zero-cost boundary
+        run: |
+          echo 'Standard public-repository GitHub-hosted runner only.'
+          echo 'No paid source, API, runner, or artifact upload is used.'
+          echo 'Incremental monetary cost: 0 USD.'
