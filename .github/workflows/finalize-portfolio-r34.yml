@@ -1,0 +1,101 @@
+name: Finalize PORTFOLIO-R34
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/finalize-portfolio-r34.yml'
+      - 'tools/finalize_portfolio_r34.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify active state and immutable R34 evidence
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python -m py_compile tools/finalize_portfolio_r34.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c == {
+            'checkpoint_id':'CHK-20260917-PORTFOLIO-R34-ACTIVE',
+            'active_issue':149,
+            'active_research':'PORTFOLIO-R34',
+            'last_completed_issue':148,
+            'last_completed_research':'US-FTA-TRANSIT-N01',
+            'last_decision':'DEC-210',
+            'updated':'2026-09-17',
+          }
+          score=Path('research/PORTFOLIO-R34/SCORECARD.md').read_text()
+          assert 'source_revalidation_commit: 70884f50133fdd3f786d3b3f515e303584fd77bf' in score
+          assert 'SELECT_US_EPA_XMEDIA_001_RCRA_TO_NPDES_F01' in score
+          assert 'candidate_outcomes_opened: false' in score
+          assert 'relationship_computed: false' in score
+          print('PORTFOLIO_R34_IMMUTABLE_EVIDENCE_VERIFY_PASS')
+          PY
+          test "$(git log -1 --format=%H -- research/PORTFOLIO-R34/README.md)" = "db56429107fc1a7054b9be0b5a78d91424f72971"
+          test "$(git log -1 --format=%H -- research/PORTFOLIO-R34/SOURCE_REVALIDATION.md)" = "70884f50133fdd3f786d3b3f515e303584fd77bf"
+          test "$(git log -1 --format=%H -- research/PORTFOLIO-R34/SCORECARD.md)" = "a23c00f321e565e647d53eada24e2ce17dc956fd"
+          test "$(gh api repos/${GITHUB_REPOSITORY}/issues/149 --jq .state)" = "open"
+
+      - name: Finalize R34 selection
+        run: python tools/finalize_portfolio_r34.py
+
+      - name: Verify terminal mirrors
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c == {
+            'checkpoint_id':'CHK-20260917-PORTFOLIO-R34-TERMINAL',
+            'active_issue':'none',
+            'active_research':'NONE',
+            'last_completed_issue':149,
+            'last_completed_research':'PORTFOLIO-R34',
+            'last_decision':'DEC-211',
+            'updated':'2026-09-17',
+          }
+          assert 'PORTFOLIO_R34_SELECTED_US_EPA_XMEDIA_001__F01_AUTHORIZATION_REQUIRED' in Path('STATUS.md').read_text()
+          assert 'SELECT_US_EPA_XMEDIA_001_RCRA_TO_NPDES_F01' in Path('research/PORTFOLIO-R34/RESULT.md').read_text()
+          assert Path('registry/DEC-211.md').exists()
+          assert Path('registry/CLM-187.md').exists()
+          assert '`DEC-211`' in Path('registry/DECISION_LOG.md').read_text()
+          assert '`CLM-187`' in Path('registry/CLAIM_LEDGER.md').read_text()
+          print('PORTFOLIO_R34_TERMINAL_VERIFY_PASS')
+          PY
+
+      - name: Commit terminal selection
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/PORTFOLIO-R34/README.md research/PORTFOLIO-R34/RESULT.md registry/DEC-211.md registry/CLM-187.md registry/DECISION_LOG.md registry/CLAIM_LEDGER.md STATUS.md context/checkpoint.json context/SESSION_HANDOFF.md
+          git commit -m 'Finalize PORTFOLIO-R34 EPA selection'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Close Issue 149 as completed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api "repos/${GITHUB_REPOSITORY}/issues/149" -X PATCH -f state=closed -f state_reason=completed >/dev/null
+          echo 'Issue #149 closed completed.'
+
+      - name: Confirm zero-cost boundary
+        run: |
+          echo 'No paid source, API, runner, or artifact upload is used.'
+          echo 'Incremental monetary cost: 0 USD.'
