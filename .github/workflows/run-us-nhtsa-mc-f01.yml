@@ -1,0 +1,108 @@
+name: Run US-NHTSA-MC-F01 Outcome-Blind Source Gate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/run-us-nhtsa-mc-f01.yml'
+      - 'tools/run_us_nhtsa_mc_f01.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  run-feasibility:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify frozen active contract
+        run: |
+          python -m py_compile tools/run_us_nhtsa_mc_f01.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c['active_issue'] == 143
+          assert c['active_research'] == 'US-NHTSA-MC-F01'
+          assert c['last_completed_issue'] == 142
+          assert c['last_decision'] == 'DEC-198'
+          r=Path('research/US-NHTSA-MC-F01/README.md').read_text()
+          for s in [
+              '>= **10,000 distinct valid product keys**',
+              '>= **5,000 distinct valid product keys**',
+              '>= **1,000 distinct product keys**',
+              'PASS_US_NHTSA_MC_F01_PRODUCT_TIME_JOIN_READY',
+              'HOLD_US_NHTSA_MC_F01_SOURCE_SCHEMA_OR_IDENTITY',
+              'recall_incidence_opened: false',
+          ]:
+              assert s in r
+          print('US_NHTSA_MC_F01_FROZEN_CONTRACT_VERIFY_PASS')
+          PY
+
+      - name: Execute official-source gate
+        run: python tools/run_us_nhtsa_mc_f01.py
+
+      - name: Verify outcome-blind staging
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('research/US-NHTSA-MC-F01/STAGING_RESULT.json').read_text())
+          assert r['gate'] in {
+            'PASS_US_NHTSA_MC_F01_PRODUCT_TIME_JOIN_READY',
+            'HOLD_US_NHTSA_MC_F01_SOURCE_SCHEMA_OR_IDENTITY',
+            'IMPLEMENTATION_OR_SOURCE_PARSE_NOT_VALID_FOR_GATE',
+          }
+          assert r['recall_incidence_opened'] is False
+          assert r['future_recall_membership_conditioned_on_communications_opened'] is False
+          assert r['relationship_computed'] is False
+          assert r['predictive_metric_computed'] is False
+          assert r['causal_claim_made'] is False
+          assert r['unofficial_mirror_used'] is False
+          assert r['authentication_bypass_used'] is False
+          assert r['post_execution_rescue_used'] is False
+          assert r['incremental_monetary_cost_usd'] == 0
+          assert Path('research/US-NHTSA-MC-F01/STAGING_SOURCE_AUDIT.json').exists()
+          print('US_NHTSA_MC_F01_STAGING_BOUNDARY_VERIFY_PASS', r['gate'])
+          PY
+
+      - name: Index authorization decision and commit immutable staging
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('registry/DECISION_LOG.md')
+          t=p.read_text()
+          if '`DEC-198`' not in t:
+              if not t.endswith('\n'):
+                  t += '\n'
+              t += '| `DEC-198` | 2026-09-16 | Authorize US-NHTSA-MC-F01 outcome-blind Manufacturer Communications × Recall source/schema/product-time feasibility. / NHTSA communications×recall product/time gate 승인. | Frozen official files, exact product normalization, aggregate overlap only; recall incidence and relationship remain closed. | Issue #143; `research/US-NHTSA-MC-F01/README.md` | active |\n'
+              p.write_text(t)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add registry/DECISION_LOG.md research/US-NHTSA-MC-F01/STAGING_RESULT.json research/US-NHTSA-MC-F01/STAGING_SOURCE_AUDIT.json
+          git commit -m 'Record US-NHTSA-MC-F01 outcome-blind staging evidence'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Require valid gate evaluation
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('research/US-NHTSA-MC-F01/STAGING_RESULT.json').read_text())
+          if not r['valid_execution'] or r['gate'] == 'IMPLEMENTATION_OR_SOURCE_PARSE_NOT_VALID_FOR_GATE':
+              raise SystemExit('US_NHTSA_MC_F01_EXECUTION_INVALID_FOR_SCIENTIFIC_GATE')
+          print('US_NHTSA_MC_F01_VALID_GATE_EVALUATION', r['gate'])
+          PY
+
+      - name: Confirm zero-cost boundary
+        run: |
+          echo 'Frozen official NHTSA public files only.'
+          echo 'No unofficial mirror, authentication bypass, paid API, or paid source.'
+          echo 'Incremental monetary cost: 0 USD.'
