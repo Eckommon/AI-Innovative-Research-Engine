@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/workflows/run-us-fmcsa-haz-f01.yml'
       - 'tools/run_us_fmcsa_haz_f01.py'
+      - 'tools/run_us_fmcsa_haz_f01_corrected.py'
   workflow_dispatch:
 
 permissions:
@@ -20,9 +21,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Verify frozen active contract
+      - name: Verify frozen active contract and superseded implementation run
         run: |
-          python -m py_compile tools/run_us_fmcsa_haz_f01.py
+          python -m py_compile tools/run_us_fmcsa_haz_f01.py tools/run_us_fmcsa_haz_f01_corrected.py
           python - <<'PY'
           import json
           from pathlib import Path
@@ -33,23 +34,23 @@ jobs:
           assert c['last_decision'] == 'DEC-202'
           r=Path('research/US-FMCSA-HAZ-F01/README.md').read_text()
           for s in [
-              'fx4q-ay7w',
-              '876r-jsdb',
-              '>= 50,000 distinct valid USDOT carriers',
-              '>=500 distinct valid numeric FED DOT IDs',
-              '>=300 distinct carriers',
+              'fx4q-ay7w','876r-jsdb','>= 50,000 distinct valid USDOT carriers',
+              '>=500 distinct valid numeric FED DOT IDs','>=300 distinct carriers',
               'PASS_US_FMCSA_HAZ_F01_CARRIER_TIME_JOIN_READY',
               'PARTIAL_US_FMCSA_HAZ_F01_SOURCE_SEMANTICS_READY__PHMSA_EXPORT_ACCESS_BLOCKED',
               'HOLD_US_FMCSA_HAZ_F01_SOURCE_SCHEMA_OR_IDENTITY',
               'hazmat_incident_occurrence_by_inspection_profile_opened = false',
           ]:
               assert s in r, s
-          assert not Path('research/US-FMCSA-HAZ-F01/STAGING_RESULT.json').exists()
-          print('US_FMCSA_HAZ_F01_FROZEN_CONTRACT_VERIFY_PASS')
+          s=json.loads(Path('research/US-FMCSA-HAZ-F01/STAGING_RESULT.json').read_text())
+          assert s['gate'] == 'IMPLEMENTATION_OR_SOURCE_PARSE_NOT_VALID_FOR_GATE'
+          assert s['valid_execution'] is False
+          assert Path('research/US-FMCSA-HAZ-F01/SUPERSEDED_RUN_35045639924.md').exists()
+          print('US_FMCSA_HAZ_F01_CORRECTION_SCOPE_VERIFY_PASS')
           PY
 
-      - name: Execute official-source gate
-        run: python tools/run_us_fmcsa_haz_f01.py
+      - name: Execute corrected official-source gate
+        run: python tools/run_us_fmcsa_haz_f01_corrected.py
 
       - name: Verify outcome-blind staging boundary
         run: |
@@ -63,6 +64,7 @@ jobs:
             'HOLD_US_FMCSA_HAZ_F01_SOURCE_SCHEMA_OR_IDENTITY',
             'IMPLEMENTATION_OR_SOURCE_PARSE_NOT_VALID_FOR_GATE',
           }
+          assert r.get('corrects_run') == 35045639924
           assert r['hazmat_incident_occurrence_by_inspection_profile_opened'] is False
           assert r['future_incident_membership_conditioned_on_fmcsa_opened'] is False
           assert r['carrier_level_join_membership_persisted'] is False
@@ -74,16 +76,15 @@ jobs:
           assert r['authentication_bypass_used'] is False
           assert r['post_execution_rescue_used'] is False
           assert r['incremental_monetary_cost_usd'] == 0
-          assert Path('research/US-FMCSA-HAZ-F01/STAGING_SOURCE_AUDIT.json').exists()
           print('US_FMCSA_HAZ_F01_STAGING_BOUNDARY_VERIFY_PASS', r['gate'])
           PY
 
-      - name: Commit immutable staging evidence
+      - name: Commit corrected immutable staging evidence
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add research/US-FMCSA-HAZ-F01/STAGING_RESULT.json research/US-FMCSA-HAZ-F01/STAGING_SOURCE_AUDIT.json
-          git commit -m 'Record US-FMCSA-HAZ-F01 outcome-blind staging evidence'
+          git commit -m 'Record corrected US-FMCSA-HAZ-F01 staging evidence'
           git pull --rebase origin main
           git push origin HEAD:main
 
