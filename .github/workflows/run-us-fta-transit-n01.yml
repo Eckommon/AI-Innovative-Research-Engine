@@ -1,0 +1,118 @@
+name: Run US-FTA-TRANSIT-N01
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/run-us-fta-transit-n01.yml'
+      - 'tools/run_us_fta_transit_n01.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: read
+
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify active authorization and frozen contract
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python -m py_compile tools/run_us_fta_transit_n01.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c == {
+            'checkpoint_id':'CHK-20260916-US-FTA-TRANSIT-N01-ACTIVE',
+            'active_issue':148,
+            'active_research':'US-FTA-TRANSIT-N01',
+            'last_completed_issue':147,
+            'last_completed_research':'US-FTA-TRANSIT-F01',
+            'last_decision':'DEC-208',
+            'updated':'2026-09-16',
+          }
+          s=Path('research/US-FTA-TRANSIT-N01/README.md').read_text()
+          assert 'status: CONTRACT_FROZEN_PRE_ISSUE' in s
+          assert 'PASS_US_FTA_TRANSIT_N01_MATCHED_RELIABILITY_DESIGN_IDENTIFIABLE' in s
+          assert 'HOLD_US_FTA_TRANSIT_N01_MATCHED_RELIABILITY_DESIGN_NOT_IDENTIFIABLE' in s
+          assert 'safety_outcome_row_values_opened: false' in s
+          assert 'relationship_computed: false' in s
+          runner=Path('tools/run_us_fta_transit_n01.py').read_text()
+          assert '9ivb-8ae9' not in runner
+          print('US_FTA_TRANSIT_N01_AUTHORIZATION_VERIFY_PASS')
+          PY
+          test "$(gh api repos/${GITHUB_REPOSITORY}/issues/148 --jq .state)" = "open"
+
+      - name: Execute frozen outcome-blind design gate
+        run: python tools/run_us_fta_transit_n01.py
+
+      - name: Validate immutable staging and manifest boundary
+        run: |
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          p=Path('research/US-FTA-TRANSIT-N01/STAGING_RESULT.json')
+          m=Path('research/US-FTA-TRANSIT-N01/PAIR_MANIFEST.json')
+          r=json.loads(p.read_text())
+          pairs=json.loads(m.read_text())
+          assert r['protocol']=='US-FTA-TRANSIT-N01'
+          assert r['issue']==148
+          assert r['contract_commit']=='c4a7f4ea05954fd013714ee6c891d489a6cfc82f'
+          assert r['valid_evaluation'] is True
+          assert r['disposition'] in {
+            'PASS_US_FTA_TRANSIT_N01_MATCHED_RELIABILITY_DESIGN_IDENTIFIABLE',
+            'HOLD_US_FTA_TRANSIT_N01_MATCHED_RELIABILITY_DESIGN_NOT_IDENTIFIABLE',
+          }
+          assert set(r['checks']) == {str(i) for i in range(1,18)}
+          assert len(pairs)==r['manifest']['pairs']
+          assert hashlib.sha256(m.read_bytes()).hexdigest()==r['manifest']['sha256']
+          b=r['boundaries']
+          for k in [
+            'major_safety_event_row_values_opened',
+            'future_safety_event_membership_opened',
+            'row_level_breakdown_event_join_persisted',
+            'relationship_computed',
+            'predictive_metric_computed',
+            'causal_claim_made',
+            'manual_or_fuzzy_identity_repair_used',
+          ]:
+            assert b[k] is False, (k,b[k])
+          assert r['incremental_monetary_cost_usd']==0
+          forbidden={'safety_event','incident_number','safety_security','total_injuries','total_fatalities'}
+          for row in pairs:
+            assert not (forbidden & set(row)), forbidden & set(row)
+          print('US_FTA_TRANSIT_N01_STAGING_BOUNDARY_PASS')
+          print('disposition=',r['disposition'])
+          print('retained_agencies=',r['diagnostics']['retained_unique_agencies'])
+          print('eligible_strata=',r['diagnostics']['design_eligible_strata'])
+          print('matched_pairs=',r['diagnostics']['matched_pairs'])
+          print('matched_modes=',r['diagnostics']['matched_modes'])
+          print('balance=',r['diagnostics']['vrm_balance_fraction'])
+          print('failed_checks=',[k for k,v in r['checks'].items() if not v['pass']])
+          PY
+
+      - name: Commit immutable N01 staging evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-FTA-TRANSIT-N01/STAGING_RESULT.json research/US-FTA-TRANSIT-N01/PAIR_MANIFEST.json
+          git commit -m 'Stage US-FTA-TRANSIT-N01 evaluation'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Confirm zero-cost boundary
+        run: |
+          echo 'Official FTA/DOT Annual Breakdowns endpoint only.'
+          echo 'No Major Safety/Security row endpoint is called.'
+          echo 'Standard public-repository GitHub-hosted runner only.'
+          echo 'No paid API, runner, source, authentication bypass, or artifact upload is used.'
+          echo 'Incremental monetary cost: 0 USD.'
