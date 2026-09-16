@@ -108,3 +108,8 @@ Score each authorized candidate exactly once, 0–5 on each dimension, total /45
 ## Exact next action / 정확한 다음 행동
 
 Bind this frozen candidate/rubric contract to a dedicated R32 Issue **before** writing `SOURCE_REVALIDATION.md` or `SCORECARD.md`. Then revalidate official sources, persist the source audit, score the four candidates once, and select at most one separate outcome-blind F01.
+
+
+## Final disposition / 최종 처분
+
+Issue #144 ratifies the immutable scorecard without rescoring. **`SELECT_US_FMCSA_HAZ_001_INSPECTION_TO_PHMSA_HAZMAT_F01`** is selected at **42/45**, ahead of FTA 37/45 and the two preserved 36/45 candidates. No candidate outcome was opened.

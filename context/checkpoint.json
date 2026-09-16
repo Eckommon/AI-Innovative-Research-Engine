@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260916-PORTFOLIO-R32-ACTIVE",
-  "active_issue": 144,
-  "active_research": "PORTFOLIO-R32",
-  "last_completed_issue": 143,
-  "last_completed_research": "US-NHTSA-MC-F01",
-  "last_decision": "DEC-200",
+  "checkpoint_id": "CHK-20260916-PORTFOLIO-R32-TERMINAL",
+  "active_issue": "none",
+  "active_research": "NONE",
+  "last_completed_issue": 144,
+  "last_completed_research": "PORTFOLIO-R32",
+  "last_decision": "DEC-201",
   "updated": "2026-09-16"
 }
