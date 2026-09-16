@@ -1,21 +1,23 @@
 ---
-checkpoint_id: CHK-20260916-PORTFOLIO-R30-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20260916-US-FDA-MD-F01-ACTIVE
+active_issue: 141
+active_research: US-FDA-MD-F01
 last_completed_issue: 140
 last_completed_research: PORTFOLIO-R30
-last_decision: DEC-193
+last_decision: DEC-194
 updated: 2026-09-16
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `PORTFOLIO_R30_SELECTED_US_FDA_MD_001__F01_AUTHORIZATION_REQUIRED`
+**State / 상태:** `US_FDA_MD_F01_ACTIVE__OUTCOME_BLIND_SOURCE_SCHEMA_FEI`
 
-PORTFOLIO-R30 is completed with **`SELECT_US_FDA_MD_001_INSPECTION_TO_RECALL_F01`** under DEC-193 / CLM-178. Frozen scores: FDA **41/45**, CMS **37/45**, US-PIPE **36/45**. No candidate outcome magnitude was opened. The scorecard-before-Issue binding nonconformity remains durably recorded.
+Issue #141 / US-FDA-MD-F01 is active under DEC-194. The gate tests only official source access, inspection schema, exact FEI identity, FDA-native medical-device cohort semantics, repeated-inspection/project-area structure and aggregate exact FEI overlap with Device Recall.
+
+Inspection classification (`NAI`/`VAI`/`OAI`) is an authorized baseline identity. The forbidden outcome is recall incidence/membership stratified by inspection class. No such comparison or relationship is authorized.
 
 ## Exact next action / 정확한 다음 행동
 
-Open exactly one separate `US-FDA-MD-F01` outcome-blind source/schema/identity feasibility Issue. Verify current zero-cost inspection dataset access, exact FEI/date/classification/project-area schema, CDRH/device manufacturing filter, repeated-inspection structure and exact Device Recall FEI/date support. Do not count or compare recall incidence by inspection class.
+Execute the frozen F01 contract against official FDA/openFDA routes only. Probe the advertised public inspection download and current official access semantics, verify openFDA recall FEI/date support, and apply PASS/PARTIAL/HOLD exactly as preregistered. No unofficial mirror or authentication bypass.
 
 Incremental monetary cost remains **0 USD**.
