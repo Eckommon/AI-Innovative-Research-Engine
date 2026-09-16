@@ -1,0 +1,191 @@
+{
+  "boundaries": {
+    "agency_name_repair_used": false,
+    "breakdown_conditioned_major_safety_event_occurrence_opened": false,
+    "causal_claim_made": false,
+    "manual_or_fuzzy_identity_repair_used": false,
+    "predictive_metric_computed": false,
+    "relationship_computed": false,
+    "row_level_breakdown_event_join_persisted": false
+  },
+  "checks": {
+    "1": {
+      "evidence": "Official Socrata metadata read and SHA-256 fingerprinted for all three frozen dataset IDs.",
+      "pass": true
+    },
+    "10": {
+      "evidence": "Major-event required fields=True; distinct years=13; range=2014..2026.",
+      "pass": true
+    },
+    "11": {
+      "evidence": "Exact aggregate Breakdowns∩Major NTD ID x mode pairs=968.",
+      "pass": true
+    },
+    "12": {
+      "evidence": "Only exact normalized source-native NTD ID x mode is used; no agency-name/address/manual/fuzzy repair is implemented.",
+      "pass": true
+    },
+    "13": {
+      "evidence": "TOS retained in exact Breakdowns key before pair projection; exact source-grain keys=3731.",
+      "pass": true
+    },
+    "14": {
+      "evidence": "Official recent-safety validation lag is frozen in contract; runner does not use recent safety measures and does not treat them as complete outcome support.",
+      "pass": true
+    },
+    "15": {
+      "evidence": "SHA-256 fingerprints persisted for all three pair sets and both exact intersections.",
+      "pass": true
+    },
+    "16": {
+      "evidence": "breakdown_conditioned_major_safety_event_occurrence_opened=false",
+      "pass": true
+    },
+    "17": {
+      "evidence": "row_level_breakdown_event_join_persisted=false",
+      "pass": true
+    },
+    "18": {
+      "evidence": "relationship_computed=false; predictive_metric_computed=false; causal_claim_made=false",
+      "pass": true
+    },
+    "19": {
+      "evidence": "Only frozen official DOT/FTA endpoints and standard public-repository runner; incremental monetary cost=0 USD.",
+      "pass": true
+    },
+    "2": {
+      "evidence": "Actual structural-only query rows read: breakdowns=3731, monthly=192312, major=115454.",
+      "pass": true
+    },
+    "3": {
+      "evidence": "Breakdowns required structural/mechanical fields resolved=True.",
+      "pass": true
+    },
+    "4": {
+      "evidence": "Breakdowns years=[2022, 2023, 2024].",
+      "pass": true
+    },
+    "5": {
+      "evidence": "Distinct valid Breakdowns NTD ID x mode pairs=1199.",
+      "pass": true
+    },
+    "6": {
+      "evidence": "Breakdowns pairs represented in >=2 years=1131.",
+      "pass": true
+    },
+    "7": {
+      "evidence": "Exact source-grain keys=3731, duplicate rows=0, conflicting duplicate keys=0.",
+      "pass": true
+    },
+    "8": {
+      "evidence": "Monthly required fields=True; years=2014..2026; evaluation_year=2026.",
+      "pass": true
+    },
+    "9": {
+      "evidence": "Breakdowns pairs represented in Monthly=1167/1199=0.973311.",
+      "pass": true
+    }
+  },
+  "contract_commit": "70c41fc8202579436ad7560118548fc1c2a34593",
+  "disposition": "PASS_US_FTA_TRANSIT_F01_AGENCY_MODE_TIME_JOIN_READY",
+  "evaluated_at_utc": "2026-09-16T06:24:45+00:00",
+  "fingerprints": {
+    "breakdowns_intersect_major_events_pairs_sha256": "e3ce8025e88a3ce264ac8cfcf9f81257d1d32d378e164c1f7c04b491f5092dcd",
+    "breakdowns_intersect_monthly_pairs_sha256": "284470d6ef552e448353925d1ec47cfb54d375fa56df836f1364a87632c79bba",
+    "breakdowns_ntd_id_mode_pairs_sha256": "e14c25ba7c0d45ffbc4d42bc02ca8d378de5d42376ef378b54e95b5f3ec04e83",
+    "major_safety_events_ntd_id_mode_pairs_sha256": "d5b75b1cbdd001444e61477b356d84d8e16e4b9f0607f435f9923d09e9030559",
+    "monthly_modal_ntd_id_mode_pairs_sha256": "06c6a5a224e3672df3cc237cd0f0dc45eacfdc39ec8f8f27a4a2781fbfbc9ae8"
+  },
+  "incremental_monetary_cost_usd": 0,
+  "issue": 147,
+  "protocol": "US-FTA-TRANSIT-F01",
+  "source_evidence": {
+    "breakdowns": {
+      "dataset_id": "amkt-4ehs",
+      "metadata_bytes": 56674,
+      "metadata_name": "2022 - 2024 NTD Annual Data - Breakdowns",
+      "metadata_rows_updated_at": 1783017870,
+      "metadata_sha256": "8acf5496b09847616ab3a7d530689c10cf0159e236888deedc2d644c6ca55d92",
+      "query_bytes": 650045,
+      "resolved_fields": {
+        "major_mechanical_failures": "major_mechanical_failures",
+        "mode": "mode",
+        "ntd_id": "ntd_id",
+        "other_mechanical_failures": "other_mechanical_failures",
+        "report_year": "report_year",
+        "tos": "type_of_service",
+        "total_mechanical_failures": "total_mechanical_failures"
+      },
+      "rows_read": 3731
+    },
+    "major_safety_events": {
+      "dataset_id": "9ivb-8ae9",
+      "metadata_bytes": 180584,
+      "metadata_name": "Major Safety and Security Events",
+      "metadata_rows_updated_at": 1788977920,
+      "metadata_sha256": "5622b41a66919f63557112e9c70b542729a132c4ab66837320a4702691b944db",
+      "query_bytes": 9582685,
+      "resolved_fields": {
+        "event_month": null,
+        "event_time": "incident_date",
+        "event_year": null,
+        "mode": "mode",
+        "ntd_id": "_5_digit_ntd_id"
+      },
+      "rows_read": 115454
+    },
+    "monthly_modal": {
+      "dataset_id": "5ti2-5uiv",
+      "metadata_bytes": 120928,
+      "metadata_name": "Monthly Modal Time Series",
+      "metadata_rows_updated_at": 1788533528,
+      "metadata_sha256": "dafd12f90d2d9bccd15d28d8a7c2cc74491271050d5c070127b40c44a6429339",
+      "query_bytes": 13869543,
+      "resolved_fields": {
+        "mode": "mode",
+        "month": "month",
+        "ntd_id": "_5_digit_ntd_id",
+        "year": "year"
+      },
+      "rows_read": 192312
+    }
+  },
+  "structural_diagnostics": {
+    "breakdowns": {
+      "conflicting_duplicate_source_grain_keys": 0,
+      "distinct_ntd_id_mode_pairs": 1199,
+      "distinct_years": [
+        2022,
+        2023,
+        2024
+      ],
+      "duplicate_source_grain_rows": 0,
+      "non_numeric_mechanical_rows": 0,
+      "null_or_unparseable_structural_rows": 0,
+      "pairs_in_at_least_two_breakdown_years": 1131,
+      "valid_source_grain_keys": 3731
+    },
+    "cross_source": {
+      "breakdowns_pair_monthly_coverage": 0.973311093,
+      "breakdowns_pairs_in_major_events": 968,
+      "breakdowns_pairs_in_monthly": 1167
+    },
+    "major_safety_events": {
+      "distinct_calendar_periods": 149,
+      "distinct_ntd_id_mode_pairs": 1038,
+      "distinct_years": 13,
+      "null_or_unparseable_structural_rows": 0,
+      "year_max": 2026,
+      "year_min": 2014
+    },
+    "monthly_modal": {
+      "distinct_calendar_periods": 151,
+      "distinct_ntd_id_mode_pairs": 1387,
+      "duplicate_structural_rows": 23953,
+      "null_or_unparseable_structural_rows": 0,
+      "year_max": 2026,
+      "year_min": 2014
+    }
+  },
+  "valid_evaluation": true
+}
