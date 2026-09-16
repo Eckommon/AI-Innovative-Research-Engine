@@ -1,21 +1,21 @@
 ---
-checkpoint_id: CHK-20260916-US-FMCSA-HAZ-F01-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20260916-PORTFOLIO-R33-ACTIVE
+active_issue: 146
+active_research: PORTFOLIO-R33
 last_completed_issue: 145
 last_completed_research: US-FMCSA-HAZ-F01
-last_decision: DEC-203
+last_decision: DEC-204
 updated: 2026-09-16
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `US_FMCSA_HAZ_F01_PARTIAL_PHMSA_EXPORT_BLOCKED__PORTFOLIO_RETURN`
+**State / 상태:** `PORTFOLIO_R33_ACTIVE__SOURCE_REVALIDATION_THEN_IMMUTABLE_SCORE`
 
-US-FMCSA-HAZ-F01 is terminal at **`PARTIAL_US_FMCSA_HAZ_F01_SOURCE_SEMANTICS_READY__PHMSA_EXPORT_ACCESS_BLOCKED`** under corrected Run `35057953144`, DEC-203 and CLM-183. FMCSA source/schema/carrier/date/violation-linkage support passes strongly; official PHMSA detailed-export semantics are documented but the export bytes remain inaccessible to the frozen zero-cost runner. PHMSA carrier/date/intersection requirements remain uncomputed. No hazmat incident outcome or joined carrier membership was opened.
+PORTFOLIO-R33 is active under Issue #146 / DEC-204. The four-candidate pool, nine-dimension Mission-ROI rubric, current-executable-access interpretation and tie-break were frozen before Issue binding. No candidate outcome magnitude or relationship direction has been opened.
 
 ## Exact next action / 정확한 다음 행동
 
-Return to Stage 0 and open a new portfolio reselection. Preserve US-FMCSA-HAZ-001 as an access-blocked asset; do not automatically redesign it around another PHMSA source and do not use unofficial mirrors. Compare preserved and fresh candidates prospectively before authorizing exactly one next outcome-blind gate.
+Persist official-source and direct-overlap revalidation for exactly `US-FTA-TRANSIT-001`, `US-MSHA-001`, `US-FRA-XING-001`, and `KR-GG-CHEM-001`; then score exactly once and select at most one next outcome-blind F01.
 
 Incremental monetary cost remains **0 USD**.
