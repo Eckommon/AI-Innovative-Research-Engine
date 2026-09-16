@@ -5,6 +5,7 @@ name: State Integrity / 상태 무결성
 # C-EU-F01 terminal-state recheck: verify canonical post-finalization state after bot-authored push/issue suppression.
 # PORTFOLIO-R30 terminal-state recheck: verify canonical post-finalization state after bot-authored push/issue suppression.
 # US-FDA-MD-F01 terminal-state recheck: verify canonical post-finalization state after bot-authored push/issue suppression.
+# PORTFOLIO-R31 terminal-state recheck: verify canonical post-finalization state after bot-authored push/issue suppression.
 
 on:
   push:
