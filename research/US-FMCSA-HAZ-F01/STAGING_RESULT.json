@@ -1,0 +1,78 @@
+{
+  "aggregate_exact_carrier_intersection": null,
+  "authentication_bypass_used": false,
+  "carrier_level_join_membership_persisted": false,
+  "causal_claim_made": false,
+  "federal_safety_rating_claim_made": false,
+  "fingerprints": {
+    "fmcsa_usdot_carriers": null,
+    "intersection": null,
+    "phmsa_highway_fed_dot_ids": null
+  },
+  "fmcsa": {
+    "carrier_fingerprint": null,
+    "distinct_valid_usdot_carriers": 0,
+    "field_map": {
+      "inspection_date": "insp_date",
+      "inspection_id": "inspection_id",
+      "usdot": null,
+      "violation_inspection_id": "inspection_id",
+      "violation_oos": "out_of_service_indicator"
+    },
+    "inspection_schema_column_count": 63,
+    "max_inspections_per_carrier": 0,
+    "repeated_inspection_carriers": 0,
+    "schema_complete": false,
+    "violation_linkage_ready": false,
+    "violation_schema_column_count": 14
+  },
+  "future_incident_membership_conditioned_on_fmcsa_opened": false,
+  "gate": "IMPLEMENTATION_OR_SOURCE_PARSE_NOT_VALID_FOR_GATE",
+  "hazmat_incident_occurrence_by_inspection_profile_opened": false,
+  "implementation_error": "RuntimeError: FMCSA required field mapping incomplete: {'usdot': None, 'inspection_id': 'inspection_id', 'inspection_date': 'insp_date', 'violation_inspection_id': 'inspection_id', 'violation_oos': 'out_of_service_indicator'}",
+  "incremental_monetary_cost_usd": 0,
+  "issue": 145,
+  "phmsa": {
+    "carrier_fingerprint": null,
+    "date_parse_rate": null,
+    "date_years": null,
+    "distinct_date_years": null,
+    "distinct_highway_fed_dot_ids": null,
+    "docs_reachable": false,
+    "export_bytes_accessible": false,
+    "public_export_semantics_documented": true,
+    "required_schema_present": false
+  },
+  "phmsa_export_access_only_partial_condition": {
+    "fmcsa_empirical_requirements_pass": false,
+    "phmsa_docs_reachable": false,
+    "phmsa_export_bytes_accessible": false,
+    "phmsa_public_export_semantics_documented": true
+  },
+  "post_execution_rescue_used": false,
+  "predictive_metric_computed": false,
+  "relationship_computed": false,
+  "requirements": {
+    "carrier_level_join_membership_not_persisted": true,
+    "exact_carrier_intersection_ge_300": false,
+    "fmcsa_date_support_ge_3_years_and_95pct": false,
+    "fmcsa_distinct_usdot_ge_50000": false,
+    "fmcsa_inspection_machine_readable": false,
+    "fmcsa_required_native_fields_present": false,
+    "fmcsa_violation_machine_readable": false,
+    "fmcsa_violation_oos_linkage_deterministic": false,
+    "official_metadata_documentation_reachable_fingerprinted": false,
+    "outcome_boundary_preserved": true,
+    "phmsa_date_support_ge_10_years_and_95pct": false,
+    "phmsa_detailed_export_publicly_executable": false,
+    "phmsa_highway_fed_dot_ids_ge_500": false,
+    "phmsa_required_fields_present": false,
+    "public_cohort_boundary_preserved": true,
+    "relationship_prediction_causality_closed": true,
+    "three_identity_fingerprints_persisted": false,
+    "zero_cost_no_bypass": true
+  },
+  "research_id": "US-FMCSA-HAZ-F01",
+  "unofficial_mirror_used": false,
+  "valid_execution": false
+}

@@ -1,0 +1,111 @@
+{
+  "authentication_bypass_used": false,
+  "carrier_level_join_membership_persisted": false,
+  "fmcsa_docs": {
+    "bytes": 436,
+    "content_disposition": "",
+    "content_type": "text/html",
+    "error": "HTTPError",
+    "final_url": "https://www.fmcsa.dot.gov/registration/fmcsa-data-dissemination-program",
+    "http": 403,
+    "sha256": "dda4f1c6752a2e542d4254735534b34c1375c6f7fea00967893fc95d620d3a15",
+    "url": "https://www.fmcsa.dot.gov/registration/fmcsa-data-dissemination-program"
+  },
+  "fmcsa_inspection_catalog": {
+    "bytes": 123632,
+    "content_disposition": "",
+    "content_type": "text/html; charset=utf-8",
+    "error": null,
+    "final_url": "https://catalog.data.gov/dataset/vehicle-inspection-file",
+    "http": 200,
+    "sha256": "b3d302fb54d0d2ec53dbb443fc001c084bc5fe89c306b729e29b806b1ba3c8e2",
+    "url": "https://catalog.data.gov/dataset/vehicle-inspection-file"
+  },
+  "fmcsa_inspection_schema": {
+    "bytes": 79353,
+    "content_disposition": "",
+    "content_type": "application/json; charset=utf-8",
+    "error": null,
+    "final_url": "https://data.transportation.gov/api/views/fx4q-ay7w/columns.json",
+    "http": 200,
+    "sha256": "fc71646f46b4a1fe04bb8ce097406a2d9b1e72a4a0604567278b07b332d7aee2",
+    "url": "https://data.transportation.gov/api/views/fx4q-ay7w/columns.json"
+  },
+  "fmcsa_query_audits": [],
+  "fmcsa_violation_catalog": {
+    "bytes": 122178,
+    "content_disposition": "",
+    "content_type": "text/html; charset=utf-8",
+    "error": null,
+    "final_url": "https://catalog.data.gov/dataset/vehicle-inspections-and-violations",
+    "http": 200,
+    "sha256": "e41b33064fda74f0cc2b4c4a51fd2ace277485d7c8d4ac3dc48836d9a6efaa10",
+    "url": "https://catalog.data.gov/dataset/vehicle-inspections-and-violations"
+  },
+  "fmcsa_violation_schema": {
+    "bytes": 21235,
+    "content_disposition": "",
+    "content_type": "application/json; charset=utf-8",
+    "error": null,
+    "final_url": "https://data.transportation.gov/api/views/876r-jsdb/columns.json",
+    "http": 200,
+    "sha256": "e94fa4938c38ab619fa5034007a465c4f61c26135ad9d2d172b006a61e6acb32",
+    "url": "https://data.transportation.gov/api/views/876r-jsdb/columns.json"
+  },
+  "phmsa_catalog": {
+    "bytes": 124394,
+    "content_disposition": "",
+    "content_type": "text/html; charset=utf-8",
+    "error": null,
+    "final_url": "https://catalog.data.gov/dataset/hazmat-incident-reports-data-mining-tool",
+    "http": 200,
+    "sha256": "fb0caf7b0c51908479c7b1a92e24d7155b77b9e1e6df7e8fd7a6c0b2bf278264",
+    "url": "https://catalog.data.gov/dataset/hazmat-incident-reports-data-mining-tool"
+  },
+  "phmsa_dictionary": {
+    "bytes": 23370,
+    "content_disposition": "",
+    "content_type": "application/pdf",
+    "error": null,
+    "final_url": "https://portal.phmsa.dot.gov/HIP_Help/DataDictionary.pdf",
+    "http": 200,
+    "sha256": "10dc2cb2c52bc8961dfbacbf885c560f7be48c20fcfef9be607dfe84ef3bf4b8",
+    "url": "https://portal.phmsa.dot.gov/HIP_Help/DataDictionary.pdf"
+  },
+  "phmsa_discovered_export_candidate_count": 0,
+  "phmsa_discovered_export_candidates": [],
+  "phmsa_export_attempts": [],
+  "phmsa_search": {
+    "bytes": 0,
+    "content_disposition": "",
+    "content_type": "",
+    "error": "URLError",
+    "final_url": "https://portalpublic.phmsa.dot.gov/analytics/saw.dll?Portal%3FPortalPath=%2Fshared%2FPublic+Website+Pages%2F_portal%2FHazmat+Incident+Report+Search",
+    "http": null,
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "url": "https://portalpublic.phmsa.dot.gov/analytics/saw.dll?Portal%3FPortalPath=%2Fshared%2FPublic+Website+Pages%2F_portal%2FHazmat+Incident+Report+Search"
+  },
+  "phmsa_stats": {
+    "bytes": 492,
+    "content_disposition": "",
+    "content_type": "text/html",
+    "error": "HTTPError",
+    "final_url": "https://www.phmsa.dot.gov/hazmat-program-management-data-and-statistics/data-operations/incident-statistics",
+    "http": 403,
+    "sha256": "7dd647556e79eb2fdba83a806243e6628ee0394fdcb5afb42af1062fb42528ad",
+    "url": "https://www.phmsa.dot.gov/hazmat-program-management-data-and-statistics/data-operations/incident-statistics"
+  },
+  "raw_source_bytes_persisted": false,
+  "source_boundary": {
+    "carrier_level_join_membership_persisted": false,
+    "fmcsa_dataset_ids": [
+      "fx4q-ay7w",
+      "876r-jsdb"
+    ],
+    "no_authentication_bypass": true,
+    "no_unofficial_mirror": true,
+    "phmsa_source": "Form 5800.1 official public Incident Detailed Report/export only",
+    "raw_source_bytes_persisted": false
+  },
+  "unofficial_mirror_used": false
+}
