@@ -1,0 +1,72 @@
+name: Activate PORTFOLIO-R32 Canonical State
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/activate-portfolio-r32.yml'
+      - 'tools/activate_portfolio_r32.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: read
+
+jobs:
+  activate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify Issue 144 is open and scorecard absent
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python -m py_compile tools/activate_portfolio_r32.py
+          state=$(gh api "repos/${GITHUB_REPOSITORY}/issues/144" --jq '.state')
+          test "$state" = "open"
+          test ! -e research/PORTFOLIO-R32/SCORECARD.md
+          grep -q 'CONTRACT_FROZEN_PRE_SCORE' research/PORTFOLIO-R32/README.md
+          echo 'PORTFOLIO_R32_PREACTIVATION_VERIFY_PASS'
+
+      - name: Activate R32
+        run: python tools/activate_portfolio_r32.py
+
+      - name: Verify active canonical mirrors
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c == {
+            'checkpoint_id':'CHK-20260916-PORTFOLIO-R32-ACTIVE',
+            'active_issue':144,
+            'active_research':'PORTFOLIO-R32',
+            'last_completed_issue':143,
+            'last_completed_research':'US-NHTSA-MC-F01',
+            'last_decision':'DEC-200',
+            'updated':'2026-09-16',
+          }
+          assert 'PORTFOLIO_R32_ACTIVE__SOURCE_REVALIDATION_PENDING' in Path('STATUS.md').read_text()
+          assert Path('registry/DEC-200.md').exists()
+          assert '`DEC-200`' in Path('registry/DECISION_LOG.md').read_text()
+          assert not Path('research/PORTFOLIO-R32/SCORECARD.md').exists()
+          print('PORTFOLIO_R32_ACTIVE_MIRROR_VERIFY_PASS')
+          PY
+
+      - name: Commit activation
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add registry/DEC-200.md registry/DECISION_LOG.md STATUS.md context/checkpoint.json context/SESSION_HANDOFF.md
+          git commit -m 'Activate PORTFOLIO-R32 source revalidation'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Confirm zero-cost boundary
+        run: |
+          echo 'Public GitHub-hosted runner and public-source research only.'
+          echo 'Incremental monetary cost: 0 USD.'
