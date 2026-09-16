@@ -1,6 +1,7 @@
 ---
 id: PORTFOLIO-R30
-state: PREPARED_AWAITING_ISSUE_BINDING
+issue: 140
+state: ACTIVE_FROZEN_SCORECARD_RATIFICATION
 created: 2026-09-16
 candidate_outcomes_opened: false
 incremental_monetary_cost_usd: 0
@@ -14,9 +15,17 @@ Return to Stage 0 after terminal `C-EU-F01 = HOLD_C_EU_F01_SOURCE_OR_IDENTITY`. 
 
 No candidate outcome magnitude or candidate-specific relationship is opened in R30.
 
+## Frozen provenance and process note / provenance·절차 기록
+
+Candidate/rule/source facts were durably frozen before scoring:
+- candidate/rule contract commit `faf01cbe5a114f69bf96fdafa075521aa619662b`;
+- source revalidation commit `540f27da69d109a6b731b3d41d02eb5a99c29252`.
+
+The scorecard was committed at `e848a6c77920aa7e31eb1e1038e4f9914cbc6b7e` before Issue #140 was bound. This ordering nonconformity is durably recorded in `PROCESS_NONCONFORMITY.md`. It is not outcome leakage: the pool, rubric, tie-break and source evidence were fixed first and no candidate outcome was opened. Issue #140 freezes the existing scorecard; **no rescoring is permitted** merely to repair the orchestration order.
+
 ## Frozen candidate pool / 고정 후보군
 
-Exactly three candidates may be scored in R30:
+Exactly three candidates are scored in R30:
 
 1. **US-PIPE-001 — hydrologic stress → pipeline incidents**
    - preserved unexecuted candidate from R29;
@@ -36,12 +45,11 @@ Exactly three candidates may be scored in R30:
    - outcome family: later CMS Health Deficiencies citations;
    - exact facility key: CMS Certification Number (`CCN`);
    - both sources are public/free and expose time identities;
-   - however, peer-reviewed work has already merged PBJ with Care Compare/deficiency outcomes and directly tested staffing instability against deficiency citations, creating high overlap/diminishing-return risk.
+   - peer-reviewed work has already merged PBJ with Care Compare/deficiency outcomes and directly tested staffing instability against deficiency citations, creating high overlap/diminishing-return risk.
 
 ## Frozen scoring frame / 고정 평가틀
 
 Reuse the established R26–R29 Mission-ROI rubric, 0–5 each, total /45:
-
 1. Mission bottleneck
 2. Cross-source value
 3. Direct outcome
@@ -52,16 +60,15 @@ Reuse the established R26–R29 Mission-ROI rubric, 0–5 each, total /45:
 8. Next-gate information gain
 9. Low overlap / novelty risk
 
-Scores are portfolio-control judgments, not empirical findings.
+## Frozen scorecard / 고정 점수
 
-## Frozen interpretation rules / 고정 해석 규칙
+| Candidate | Mission bottleneck | Cross-source | Direct outcome | Independent-unit prospect | Practical value | Zero-cost operability | Join defensibility | Next-gate info gain | Low overlap / novelty risk | Total |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| **US-FDA-MD-001 inspection classification → later device recall** | 5 | 5 | 5 | 4 | 5 | 5 | 4 | 5 | 3 | **41** |
+| US-CMS-NH-001 staffing instability → later health deficiencies | 5 | 5 | 5 | 5 | 5 | 5 | 5 | 2 | 0 | **37** |
+| US-PIPE-001 hydrologic stress → incident | 5 | 5 | 5 | 5 | 5 | 5 | 3 | 3 | 0 | **36** |
 
-- `Join defensibility` scores exact deterministic identity and source accessibility, not whether the eventual relationship is causal.
-- `Independent-unit prospect` must penalize obvious repeated-unit/pseudoreplication or severe selection structure if a prospective design cannot readily control it.
-- `Next-gate information gain` scores how much one **outcome-blind F01** can remove current uncertainty, not the attractiveness of a hoped-for positive result.
-- `Low overlap / novelty risk` is an overlap penalty only; absence of a found near-identical paper is not proof of novelty.
-- A non-comprehensive public database may still support a bounded cohort question if the cohort definition is explicit and no population-wide denominator is claimed.
-- No candidate may receive an effect score based on opening outcome magnitudes during R30.
+Provisional selection frozen for ratification: **`SELECT_US_FDA_MD_001_INSPECTION_TO_RECALL_F01`**. No tie-break is required.
 
 ## Frozen tie-break / 고정 동점규칙
 
@@ -70,25 +77,10 @@ Scores are portfolio-control judgments, not empirical findings.
 3. Low overlap / novelty risk
 4. Join defensibility
 5. Direct outcome
-6. If still tied, fail closed and do not select until a new prospective discriminator is registered.
-
-## Source basis / source 근거
-
-### US-FDA-MD-001
-- FDA Inspection Classification Database: https://www.fda.gov/inspections-compliance-enforcement-and-criminal-investigations/inspection-classification-database
-- FDA Inspections Data Dashboard: https://datadashboard.fda.gov/oii/cd/inspections.htm
-- FDA CDRH Regulatory Reliance Portal: https://www.fda.gov/medical-devices/cdrh-international-affairs/cdrh-regulatory-reliance-portal-medical-devices
-- openFDA Device Recall searchable fields: https://open.fda.gov/apis/device/recall/searchable-fields/
-
-### US-CMS-NH-001
-- CMS PBJ Daily Nurse Staffing: https://data.cms.gov/quality-of-care/payroll-based-journal-daily-nurse-staffing
-- CMS Health Deficiencies: https://data.cms.gov/provider-data/dataset/r5ix-sfxw
-
-### US-PIPE-001
-Use the official PHMSA/NPMS source-access facts already frozen in PORTFOLIO-R29 / Issue #138; R30 does not reopen or relax the restricted-geometry finding.
+6. Still tied → fail closed.
 
 ## Exact next action / 정확한 다음 행동
 
-Bind this contract to a dedicated R30 Issue, score exactly the three frozen candidates without opening candidate outcomes, select exactly one winner under the frozen tie-break, persist the result atomically, close R30, pass State Integrity, and only then open the winner's separate outcome-blind F01.
+Ratify this immutable scorecard under Issue #140 without rescoring, persist the R30 terminal selection atomically, close Issue #140, pass State Integrity, and only then open a separate `US-FDA-MD-F01` outcome-blind source/schema/identity gate. No inspection-classification→recall effect test is authorized by R30.
 
 Incremental monetary cost remains **0 USD**.
