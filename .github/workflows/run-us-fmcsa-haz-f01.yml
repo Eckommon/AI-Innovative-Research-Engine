@@ -1,0 +1,105 @@
+name: Run US-FMCSA-HAZ-F01 Outcome-Blind Source Gate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/run-us-fmcsa-haz-f01.yml'
+      - 'tools/run_us_fmcsa_haz_f01.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  run-feasibility:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify frozen active contract
+        run: |
+          python -m py_compile tools/run_us_fmcsa_haz_f01.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c['active_issue'] == 145
+          assert c['active_research'] == 'US-FMCSA-HAZ-F01'
+          assert c['last_completed_issue'] == 144
+          assert c['last_decision'] == 'DEC-202'
+          r=Path('research/US-FMCSA-HAZ-F01/README.md').read_text()
+          for s in [
+              'fx4q-ay7w',
+              '876r-jsdb',
+              '>= 50,000 distinct valid USDOT carriers',
+              '>=500 distinct valid numeric FED DOT IDs',
+              '>=300 distinct carriers',
+              'PASS_US_FMCSA_HAZ_F01_CARRIER_TIME_JOIN_READY',
+              'PARTIAL_US_FMCSA_HAZ_F01_SOURCE_SEMANTICS_READY__PHMSA_EXPORT_ACCESS_BLOCKED',
+              'HOLD_US_FMCSA_HAZ_F01_SOURCE_SCHEMA_OR_IDENTITY',
+              'hazmat_incident_occurrence_by_inspection_profile_opened = false',
+          ]:
+              assert s in r, s
+          assert not Path('research/US-FMCSA-HAZ-F01/STAGING_RESULT.json').exists()
+          print('US_FMCSA_HAZ_F01_FROZEN_CONTRACT_VERIFY_PASS')
+          PY
+
+      - name: Execute official-source gate
+        run: python tools/run_us_fmcsa_haz_f01.py
+
+      - name: Verify outcome-blind staging boundary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('research/US-FMCSA-HAZ-F01/STAGING_RESULT.json').read_text())
+          assert r['gate'] in {
+            'PASS_US_FMCSA_HAZ_F01_CARRIER_TIME_JOIN_READY',
+            'PARTIAL_US_FMCSA_HAZ_F01_SOURCE_SEMANTICS_READY__PHMSA_EXPORT_ACCESS_BLOCKED',
+            'HOLD_US_FMCSA_HAZ_F01_SOURCE_SCHEMA_OR_IDENTITY',
+            'IMPLEMENTATION_OR_SOURCE_PARSE_NOT_VALID_FOR_GATE',
+          }
+          assert r['hazmat_incident_occurrence_by_inspection_profile_opened'] is False
+          assert r['future_incident_membership_conditioned_on_fmcsa_opened'] is False
+          assert r['carrier_level_join_membership_persisted'] is False
+          assert r['relationship_computed'] is False
+          assert r['predictive_metric_computed'] is False
+          assert r['causal_claim_made'] is False
+          assert r['federal_safety_rating_claim_made'] is False
+          assert r['unofficial_mirror_used'] is False
+          assert r['authentication_bypass_used'] is False
+          assert r['post_execution_rescue_used'] is False
+          assert r['incremental_monetary_cost_usd'] == 0
+          assert Path('research/US-FMCSA-HAZ-F01/STAGING_SOURCE_AUDIT.json').exists()
+          print('US_FMCSA_HAZ_F01_STAGING_BOUNDARY_VERIFY_PASS', r['gate'])
+          PY
+
+      - name: Commit immutable staging evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-FMCSA-HAZ-F01/STAGING_RESULT.json research/US-FMCSA-HAZ-F01/STAGING_SOURCE_AUDIT.json
+          git commit -m 'Record US-FMCSA-HAZ-F01 outcome-blind staging evidence'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Require valid gate evaluation
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('research/US-FMCSA-HAZ-F01/STAGING_RESULT.json').read_text())
+          if not r['valid_execution'] or r['gate'] == 'IMPLEMENTATION_OR_SOURCE_PARSE_NOT_VALID_FOR_GATE':
+              raise SystemExit('US_FMCSA_HAZ_F01_EXECUTION_INVALID_FOR_SCIENTIFIC_GATE')
+          print('US_FMCSA_HAZ_F01_VALID_GATE_EVALUATION', r['gate'])
+          PY
+
+      - name: Confirm zero-cost boundary
+        run: |
+          echo 'Official DOT/FMCSA and PHMSA public routes only.'
+          echo 'No unofficial mirror, authentication bypass, paid API, or paid source.'
+          echo 'Incremental monetary cost: 0 USD.'
