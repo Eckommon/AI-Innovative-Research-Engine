@@ -1,0 +1,417 @@
+{
+  "evaluated_at_utc": "2026-09-16T06:30:22+00:00",
+  "incremental_monetary_cost_usd": 0,
+  "outcome_values_opened": false,
+  "protocol": "US-FTA-TRANSIT-N01-SCHEMA-PREFLIGHT",
+  "relationship_computed": false,
+  "sources": {
+    "breakdowns": {
+      "column_count": 29,
+      "dataset_id": "amkt-4ehs",
+      "metadata_name": "2022 - 2024 NTD Annual Data - Breakdowns",
+      "metadata_sha256": "8acf5496b09847616ab3a7d530689c10cf0159e236888deedc2d644c6ca55d92",
+      "selected_schema_columns": [
+        {
+          "dataTypeName": "text",
+          "description": "The transit agency's name.",
+          "fieldName": "agency",
+          "name": "Agency"
+        },
+        {
+          "dataTypeName": "text",
+          "description": "The city in which the agency is headquartered.",
+          "fieldName": "city",
+          "name": "City"
+        },
+        {
+          "dataTypeName": "text",
+          "description": "The state in which the agency is headquartered.",
+          "fieldName": "state",
+          "name": "State"
+        },
+        {
+          "dataTypeName": "text",
+          "description": "A five-digit identifying number for each agency used in the current NTD system.",
+          "fieldName": "ntd_id",
+          "name": "NTD ID"
+        },
+        {
+          "dataTypeName": "text",
+          "description": "Description of the agency's legal entity.",
+          "fieldName": "organization_type",
+          "name": "Organization Type"
+        },
+        {
+          "dataTypeName": "text",
+          "description": "The type of NTD report that the agency completed this year.",
+          "fieldName": "reporter_type",
+          "name": "Reporter Type"
+        },
+        {
+          "dataTypeName": "text",
+          "description": "The year in which hte data was reported.",
+          "fieldName": "report_year",
+          "name": "Report Year"
+        },
+        {
+          "dataTypeName": "text",
+          "description": "UACE Code remains consistent across census years.",
+          "fieldName": "uace_code",
+          "name": "UACE Code"
+        },
+        {
+          "dataTypeName": "text",
+          "description": "The name of the agency's Urbanized Area.",
+          "fieldName": "uza_name",
+          "name": "UZA Name"
+        },
+        {
+          "dataTypeName": "number",
+          "description": "The population of the urbanized area primarily served by the agency.",
+          "fieldName": "primary_uza_population",
+          "name": "Primary UZA Population"
+        },
+        {
+          "dataTypeName": "number",
+          "description": "The number of revenue vehicles operated across the whole agency to meet the annual maximum service requirement. This is the revenue vehicle count during the peak season of the year; on the week and day that maximum service is provided. Vehicles operated in maximum service (VOMS) exclude atypical days and one-time special events.",
+          "fieldName": "agency_voms",
+          "name": "Agency VOMS"
+        },
+        {
+          "dataTypeName": "text",
+          "description": "A system for carrying transit passengers described by specific right-of-way (ROW), technology and operational features.",
+          "fieldName": "mode",
+          "name": "Mode"
+        },
+        {
+          "dataTypeName": "text",
+          "description": "A system for carrying transit passengers described by specific right-of-way (ROW), technology and operational features.",
+          "fieldName": "mode_name",
+          "name": "Mode Name"
+        },
+        {
+          "dataTypeName": "text",
+          "description": "Describes how public transportation services are provided by the transit agency: directly operated (DO) or purchased transportation (PT) services.",
+          "fieldName": "type_of_service",
+          "name": "Type of Service"
+        },
+        {
+          "dataTypeName": "number",
+          "description": "The number of revenue vehicles operated by the given mode and type of service to meet the annual maximum service requirement. This is the revenue vehicle count during the peak season of the year; on the week and day that maximum service is provided. Vehicles operated in maximum service (VOMS) exclude atypical days and one-time special events.",
+          "fieldName": "mode_voms",
+          "name": "Mode VOMS"
+        },
+        {
+          "dataTypeName": "number",
+          "description": "A failure of some mechanical element of the revenue vehicle that prevents the vehicle from completing a scheduled revenue trip or from starting the next scheduled revenue trip because actual movement is limited or because of safety concerns.",
+          "fieldName": "major_mechanical_failures",
+          "name": "Major Mechanical Failures"
+        },
+        {
+          "dataTypeName": "text",
+          "description": "FTA marks a data point as Questionable when there is reason to believe it is incorrect, but the reporting agency has been unable to correct the data or offer an explanation for its anomalous appearance.",
+          "fieldName": "major_mechanical_failures_1",
+          "name": "Major Mechanical Failures Questionable"
+        },
+        {
+          "dataTypeName": "number",
+          "description": "A failure of some other mechanical element of the revenue vehicle that, because of local agency policy, prevents the revenue vehicle from completing a scheduled revenue trip or from starting the next scheduled revenue trip even though the vehicle is physically able to continue in revenue service. For example, a malfunction in the farebox or the air conditioner would be classified thus.",
+          "fieldName": "other_mechanical_failures",
+          "name": "Other Mechanical Failures"
+        },
+        {
+          "dataTypeName": "text",
+          "description": "FTA marks a data point as Questionable when there is reason to believe it is incorrect, but the reporting agency has been unable to correct the data or offer an explanation for its anomalous appearance.",
+          "fieldName": "other_mechanical_failures_1",
+          "name": "Other Mechanical Failures Questionable"
+        },
+        {
+          "dataTypeName": "number",
+          "description": "The sum of major and other mechanical failures.",
+          "fieldName": "total_mechanical_failures",
+          "name": "Total Mechanical Failures"
+        },
+        {
+          "dataTypeName": "text",
+          "description": "FTA marks a data point as Questionable when there is reason to believe it is incorrect, but the reporting agency has been unable to correct the data or offer an explanation for its anomalous appearance.",
+          "fieldName": "total_mechanical_failures_1",
+          "name": "Total Mechanical Failures Questionable"
+        },
+        {
+          "dataTypeName": "number",
+          "description": "The miles that vehicles (or passenger cars, for rail service) travel while in revenue service (vehicle revenue miles (VRM)) plus deadhead miles. Vehicle miles exclude miles for charter services, school bus service, operator training, and vehicle maintenance testing.",
+          "fieldName": "vehicle_passenger_car_miles",
+          "name": "Vehicle/Passenger Car Miles"
+        },
+        {
+          "dataTypeName": "text",
+          "description": "FTA marks a data point as Questionable when there is reason to believe it is incorrect, but the reporting agency has been unable to correct the data or offer an explanation for its anomalous appearance.",
+          "fieldName": "vehicle_passenger_car_miles_1",
+          "name": "Vehicle/Passenger Car Miles Questionable"
+        },
+        {
+          "dataTypeName": "number",
+          "description": "The miles that vehicles (or passenger cars, for rail service) travel while in revenue service. Vehicle revenue miles exclude deadhead, operator training, maintenance testing, and school bus and charter services.",
+          "fieldName": "vehicle_passenger_car_revenue",
+          "name": "Vehicle/Passenger Car Revenue Miles"
+        },
+        {
+          "dataTypeName": "text",
+          "description": "FTA marks a data point as Questionable when there is reason to believe it is incorrect, but the reporting agency has been unable to correct the data or offer an explanation for its anomalous appearance.",
+          "fieldName": "vehicle_passenger_car_miles_2",
+          "name": "Vehicle/Passenger Car Revenue Miles Questionable"
+        },
+        {
+          "dataTypeName": "number",
+          "description": "The miles that trains travel while in revenue service (train revenue miles) plus deadhead miles. Train miles exclude miles for charter services, operator training, and vehicle maintenance testing.",
+          "fieldName": "train_miles",
+          "name": "Train Miles"
+        },
+        {
+          "dataTypeName": "text",
+          "description": "FTA marks a data point as Questionable when there is reason to believe it is incorrect, but the reporting agency has been unable to correct the data or offer an explanation for its anomalous appearance.",
+          "fieldName": "train_miles_questionable",
+          "name": "Train Miles Questionable"
+        },
+        {
+          "dataTypeName": "number",
+          "description": "The miles that trains travel while in revenue service. Train revenue miles exclude deadhead, operator training, maintenance testing, and charter services.",
+          "fieldName": "train_revenue_miles",
+          "name": "Train Revenue Miles"
+        },
+        {
+          "dataTypeName": "text",
+          "description": "FTA marks a data point as Questionable when there is reason to believe it is incorrect, but the reporting agency has been unable to correct the data or offer an explanation for its anomalous appearance.",
+          "fieldName": "train_revenue_miles_1",
+          "name": "Train Revenue Miles Questionable"
+        }
+      ]
+    },
+    "major_safety_events": {
+      "column_count": 127,
+      "dataset_id": "9ivb-8ae9",
+      "metadata_name": "Major Safety and Security Events",
+      "metadata_sha256": "5622b41a66919f63557112e9c70b542729a132c4ab66837320a4702691b944db",
+      "selected_schema_columns": [
+        {
+          "dataTypeName": "text",
+          "description": "A five-digit identifying number for each agency used in the current NTD system.",
+          "fieldName": "_5_digit_ntd_id",
+          "name": "NTD ID"
+        },
+        {
+          "dataTypeName": "text",
+          "description": "A system for carrying transit passengers described by specific right-of-way (ROW), technology and operational features.",
+          "fieldName": "mode_name",
+          "name": "Mode Name"
+        },
+        {
+          "dataTypeName": "text",
+          "description": "Abbreviation of mode name.",
+          "fieldName": "mode",
+          "name": "Mode"
+        },
+        {
+          "dataTypeName": "text",
+          "description": "",
+          "fieldName": "consolidated_mode_name",
+          "name": "Consolidated Mode Name"
+        },
+        {
+          "dataTypeName": "number",
+          "description": "The calendar year in which the event occurred.",
+          "fieldName": "year",
+          "name": "Year"
+        },
+        {
+          "dataTypeName": "calendar_date",
+          "description": "The date on which the event occurred.",
+          "fieldName": "incident_date",
+          "name": "Event Date"
+        }
+      ]
+    },
+    "monthly_modal": {
+      "column_count": 77,
+      "dataset_id": "5ti2-5uiv",
+      "metadata_name": "Monthly Modal Time Series",
+      "metadata_sha256": "dafd12f90d2d9bccd15d28d8a7c2cc74491271050d5c070127b40c44a6429339",
+      "selected_schema_columns": [
+        {
+          "dataTypeName": "text",
+          "description": "A five-digit identifying number for each agency used in the current NTD system.",
+          "fieldName": "_5_digit_ntd_id",
+          "name": "NTD ID"
+        },
+        {
+          "dataTypeName": "text",
+          "description": "The legal name of the entity reporting to the NTD.",
+          "fieldName": "agency",
+          "name": "Agency"
+        },
+        {
+          "dataTypeName": "text",
+          "description": "Groups modes based on whether they are:  Rail, Running Non-Rail Surface Transportation, or Ferryboat.",
+          "fieldName": "rail_bus_ferry",
+          "name": "Rail/Bus/Ferry"
+        },
+        {
+          "dataTypeName": "text",
+          "description": "A system for carrying transit passengers described by specific right-of-way (ROW), technology and operational features.",
+          "fieldName": "mode_name",
+          "name": "Mode Name"
+        },
+        {
+          "dataTypeName": "text",
+          "description": "A system for carrying transit passengers described by specific right-of-way (ROW), technology and operational features.",
+          "fieldName": "mode",
+          "name": "Mode"
+        },
+        {
+          "dataTypeName": "text",
+          "description": "Describes how public transportation services are provided by the transit agency: directly operated (DO) or purchased transportation which also includes from Taxi Operators and Transportation Network Companies (PT, TX, TN) services.",
+          "fieldName": "type_of_service",
+          "name": "Type of Service"
+        },
+        {
+          "dataTypeName": "checkbox",
+          "description": "Flag that identifies whether the mode is fixed-route or non-fixed route.",
+          "fieldName": "fixed_route_flag",
+          "name": "Fixed Route Flag"
+        },
+        {
+          "dataTypeName": "checkbox",
+          "description": "Separates Rail (True) from Non-Rail (False) modes.",
+          "fieldName": "rail_y_n",
+          "name": "Rail (True/False)"
+        },
+        {
+          "dataTypeName": "number",
+          "description": "The service area as measured in square miles for the agency as of the most recently concluded report year.",
+          "fieldName": "service_area_sq_miles",
+          "name": "Service Area Sq Miles"
+        },
+        {
+          "dataTypeName": "number",
+          "description": "The population residing within the service area for the agency as of the most recently concluded report year.",
+          "fieldName": "service_area_population",
+          "name": "Service Area Population"
+        },
+        {
+          "dataTypeName": "number",
+          "description": "The calendar year in which the events occurred.",
+          "fieldName": "year",
+          "name": "Year"
+        },
+        {
+          "dataTypeName": "text",
+          "description": "The month in which the events occurred.",
+          "fieldName": "month",
+          "name": "Month"
+        },
+        {
+          "dataTypeName": "calendar_date",
+          "description": "The beginning of the month in which the S&S events occurred in date timestamp format.",
+          "fieldName": "month_year",
+          "name": "Month_Year (timestamp)"
+        },
+        {
+          "dataTypeName": "number",
+          "description": "The number of revenue vehicles operated by the given mode and type of service to meet the annual maximum service requirement. This is the revenue vehicle count during the peak season of the reporting period; on the week and day that maximum service is provided. Vehicles operated in maximum service (VOMS) exclude atypical days and one-time special events.",
+          "fieldName": "vehicles",
+          "name": "VOMS"
+        },
+        {
+          "dataTypeName": "number",
+          "description": "The number of miles traveled by transit vehicles in revenue service, as reported by the system for the same calendar year.  The value is year to date for calendar years that are not yet complete. For rail modes, \"passenger car revenue miles\" is used.",
+          "fieldName": "vehicle_revenue_miles",
+          "name": "Vehicle Revenue Miles"
+        },
+        {
+          "dataTypeName": "number",
+          "description": "The number of hours operated by transit vehicles in revenue service, as reported by the system for the same calendar year.  The value is year to date for calendar years that are not yet complete.",
+          "fieldName": "vehicle_revenue_hours",
+          "name": "Vehicle Revenue Hours"
+        },
+        {
+          "dataTypeName": "number",
+          "description": "The number of boardings on transit vehicles reported by the system for the same calendar year.  The value is year to date for calendar years that are not yet complete.",
+          "fieldName": "ridership",
+          "name": "Unlinked Passenger Trips"
+        },
+        {
+          "dataTypeName": "number",
+          "description": "The number of collisions with a motor vehicle for the given agency/mode/month.",
+          "fieldName": "collisions_with_motor_vehicle",
+          "name": "Collisions with Motor Vehicle"
+        },
+        {
+          "dataTypeName": "number",
+          "description": "The number of collisions with a person for the given agency/mode/month.",
+          "fieldName": "collisions_with_person",
+          "name": "Collisions with Person"
+        },
+        {
+          "dataTypeName": "number",
+          "description": "The number of collisions with a fixed object for the given agency/mode/month.",
+          "fieldName": "collisions_with_fixed_object",
+          "name": "Collisions with Fixed Object"
+        },
+        {
+          "dataTypeName": "number",
+          "description": "The number of collisions with a rail vehicle for the given agency/mode/month.",
+          "fieldName": "collisions_with_rail_vehicle",
+          "name": "Collisions with Rail Vehicle"
+        },
+        {
+          "dataTypeName": "number",
+          "description": "The number of collisions with a bus vehicle for the given agency/mode/month.",
+          "fieldName": "collisions_with_bus_vehicle",
+          "name": "Collisions with Bus Vehicle"
+        },
+        {
+          "dataTypeName": "number",
+          "description": "The number of collisions with another object for the given agency/mode/month.",
+          "fieldName": "collisions_with_other",
+          "name": "Collisions with Other"
+        },
+        {
+          "dataTypeName": "number",
+          "description": "The total number of collisions for the given agency/mode/month.",
+          "fieldName": "total_collisions",
+          "name": "Total Collisions"
+        },
+        {
+          "dataTypeName": "number",
+          "description": "Total number of main line derailments reported to NTD. Yard derailments are reported as Not-Otherwise Classified (NOC) events.",
+          "fieldName": "total_derailments",
+          "name": "Total Derailments"
+        },
+        {
+          "dataTypeName": "number",
+          "description": "Total number of fires reported to NTD.",
+          "fieldName": "total_fires",
+          "name": "Total Fires"
+        },
+        {
+          "dataTypeName": "number",
+          "description": "Total number of major security events reported to NTD, including assaults on transit workers and other security events.",
+          "fieldName": "total_security_events",
+          "name": "Total Security Events"
+        },
+        {
+          "dataTypeName": "number",
+          "description": "Total number of accidents \"not otherwise classified\" (NOC) reported to NTD.  These events include slips, trips and falls, electric shocks, vehicles leaving roadway, yard derailments, and other events that are not reported as a collision, derailment, or fire.",
+          "fieldName": "total_events_not_otherwise",
+          "name": "Total Events Not Otherwise Classified"
+        },
+        {
+          "dataTypeName": "number",
+          "description": "Total number reportable major and non-major events for the given agency/mode/type of service/month.",
+          "fieldName": "total_events",
+          "name": "Total Events"
+        }
+      ]
+    }
+  }
+}
