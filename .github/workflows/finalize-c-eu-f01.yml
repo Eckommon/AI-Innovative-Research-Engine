@@ -1,0 +1,97 @@
+name: Finalize C-EU-F01 Terminal HOLD
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/finalize-c-eu-f01.yml'
+      - 'tools/finalize_c_eu_f01.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      SOURCE_RUN_ID: '35039383396'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify corrected staging and active contract
+        run: |
+          python -m py_compile tools/finalize_c_eu_f01.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c['active_issue'] == 139
+          assert c['active_research'] == 'C-EU-F01'
+          assert c['last_completed_issue'] == 138
+          assert c['last_decision'] == 'DEC-191'
+          r=json.loads(Path('research/C-EU-F01/STAGING_RESULT.json').read_text())
+          assert r['gate'] == 'HOLD_C_EU_F01_SOURCE_OR_IDENTITY'
+          assert r['eea']['queried_rows'] == r['eea']['reported_layer_records'] == 854731
+          assert r['eea']['distinct_nonblank_site_ids'] == 97889
+          assert r['eea']['coordinate_qualified_site_ids'] == 59137
+          assert r['eea']['conflicting_site_ids'] == 38752
+          assert r['requirements']['coordinate_qualified_rate_ge_95pct'] is False
+          assert r['requirements']['conflicting_site_ids_zero'] is False
+          assert r['industrial_outcome_or_thematic_magnitudes_opened'] is False
+          assert r['site_temperature_magnitudes_opened'] is False
+          assert r['relationship_computed'] is False
+          assert r['execution_correction']['scientific_contract_changed'] is False
+          print('C_EU_F01_TERMINAL_INPUT_VERIFY_PASS')
+          PY
+      - name: Finalize terminal HOLD
+        run: python tools/finalize_c_eu_f01.py
+      - name: Verify terminal artifacts and mirrors
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c == {
+            'checkpoint_id':'CHK-20260916-C-EU-F01-TERMINAL',
+            'active_issue':'none',
+            'active_research':'NONE',
+            'last_completed_issue':139,
+            'last_completed_research':'C-EU-F01',
+            'last_decision':'DEC-192',
+            'updated':'2026-09-16',
+          }
+          result=json.loads(Path('research/C-EU-F01/RESULT.json').read_text())
+          assert result['gate'] == 'HOLD_C_EU_F01_SOURCE_OR_IDENTITY'
+          assert result['industrial_outcomes_opened'] is False
+          assert result['temperature_magnitudes_opened'] is False
+          assert result['relationship_computed'] is False
+          assert Path('registry/CLM-177.md').exists()
+          assert Path('registry/DEC-192.md').exists()
+          assert '`CLM-177`' in Path('registry/CLAIM_LEDGER.md').read_text()
+          assert '`DEC-192`' in Path('registry/DECISION_LOG.md').read_text()
+          assert 'C_EU_F01_HOLD__PORTFOLIO_RETURN' in Path('STATUS.md').read_text()
+          print('C_EU_F01_TERMINAL_VERIFY_PASS')
+          PY
+      - name: Commit terminalization
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/C-EU-F01/README.md research/C-EU-F01/RESULT.md research/C-EU-F01/RESULT.json registry/CLM-177.md registry/DEC-192.md registry/CLAIM_LEDGER.md registry/DECISION_LOG.md STATUS.md context/checkpoint.json context/SESSION_HANDOFF.md
+          git commit -m 'Finalize C-EU-F01 terminal HOLD'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Close Issue 139 as completed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api "repos/${GITHUB_REPOSITORY}/issues/139" -X PATCH -f state=closed -f state_reason=completed >/dev/null
+          echo 'Issue #139 closed completed.'
+      - name: Confirm zero-cost boundary
+        run: |
+          echo 'Standard public-repository GitHub-hosted runner only.'
+          echo 'No paid source or service is used.'
+          echo 'Incremental monetary cost: 0 USD.'
