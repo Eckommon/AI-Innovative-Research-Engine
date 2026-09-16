@@ -1,0 +1,86 @@
+name: Run US-FDA-MD-F01 Outcome-Blind Source Gate
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/run-us-fda-md-f01.yml'
+      - 'tools/run_us_fda_md_f01.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  run-feasibility:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install parser dependency
+        run: python -m pip install 'openpyxl>=3.1,<4'
+      - name: Verify frozen active contract
+        run: |
+          python -m py_compile tools/run_us_fda_md_f01.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c['active_issue'] == 141
+          assert c['active_research'] == 'US-FDA-MD-F01'
+          assert c['last_completed_issue'] == 140
+          assert c['last_decision'] == 'DEC-194'
+          r=Path('research/US-FDA-MD-F01/README.md').read_text()
+          for s in ['>= **500 distinct FEIs**','>= **100 distinct FEIs**','PARTIAL_US_FDA_MD_F01_SOURCE_SEMANTICS_READY__INSPECTION_BYTES_ACCESS_BLOCKED','HOLD_US_FDA_MD_F01_SOURCE_SCHEMA_OR_IDENTITY']:
+              assert s in r
+          assert 'recall_incidence_by_class_opened: false' in r
+          print('US_FDA_MD_F01_FROZEN_CONTRACT_VERIFY_PASS')
+          PY
+      - name: Execute official-source gate
+        run: python tools/run_us_fda_md_f01.py
+      - name: Verify outcome-blind staging
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('research/US-FDA-MD-F01/STAGING_RESULT.json').read_text())
+          assert r['gate'] in {
+            'PASS_US_FDA_MD_F01_FEI_JOIN_READY',
+            'PARTIAL_US_FDA_MD_F01_SOURCE_SEMANTICS_READY__INSPECTION_BYTES_ACCESS_BLOCKED',
+            'HOLD_US_FDA_MD_F01_SOURCE_SCHEMA_OR_IDENTITY',
+          }
+          assert r['recall_incidence_by_class_opened'] is False
+          assert r['class_specific_recall_membership_opened'] is False
+          assert r['relationship_computed'] is False
+          assert r['population_wide_manufacturer_risk_claimed'] is False
+          assert r['unofficial_mirror_used'] is False
+          assert r['authentication_bypass_used'] is False
+          assert r['post_execution_rescue_used'] is False
+          assert r['incremental_monetary_cost_usd'] == 0
+          assert Path('research/US-FDA-MD-F01/STAGING_SOURCE_AUDIT.json').exists()
+          print('US_FDA_MD_F01_STAGING_VERIFY_PASS', r['gate'])
+          PY
+      - name: Index authorization decision and commit immutable staging
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('registry/DECISION_LOG.md')
+          t=p.read_text()
+          if '`DEC-194`' not in t:
+              if not t.endswith('\n'): t += '\n'
+              t += '| `DEC-194` | 2026-09-16 | Authorize US-FDA-MD-F01 outcome-blind FDA inspection × Device Recall source/schema/FEI feasibility. / FDA inspection×recall source/schema/FEI gate 승인. | Exact FEI identity, bounded disclosed-inspection cohort, access-only PARTIAL rule, and no class-stratified recall outcome. | Issue #141; `research/US-FDA-MD-F01/README.md` | active |\n'
+              p.write_text(t)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add registry/DECISION_LOG.md research/US-FDA-MD-F01/STAGING_RESULT.json research/US-FDA-MD-F01/STAGING_SOURCE_AUDIT.json
+          git commit -m 'Record US-FDA-MD-F01 outcome-blind staging evidence'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Confirm zero-cost boundary
+        run: |
+          echo 'Official FDA/openFDA routes only.'
+          echo 'No unofficial mirror, auth bypass, paid API, or paid source.'
+          echo 'Incremental monetary cost: 0 USD.'
