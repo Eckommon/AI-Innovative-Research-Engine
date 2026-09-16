@@ -1,21 +1,21 @@
 ---
-checkpoint_id: CHK-20260916-US-FTA-TRANSIT-F01-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20260916-US-FTA-TRANSIT-N01-ACTIVE
+active_issue: 148
+active_research: US-FTA-TRANSIT-N01
 last_completed_issue: 147
 last_completed_research: US-FTA-TRANSIT-F01
-last_decision: DEC-207
+last_decision: DEC-208
 updated: 2026-09-16
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `US_FTA_TRANSIT_F01_PASS__N01_AUTHORIZATION_REQUIRED`
+**State / 상태:** `US_FTA_TRANSIT_N01_ACTIVE__OUTCOME_BLIND_MATCHED_RELIABILITY_DESIGN`
 
-US-FTA-TRANSIT-F01 is terminal at **`PASS_US_FTA_TRANSIT_F01_AGENCY_MODE_TIME_JOIN_READY`** under DEC-207 / CLM-185. All 19 frozen requirements passed in Run `35063556654`. Structural support: **1,199** Breakdowns agency-mode pairs; **1,131** repeated in >=2 years; **97.3311%** represented in Monthly Modal; **968** exact Breakdowns∩Major-event pair overlap. Breakdown-conditioned Major Safety Event outcomes remain unopened.
+US-FTA-TRANSIT-N01 is active under Issue #148 / DEC-208. The exposure measure, Q/W fail-closed rules, TOS aggregation, temporal eligibility, one-agency rule, strata/quartiles, deterministic VRM matching, 17 PASS requirements and future E01 Safety-only/McNemar contract were frozen before Issue binding. No Major Safety/Security Event row value has been opened.
 
 ## Exact next action / 정확한 다음 행동
 
-Freeze a separate `US-FTA-TRANSIT-N01` design-identifiability contract **before opening its Issue and before reading any Breakdown-conditioned Major Safety Event outcome**. Prospectively define exposure normalization, service-denominator aggregation, time ordering, eligibility/missingness rules and the exact future E01 analysis contract.
+Execute the frozen N01 runner against official Breakdowns `amkt-4ehs` only. Persist an outcome-blind deterministic pair manifest and its fingerprint, then apply the exact PASS/HOLD gate. Do not call the Major Safety/Security event row endpoint.
 
 Incremental monetary cost remains **0 USD**.
