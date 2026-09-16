@@ -1,0 +1,88 @@
+name: Finalize PORTFOLIO-R30 FDA Selection
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/finalize-portfolio-r30.yml'
+      - 'tools/finalize_portfolio_r30.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify active R30 and immutable scorecard
+        run: |
+          python -m py_compile tools/finalize_portfolio_r30.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c['active_issue'] == 140
+          assert c['active_research'] == 'PORTFOLIO-R30'
+          assert c['last_completed_issue'] == 139
+          assert c['last_decision'] == 'DEC-192'
+          r=Path('research/PORTFOLIO-R30/README.md').read_text()
+          s=Path('research/PORTFOLIO-R30/SCORECARD.md').read_text()
+          n=Path('research/PORTFOLIO-R30/PROCESS_NONCONFORMITY.md').read_text()
+          assert 'issue: 140' in r
+          assert 'SELECT_US_FDA_MD_001_INSPECTION_TO_RECALL_F01' in r
+          assert '**41**' in s and '**37**' in s and '**36**' in s
+          assert 'e848a6c77920aa7e31eb1e1038e4f9914cbc6b7e' in n
+          assert 'No candidate outcome' in n
+          print('PORTFOLIO_R30_FROZEN_INPUT_VERIFY_PASS')
+          PY
+      - name: Ratify terminal selection
+        run: python tools/finalize_portfolio_r30.py
+      - name: Verify terminal mirrors and ledgers
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c == {
+            'checkpoint_id':'CHK-20260916-PORTFOLIO-R30-TERMINAL',
+            'active_issue':'none',
+            'active_research':'NONE',
+            'last_completed_issue':140,
+            'last_completed_research':'PORTFOLIO-R30',
+            'last_decision':'DEC-193',
+            'updated':'2026-09-16',
+          }
+          assert 'PORTFOLIO_R30_SELECTED_US_FDA_MD_001__F01_AUTHORIZATION_REQUIRED' in Path('STATUS.md').read_text()
+          assert 'SELECT_US_FDA_MD_001_INSPECTION_TO_RECALL_F01' in Path('research/PORTFOLIO-R30/RESULT.md').read_text()
+          assert Path('registry/DEC-193.md').exists()
+          assert Path('registry/CLM-178.md').exists()
+          assert '`DEC-193`' in Path('registry/DECISION_LOG.md').read_text()
+          assert '`CLM-178`' in Path('registry/CLAIM_LEDGER.md').read_text()
+          assert Path('research/PORTFOLIO-R30/PROCESS_NONCONFORMITY.md').exists()
+          print('PORTFOLIO_R30_TERMINAL_VERIFY_PASS')
+          PY
+      - name: Commit terminalization
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/PORTFOLIO-R30/README.md research/PORTFOLIO-R30/RESULT.md registry/DEC-193.md registry/CLM-178.md registry/DECISION_LOG.md registry/CLAIM_LEDGER.md STATUS.md context/checkpoint.json context/SESSION_HANDOFF.md
+          git commit -m 'Finalize PORTFOLIO-R30 FDA selection'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Close Issue 140 as completed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api "repos/${GITHUB_REPOSITORY}/issues/140" -X PATCH -f state=closed -f state_reason=completed >/dev/null
+          echo 'Issue #140 closed completed.'
+      - name: Confirm zero-cost boundary
+        run: |
+          echo 'Standard public-repository GitHub-hosted runner only.'
+          echo 'No paid source or service is used.'
+          echo 'Incremental monetary cost: 0 USD.'
