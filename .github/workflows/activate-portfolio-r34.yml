@@ -1,0 +1,79 @@
+name: Activate PORTFOLIO-R34
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/activate-portfolio-r34.yml'
+      - 'tools/activate_portfolio_r34.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: read
+
+jobs:
+  activate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify frozen contract and Issue binding
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python -m py_compile tools/activate_portfolio_r34.py
+          test "$(git log -1 --format=%H -- research/PORTFOLIO-R34/README.md)" = "db56429107fc1a7054b9be0b5a78d91424f72971"
+          test "$(gh api repos/${GITHUB_REPOSITORY}/issues/149 --jq .state)" = "open"
+          python - <<'PY'
+          from pathlib import Path
+          s=Path('research/PORTFOLIO-R34/README.md').read_text()
+          for c in ('US-EPA-XMEDIA-001','US-BTS-PORT-001','US-USCG-VESSEL-001','US-MSHA-001'):
+              assert c in s
+          assert not Path('research/PORTFOLIO-R34/SOURCE_REVALIDATION.md').exists()
+          assert not Path('research/PORTFOLIO-R34/SCORECARD.md').exists()
+          print('PORTFOLIO_R34_PREACTIVATION_VERIFY_PASS')
+          PY
+
+      - name: Activate canonical R34 state
+        run: python tools/activate_portfolio_r34.py
+
+      - name: Verify active mirrors
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c == {
+            'checkpoint_id':'CHK-20260917-PORTFOLIO-R34-ACTIVE',
+            'active_issue':149,
+            'active_research':'PORTFOLIO-R34',
+            'last_completed_issue':148,
+            'last_completed_research':'US-FTA-TRANSIT-N01',
+            'last_decision':'DEC-210',
+            'updated':'2026-09-17',
+          }
+          assert 'PORTFOLIO_R34_ACTIVE__SOURCE_LITERATURE_REVALIDATION_PENDING' in Path('STATUS.md').read_text()
+          assert Path('registry/DEC-210.md').exists()
+          assert '`DEC-210`' in Path('registry/DECISION_LOG.md').read_text()
+          print('PORTFOLIO_R34_ACTIVE_VERIFY_PASS')
+          PY
+
+      - name: Commit activation
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add registry/DEC-210.md registry/DECISION_LOG.md STATUS.md context/checkpoint.json context/SESSION_HANDOFF.md
+          git commit -m 'Activate PORTFOLIO-R34'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Confirm zero-cost boundary
+        run: |
+          echo 'Standard public-repository GitHub-hosted runner only.'
+          echo 'No paid API, source, runner, or artifact upload is used.'
+          echo 'Incremental monetary cost: 0 USD.'
