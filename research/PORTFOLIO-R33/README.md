@@ -93,3 +93,8 @@ Carry the previously frozen concept and source limitations. Current public facil
 - Score exactly once; no outcome-driven rescoring.
 - Select at most one next outcome-blind F01.
 - Incremental monetary cost remains **0 USD**.
+
+
+## Final disposition / 최종 처분
+
+Issue #146 ratifies the immutable scorecard without rescoring. **`SELECT_US_FTA_TRANSIT_001_BREAKDOWNS_TO_MAJOR_SAFETY_F01`** is selected after the frozen 37/45 tie with MSHA is resolved at the second tie-break criterion, low-overlap / novelty risk (**FTA 3 > MSHA 0**). No candidate outcome was opened.

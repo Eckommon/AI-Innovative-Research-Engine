@@ -1,10 +1,10 @@
 ---
-checkpoint_id: CHK-20260916-PORTFOLIO-R33-ACTIVE
-active_issue: 146
-active_research: PORTFOLIO-R33
-last_completed_issue: 145
-last_completed_research: US-FMCSA-HAZ-F01
-last_decision: DEC-204
+checkpoint_id: CHK-20260916-PORTFOLIO-R33-TERMINAL
+active_issue: none
+active_research: NONE
+last_completed_issue: 146
+last_completed_research: PORTFOLIO-R33
+last_decision: DEC-205
 updated: 2026-09-16
 ---
 
@@ -12,16 +12,14 @@ updated: 2026-09-16
 
 ## Canonical state / 정본 상태
 
-- state: `PORTFOLIO_R33_ACTIVE__SOURCE_REVALIDATION_THEN_IMMUTABLE_SCORE`
-- active Issue: `#146`
-- contract: `research/PORTFOLIO-R33/README.md`
-- contract commit: `000725296414465206647121607b930625119a24`
+- state: `PORTFOLIO_R33_SELECTED_US_FTA_TRANSIT_001__F01_AUTHORIZATION_REQUIRED`
+- selected candidate: `US-FTA-TRANSIT-001`
+- selected gate: `US-FTA-TRANSIT-F01`
+- frozen score: `37/45`
+- tie-break: `next-info 4=4 → low-overlap/novelty 3>0`
 - candidate outcomes opened: `false`
-- frozen candidates: `US-FTA-TRANSIT-001`, `US-MSHA-001`, `US-FRA-XING-001`, `KR-GG-CHEM-001`
-- current-access scoring rule: active
+- monetary cost: `0 USD`
 
 ## Exact restart point / 정확한 재개점
 
-Persist the current official-source/direct-overlap revalidation, then write exactly one immutable /45 scorecard. Apply the frozen tie-break without outcome access, select at most one candidate, and terminalize R33 before opening any descendant F01.
-
-Incremental monetary cost remains **0 USD**.
+Open exactly one `US-FTA-TRANSIT-F01` outcome-blind source/schema/agency-mode/time gate. Verify current official FTA/NTD Breakdowns and Safety & Security source bytes, source-native agency × mode identity, Type of Service/reporting-scope semantics, temporal support, aggregate overlap and deterministic fingerprints. Do not open Major Safety Event occurrence/rates/counts conditioned on breakdown history.
