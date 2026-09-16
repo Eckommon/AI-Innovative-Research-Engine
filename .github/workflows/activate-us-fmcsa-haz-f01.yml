@@ -1,0 +1,71 @@
+name: Activate US-FMCSA-HAZ-F01 Canonical State
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/activate-us-fmcsa-haz-f01.yml'
+      - 'tools/activate_us_fmcsa_haz_f01.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: read
+
+jobs:
+  activate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify Issue 145 open and staging absent
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python -m py_compile tools/activate_us_fmcsa_haz_f01.py
+          state=$(gh api "repos/${GITHUB_REPOSITORY}/issues/145" --jq '.state')
+          test "$state" = "open"
+          test ! -e research/US-FMCSA-HAZ-F01/STAGING_RESULT.json
+          grep -q 'CONTRACT_FROZEN_PRE_ISSUE' research/US-FMCSA-HAZ-F01/README.md
+          echo 'US_FMCSA_HAZ_F01_PREACTIVATION_VERIFY_PASS'
+
+      - name: Activate F01
+        run: python tools/activate_us_fmcsa_haz_f01.py
+
+      - name: Verify active mirrors
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c == {
+            'checkpoint_id':'CHK-20260916-US-FMCSA-HAZ-F01-ACTIVE',
+            'active_issue':145,
+            'active_research':'US-FMCSA-HAZ-F01',
+            'last_completed_issue':144,
+            'last_completed_research':'PORTFOLIO-R32',
+            'last_decision':'DEC-202',
+            'updated':'2026-09-16',
+          }
+          assert 'US_FMCSA_HAZ_F01_ACTIVE__OUTCOME_BLIND_SOURCE_SCHEMA_CARRIER_TIME' in Path('STATUS.md').read_text()
+          assert Path('registry/DEC-202.md').exists()
+          assert '`DEC-202`' in Path('registry/DECISION_LOG.md').read_text()
+          print('US_FMCSA_HAZ_F01_ACTIVE_MIRROR_VERIFY_PASS')
+          PY
+
+      - name: Commit activation
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add registry/DEC-202.md registry/DECISION_LOG.md STATUS.md context/checkpoint.json context/SESSION_HANDOFF.md
+          git commit -m 'Activate US-FMCSA-HAZ-F01 outcome-blind gate'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Confirm zero-cost boundary
+        run: |
+          echo 'Public federal data and standard GitHub-hosted runner only.'
+          echo 'Incremental monetary cost: 0 USD.'
