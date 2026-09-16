@@ -1,0 +1,94 @@
+name: Finalize US-FTA-TRANSIT-N01
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/finalize-us-fta-transit-n01.yml'
+      - 'tools/finalize_us_fta_transit_n01.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify active state and immutable HOLD staging
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python -m py_compile tools/finalize_us_fta_transit_n01.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c['active_issue']==148 and c['active_research']=='US-FTA-TRANSIT-N01' and c['last_decision']=='DEC-208'
+          r=json.loads(Path('research/US-FTA-TRANSIT-N01/STAGING_RESULT.json').read_text())
+          assert r['disposition']=='HOLD_US_FTA_TRANSIT_N01_MATCHED_RELIABILITY_DESIGN_NOT_IDENTIFIABLE'
+          assert r['valid_evaluation'] is True
+          assert {k for k,v in r['checks'].items() if not v['pass']} == {'7','9','10'}
+          assert r['boundaries']['major_safety_event_row_values_opened'] is False
+          assert r['boundaries']['future_safety_event_membership_opened'] is False
+          assert r['boundaries']['relationship_computed'] is False
+          print('US_FTA_TRANSIT_N01_IMMUTABLE_HOLD_VERIFY')
+          PY
+          test "$(git log -1 --format=%H -- research/US-FTA-TRANSIT-N01/STAGING_RESULT.json)" = "d8d244fc2a3d8b5f7ca47a9c2dc9863b7c6a159d"
+          test "$(git log -1 --format=%H -- research/US-FTA-TRANSIT-N01/PAIR_MANIFEST.json)" = "d8d244fc2a3d8b5f7ca47a9c2dc9863b7c6a159d"
+          test "$(gh api repos/${GITHUB_REPOSITORY}/issues/148 --jq .state)" = "open"
+
+      - name: Finalize N01 HOLD
+        run: python tools/finalize_us_fta_transit_n01.py
+
+      - name: Verify terminal mirrors
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c == {
+            'checkpoint_id':'CHK-20260917-US-FTA-TRANSIT-N01-TERMINAL',
+            'active_issue':'none',
+            'active_research':'NONE',
+            'last_completed_issue':148,
+            'last_completed_research':'US-FTA-TRANSIT-N01',
+            'last_decision':'DEC-209',
+            'updated':'2026-09-17',
+          }
+          assert 'US_FTA_TRANSIT_N01_HOLD__PORTFOLIO_RESELECTION_REQUIRED' in Path('STATUS.md').read_text()
+          assert 'HOLD_US_FTA_TRANSIT_N01_MATCHED_RELIABILITY_DESIGN_NOT_IDENTIFIABLE' in Path('research/US-FTA-TRANSIT-N01/RESULT.md').read_text()
+          assert Path('registry/DEC-209.md').exists()
+          assert Path('registry/CLM-186.md').exists()
+          assert '`DEC-209`' in Path('registry/DECISION_LOG.md').read_text()
+          assert '`CLM-186`' in Path('registry/CLAIM_LEDGER.md').read_text()
+          print('US_FTA_TRANSIT_N01_TERMINAL_VERIFY_PASS')
+          PY
+
+      - name: Commit terminalization
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-FTA-TRANSIT-N01/README.md research/US-FTA-TRANSIT-N01/RESULT.md registry/DEC-209.md registry/CLM-186.md registry/DECISION_LOG.md registry/CLAIM_LEDGER.md STATUS.md context/checkpoint.json context/SESSION_HANDOFF.md
+          git commit -m 'Finalize US-FTA-TRANSIT-N01 HOLD'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Close Issue 148 as completed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api "repos/${GITHUB_REPOSITORY}/issues/148" -X PATCH -f state=closed -f state_reason=completed >/dev/null
+          echo 'Issue #148 closed completed.'
+
+      - name: Confirm zero-cost boundary
+        run: |
+          echo 'No paid source, API, runner, or artifact upload is used.'
+          echo 'Incremental monetary cost: 0 USD.'
