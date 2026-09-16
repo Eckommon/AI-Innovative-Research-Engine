@@ -81,3 +81,8 @@ No threshold, filter, identity key, source, access rule or disposition may chang
 ## Claim boundary / 주장 경계
 
 PASS or PARTIAL establishes only structural/source readiness within the disclosed inspection cohort. It is not evidence that NAI/VAI/OAI predicts recalls, not a ranking of inspection classes, not population-wide manufacturer risk, and not a causal claim.
+
+
+## Final disposition / 최종 처분
+
+Run `35040935495` finalizes **`PARTIAL_US_FDA_MD_F01_SOURCE_SEMANTICS_READY__INSPECTION_BYTES_ACCESS_BLOCKED`**. FDA/openFDA semantics and the public Device Recall route pass, while the official advertised inspection XLSX routes return 404 and the remaining Dashboard API requires OII Unified Logon credentials. Byte-dependent FEI/schema/overlap thresholds remain uncomputed. No recall outcome was opened by inspection class.
