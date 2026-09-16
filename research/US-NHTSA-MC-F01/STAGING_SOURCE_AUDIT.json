@@ -6,7 +6,7 @@
     "error": "HTTPError",
     "final_url": "https://www.nhtsa.gov/nhtsa-datasets-and-apis",
     "http": 403,
-    "sha256": "631895d095cb238400ab94abedca252118909ebafbd0cfd0dac3e878c04f17bf",
+    "sha256": "f923623fe52b2a0a76672fa05822d79419392d3e27565f0d014f4a2fa81213af",
     "url": "https://www.nhtsa.gov/nhtsa-datasets-and-apis"
   },
   "comm_2020_2024": {
@@ -39,6 +39,7 @@
   },
   "communication_archives": [
     {
+      "communication_date_field_present": false,
       "delimiter": ",",
       "encoding": "utf-8-sig",
       "field_map": {
@@ -57,16 +58,19 @@
         "Model Year",
         "Concise Summary"
       ],
+      "full_frozen_required_schema_present": false,
       "label": "comm_2020_2024",
-      "schema_complete": false,
+      "nhtsa_id_field_present": false,
       "selected_member": "MFR_COMMS_RECEIVED_2020-2024.csv",
       "selected_member_bytes": 126537951,
       "selected_member_sha256": "b935bad9a374f8f44770aedb7c173366e9b7fec49cc8186325d37bcb1f23d0ca",
+      "structural_product_document_schema_readable": true,
       "zip_members": [
         "MFR_COMMS_RECEIVED_2020-2024.csv"
       ]
     },
     {
+      "communication_date_field_present": false,
       "delimiter": ",",
       "encoding": "utf-8-sig",
       "field_map": {
@@ -85,18 +89,23 @@
         "Model Year",
         "Concise Summary"
       ],
+      "full_frozen_required_schema_present": false,
       "label": "comm_2025_2026",
-      "schema_complete": false,
+      "nhtsa_id_field_present": false,
       "selected_member": "MFR_COMMS_RECEIVED_2025-2026.csv",
       "selected_member_bytes": 85295432,
       "selected_member_sha256": "390bc5b9678f4ea81da338b889122acb3b27da61a8de90953293f4acd17a75a1",
+      "structural_product_document_schema_readable": true,
       "zip_members": [
         "MFR_COMMS_RECEIVED_2025-2026.csv"
       ]
     }
   ],
-  "correction_scope": "execution-control-flow-and-public-user-agent-only",
-  "corrects_run": 35042810534,
+  "correction_scope": "classify-readable-csv-separately-from-missing-frozen-date-schema",
+  "corrects_runs": [
+    35042810534,
+    35042957163
+  ],
   "dictionary_semantics": {
     "communication_csv_product_row_semantics_confirmed": true,
     "communication_dictionary_fields_confirmed": true,
