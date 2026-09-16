@@ -1,0 +1,102 @@
+{
+  "advertised_inspection_download_probes": [
+    {
+      "bytes": 1245,
+      "content_type": "text/html",
+      "error": "HTTPError",
+      "final_url": "https://datadashboard.fda.gov/InspectionsDataset.xlsx",
+      "http": 404,
+      "sha256": "dc1d54dab6ec8c00f70137927504e4f222c8395f10760b6beecfcfa94e08249f",
+      "url": "https://datadashboard.fda.gov/InspectionsDataset.xlsx"
+    },
+    {
+      "bytes": 1245,
+      "content_type": "text/html",
+      "error": "HTTPError",
+      "final_url": "https://datadashboard.fda.gov/oii/cd/InspectionsData-filtered.xlsx",
+      "http": 404,
+      "sha256": "dc1d54dab6ec8c00f70137927504e4f222c8395f10760b6beecfcfa94e08249f",
+      "url": "https://datadashboard.fda.gov/oii/cd/InspectionsData-filtered.xlsx"
+    }
+  ],
+  "authentication_bypass_used": false,
+  "documents": {
+    "cdrh": {
+      "bytes": 52785,
+      "content_type": "text/html; charset=UTF-8",
+      "error": null,
+      "final_url": "https://www.fda.gov/medical-devices/cdrh-international-affairs/cdrh-regulatory-reliance-portal-medical-devices",
+      "http": 200,
+      "sha256": "ed3af1769f1d592a897e875884443122b847a3e830bae4d2e39e83c895a1d404",
+      "url": "https://www.fda.gov/medical-devices/cdrh-international-affairs/cdrh-regulatory-reliance-portal-medical-devices"
+    },
+    "classification": {
+      "bytes": 42266,
+      "content_type": "text/html; charset=UTF-8",
+      "error": null,
+      "final_url": "https://www.fda.gov/inspections-compliance-enforcement-and-criminal-investigations/inspection-classification-database",
+      "http": 200,
+      "sha256": "8fd11783c1d86cc65136b61ff768969b637fce78e8faf700b797b242a352e411",
+      "url": "https://www.fda.gov/inspections-compliance-enforcement-and-criminal-investigations/inspection-classification-database"
+    },
+    "dashboard": {
+      "bytes": 27649,
+      "content_type": "text/html",
+      "error": null,
+      "final_url": "https://datadashboard.fda.gov/oii/cd/inspections.htm",
+      "http": 200,
+      "sha256": "b47ab3cb75d1e4d97ef5b26081de461e873e4c323bef698f9c7ff02fa715c73d",
+      "url": "https://datadashboard.fda.gov/oii/cd/inspections.htm"
+    },
+    "faq": {
+      "bytes": 39517,
+      "content_type": "text/html; charset=UTF-8",
+      "error": null,
+      "final_url": "https://www.fda.gov/inspections-compliance-enforcement-and-criminal-investigations/inspection-references/inspections-database-frequently-asked-questions",
+      "http": 200,
+      "sha256": "14c5571424e53eab0aa5c594b2287db09cdca168c1edd9fcc88ee31180ac4a3a",
+      "url": "https://www.fda.gov/inspections-compliance-enforcement-and-criminal-investigations/inspection-references/inspections-database-frequently-asked-questions"
+    },
+    "glossary": {
+      "bytes": 33300,
+      "content_type": "text/html; charset=UTF-8",
+      "error": null,
+      "final_url": "https://www.fda.gov/about-fda/fda-data-dashboard/glossary-fda-data-dashboard",
+      "http": 200,
+      "sha256": "f133374e6a71a7d0c207072c322ad6d4827fbead4e66fad1b1b2918a7dfd1939",
+      "url": "https://www.fda.gov/about-fda/fda-data-dashboard/glossary-fda-data-dashboard"
+    },
+    "openfda_download_manifest": {
+      "bytes": 592208,
+      "content_type": "application/json; charset=utf-8",
+      "error": null,
+      "final_url": "https://api.fda.gov/download.json",
+      "http": 200,
+      "sha256": "260ebe8dbd3ca8b5bb2635274bf8287e6a5339db8b43d4f6889020e364c4f34b",
+      "url": "https://api.fda.gov/download.json"
+    },
+    "recall_fields": {
+      "bytes": 128751,
+      "content_type": "text/html; charset=utf-8",
+      "error": null,
+      "final_url": "https://open.fda.gov/apis/device/recall/searchable-fields/",
+      "http": 200,
+      "sha256": "5dc2043796215ce10c41700a4ce88fd4e3c1ce036db39e4aba90b4ce9e8d87db",
+      "url": "https://open.fda.gov/apis/device/recall/searchable-fields/"
+    }
+  },
+  "openfda_partition_audits": [],
+  "openfda_recall_partition_count": 1,
+  "raw_inspection_bytes_persisted": false,
+  "raw_recall_bytes_persisted": false,
+  "semantics": {
+    "api_credentials_documented": true,
+    "classifications_documented": true,
+    "database_noncomprehensive_documented": true,
+    "device_fei_filter_documented": true,
+    "fei_unique_documented": true,
+    "multiple_project_area_rows_documented": true,
+    "recall_fields_documented": true
+  },
+  "unofficial_mirror_used": false
+}

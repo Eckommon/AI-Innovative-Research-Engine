@@ -1,0 +1,47 @@
+{
+  "aggregate_exact_fei_overlap": null,
+  "authentication_bypass_used": false,
+  "class_specific_recall_membership_opened": false,
+  "fingerprints": {
+    "inspection_feis": null,
+    "intersection_feis": null,
+    "recall_feis": null
+  },
+  "gate": "PARTIAL_US_FDA_MD_F01_SOURCE_SEMANTICS_READY__INSPECTION_BYTES_ACCESS_BLOCKED",
+  "incremental_monetary_cost_usd": 0,
+  "inspection": {
+    "schema_complete": false
+  },
+  "inspection_bytes_accessible": false,
+  "issue": 141,
+  "population_wide_manufacturer_risk_claimed": false,
+  "post_execution_rescue_used": false,
+  "recall_distinct_feis": null,
+  "recall_incidence_by_class_opened": false,
+  "recall_public_route": true,
+  "relationship_computed": false,
+  "requirements": {
+    "aggregate_exact_fei_overlap_ge_100": false,
+    "allowed_final_classification_route": false,
+    "device_cohort_ge_500_feis_and_5_years": false,
+    "identity_fingerprints_frozen": false,
+    "inspection_schema_and_native_device_filter": false,
+    "official_metadata_reachable_and_hashed": true,
+    "official_zero_cost_inspection_bytes_readable": false,
+    "openfda_recall_schema_and_public_route": true,
+    "outcome_boundary_and_cost_zero": true,
+    "repeated_structure_quantified": false,
+    "structural_classification_conflicts_zero": false
+  },
+  "research_id": "US-FDA-MD-F01",
+  "semantics": {
+    "api_credentials_documented": true,
+    "classifications_documented": true,
+    "database_noncomprehensive_documented": true,
+    "device_fei_filter_documented": true,
+    "fei_unique_documented": true,
+    "multiple_project_area_rows_documented": true,
+    "recall_fields_documented": true
+  },
+  "unofficial_mirror_used": false
+}
