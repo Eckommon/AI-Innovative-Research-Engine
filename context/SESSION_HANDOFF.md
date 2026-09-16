@@ -1,10 +1,10 @@
 ---
-checkpoint_id: CHK-20260917-PORTFOLIO-R34-ACTIVE
-active_issue: 149
-active_research: PORTFOLIO-R34
-last_completed_issue: 148
-last_completed_research: US-FTA-TRANSIT-N01
-last_decision: DEC-210
+checkpoint_id: CHK-20260917-PORTFOLIO-R34-TERMINAL
+active_issue: none
+active_research: NONE
+last_completed_issue: 149
+last_completed_research: PORTFOLIO-R34
+last_decision: DEC-211
 updated: 2026-09-17
 ---
 
@@ -12,16 +12,16 @@ updated: 2026-09-17
 
 ## Canonical state / 정본 상태
 
-- state: `PORTFOLIO_R34_ACTIVE__SOURCE_LITERATURE_REVALIDATION_PENDING`
-- active Issue: `#149`
-- authorization: `DEC-210`
-- contract commit: `db56429107fc1a7054b9be0b5a78d91424f72971`
-- frozen candidates: `US-EPA-XMEDIA-001`, `US-BTS-PORT-001`, `US-USCG-VESSEL-001`, `US-MSHA-001`
-- internal prior-branch overlap discovered after freeze: `US-RCRA-*`, `US-PORT-F01`, `US-MINE-*`
-- scorecard created: `false`
+- state: `PORTFOLIO_R34_SELECTED_US_EPA_XMEDIA_001__F01_AUTHORIZATION_REQUIRED`
+- selected candidate: `US-EPA-XMEDIA-001`
+- selected gate: `US-EPA-XMEDIA-F01`
+- frozen score: `41/45`
+- other scores: `USCG 38`, `MSHA 36`, `BTS-Port 30`
+- tie-break used: `false`
 - candidate outcomes opened: `false`
+- relationship computed: `false`
 - monetary cost: `0 USD`
 
 ## Exact restart point / 정확한 재개점
 
-Perform source/internal-history/literature revalidation for all four frozen candidates, explicitly accounting for prior repository branches without altering candidate membership. Persist `SOURCE_REVALIDATION.md`, then create the immutable scorecard exactly once and select at most one separate outcome-blind F01.
+Freeze the separate US-EPA-XMEDIA-F01 source/schema/identity/time/cardinality contract before Issue creation. Use exact official FRS / Registry ID linkage only. Do not open RCRA-conditioned NPDES effluent outcomes.

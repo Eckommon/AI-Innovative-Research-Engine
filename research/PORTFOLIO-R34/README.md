@@ -142,3 +142,8 @@ Direct-overlap warning remains binding: published work already uses MSHA violati
 - Select at most one next outcome-blind F01.
 - No candidate may be rescued or rescored from downstream support or outcome observations.
 - Incremental monetary cost remains **0 USD**.
+
+
+## Final disposition / 최종 처분
+
+Issue #149 ratifies the one-time immutable scorecard without rescoring. **`SELECT_US_EPA_XMEDIA_001_RCRA_TO_NPDES_F01`** is selected uniquely at **41/45** over USCG 38, MSHA 36 and BTS-Port 30. No candidate outcome was opened.
