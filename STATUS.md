@@ -1,21 +1,28 @@
 ---
-checkpoint_id: CHK-20260916-US-FDA-MD-F01-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20260916-PORTFOLIO-R31-ACTIVE
+active_issue: 142
+active_research: PORTFOLIO-R31
 last_completed_issue: 141
 last_completed_research: US-FDA-MD-F01
-last_decision: DEC-195
+last_decision: DEC-196
 updated: 2026-09-16
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `US_FDA_MD_F01_PARTIAL_ACCESS_BLOCKED__PORTFOLIO_RETURN`
+**State / 상태:** `PORTFOLIO_R31_ACTIVE__FROZEN_CANDIDATES_AWAIT_SCORE`
 
-US-FDA-MD-F01 is terminal at **`PARTIAL_US_FDA_MD_F01_SOURCE_SEMANTICS_READY__INSPECTION_BYTES_ACCESS_BLOCKED`** under Run `35040935495`, DEC-195 and CLM-179. FDA/openFDA source semantics are structurally ready, but current official inspection dataset bytes are unavailable through the advertised public links; the remaining Dashboard API is credentialed. No recall incidence/membership by inspection class was opened and no relationship was computed.
+PORTFOLIO-R31 is active under Issue #142 / DEC-196 after terminal US-FDA-MD-F01 access-limited PARTIAL. The candidate/rubric contract was frozen before Issue binding and before scoring.
+
+Frozen candidates:
+- `US-NHTSA-MC-001`
+- `KR-GG-CHEM-001`
+- `US-PIPE-001`
+
+No candidate outcome magnitude or relationship is authorized in R31.
 
 ## Exact next action / 정확한 다음 행동
 
-Return to Stage 0 and perform a new portfolio reselection. Preserve US-FDA-MD-001 as an access-blocked asset; do not automatically promote a prior runner-up and do not use unofficial inspection mirrors. Re-score preserved/fresh candidates using the new access information before selecting one next branch.
+Persist one immutable Mission-ROI scorecard for exactly the three frozen candidates, select at most one winner under the frozen tie-break, terminalize Issue #142 atomically, pass State Integrity, and only then open the selected winner's separate outcome-blind F01.
 
 Incremental monetary cost remains **0 USD**.
