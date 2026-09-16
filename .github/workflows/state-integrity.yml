@@ -3,6 +3,7 @@ name: State Integrity / 상태 무결성
 # E01 terminal-state recheck: verify canonical post-finalization state after bot-authored push suppression.
 # US-MINE-F01 terminal-state recheck: verify canonical post-finalization state after bot-authored push suppression.
 # C-EU-F01 terminal-state recheck: verify canonical post-finalization state after bot-authored push/issue suppression.
+# PORTFOLIO-R30 terminal-state recheck: verify canonical post-finalization state after bot-authored push/issue suppression.
 
 on:
   push:
