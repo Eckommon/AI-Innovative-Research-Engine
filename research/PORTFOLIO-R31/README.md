@@ -122,3 +122,8 @@ Scores are portfolio-control judgments, not empirical findings.
 Create and bind a dedicated PORTFOLIO-R31 Issue **before** any scorecard is persisted. Then score exactly these three candidates under the frozen rubric, select at most one winner, persist the terminal selection atomically, close R31, pass State Integrity, and only then open the selected candidate's separate outcome-blind F01.
 
 Incremental monetary cost remains **0 USD**.
+
+
+## Final disposition / 최종 처분
+
+Issue #142 ratifies the immutable scorecard without rescoring. **`SELECT_US_NHTSA_MC_001_COMMUNICATION_TO_RECALL_F01`** is selected at **39/45**, ahead of KR-GG-CHEM-001 and US-PIPE-001 at **36/45** each. No candidate outcome was opened.

@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260916-PORTFOLIO-R31-ACTIVE",
-  "active_issue": 142,
-  "active_research": "PORTFOLIO-R31",
-  "last_completed_issue": 141,
-  "last_completed_research": "US-FDA-MD-F01",
-  "last_decision": "DEC-196",
+  "checkpoint_id": "CHK-20260916-PORTFOLIO-R31-TERMINAL",
+  "active_issue": "none",
+  "active_research": "NONE",
+  "last_completed_issue": 142,
+  "last_completed_research": "PORTFOLIO-R31",
+  "last_decision": "DEC-197",
   "updated": "2026-09-16"
 }

@@ -1,10 +1,10 @@
 ---
-checkpoint_id: CHK-20260916-PORTFOLIO-R31-ACTIVE
-active_issue: 142
-active_research: PORTFOLIO-R31
-last_completed_issue: 141
-last_completed_research: US-FDA-MD-F01
-last_decision: DEC-196
+checkpoint_id: CHK-20260916-PORTFOLIO-R31-TERMINAL
+active_issue: none
+active_research: NONE
+last_completed_issue: 142
+last_completed_research: PORTFOLIO-R31
+last_decision: DEC-197
 updated: 2026-09-16
 ---
 
@@ -12,20 +12,15 @@ updated: 2026-09-16
 
 ## Canonical state / 정본 상태
 
-- state: `PORTFOLIO_R31_ACTIVE__FROZEN_CANDIDATES_AWAIT_SCORE`
-- active Issue: `#142`
-- authorization: `DEC-196`
-- frozen candidate/rubric contract: `research/PORTFOLIO-R31/README.md`
+- state: `PORTFOLIO_R31_SELECTED_US_NHTSA_MC_001__F01_AUTHORIZATION_REQUIRED`
+- selected candidate: `US-NHTSA-MC-001`
+- selected gate: `US-NHTSA-MC-F01`
+- frozen score: `39/45`
+- alternatives: `KR-GG-CHEM-001 = 36/45`; `US-PIPE-001 = 36/45`
 - candidate outcomes opened: `false`
-- incremental monetary cost: `0 USD`
-
-Frozen candidates only:
-1. `US-NHTSA-MC-001`
-2. `KR-GG-CHEM-001`
-3. `US-PIPE-001`
 
 ## Exact restart point / 정확한 재개점
 
-Persist one immutable /45 Mission-ROI scorecard for exactly the frozen candidates using source/access/identity and overlap evidence only. Select at most one winner under the frozen tie-break. Do not open candidate outcome magnitudes. Then terminalize R31, close Issue #142, pass State Integrity, and only afterward open the winner's separate outcome-blind F01.
+Open exactly one `US-NHTSA-MC-F01` outcome-blind source/schema/product-identity/time gate. Verify current official communication and recall files, dictionaries, exact product normalization, repeated row structure and temporal/aggregate overlap support. Do not open recall incidence or any relationship by communication profile.
 
 Incremental monetary cost remains **0 USD**.
