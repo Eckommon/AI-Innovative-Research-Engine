@@ -1,0 +1,93 @@
+name: Finalize PORTFOLIO-R31 NHTSA Selection
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/finalize-portfolio-r31.yml'
+      - 'tools/finalize_portfolio_r31.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify active R31 and immutable scorecard
+        run: |
+          python -m py_compile tools/finalize_portfolio_r31.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c['active_issue'] == 142
+          assert c['active_research'] == 'PORTFOLIO-R31'
+          assert c['last_completed_issue'] == 141
+          assert c['last_decision'] == 'DEC-196'
+          r=Path('research/PORTFOLIO-R31/README.md').read_text()
+          s=Path('research/PORTFOLIO-R31/SCORECARD.md').read_text()
+          assert 'US-NHTSA-MC-001' in r and 'KR-GG-CHEM-001' in r and 'US-PIPE-001' in r
+          assert '**39/45**' in s and s.count('**36/45**') >= 2
+          assert 'SELECT_US_NHTSA_MC_001_COMMUNICATION_TO_RECALL_F01' in s
+          assert 'candidate_outcomes_opened: false' in s
+          print('PORTFOLIO_R31_FROZEN_INPUT_VERIFY_PASS')
+          PY
+
+      - name: Ratify terminal selection
+        run: python tools/finalize_portfolio_r31.py
+
+      - name: Verify terminal mirrors and ledgers
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c == {
+            'checkpoint_id':'CHK-20260916-PORTFOLIO-R31-TERMINAL',
+            'active_issue':'none',
+            'active_research':'NONE',
+            'last_completed_issue':142,
+            'last_completed_research':'PORTFOLIO-R31',
+            'last_decision':'DEC-197',
+            'updated':'2026-09-16',
+          }
+          assert 'PORTFOLIO_R31_SELECTED_US_NHTSA_MC_001__F01_AUTHORIZATION_REQUIRED' in Path('STATUS.md').read_text()
+          assert 'SELECT_US_NHTSA_MC_001_COMMUNICATION_TO_RECALL_F01' in Path('research/PORTFOLIO-R31/RESULT.md').read_text()
+          assert Path('registry/DEC-196.md').exists()
+          assert Path('registry/DEC-197.md').exists()
+          assert Path('registry/CLM-180.md').exists()
+          assert '`DEC-196`' in Path('registry/DECISION_LOG.md').read_text()
+          assert '`DEC-197`' in Path('registry/DECISION_LOG.md').read_text()
+          assert '`CLM-180`' in Path('registry/CLAIM_LEDGER.md').read_text()
+          print('PORTFOLIO_R31_TERMINAL_VERIFY_PASS')
+          PY
+
+      - name: Commit terminalization
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/PORTFOLIO-R31/README.md research/PORTFOLIO-R31/RESULT.md registry/DEC-197.md registry/CLM-180.md registry/DECISION_LOG.md registry/CLAIM_LEDGER.md STATUS.md context/checkpoint.json context/SESSION_HANDOFF.md
+          git commit -m 'Finalize PORTFOLIO-R31 NHTSA selection'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Close Issue 142 as completed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api "repos/${GITHUB_REPOSITORY}/issues/142" -X PATCH -f state=closed -f state_reason=completed >/dev/null
+          echo 'Issue #142 closed completed.'
+
+      - name: Confirm zero-cost boundary
+        run: |
+          echo 'Standard public-repository GitHub-hosted runner only.'
+          echo 'No paid source or service is used.'
+          echo 'Incremental monetary cost: 0 USD.'
