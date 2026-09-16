@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260916-PORTFOLIO-R31-TERMINAL",
-  "active_issue": "none",
-  "active_research": "NONE",
+  "checkpoint_id": "CHK-20260916-US-NHTSA-MC-F01-ACTIVE",
+  "active_issue": 143,
+  "active_research": "US-NHTSA-MC-F01",
   "last_completed_issue": 142,
   "last_completed_research": "PORTFOLIO-R31",
-  "last_decision": "DEC-197",
+  "last_decision": "DEC-198",
   "updated": "2026-09-16"
 }
