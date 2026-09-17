@@ -1,21 +1,21 @@
 ---
-checkpoint_id: CHK-20260917-US-FAA-AIP-F01-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20260917-PORTFOLIO-R36-ACTIVE
+active_issue: 155
+active_research: PORTFOLIO-R36
 last_completed_issue: 154
 last_completed_research: US-FAA-AIP-F01
-last_decision: DEC-221
+last_decision: DEC-222
 updated: 2026-09-17
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `US_FAA_AIP_F01_HOLD__PORTFOLIO_RESELECTION_REQUIRED`
+**State / 상태:** `PORTFOLIO_R36_ACTIVE__SOURCE_LITERATURE_REVALIDATION_PENDING`
 
-US-FAA-AIP-F01 is terminal HOLD: 16/17 frozen gates passed, but state concordance was 96.0643%, below the frozen 99% threshold. Candidate delay outcomes remained unopened. N01 is not authorized.
+R36 is active under the frozen pre-Issue four-candidate contract. Candidate outcomes remain unopened.
 
 ## Exact next action / 정확한 다음 행동
 
-Start a new independent portfolio reselection. Do not lower the FAA state-concordance threshold or manually rescue the 49 excluded conflicts.
+Revalidate official sources, internal overlap and external literature/agency-framework overlap; then write exactly one immutable scorecard and select at most one outcome-blind F01.
 
 Incremental monetary cost remains **0 USD**.

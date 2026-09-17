@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260917-US-FAA-AIP-F01-TERMINAL",
-  "active_issue": "none",
-  "active_research": "NONE",
+  "checkpoint_id": "CHK-20260917-PORTFOLIO-R36-ACTIVE",
+  "active_issue": 155,
+  "active_research": "PORTFOLIO-R36",
   "last_completed_issue": 154,
   "last_completed_research": "US-FAA-AIP-F01",
-  "last_decision": "DEC-221",
+  "last_decision": "DEC-222",
   "updated": "2026-09-17"
 }
