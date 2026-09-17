@@ -156,3 +156,8 @@ F01 may inspect only machine-readable access, schema, exact reactor/site/docket 
 - PHMSA Pipeline Operators - OpIDs: `https://www.phmsa.dot.gov/data-and-statistics/pipeline/pipeline-operators-opids`
 - NRC Reactor Oversight Process: `https://www.nrc.gov/reactors/operating/oversight`
 - NRC Inspection Findings Search: `https://www.nrc.gov/reactors/operating/oversight/findings-search`
+
+
+## Final disposition / 최종 처분
+
+Issue #153 ratifies the one-time immutable scorecard without rescoring. **`SELECT_US_FAA_AIP_001_AIRFIELD_INFRASTRUCTURE_TO_BTS_DELAY_F01`** is uniquely selected at **40/45** over DWSRF 39, PHMSA 38 and NRC 32. No candidate outcome was opened.
