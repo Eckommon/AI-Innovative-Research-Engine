@@ -1,27 +1,26 @@
 ---
-checkpoint_id: CHK-20260917-US-EPA-XMEDIA-N01-ACTIVE
-active_issue: 151
-active_research: US-EPA-XMEDIA-N01
-last_completed_issue: 150
-last_completed_research: US-EPA-XMEDIA-F01
-last_decision: DEC-214
+checkpoint_id: CHK-20260917-US-EPA-XMEDIA-N01-TERMINAL
+active_issue: none
+active_research: NONE
+last_completed_issue: 151
+last_completed_research: US-EPA-XMEDIA-N01
+last_decision: DEC-215
 updated: 2026-09-17
 ---
 
 # Session Handoff / 세션 인계
 
-## Canonical state / 정본 상태
-
-- state: `US_EPA_XMEDIA_N01_ACTIVE__OUTCOME_BLIND_MATCHED_MONITORING_INTENSITY_DESIGN`
-- Issue: #151
-- contract: `12f30d5d27d7d4f27022bc355c2a0c62a76e9f0c`
-- baseline window: 2018–2020
-- exposure window: 2021–2023
-- future E01 window: 2024
-- E90/DMR/RCRA outcome rows opened: false
+- state: `US_EPA_XMEDIA_N01_PASS__E01_AUTHORIZATION_REQUIRED`
+- N01 gate: `PASS_US_EPA_XMEDIA_N01_MATCHED_MONITORING_INTENSITY_DESIGN_IDENTIFIABLE`
+- run: `35167553702`
+- immutable staging: `78f0f0f1458463c79c326c016d415dc5533af026`
+- matched pairs: 307
+- states: 22
+- manifest SHA-256: `19e1b3a1963fe008811aa230336e12ec69a348b03cf37bd656ea9d3fba8e5aaf`
+- future E90/DMR/RCRA outcomes opened: false
 - relationship/prediction/causality: false
 - cost: 0 USD
 
-## Exact restart point / 정확한 재개점
+## Exact restart point
 
-Execute N01 exactly as frozen and persist a deterministic structural pair manifest plus PASS/HOLD staging result. Future E01 remains unauthorized.
+Create and activate a separate E01 bound to the exact N01 manifest before any outcome access.

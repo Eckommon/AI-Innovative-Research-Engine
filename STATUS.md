@@ -1,21 +1,21 @@
 ---
-checkpoint_id: CHK-20260917-US-EPA-XMEDIA-N01-ACTIVE
-active_issue: 151
-active_research: US-EPA-XMEDIA-N01
-last_completed_issue: 150
-last_completed_research: US-EPA-XMEDIA-F01
-last_decision: DEC-214
+checkpoint_id: CHK-20260917-US-EPA-XMEDIA-N01-TERMINAL
+active_issue: none
+active_research: NONE
+last_completed_issue: 151
+last_completed_research: US-EPA-XMEDIA-N01
+last_decision: DEC-215
 updated: 2026-09-17
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `US_EPA_XMEDIA_N01_ACTIVE__OUTCOME_BLIND_MATCHED_MONITORING_INTENSITY_DESIGN`
+**State / 상태:** `US_EPA_XMEDIA_N01_PASS__E01_AUTHORIZATION_REQUIRED`
 
-US-EPA-XMEDIA-N01 is active under the pre-Issue contract frozen at `12f30d5d27d7d4f27022bc355c2a0c62a76e9f0c`. The design uses baseline RCRA evaluations (2018–2020), recent RCRA monitoring intensity (2021–2023), exact FRS cross-program identity and NPDES Part 1 structural permit covariates only. Future 2024 E90 outcome membership remains unopened.
+US-EPA-XMEDIA-N01 is terminal at **`PASS_US_EPA_XMEDIA_N01_MATCHED_MONITORING_INTENSITY_DESIGN_IDENTIFIABLE`**. Run `35167553702` passed **18/18** requirements and froze **307 matched pairs across 22 states** under manifest `19e1b3a1963fe008811aa230336e12ec69a348b03cf37bd656ea9d3fba8e5aaf`. Future 2024 E90/DMR outcomes remain unopened.
 
 ## Exact next action / 정확한 다음 행동
 
-Execute one immutable structural N01 run and evaluate all 18 frozen requirements without opening any NPDES/RCRA outcome table. Do not relax thresholds or matching rules after observing counts.
+Freeze and bind a separate `US-EPA-XMEDIA-E01` to this exact manifest before any outcome access. E01 may use only the prospectively frozen calendar-2024 `E90` occurrence endpoint and paired McNemar/RD gate.
 
 Incremental monetary cost remains **0 USD**.

@@ -268,3 +268,8 @@ A negative estimate must not be reframed as a protective-effect claim. Any later
 ## Cost boundary / 비용 경계
 
 Incremental monetary cost must remain **0 USD**. Any paid API/data/runner requirement requires explicit user approval before use.
+
+
+## Terminal N01 result / N01 최종 결과
+
+**`PASS_US_EPA_XMEDIA_N01_MATCHED_MONITORING_INTENSITY_DESIGN_IDENTIFIABLE`** — Run `35167553702` passed all 18 frozen requirements with **307 pairs across 22 states**. Future E90/DMR outcome membership remains unopened. See `RESULT.md`.
