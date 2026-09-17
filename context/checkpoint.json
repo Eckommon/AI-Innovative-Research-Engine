@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260918-US-FDIC-BRANCH-F01-TERMINAL",
-  "active_issue": "none",
-  "active_research": "NONE",
+  "checkpoint_id": "CHK-20260918-US-FDIC-BRANCH-N01-ACTIVE",
+  "active_issue": 161,
+  "active_research": "US-FDIC-BRANCH-N01",
   "last_completed_issue": 160,
   "last_completed_research": "US-FDIC-BRANCH-F01",
-  "last_decision": "DEC-233",
+  "last_decision": "DEC-234",
   "updated": "2026-09-18"
 }
