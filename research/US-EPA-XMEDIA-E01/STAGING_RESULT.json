@@ -1,0 +1,237 @@
+{
+  "activation_decision": "DEC-216",
+  "contract_commit": "46938afda3fbeaf9349a3c508502f8d4a3c973a3",
+  "gate": "NO_PREREGISTERED_POSITIVE_US_EPA_XMEDIA_E01_RELATIONSHIP",
+  "generated_utc": "2026-09-17T00:53:30Z",
+  "incremental_monetary_cost_usd": 0,
+  "integrity": {
+    "endpoint_changed": false,
+    "facility_level_outcome_labels_persisted": false,
+    "frozen_npdes_ids": 614,
+    "frozen_pairs": 307,
+    "malformed_nonblank_candidate_e90_dates_excluded": 0,
+    "pair_membership_changed": false,
+    "required_schema_all_states": true,
+    "rows_for_frozen_ids": 30888,
+    "threshold_changed": false,
+    "total_source_rows_scanned": 36755059,
+    "window_changed": false
+  },
+  "interpretation_boundary": {
+    "dmr_values_or_limits_opened": false,
+    "enforcement_targeting_score_computed": false,
+    "facility_ranking_computed": false,
+    "negative_estimate_not_protective_claim": true,
+    "observational_noncausal": true,
+    "rcra_outcomes_opened": false,
+    "secondary_endpoint_computed": false
+  },
+  "issue": 152,
+  "n01_manifest_sha256": "19e1b3a1963fe008811aa230336e12ec69a348b03cf37bd656ea9d3fba8e5aaf",
+  "n01_staging_commit": "78f0f0f1458463c79c326c016d415dc5533af026",
+  "primary": {
+    "b_high1_low0": 12,
+    "both_event": 5,
+    "c_high0_low1": 6,
+    "discordant_pairs": 18,
+    "exact_two_sided_mcnemar_binomial_p": 0.237884521484375,
+    "high_event_facilities": 17,
+    "low_event_facilities": 11,
+    "materiality_floor": 0.05,
+    "neither_event": 284,
+    "risk_difference": 0.019543973941368073,
+    "risk_high": 0.05537459283387622,
+    "risk_low": 0.035830618892508145
+  },
+  "research": "US-EPA-XMEDIA-E01",
+  "source_fingerprints": {
+    "AL": {
+      "bytes": 124721762,
+      "member": "AL_NPDES_EFF_VIOLATIONS.csv",
+      "rows_scanned": 2551633,
+      "sha256": "91d6b90a30303a7c41538e3833d392008c931a806d90dc77b2b9d7af25937fea",
+      "url": "https://echo.epa.gov/files/echodownloads/NPDES_by_state_year/AL_NPDES_EFF_VIOLATIONS.zip"
+    },
+    "AR": {
+      "bytes": 31311141,
+      "member": "AR_NPDES_EFF_VIOLATIONS.csv",
+      "rows_scanned": 437376,
+      "sha256": "b0446fd97a4afff54478c3de5e2910ecf4cafe26f6504210e5912fdfb2b827b3",
+      "url": "https://echo.epa.gov/files/echodownloads/NPDES_by_state_year/AR_NPDES_EFF_VIOLATIONS.zip"
+    },
+    "CA": {
+      "bytes": 34529844,
+      "member": "CA_NPDES_EFF_VIOLATIONS.csv",
+      "rows_scanned": 487729,
+      "sha256": "0aecb2dee94dd2c94064936032ac54648be2323d8bbbb35345d6e20cb588599e",
+      "url": "https://echo.epa.gov/files/echodownloads/NPDES_by_state_year/CA_NPDES_EFF_VIOLATIONS.zip"
+    },
+    "FL": {
+      "bytes": 10093824,
+      "member": "FL_NPDES_EFF_VIOLATIONS.csv",
+      "rows_scanned": 142238,
+      "sha256": "4258eed506c4b1e4f0f29811e47829393e130c004779f827ff57b2fcd8c953dd",
+      "url": "https://echo.epa.gov/files/echodownloads/NPDES_by_state_year/FL_NPDES_EFF_VIOLATIONS.zip"
+    },
+    "GA": {
+      "bytes": 46198451,
+      "member": "GA_NPDES_EFF_VIOLATIONS.csv",
+      "rows_scanned": 915729,
+      "sha256": "a91aefebbad24e68692f23bdbf5efa34c6d8d36b0f1b5951fbbdf5c06b929406",
+      "url": "https://echo.epa.gov/files/echodownloads/NPDES_by_state_year/GA_NPDES_EFF_VIOLATIONS.zip"
+    },
+    "IN": {
+      "bytes": 36511033,
+      "member": "IN_NPDES_EFF_VIOLATIONS.csv",
+      "rows_scanned": 522268,
+      "sha256": "409353b425000822f8d6e59da8bccf6f376dd10985b53b77689861a860ce8c08",
+      "url": "https://echo.epa.gov/files/echodownloads/NPDES_by_state_year/IN_NPDES_EFF_VIOLATIONS.zip"
+    },
+    "KY": {
+      "bytes": 255177571,
+      "member": "KY_NPDES_EFF_VIOLATIONS.csv",
+      "rows_scanned": 4734526,
+      "sha256": "b9625ff1ae1a576e6ef3ebd9a131e44c518a3cca69eb4d0c7c09f099e8984e3b",
+      "url": "https://echo.epa.gov/files/echodownloads/NPDES_by_state_year/KY_NPDES_EFF_VIOLATIONS.zip"
+    },
+    "MD": {
+      "bytes": 48442394,
+      "member": "MD_NPDES_EFF_VIOLATIONS.csv",
+      "rows_scanned": 932079,
+      "sha256": "7bef1c2d5ca9b9b602fc217b342f706f6bf1ae13b58e0059afaadc70db62ea0c",
+      "url": "https://echo.epa.gov/files/echodownloads/NPDES_by_state_year/MD_NPDES_EFF_VIOLATIONS.zip"
+    },
+    "MI": {
+      "bytes": 44313716,
+      "member": "MI_NPDES_EFF_VIOLATIONS.csv",
+      "rows_scanned": 830608,
+      "sha256": "39afb68d36310d030d372008a3c170847dcce8347ede1b14814330016c2dccb8",
+      "url": "https://echo.epa.gov/files/echodownloads/NPDES_by_state_year/MI_NPDES_EFF_VIOLATIONS.zip"
+    },
+    "MO": {
+      "bytes": 50441657,
+      "member": "MO_NPDES_EFF_VIOLATIONS.csv",
+      "rows_scanned": 794435,
+      "sha256": "fb2a2448487fb0f13f6a67a53a3f79b98a4197b79c55bfe6ec1a85512ae25da9",
+      "url": "https://echo.epa.gov/files/echodownloads/NPDES_by_state_year/MO_NPDES_EFF_VIOLATIONS.zip"
+    },
+    "MS": {
+      "bytes": 25559124,
+      "member": "MS_NPDES_EFF_VIOLATIONS.csv",
+      "rows_scanned": 369973,
+      "sha256": "3defdcb2c75d7f2b2080bec36ade4e9cbeca1e7ecebe10f4e25c602dae6fe5cd",
+      "url": "https://echo.epa.gov/files/echodownloads/NPDES_by_state_year/MS_NPDES_EFF_VIOLATIONS.zip"
+    },
+    "NC": {
+      "bytes": 23793533,
+      "member": "NC_NPDES_EFF_VIOLATIONS.csv",
+      "rows_scanned": 518206,
+      "sha256": "4764addb4c4faed181d56e382e0e0839cec05feeddeda3fa4ad2c6049f932b6b",
+      "url": "https://echo.epa.gov/files/echodownloads/NPDES_by_state_year/NC_NPDES_EFF_VIOLATIONS.zip"
+    },
+    "NJ": {
+      "bytes": 19305527,
+      "member": "NJ_NPDES_EFF_VIOLATIONS.csv",
+      "rows_scanned": 297008,
+      "sha256": "2e335b2c7cd2a067fa49ffa0a15a47626187bd297fee7512d6c9ce5a6ef25d15",
+      "url": "https://echo.epa.gov/files/echodownloads/NPDES_by_state_year/NJ_NPDES_EFF_VIOLATIONS.zip"
+    },
+    "NV": {
+      "bytes": 1931885,
+      "member": "NV_NPDES_EFF_VIOLATIONS.csv",
+      "rows_scanned": 33453,
+      "sha256": "8c7587cb782963a5d19166416cdc16bab66cc6d1212bde1b473d407674efdef4",
+      "url": "https://echo.epa.gov/files/echodownloads/NPDES_by_state_year/NV_NPDES_EFF_VIOLATIONS.zip"
+    },
+    "OH": {
+      "bytes": 54791564,
+      "member": "OH_NPDES_EFF_VIOLATIONS.csv",
+      "rows_scanned": 818480,
+      "sha256": "42b5c6b55db61fdd9de067461b7afeaeee8f64268604a6f09245242a8bada85d",
+      "url": "https://echo.epa.gov/files/echodownloads/NPDES_by_state_year/OH_NPDES_EFF_VIOLATIONS.zip"
+    },
+    "OR": {
+      "bytes": 6159602,
+      "member": "OR_NPDES_EFF_VIOLATIONS.csv",
+      "rows_scanned": 153191,
+      "sha256": "15e83bbdf97a42b08475c46eb65c252495495d9e99ae1c59c15717fa8cf4094e",
+      "url": "https://echo.epa.gov/files/echodownloads/NPDES_by_state_year/OR_NPDES_EFF_VIOLATIONS.zip"
+    },
+    "PA": {
+      "bytes": 52479892,
+      "member": "PA_NPDES_EFF_VIOLATIONS.csv",
+      "rows_scanned": 1044177,
+      "sha256": "b38329612ae7fc5df37b9ea0cf4aaeb22455fb1f00e48d0c1c27c08cf9e406d1",
+      "url": "https://echo.epa.gov/files/echodownloads/NPDES_by_state_year/PA_NPDES_EFF_VIOLATIONS.zip"
+    },
+    "SC": {
+      "bytes": 26706198,
+      "member": "SC_NPDES_EFF_VIOLATIONS.csv",
+      "rows_scanned": 525504,
+      "sha256": "2ea20bf9db88b26e20c1b566bc43a96483fb79eab8bd37f30d3e63e037d48d4d",
+      "url": "https://echo.epa.gov/files/echodownloads/NPDES_by_state_year/SC_NPDES_EFF_VIOLATIONS.zip"
+    },
+    "TN": {
+      "bytes": 32901110,
+      "member": "TN_NPDES_EFF_VIOLATIONS.csv",
+      "rows_scanned": 706872,
+      "sha256": "c2d2f9b0c0ebe895c4e75caec0222eb8b6f7388bea9e2cb18a4dc3d65e7dc240",
+      "url": "https://echo.epa.gov/files/echodownloads/NPDES_by_state_year/TN_NPDES_EFF_VIOLATIONS.zip"
+    },
+    "TX": {
+      "bytes": 130214922,
+      "member": "TX_NPDES_EFF_VIOLATIONS.csv",
+      "rows_scanned": 1882823,
+      "sha256": "c6dacd45baf63a4801225bd4d39f5a66cc3eef3f3abe5df6c3cc7b86494adc98",
+      "url": "https://echo.epa.gov/files/echodownloads/NPDES_by_state_year/TX_NPDES_EFF_VIOLATIONS.zip"
+    },
+    "WI": {
+      "bytes": 13267976,
+      "member": "WI_NPDES_EFF_VIOLATIONS.csv",
+      "rows_scanned": 301657,
+      "sha256": "4ac2d6a830870814ff59dedf94bd8a91d2de05d24a199f629e4e89b137e63e6a",
+      "url": "https://echo.epa.gov/files/echodownloads/NPDES_by_state_year/WI_NPDES_EFF_VIOLATIONS.zip"
+    },
+    "WV": {
+      "bytes": 730962486,
+      "member": "WV_NPDES_EFF_VIOLATIONS.csv",
+      "rows_scanned": 17755094,
+      "sha256": "bd4d079b1e6109ad650f8627c8ae23e626a6b68cbe809e5bf3f17fbcf8fd7d77",
+      "url": "https://echo.epa.gov/files/echodownloads/NPDES_by_state_year/WV_NPDES_EFF_VIOLATIONS.zip"
+    }
+  },
+  "source_scope": {
+    "required_fields": [
+      "MONITORING_PERIOD_END_DATE",
+      "NPDES_ID",
+      "NPDES_VIOLATION_ID",
+      "VIOLATION_CODE"
+    ],
+    "source_table": "NPDES_EFF_VIOLATIONS",
+    "state_count": 22,
+    "states": [
+      "AL",
+      "AR",
+      "CA",
+      "FL",
+      "GA",
+      "IN",
+      "KY",
+      "MD",
+      "MI",
+      "MO",
+      "MS",
+      "NC",
+      "NJ",
+      "NV",
+      "OH",
+      "OR",
+      "PA",
+      "SC",
+      "TN",
+      "TX",
+      "WI",
+      "WV"
+    ]
+  }
+}
