@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Execution trigger: implementation-only correction attempt 02; frozen contract unchanged.
 from __future__ import annotations
 import copy, hashlib, json, urllib.parse, urllib.request
 from pathlib import Path
@@ -24,12 +25,7 @@ preflight=(ROOT/'research/US-FDIC-BRANCH-F01/SOURCE_PREFLIGHT.md').read_text(enc
 assert 'UNINUMBR' in preflight and 'YEAR' in preflight and 'CERT' in preflight and 'BRNUM' in preflight
 assert 'regardless of ownership' in preflight
 
-params=urllib.parse.urlencode({
-    'filters':'YEAR:2025',
-    'fields':'YEAR,CERT,BRNUM,UNINUMBR',
-    'limit':1,
-    'offset':0,
-})
+params=urllib.parse.urlencode({'filters':'YEAR:2025','fields':'YEAR,CERT,BRNUM,UNINUMBR','limit':1,'offset':0})
 url='https://api.fdic.gov/banks/sod?'+params
 req=urllib.request.Request(url,method='HEAD',headers={
     'User-Agent':'AI-Innovative-Research-Engine/US-FDIC-BRANCH-F01 outcome-blind schema preflight',
@@ -41,19 +37,13 @@ with urllib.request.urlopen(req,timeout=60) as resp:
     # Deliberately do not call resp.read(): no 2025 response body or row is consumed.
 
 header_evidence={
-    'method':'HEAD',
-    'url':url,
-    'http_status':status,
-    'content_type':headers.get('content-type'),
-    'content_length':headers.get('content-length'),
-    'response_body_read':False,
-    'future_2025_rows_opened':False,
+    'method':'HEAD','url':url,'http_status':status,
+    'content_type':headers.get('content-type'),'content_length':headers.get('content-length'),
+    'response_body_read':False,'future_2025_rows_opened':False,
     'schema_fields_requested':['YEAR','CERT','BRNUM','UNINUMBR'],
-    'preflight_commit':PREFLIGHT,
-    'correction_commit':CORRECTION,
+    'preflight_commit':PREFLIGHT,'correction_commit':CORRECTION,
 }
-head_fingerprint=hashlib.sha256(json.dumps(header_evidence,sort_keys=True).encode()).hexdigest()
-header_evidence['request_evidence_sha256']=head_fingerprint
+header_evidence['request_evidence_sha256']=hashlib.sha256(json.dumps(header_evidence,sort_keys=True).encode()).hexdigest()
 
 result=copy.deepcopy(base)
 result['attempt']=2
