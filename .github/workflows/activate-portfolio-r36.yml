@@ -1,0 +1,49 @@
+name: Activate PORTFOLIO-R36
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/activate_portfolio_r36.py'
+      - '.github/workflows/activate-portfolio-r36.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: read
+jobs:
+  activate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify pre-Issue contract and live Issue
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git cat-file -e 6550f4cfbde9df2702c793b902d7676f05700d61^{commit}
+          python - <<'PY'
+          import json, os, urllib.request
+          from pathlib import Path
+          assert Path('research/PORTFOLIO-R36/README.md').exists()
+          req=urllib.request.Request('https://api.github.com/repos/Eckommon/AI-Innovative-Research-Engine/issues/155',headers={'Authorization':f"Bearer {os.environ['GH_TOKEN']}",'Accept':'application/vnd.github+json'})
+          with urllib.request.urlopen(req,timeout=20) as r: issue=json.load(r)
+          assert issue['state']=='open'
+          assert '6550f4cfbde9df2702c793b902d7676f05700d61' in issue['body']
+          PY
+      - name: Activate canonical state
+        run: python tools/activate_portfolio_r36.py
+      - name: Verify active mirrors
+        run: python tools/check_checkpoint.py
+      - name: Commit activation
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add registry/DEC-222.md registry/DECISION_LOG.md context/checkpoint.json STATUS.md context/SESSION_HANDOFF.md
+          git commit -m 'Activate PORTFOLIO-R36'
+          git push origin HEAD:main
+      - name: Confirm outcome firewall
+        run: |
+          echo 'R36 activation opens no candidate outcome rows.'
+          echo 'No paid API or paid compute used.'
