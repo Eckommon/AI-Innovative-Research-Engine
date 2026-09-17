@@ -1,0 +1,409 @@
+{
+  "activation_decision": "DEC-212",
+  "causal_claim_made": false,
+  "contract_commit": "86a7a01ba3b64160ee21a7ea821536d3d1adbb14",
+  "dmr_outcome_rows_opened": false,
+  "effluent_violation_rows_opened": false,
+  "gate": "PASS_US_EPA_XMEDIA_F01_EXACT_FRS_CROSS_PROGRAM_JOIN_READY",
+  "generated_utc": "2026-09-17T00:32:03Z",
+  "identity_repair_used": false,
+  "implementation_correction": {
+    "contract_changed": false,
+    "identity_rules_changed": false,
+    "kind": "DATE_PARSER_VALID_YEAR_RANGE",
+    "outcome_firewall_changed": false,
+    "preserves_original_staging": "research/US-EPA-XMEDIA-F01/STAGING_RESULT.json",
+    "reason": "Original fallback date parser could admit malformed/out-of-range years; corrected parser accepts only calendar years 1900-2100.",
+    "sources_changed": false,
+    "thresholds_changed": false
+  },
+  "incremental_monetary_cost_usd": 0,
+  "issue": 150,
+  "measurements": {
+    "exact_cross_program_registry_ids_with_rcra_eval_and_npdes_part1_permit": 18415,
+    "fingerprints": {
+      "exact_cross_supported_registry_sha256": "0b17a285f863e55340413416a05d37615af8bb6da02827c60fb3c57dde497c4e",
+      "frs_cross_program_registry_intersection_sha256": "3355572a1b5e91c8f9227a0859f0a78b87d5633cd811d801798ab47c0b8d1a2c",
+      "frs_npdes_exact_pairs_sha256": "856b1938a812f83c5f733806f237867090f7a510624290a11d201c1258900a69",
+      "frs_rcra_exact_pairs_sha256": "7ef51065e6366cd1b7eb3f1d0498e5650b6caede08fb7965833dbf8d32cd71db",
+      "npdes_part1_exact_identity_pairs_sha256": "ab55a67210f83c58d271924ed8afa99daaf32252c52c18fce573c70aa5ce79b1",
+      "rcra_exact_identity_pairs_sha256": "f40d51b00cb2ebef4e2b44b26e40d5bb77981c2f5bb8db2833c8e2eb775b3af1"
+    },
+    "frs_exact_cross_program_registry_intersection": 60677,
+    "frs_npdes_program_id_conflicts": 0,
+    "frs_npdes_program_ids_nonconflicting": 1218327,
+    "frs_npdes_registry_ids": 1037626,
+    "frs_program_link_rows": 4424484,
+    "frs_rcra_program_id_conflicts": 0,
+    "frs_rcra_program_ids_nonconflicting": 1607600,
+    "frs_rcra_registry_ids": 1501147,
+    "frs_seen_required_program_families": [
+      "NPDES",
+      "RCRAINFO"
+    ],
+    "npdes_distinct_ids": 1214104,
+    "npdes_distinct_registry_ids": 1029367,
+    "npdes_exact_corroboration_rate": 0.9999759750405525,
+    "npdes_facility_rows": 1214104,
+    "npdes_id_registry_conflicts": 0,
+    "npdes_pairs_exactly_corroborated_by_frs": 1207049,
+    "npdes_pairs_represented_in_frs": 1207078,
+    "npdes_permit_date_years": [
+      1900,
+      1960,
+      1969,
+      1970,
+      1971,
+      1972,
+      1973,
+      1974,
+      1975,
+      1976,
+      1977,
+      1978,
+      1979,
+      1980,
+      1981,
+      1982,
+      1983,
+      1984,
+      1985,
+      1986,
+      1987,
+      1988,
+      1989,
+      1990,
+      1991,
+      1992,
+      1993,
+      1994,
+      1995,
+      1996,
+      1997,
+      1998,
+      1999,
+      2000,
+      2001,
+      2002,
+      2003,
+      2004,
+      2005,
+      2006,
+      2007,
+      2008,
+      2009,
+      2010,
+      2011,
+      2012,
+      2013,
+      2014,
+      2015,
+      2016,
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025,
+      2026,
+      2027,
+      2028,
+      2029,
+      2030,
+      2031,
+      2032,
+      2033,
+      2034,
+      2035,
+      2036,
+      2038,
+      2039,
+      2040,
+      2041,
+      2042,
+      2060,
+      2080,
+      2099,
+      2100
+    ],
+    "npdes_permit_rows": 1728112,
+    "rcra_distinct_registry_ids": 89636,
+    "rcra_distinct_source_ids": 90302,
+    "rcra_distinct_valid_years": [
+      1982,
+      1983,
+      1984,
+      1985,
+      1986,
+      1987,
+      1988,
+      1989,
+      1990,
+      1991,
+      1992,
+      1993,
+      1994,
+      1995,
+      1996,
+      1997,
+      1998,
+      1999,
+      2000,
+      2001,
+      2002,
+      2003,
+      2004,
+      2005,
+      2006,
+      2007,
+      2008,
+      2009,
+      2010,
+      2011,
+      2012,
+      2013,
+      2014,
+      2015,
+      2016,
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025,
+      2026
+    ],
+    "rcra_evaluation_rows": 200759,
+    "rcra_exact_corroboration_rate": 1.0,
+    "rcra_pairs_exactly_corroborated_by_frs": 90196,
+    "rcra_pairs_represented_in_frs": 90196,
+    "rcra_source_ids_conflicting_registry": 0,
+    "rcra_source_ids_unique_registry": 90302,
+    "rcra_valid_identity_date_rows": 200759
+  },
+  "predictive_metric_computed": false,
+  "relationship_computed": false,
+  "requirements": [
+    {
+      "evidence": "all three official source ZIP bytes read",
+      "name": "official EPA documentation/source readable",
+      "number": 1,
+      "pass": true
+    },
+    {
+      "evidence": {
+        "frs": {
+          "bytes": 364802817,
+          "member_count": 4,
+          "member_fingerprint_sha256": "169a585ff21e03e81f904528d0d7069055e91428755d04df5dfa855c84b26d13",
+          "sha256": "ffa59a6d08392b813e770a5faeec9617cf279bc83aba9c7cf0095e62c909b64c",
+          "url": "https://echo.epa.gov/files/echodownloads/frs_downloads.zip"
+        },
+        "npdes": {
+          "bytes": 350329008,
+          "member_count": 15,
+          "member_fingerprint_sha256": "26229777ad10375310461f23bc9a5e88311cdbb4adf02c65d3b86fe298c5f2e4",
+          "sha256": "4ae143fd5260c9f9003905c08d1ff2d2c2ad13db177f88e0982d5aa55cfde9c9",
+          "url": "https://echo.epa.gov/files/echodownloads/npdes_downloads.zip"
+        },
+        "rcra": {
+          "bytes": 52037366,
+          "member_count": 5,
+          "member_fingerprint_sha256": "57579eaca9f99faae983419ac50718ee29c5b90dc949c7f9d463d14227428d6d",
+          "sha256": "0071b0c6dc9c387425d875a871a7cffc116f38a867cfcb30ed217167241b7f35",
+          "url": "https://echo.epa.gov/files/echodownloads/pipeline_rcra_downloads.zip"
+        }
+      },
+      "name": "authorized ZIP integrity and fingerprint",
+      "number": 2,
+      "pass": true
+    },
+    {
+      "evidence": {
+        "required": [
+          "REGISTRY_ID",
+          "SOURCE_ID",
+          "EVAL_DATE"
+        ]
+      },
+      "name": "RCRA required schema",
+      "number": 3,
+      "pass": true
+    },
+    {
+      "evidence": {
+        "registry_ids": 89636,
+        "source_ids": 90302
+      },
+      "name": "RCRA >=5000 distinct SOURCE_ID and REGISTRY_ID",
+      "number": 4,
+      "pass": true
+    },
+    {
+      "evidence": {
+        "max": 2026,
+        "min": 1982,
+        "n_years": 45
+      },
+      "name": "RCRA >=10 years and max >=2025",
+      "number": 5,
+      "pass": true
+    },
+    {
+      "evidence": {
+        "families": [
+          "NPDES",
+          "RCRAINFO"
+        ]
+      },
+      "name": "FRS required schema and RCRAINFO/NPDES families",
+      "number": 6,
+      "pass": true
+    },
+    {
+      "evidence": {
+        "denominator": 90196,
+        "numerator": 90196,
+        "rate": 1.0
+      },
+      "name": "RCRA exact FRS corroboration >=90%",
+      "number": 7,
+      "pass": true
+    },
+    {
+      "evidence": {
+        "facility_required": true,
+        "permit_required": true
+      },
+      "name": "NPDES Part 1 required facility/permit schema",
+      "number": 8,
+      "pass": true
+    },
+    {
+      "evidence": {
+        "npdes_ids": 1214104,
+        "registry_ids": 1029367
+      },
+      "name": "NPDES >=10000 IDs and Registry IDs",
+      "number": 9,
+      "pass": true
+    },
+    {
+      "evidence": {
+        "denominator": 1207078,
+        "numerator": 1207049,
+        "rate": 0.9999759750405525
+      },
+      "name": "NPDES exact FRS corroboration >=90%",
+      "number": 10,
+      "pass": true
+    },
+    {
+      "evidence": {
+        "max": 2100,
+        "min": 1900,
+        "n_years": 79
+      },
+      "name": "NPDES permit-date support >=10 years",
+      "number": 11,
+      "pass": true
+    },
+    {
+      "evidence": {
+        "count": 60677
+      },
+      "name": "FRS cross-program Registry intersection >=500",
+      "number": 12,
+      "pass": true
+    },
+    {
+      "evidence": {
+        "count": 18415
+      },
+      "name": "fully cross-supported Registry IDs >=500",
+      "number": 13,
+      "pass": true
+    },
+    {
+      "evidence": {
+        "identity_repair_used": false
+      },
+      "name": "no identity repair",
+      "number": 14,
+      "pass": true
+    },
+    {
+      "evidence": {
+        "exact_cross_supported_registry_sha256": "0b17a285f863e55340413416a05d37615af8bb6da02827c60fb3c57dde497c4e",
+        "frs_cross_program_registry_intersection_sha256": "3355572a1b5e91c8f9227a0859f0a78b87d5633cd811d801798ab47c0b8d1a2c",
+        "frs_npdes_exact_pairs_sha256": "856b1938a812f83c5f733806f237867090f7a510624290a11d201c1258900a69",
+        "frs_rcra_exact_pairs_sha256": "7ef51065e6366cd1b7eb3f1d0498e5650b6caede08fb7965833dbf8d32cd71db",
+        "npdes_part1_exact_identity_pairs_sha256": "ab55a67210f83c58d271924ed8afa99daaf32252c52c18fce573c70aa5ce79b1",
+        "rcra_exact_identity_pairs_sha256": "f40d51b00cb2ebef4e2b44b26e40d5bb77981c2f5bb8db2833c8e2eb775b3af1"
+      },
+      "name": "deterministic identity fingerprints persisted",
+      "number": 15,
+      "pass": true
+    },
+    {
+      "evidence": {
+        "dmr_outcome_rows_opened": false,
+        "effluent_violation_rows_opened": false
+      },
+      "name": "effluent/DMR outcome source unopened",
+      "number": 16,
+      "pass": true
+    },
+    {
+      "evidence": {
+        "causal_claim_made": false,
+        "predictive_metric_computed": false,
+        "relationship_computed": false
+      },
+      "name": "no RCRA-conditioned NPDES outcome/ranking/effect",
+      "number": 17,
+      "pass": true
+    },
+    {
+      "evidence": {
+        "incremental_monetary_cost_usd": 0
+      },
+      "name": "zero-cost and no relationship/prediction/causality",
+      "number": 18,
+      "pass": true
+    }
+  ],
+  "requirements_passed": 18,
+  "requirements_total": 18,
+  "research": "US-EPA-XMEDIA-F01",
+  "scientific_disposition": "PASS",
+  "sources": {
+    "frs": {
+      "bytes": 364802817,
+      "member_count": 4,
+      "member_fingerprint_sha256": "169a585ff21e03e81f904528d0d7069055e91428755d04df5dfa855c84b26d13",
+      "sha256": "ffa59a6d08392b813e770a5faeec9617cf279bc83aba9c7cf0095e62c909b64c",
+      "url": "https://echo.epa.gov/files/echodownloads/frs_downloads.zip"
+    },
+    "npdes": {
+      "bytes": 350329008,
+      "member_count": 15,
+      "member_fingerprint_sha256": "26229777ad10375310461f23bc9a5e88311cdbb4adf02c65d3b86fe298c5f2e4",
+      "sha256": "4ae143fd5260c9f9003905c08d1ff2d2c2ad13db177f88e0982d5aa55cfde9c9",
+      "url": "https://echo.epa.gov/files/echodownloads/npdes_downloads.zip"
+    },
+    "rcra": {
+      "bytes": 52037366,
+      "member_count": 5,
+      "member_fingerprint_sha256": "57579eaca9f99faae983419ac50718ee29c5b90dc949c7f9d463d14227428d6d",
+      "sha256": "0071b0c6dc9c387425d875a871a7cffc116f38a867cfcb30ed217167241b7f35",
+      "url": "https://echo.epa.gov/files/echodownloads/pipeline_rcra_downloads.zip"
+    }
+  }
+}
