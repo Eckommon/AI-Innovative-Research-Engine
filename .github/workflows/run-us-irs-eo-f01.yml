@@ -1,0 +1,66 @@
+name: Run US-IRS-EO-F01 Immutable Gate
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/run-us-irs-eo-f01.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: read
+jobs:
+  f01:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify active authorization and immutable attempt slot
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git cat-file -e 689a00db411b650defcb679bef998beeb55a57da^{commit}
+          gh issue view 163 --repo '${{ github.repository }}' --json state --jq '.state' | grep -qx OPEN
+          test ! -e research/US-IRS-EO-F01/evidence/attempt-01.json
+          test ! -e research/US-IRS-EO-F01/evidence/attempt-01.md
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          cp=json.loads(Path('context/checkpoint.json').read_text())
+          assert cp['checkpoint_id']=='CHK-20260918-US-IRS-EO-F01-ACTIVE'
+          assert cp['active_issue']==163
+          assert cp['active_research']=='US-IRS-EO-F01'
+          assert cp['last_decision']=='DEC-237'
+          c=Path('research/US-IRS-EO-F01/README.md').read_text()
+          assert 'future_outcome_membership_opened: false' in c
+          assert 'PASS_US_IRS_EO_F01_EXACT_EIN_JOIN_READY' in c
+          PY
+      - name: Execute frozen 18-gate attempt
+        env:
+          IRS_EO_F01_ISSUE_BOUND: '1'
+          IRS_EO_F01_CONTRACT_SHA: '689a00db411b650defcb679bef998beeb55a57da'
+        run: python tools/run_us_irs_eo_f01.py
+      - name: Verify outcome firewall in evidence
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          e=json.loads(Path('research/US-IRS-EO-F01/evidence/attempt-01.json').read_text())
+          assert e['future_outcome_rows_opened']==0
+          assert e['future_form990_2025_2026_rows_opened']==0
+          assert e['automatic_revocation_entity_body_bytes_consumed']==0
+          assert e['nonfiling_streak_exposure_variables_constructed']==0
+          assert e['incremental_monetary_cost_usd']==0
+          print(e['disposition'], e.get('pass_count'), e.get('failed_gates'))
+          PY
+      - name: Commit immutable Attempt 01 evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-IRS-EO-F01/evidence/attempt-01.json research/US-IRS-EO-F01/evidence/attempt-01.md
+          git commit -m 'Record US-IRS-EO-F01 immutable attempt 01'
+          git push origin HEAD:main
+      - name: Report boundary
+        run: |
+          echo 'Automatic Revocation data rows remained sealed; no scientific threshold was changed.'
