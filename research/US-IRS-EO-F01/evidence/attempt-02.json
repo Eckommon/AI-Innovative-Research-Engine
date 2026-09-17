@@ -1,0 +1,336 @@
+{
+  "attempt": 2,
+  "attempt02_wrapper_sha256": "e9d7bf34708ddef4890803e35a58c63776d69111013e9261cbe77b2fc9a56672",
+  "attempt_valid": true,
+  "automatic_revocation_entity_body_bytes_consumed": 0,
+  "base_runner_commit": "14b671a6f0209cc6afba2099fa42e6bc209e63f9",
+  "contract_sha": "689a00db411b650defcb679bef998beeb55a57da",
+  "disposition": "PASS_US_IRS_EO_F01_EXACT_EIN_JOIN_READY",
+  "documentation_fingerprints": {
+    "auto": "21fe5147a7ec260690b192f89afec92906577aab492a60b9d4d4e987db881207",
+    "bulk": "16b1a86209de9fd679af91ef104242acb67b6dee7ac0bfc73253a1ba023c312e",
+    "download": "0599852c0c0115c69fef02c944f3f946e9529f5bd1325f090089f55778ba73a2",
+    "faq": "5a42cdc7f034b003cba7e3940a15973629d0429cf6569f522a5b24663ba328f5",
+    "schema": "78652f676e82f1490a2ad5165bf38e7c812d160789293278ef52aac4ee15473c"
+  },
+  "failed_gates": [],
+  "future_form990_2025_2026_rows_opened": 0,
+  "future_outcome_rows_opened": 0,
+  "gates": [
+    {
+      "gate": 1,
+      "observed": {
+        "active_issue": 163,
+        "active_research": "US-IRS-EO-F01",
+        "checkpoint_id": "CHK-20260918-US-IRS-EO-F01-ACTIVE",
+        "last_completed_issue": 162,
+        "last_completed_research": "PORTFOLIO-R39",
+        "last_decision": "DEC-237",
+        "updated": "2026-09-18"
+      },
+      "pass": true
+    },
+    {
+      "gate": 2,
+      "observed": {
+        "contract_sha": "689a00db411b650defcb679bef998beeb55a57da",
+        "issue": 163
+      },
+      "pass": true
+    },
+    {
+      "gate": 3,
+      "observed": {
+        "2022": {
+          "bytes": 72228246,
+          "content_type": "text/csv",
+          "final_url": "https://apps.irs.gov/pub/epostcard/990/xml/2022/index_2022.csv",
+          "sha256": "5493bf8850e25dbd3d44acf53faa92faed4f50931600aadc5e4e425379b74631",
+          "status": 200,
+          "url": "https://apps.irs.gov/pub/epostcard/990/xml/2022/index_2022.csv"
+        },
+        "2023": {
+          "bytes": 77519435,
+          "content_type": "text/csv",
+          "final_url": "https://apps.irs.gov/pub/epostcard/990/xml/2023/index_2023.csv",
+          "sha256": "3906ff84e87285f3a3cf2ba328505b1ba348d9814f5dc95864fa7d1f9575a58e",
+          "status": 200,
+          "url": "https://apps.irs.gov/pub/epostcard/990/xml/2023/index_2023.csv"
+        },
+        "2024": {
+          "bytes": 91056866,
+          "content_type": "text/csv",
+          "final_url": "https://apps.irs.gov/pub/epostcard/990/xml/2024/index_2024.csv",
+          "sha256": "c00051a33f65d408ea7f6d5fa008c7f82f9bc6223751f4a6e29d59f5e17f826d",
+          "status": 200,
+          "url": "https://apps.irs.gov/pub/epostcard/990/xml/2024/index_2024.csv"
+        }
+      },
+      "pass": true
+    },
+    {
+      "gate": 4,
+      "observed": {
+        "2022": {
+          "missing": [],
+          "raw_headers": [
+            "RETURN_ID",
+            "FILING_TYPE",
+            "EIN",
+            "TAX_PERIOD",
+            "SUB_DATE",
+            "TAXPAYER_NAME",
+            "RETURN_TYPE",
+            "DLN",
+            "OBJECT_ID"
+          ],
+          "resolved": {
+            "dln": "DLN",
+            "ein": "EIN",
+            "filing_type": "FILING_TYPE",
+            "object_id": "OBJECT_ID",
+            "return_id": "RETURN_ID",
+            "submission_date": "SUB_DATE",
+            "tax_period": "TAX_PERIOD",
+            "taxpayer_name": "TAXPAYER_NAME"
+          }
+        },
+        "2023": {
+          "missing": [],
+          "raw_headers": [
+            "RETURN_ID",
+            "FILING_TYPE",
+            "EIN",
+            "TAX_PERIOD",
+            "SUB_DATE",
+            "TAXPAYER_NAME",
+            "RETURN_TYPE",
+            "DLN",
+            "OBJECT_ID"
+          ],
+          "resolved": {
+            "dln": "DLN",
+            "ein": "EIN",
+            "filing_type": "FILING_TYPE",
+            "object_id": "OBJECT_ID",
+            "return_id": "RETURN_ID",
+            "submission_date": "SUB_DATE",
+            "tax_period": "TAX_PERIOD",
+            "taxpayer_name": "TAXPAYER_NAME"
+          }
+        },
+        "2024": {
+          "missing": [],
+          "raw_headers": [
+            "RETURN_ID",
+            "FILING_TYPE",
+            "EIN",
+            "TAX_PERIOD",
+            "SUB_DATE",
+            "TAXPAYER_NAME",
+            "RETURN_TYPE",
+            "DLN",
+            "OBJECT_ID",
+            "XML_BATCH_ID"
+          ],
+          "resolved": {
+            "dln": "DLN",
+            "ein": "EIN",
+            "filing_type": "FILING_TYPE",
+            "object_id": "OBJECT_ID",
+            "return_id": "RETURN_ID",
+            "submission_date": "SUB_DATE",
+            "tax_period": "TAX_PERIOD",
+            "taxpayer_name": "TAXPAYER_NAME"
+          }
+        }
+      },
+      "pass": true
+    },
+    {
+      "gate": 5,
+      "observed": {
+        "nonblank_rows": 2090378,
+        "rate": 1.0,
+        "valid_rows": 2090378
+      },
+      "pass": true
+    },
+    {
+      "gate": 6,
+      "observed": {
+        "combined_rows": 2090378,
+        "threshold": 500000
+      },
+      "pass": true
+    },
+    {
+      "gate": 7,
+      "observed": {
+        "distinct_valid_ein": 742646,
+        "threshold": 150000
+      },
+      "pass": true
+    },
+    {
+      "gate": 8,
+      "observed": {
+        "ein_in_at_least_two_indexes": 641705,
+        "threshold": 75000
+      },
+      "pass": true
+    },
+    {
+      "gate": 9,
+      "observed": {
+        "parseable_tax_period": 2090378,
+        "rate": 1.0,
+        "valid_ein_rows": 2090378
+      },
+      "pass": true
+    },
+    {
+      "gate": 10,
+      "observed": {
+        "duplicate_rate": 0.0,
+        "duplicate_rows": 0,
+        "nonblank_rate": 1.0,
+        "object_nonblank": 2090378,
+        "valid_ein_rows": 2090378
+      },
+      "pass": true
+    },
+    {
+      "gate": 11,
+      "observed": {
+        "min_max_by_index": {
+          "2022": {
+            "max": "2022-01-01T00:00:00",
+            "min": "2022-01-01T00:00:00"
+          },
+          "2023": {
+            "max": "2023-01-01T00:00:00",
+            "min": "2023-01-01T00:00:00"
+          },
+          "2024": {
+            "max": "2024-01-01T00:00:00",
+            "min": "2024-01-01T00:00:00"
+          }
+        },
+        "min_max_semantics": "year-precision values use Jan-01 internal ordering sentinel only; month/day are not observed",
+        "parseable_submission_dates": 2090378,
+        "rate": 1.0,
+        "source_precision_counts": {
+          "YYYY_year_precision": 2090378
+        },
+        "valid_ein_rows": 2090378
+      },
+      "pass": true
+    },
+    {
+      "gate": 12,
+      "observed": {
+        "download_page_documented": true,
+        "xml_zip_metadata": {
+          "content_length": "104816571",
+          "content_type": "application/zip",
+          "entity_body_bytes_consumed": 0,
+          "etag": "\"63f5fbb-62facfc2207e8\"",
+          "final_url": "https://apps.irs.gov/pub/epostcard/990/xml/2024/2024_TEOS_XML_01A.zip",
+          "last_modified": "Thu, 06 Mar 2025 14:04:31 GMT",
+          "method": "HEAD",
+          "status": 200
+        }
+      },
+      "pass": true
+    },
+    {
+      "gate": 13,
+      "observed": {
+        "990ez": true,
+        "990pf": true,
+        "official_schema_family_990": true
+      },
+      "pass": true
+    },
+    {
+      "gate": 14,
+      "observed": {
+        "effective_revocation_date": true,
+        "ein": true,
+        "posting_date": true,
+        "reinstatement": true
+      },
+      "pass": true
+    },
+    {
+      "gate": 15,
+      "observed": {
+        "third_due_date_semantics": true,
+        "three_consecutive_years": true
+      },
+      "pass": true
+    },
+    {
+      "gate": 16,
+      "observed": {
+        "content_length": "47564625",
+        "content_type": "application/zip",
+        "entity_body_bytes_consumed": 0,
+        "etag": "\"2d5c751-65b45a011d450\"",
+        "final_url": "https://apps.irs.gov/pub/epostcard/data-download-revocation.zip",
+        "last_modified": "Sat, 12 Sep 2026 09:14:16 GMT",
+        "method": "HEAD",
+        "status": 200
+      },
+      "pass": true
+    },
+    {
+      "gate": 17,
+      "observed": {
+        "automatic_revocation_entity_body_bytes_consumed": 0,
+        "future_form990_2025_2026_rows_opened": 0,
+        "future_outcome_rows_opened": 0,
+        "name_address_repair_used": false,
+        "nonfiling_streak_exposure_variables_constructed": 0
+      },
+      "pass": true
+    },
+    {
+      "gate": 18,
+      "observed": {
+        "contract_sha": "689a00db411b650defcb679bef998beeb55a57da",
+        "cost_usd": 0,
+        "runner_sha256": "5d788154e1d02e4855b96be23c8d4a5d64949d212323ea707c9c873fc713f4c8",
+        "source_sha256": {
+          "2022": "5493bf8850e25dbd3d44acf53faa92faed4f50931600aadc5e4e425379b74631",
+          "2023": "3906ff84e87285f3a3cf2ba328505b1ba348d9814f5dc95864fa7d1f9575a58e",
+          "2024": "c00051a33f65d408ea7f6d5fa008c7f82f9bc6223751f4a6e29d59f5e17f826d"
+        }
+      },
+      "pass": true
+    }
+  ],
+  "github_run_id": "35282837658",
+  "identity_rule_changed": false,
+  "implementation_correction_commit": "d3026031bb7e5b90e63709589e226cd99babc590",
+  "incremental_monetary_cost_usd": 0,
+  "issue": 163,
+  "name_address_repair_used": false,
+  "nonfiling_streak_exposure_variables_constructed": 0,
+  "outcome_firewall_changed": false,
+  "pass_count": 18,
+  "research": "US-IRS-EO-F01",
+  "runner_sha256": "5d788154e1d02e4855b96be23c8d4a5d64949d212323ea707c9c873fc713f4c8",
+  "scientific_threshold_changed": false,
+  "source_fingerprints": {
+    "2022": "5493bf8850e25dbd3d44acf53faa92faed4f50931600aadc5e4e425379b74631",
+    "2023": "3906ff84e87285f3a3cf2ba328505b1ba348d9814f5dc95864fa7d1f9575a58e",
+    "2024": "c00051a33f65d408ea7f6d5fa008c7f82f9bc6223751f4a6e29d59f5e17f826d"
+  },
+  "source_years_changed": false,
+  "submission_date_precision_counts": {
+    "YYYY_year_precision": 2090378
+  },
+  "year_precision_semantics": "Exact YYYY source values are accepted only as year-precision Submission Date representations. The internal YYYY-01-01 datetime is an ordering sentinel and does not assert an observed month or day."
+}
