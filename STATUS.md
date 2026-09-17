@@ -1,23 +1,21 @@
 ---
-checkpoint_id: CHK-20260917-US-EIA-GEN-F01-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20260917-PORTFOLIO-R37-ACTIVE
+active_issue: 157
+active_research: PORTFOLIO-R37
 last_completed_issue: 156
 last_completed_research: US-EIA-GEN-F01
-last_decision: DEC-225
+last_decision: DEC-226
 updated: 2026-09-17
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `US_EIA_GEN_F01_HOLD__PORTFOLIO_RESELECTION_REQUIRED`
+**State / 상태:** `PORTFOLIO_R37_ACTIVE__SOURCE_LITERATURE_REVALIDATION_PENDING`
 
-US-EIA-GEN-F01 is terminal HOLD: 17/18 frozen gates passed, but the focal planned-solar cohort was 664, below the frozen 1,000-unit minimum. Future commissioning outcomes remained unopened. N01 is not authorized.
+R37 is active under the frozen pre-Issue four-candidate contract. Candidate outcomes remain unopened. EIA generator F01 remains terminal HOLD and is not being rescued.
 
 ## Exact next action / 정확한 다음 행동
 
-Return to an independent portfolio reselection. Do not lower the 1,000-unit threshold or broaden the January-2024/2024–2025 exposure definition after observing support.
+Revalidate official sources, internal overlap and bounded external literature/agency-framework overlap; then write exactly one immutable scorecard and select at most one outcome-blind F01.
 
 Incremental monetary cost remains **0 USD**.
-
-<!-- US-EIA-GEN-F01 terminal State Integrity verification trigger -->
