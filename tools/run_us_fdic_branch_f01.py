@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Execution trigger: first immutable run under contract 6568d9bd0d897abb0bcabf8eaf04f2e54f50177f.
 from __future__ import annotations
 import csv, hashlib, io, json, time, urllib.parse, urllib.request
 from collections import defaultdict
@@ -90,7 +91,6 @@ for y in YEARS:
         historical.append(rr)
 source_manifest['historical_sod_pages']=year_pages
 
-# Structural calculations only on 2022-2024 historical SOD.
 def norm(v):
     if v is None: return ''
     s=str(v).strip()
@@ -102,7 +102,6 @@ usable=[]; valid=0
 for r in historical:
     x={k:norm(r.get(k)) for k in FIELDS}
     if all(x[k] for k in ('YEAR','CERT','BRNUM','UNINUMBR')): valid+=1
-    # structurally usable = all branch identity/year keys present; deposit may be blank without invalidating identity
     if all(x[k] for k in ('YEAR','CERT','BRNUM','UNINUMBR')): usable.append(x)
 
 by_uni=defaultdict(list)
@@ -115,7 +114,6 @@ all3=sum(v=={'2022','2023','2024'} for v in yearsets.values())
 cert_change=sum(len({x['CERT'] for x in xs})>=2 for xs in by_uni.values())
 valid_rate=(valid/len(historical)) if historical else 0.0
 
-# Persist exposure-only historical manifest; no names/addresses and no future rows.
 manbuf=io.StringIO(); w=csv.writer(manbuf); w.writerow(['UNINUMBR','YEAR','CERT','BRNUM'])
 for x in sorted(usable,key=lambda z:(z['UNINUMBR'],z['YEAR'],z['CERT'],z['BRNUM'])):
     w.writerow([x['UNINUMBR'],x['YEAR'],x['CERT'],x['BRNUM']])
@@ -123,11 +121,9 @@ manbytes=manbuf.getvalue().encode()
 (OUT/'historical_exposure_manifest.csv').write_bytes(manbytes)
 (OUT/'source_manifest.json').write_text(json.dumps(source_manifest,indent=2,sort_keys=True)+'\n')
 
-# Schema evidence: BankFind docs/OpenAPI is the machine-readable source. The SOD UI metadata is separately fingerprinted.
 openapi_has_sod=('SOD' in swagger_text and 'UNINUMBR' in meta_blob)
 openapi_has_location=('LOCATION' in swagger_text)
 openapi_has_history=('HISTORY' in swagger_text)
-# 2025 row access is forbidden; future readiness is schema-level only.
 future_schema_has_uninumbr=('UNINUMBR' in meta_blob)
 
 def req(n,name,passed,evidence): return {'number':n,'name':name,'pass':bool(passed),'evidence':evidence}
