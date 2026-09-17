@@ -1,0 +1,94 @@
+name: Activate US-EPA-XMEDIA-F01
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/activate-us-epa-xmedia-f01.yml'
+      - 'tools/activate_us_epa_xmedia_f01.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: read
+
+jobs:
+  activate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify frozen contract and live Issue
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python -m py_compile tools/activate_us_epa_xmedia_f01.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c == {
+            'checkpoint_id':'CHK-20260917-PORTFOLIO-R34-TERMINAL',
+            'active_issue':'none',
+            'active_research':'NONE',
+            'last_completed_issue':149,
+            'last_completed_research':'PORTFOLIO-R34',
+            'last_decision':'DEC-211',
+            'updated':'2026-09-17',
+          }
+          s=Path('research/US-EPA-XMEDIA-F01/README.md').read_text()
+          assert 'status: CONTRACT_FROZEN_PRE_ISSUE' in s
+          assert 'effluent_violation_rows_opened: false' in s
+          assert 'relationship_computed: false' in s
+          assert 'pipeline_rcra_downloads.zip' in s
+          assert 'frs_downloads.zip' in s
+          assert 'npdes_downloads.zip' in s
+          assert 'PASS_US_EPA_XMEDIA_F01_EXACT_FRS_CROSS_PROGRAM_JOIN_READY' in s
+          assert 'HOLD_US_EPA_XMEDIA_F01_SOURCE_SCHEMA_SCOPE_OR_IDENTITY' in s
+          print('US_EPA_XMEDIA_F01_PREISSUE_CONTRACT_VERIFY_PASS')
+          PY
+          test "$(git log -1 --format=%H -- research/US-EPA-XMEDIA-F01/README.md)" = "86a7a01ba3b64160ee21a7ea821536d3d1adbb14"
+          test "$(gh api repos/${GITHUB_REPOSITORY}/issues/150 --jq .state)" = "open"
+
+      - name: Activate F01 canonical state
+        run: python tools/activate_us_epa_xmedia_f01.py
+
+      - name: Verify active mirrors
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c == {
+            'checkpoint_id':'CHK-20260917-US-EPA-XMEDIA-F01-ACTIVE',
+            'active_issue':150,
+            'active_research':'US-EPA-XMEDIA-F01',
+            'last_completed_issue':149,
+            'last_completed_research':'PORTFOLIO-R34',
+            'last_decision':'DEC-212',
+            'updated':'2026-09-17',
+          }
+          assert 'US_EPA_XMEDIA_F01_ACTIVE__OUTCOME_BLIND_EXACT_FRS_CROSS_PROGRAM_FEASIBILITY' in Path('STATUS.md').read_text()
+          assert Path('registry/DEC-212.md').exists()
+          assert '`DEC-212`' in Path('registry/DECISION_LOG.md').read_text()
+          print('US_EPA_XMEDIA_F01_ACTIVATION_VERIFY_PASS')
+          PY
+
+      - name: Commit activation
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add registry/DEC-212.md registry/DECISION_LOG.md STATUS.md context/checkpoint.json context/SESSION_HANDOFF.md
+          git commit -m 'Activate US-EPA-XMEDIA-F01'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Confirm zero-cost and outcome firewall
+        run: |
+          echo 'ICIS-NPDES Part 2 / NPDES_EFF_VIOLATIONS.csv is forbidden.'
+          echo 'DMR outcome values, limits, exceedance rows are forbidden.'
+          echo 'Incremental monetary cost: 0 USD.'
