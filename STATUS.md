@@ -19,3 +19,5 @@ US-FDIC-BRANCH-N01 is terminal scientific HOLD: 15/18 frozen gates passed, but a
 Return to an independent portfolio reselection. Do not relax the 75% balance gates, ratio band, quartile exposure, matching order, or CERT × STALPBR strata after observing N01 support.
 
 Incremental monetary cost remains **0 USD**.
+
+<!-- terminal-state verification trigger: US-FDIC-BRANCH-N01 baseline-balance HOLD -->
