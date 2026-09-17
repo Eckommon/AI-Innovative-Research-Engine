@@ -1,22 +1,29 @@
 ---
-checkpoint_id: CHK-20260917-US-EPA-XMEDIA-E01-ACTIVE
-active_issue: 152
-active_research: US-EPA-XMEDIA-E01
-last_completed_issue: 151
-last_completed_research: US-EPA-XMEDIA-N01
-last_decision: DEC-216
+checkpoint_id: CHK-20260917-US-EPA-XMEDIA-E01-TERMINAL
+active_issue: none
+active_research: NONE
+last_completed_issue: 152
+last_completed_research: US-EPA-XMEDIA-E01
+last_decision: DEC-217
 updated: 2026-09-17
 ---
 
 # Session Handoff / 세션 인계
 
-- state: `US_EPA_XMEDIA_E01_ACTIVE__FROZEN_2024_E90_PAIRED_OUTCOME`
-- Issue: #152
-- E01 contract: `46938afda3fbeaf9349a3c508502f8d4a3c973a3`
-- N01 manifest: `19e1b3a1963fe008811aa230336e12ec69a348b03cf37bd656ea9d3fba8e5aaf`
-- pairs: 307
-- endpoint: 2024 E90 occurrence only
+- state: `US_EPA_XMEDIA_E01_TERMINAL_NO_PREREGISTERED_POSITIVE__PORTFOLIO_RESELECTION_REQUIRED`
+- E01 gate: `NO_PREREGISTERED_POSITIVE_US_EPA_XMEDIA_E01_RELATIONSHIP`
+- source Run: `35168068999`
+- immutable staging: `3852773636146fb48414c98a825d6bedb8cfd6c1`
+- frozen pairs: 307
+- HIGH risk: 0.05537459
+- LOW risk: 0.03583062
+- RD: 0.01954397
+- b/c: 12/6
+- exact paired p: 0.237884521484
+- branch rescue authorized: false
+- facility ranking / enforcement targeting: false
 - cost: 0 USD
 
 ## Exact restart point
-Execute immutable E01 outcome gate exactly as frozen.
+
+Start `PORTFOLIO-R35` as an independent Stage-0 reselection. Do not alter or reinterpret the completed EPA E01 design.

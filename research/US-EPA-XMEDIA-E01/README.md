@@ -136,3 +136,8 @@ It must not be described as:
 ## Cost boundary / 비용 경계
 
 Incremental monetary cost must remain **0 USD**. No paid API, paid dataset or paid compute may be used without explicit user approval.
+
+
+## Terminal E01 result / E01 최종 결과
+
+**`NO_PREREGISTERED_POSITIVE_US_EPA_XMEDIA_E01_RELATIONSHIP`** — Run `35168068999`: HIGH **5.54%**, LOW **3.58%**, RD **+1.95pp**, `b/c=12/6`, exact p **0.237885**. The frozen positive/material gate was not met. No rescue or secondary-endpoint mining is authorized. See `RESULT.md`.

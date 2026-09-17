@@ -1,21 +1,21 @@
 ---
-checkpoint_id: CHK-20260917-US-EPA-XMEDIA-E01-ACTIVE
-active_issue: 152
-active_research: US-EPA-XMEDIA-E01
-last_completed_issue: 151
-last_completed_research: US-EPA-XMEDIA-N01
-last_decision: DEC-216
+checkpoint_id: CHK-20260917-US-EPA-XMEDIA-E01-TERMINAL
+active_issue: none
+active_research: NONE
+last_completed_issue: 152
+last_completed_research: US-EPA-XMEDIA-E01
+last_decision: DEC-217
 updated: 2026-09-17
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `US_EPA_XMEDIA_E01_ACTIVE__FROZEN_2024_E90_PAIRED_OUTCOME`
+**State / 상태:** `US_EPA_XMEDIA_E01_TERMINAL_NO_PREREGISTERED_POSITIVE__PORTFOLIO_RESELECTION_REQUIRED`
 
-E01 is active under the frozen pre-Issue contract. Exactly 307 N01 pairs are locked. Only calendar-2024 E90 occurrence may now be opened from the 22 matched-state official EPA effluent-violation distributions.
+US-EPA-XMEDIA-E01 is terminal at **`NO_PREREGISTERED_POSITIVE_US_EPA_XMEDIA_E01_RELATIONSHIP`**. Frozen 307-pair calendar-2024 E90 outcome: HIGH **5.54%**, LOW **3.58%**, RD **+1.95pp**, exact p **0.237885**. The preregistered positive/material gate was not met.
 
 ## Exact next action / 정확한 다음 행동
 
-Execute one immutable E01 run. No pair/window/endpoint/threshold change is permitted after outcome access.
+Start independent `PORTFOLIO-R35` Stage-0 reselection. Do not rescue the EPA branch by changing endpoint, window, threshold, matching or secondary outcomes.
 
 Incremental monetary cost remains **0 USD**.
