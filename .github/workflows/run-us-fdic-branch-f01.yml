@@ -1,0 +1,73 @@
+name: Run US-FDIC-BRANCH-F01
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/run_us_fdic_branch_f01.py'
+      - '.github/workflows/run-us-fdic-branch-f01.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: read
+jobs:
+  run-f01:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify active authorization and frozen contract
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git cat-file -e 6568d9bd0d897abb0bcabf8eaf04f2e54f50177f^{commit}
+          git cat-file -e b8063ff71c3b9b7aa05a5c6cae2325901af6d531^{commit}
+          test -f research/US-FDIC-BRANCH-F01/SOURCE_PREFLIGHT.md
+          test ! -e research/US-FDIC-BRANCH-F01/staging/f01_result.json
+          gh issue view 160 --repo '${{ github.repository }}' --json state --jq '.state' | grep -qx OPEN
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          cp=json.loads(Path('context/checkpoint.json').read_text())
+          assert cp['active_issue']==160
+          assert cp['active_research']=='US-FDIC-BRANCH-F01'
+          assert cp['last_decision']=='DEC-232'
+          PY
+      - name: Execute immutable outcome-blind exact physical-branch structural gate
+        run: python tools/run_us_fdic_branch_f01.py
+      - name: Verify future-outcome firewall and frozen gate shape
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('research/US-FDIC-BRANCH-F01/staging/f01_result.json')
+          x=json.loads(p.read_text())
+          assert x['requirements_total']==18
+          assert x['gate'] in {
+            'PASS_US_FDIC_BRANCH_F01_EXACT_PHYSICAL_BRANCH_LONGITUDINAL_DESIGN_READY',
+            'HOLD_US_FDIC_BRANCH_F01_EXACT_PHYSICAL_BRANCH_LONGITUDINAL_DESIGN_NOT_READY'
+          }
+          b=x['boundaries']
+          assert not b['future_2025_sod_data_rows_opened']
+          assert not b['future_branch_membership_opened']
+          assert not b['future_history_event_membership_opened']
+          assert not b['future_closure_noncontinuation_computed']
+          assert not b['fuzzy_name_address_zip_geo_manual_identity_repair_used']
+          assert x['incremental_monetary_cost_usd']==0
+          print(x['gate'])
+          print('requirements',x['requirements_passed'],'/18')
+          PY
+      - name: Commit immutable F01 evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-FDIC-BRANCH-F01/staging
+          git commit -m 'Record US-FDIC-BRANCH-F01 immutable structural result'
+          git push origin HEAD:main
+      - name: Confirm research boundary
+        run: |
+          echo 'Only 2022-2024 SOD rows were opened.'
+          echo 'No 2025 SOD row or future BankFind location/history membership was queried.'
+          echo 'No N01/E01 relationship or outcome analysis is authorized by this workflow.'
+          echo 'Incremental cost = 0 USD.'
