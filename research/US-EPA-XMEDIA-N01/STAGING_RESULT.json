@@ -1,0 +1,268 @@
+{
+  "activation_decision": "DEC-214",
+  "boundaries": {
+    "causal_claim_made": false,
+    "dmr_outcome_rows_opened": false,
+    "future_outcome_membership_opened": false,
+    "identity_repair_used": false,
+    "npdes_effluent_violation_rows_opened": false,
+    "predictive_metric_computed": false,
+    "rcra_violation_outcome_rows_opened": false,
+    "relationship_computed": false
+  },
+  "contract_commit": "12f30d5d27d7d4f27022bc355c2a0c62a76e9f0c",
+  "diagnostics": {
+    "all_structural_strata": 146,
+    "baseline_ratio_within_1_3_to_3_rate": 0.7785016286644951,
+    "eligible_registry_ids": 2170,
+    "exclusions": {
+      "no_baseline_eval": 2558,
+      "npdes_facility_ambiguous": 17,
+      "permit_anchor": 2827,
+      "permit_scope": 1190,
+      "permit_terminal_before_followup_end": 2392,
+      "rcra_exact_pair_missing": 30510
+    },
+    "frs_exact_cross_program_registry_ids": 60677,
+    "frs_exact_one_to_one_registry_ids": 41664,
+    "manifest_sha256": "19e1b3a1963fe008811aa230336e12ec69a348b03cf37bd656ea9d3fba8e5aaf",
+    "matched_pairs": 307,
+    "matched_state_count": 22,
+    "matched_states": [
+      "AL",
+      "AR",
+      "CA",
+      "FL",
+      "GA",
+      "IN",
+      "KY",
+      "MD",
+      "MI",
+      "MO",
+      "MS",
+      "NC",
+      "NJ",
+      "NV",
+      "OH",
+      "OR",
+      "PA",
+      "SC",
+      "TN",
+      "TX",
+      "WI",
+      "WV"
+    ],
+    "permit_age_difference_within_10y_rate": 0.9674267100977199,
+    "rcra_conflicting_isn_source_ids": 0,
+    "strict_separation_strata": 24
+  },
+  "gate": "PASS_US_EPA_XMEDIA_N01_MATCHED_MONITORING_INTENSITY_DESIGN_IDENTIFIABLE",
+  "generated_utc": "2026-09-17T00:41:28Z",
+  "incremental_monetary_cost_usd": 0,
+  "issue": 151,
+  "requirements": [
+    {
+      "evidence": {
+        "frs": {
+          "bytes": 364802817,
+          "member_fingerprint_sha256": "169a585ff21e03e81f904528d0d7069055e91428755d04df5dfa855c84b26d13",
+          "sha256": "ffa59a6d08392b813e770a5faeec9617cf279bc83aba9c7cf0095e62c909b64c",
+          "url": "https://echo.epa.gov/files/echodownloads/frs_downloads.zip"
+        },
+        "npdes": {
+          "bytes": 350329008,
+          "member_fingerprint_sha256": "26229777ad10375310461f23bc9a5e88311cdbb4adf02c65d3b86fe298c5f2e4",
+          "sha256": "4ae143fd5260c9f9003905c08d1ff2d2c2ad13db177f88e0982d5aa55cfde9c9",
+          "url": "https://echo.epa.gov/files/echodownloads/npdes_downloads.zip"
+        },
+        "rcra": {
+          "bytes": 52037366,
+          "member_fingerprint_sha256": "57579eaca9f99faae983419ac50718ee29c5b90dc949c7f9d463d14227428d6d",
+          "sha256": "0071b0c6dc9c387425d875a871a7cffc116f38a867cfcb30ed217167241b7f35",
+          "url": "https://echo.epa.gov/files/echodownloads/pipeline_rcra_downloads.zip"
+        }
+      },
+      "name": "authorized structural tables readable",
+      "number": 1,
+      "pass": true
+    },
+    {
+      "evidence": {
+        "fac": [],
+        "frs": [],
+        "permit": [],
+        "rcra": []
+      },
+      "name": "all frozen required fields present",
+      "number": 2,
+      "pass": true
+    },
+    {
+      "evidence": {
+        "causal_claim_made": false,
+        "dmr_outcome_rows_opened": false,
+        "future_outcome_membership_opened": false,
+        "identity_repair_used": false,
+        "npdes_effluent_violation_rows_opened": false,
+        "predictive_metric_computed": false,
+        "rcra_violation_outcome_rows_opened": false,
+        "relationship_computed": false
+      },
+      "name": "no forbidden outcome table opened",
+      "number": 3,
+      "pass": true
+    },
+    {
+      "evidence": {
+        "identity_repair_used": false,
+        "one_to_one_registry_ids": 41664
+      },
+      "name": "exact one-to-one identity only",
+      "number": 4,
+      "pass": true
+    },
+    {
+      "evidence": 2170,
+      "name": ">=1000 structurally eligible Registry IDs",
+      "number": 5,
+      "pass": true
+    },
+    {
+      "evidence": 24,
+      "name": ">=20 strict-separation strata",
+      "number": 6,
+      "pass": true
+    },
+    {
+      "evidence": 307,
+      "name": ">=250 matched pairs",
+      "number": 7,
+      "pass": true
+    },
+    {
+      "evidence": [
+        "AL",
+        "AR",
+        "CA",
+        "FL",
+        "GA",
+        "IN",
+        "KY",
+        "MD",
+        "MI",
+        "MO",
+        "MS",
+        "NC",
+        "NJ",
+        "NV",
+        "OH",
+        "OR",
+        "PA",
+        "SC",
+        "TN",
+        "TX",
+        "WI",
+        "WV"
+      ],
+      "name": ">=20 matched states",
+      "number": 8,
+      "pass": true
+    },
+    {
+      "evidence": true,
+      "name": "HIGH exposure strictly exceeds LOW",
+      "number": 9,
+      "pass": true
+    },
+    {
+      "evidence": true,
+      "name": "no Registry/RCRA/NPDES ID reuse",
+      "number": 10,
+      "pass": true
+    },
+    {
+      "evidence": 0.7785016286644951,
+      "name": ">=75% baseline eval-count ratio within [1/3,3]",
+      "number": 11,
+      "pass": true
+    },
+    {
+      "evidence": 0.9674267100977199,
+      "name": ">=75% permit-age difference <=10 years",
+      "number": 12,
+      "pass": true
+    },
+    {
+      "evidence": "19e1b3a1963fe008811aa230336e12ec69a348b03cf37bd656ea9d3fba8e5aaf",
+      "name": "deterministic manifest SHA-256 persisted",
+      "number": 13,
+      "pass": true
+    },
+    {
+      "evidence": false,
+      "name": "NPDES effluent rows unopened",
+      "number": 14,
+      "pass": true
+    },
+    {
+      "evidence": {
+        "dmr": false,
+        "future": false
+      },
+      "name": "DMR and future outcome membership unopened",
+      "number": 15,
+      "pass": true
+    },
+    {
+      "evidence": false,
+      "name": "RCRA violation outcomes unopened",
+      "number": 16,
+      "pass": true
+    },
+    {
+      "evidence": {
+        "causal_claim_made": false,
+        "dmr_outcome_rows_opened": false,
+        "future_outcome_membership_opened": false,
+        "identity_repair_used": false,
+        "npdes_effluent_violation_rows_opened": false,
+        "predictive_metric_computed": false,
+        "rcra_violation_outcome_rows_opened": false,
+        "relationship_computed": false
+      },
+      "name": "no relationship/prediction/causality",
+      "number": 17,
+      "pass": true
+    },
+    {
+      "evidence": 0,
+      "name": "zero incremental monetary cost",
+      "number": 18,
+      "pass": true
+    }
+  ],
+  "requirements_passed": 18,
+  "requirements_total": 18,
+  "research": "US-EPA-XMEDIA-N01",
+  "scientific_disposition": "PASS",
+  "sources": {
+    "frs": {
+      "bytes": 364802817,
+      "member_fingerprint_sha256": "169a585ff21e03e81f904528d0d7069055e91428755d04df5dfa855c84b26d13",
+      "sha256": "ffa59a6d08392b813e770a5faeec9617cf279bc83aba9c7cf0095e62c909b64c",
+      "url": "https://echo.epa.gov/files/echodownloads/frs_downloads.zip"
+    },
+    "npdes": {
+      "bytes": 350329008,
+      "member_fingerprint_sha256": "26229777ad10375310461f23bc9a5e88311cdbb4adf02c65d3b86fe298c5f2e4",
+      "sha256": "4ae143fd5260c9f9003905c08d1ff2d2c2ad13db177f88e0982d5aa55cfde9c9",
+      "url": "https://echo.epa.gov/files/echodownloads/npdes_downloads.zip"
+    },
+    "rcra": {
+      "bytes": 52037366,
+      "member_fingerprint_sha256": "57579eaca9f99faae983419ac50718ee29c5b90dc949c7f9d463d14227428d6d",
+      "sha256": "0071b0c6dc9c387425d875a871a7cffc116f38a867cfcb30ed217167241b7f35",
+      "url": "https://echo.epa.gov/files/echodownloads/pipeline_rcra_downloads.zip"
+    }
+  }
+}
