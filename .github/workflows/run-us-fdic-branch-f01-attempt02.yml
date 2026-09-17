@@ -1,0 +1,78 @@
+name: Run US-FDIC-BRANCH-F01 Attempt 02
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/run_us_fdic_branch_f01_attempt02.py'
+      - '.github/workflows/run-us-fdic-branch-f01-attempt02.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: read
+jobs:
+  run-attempt-02:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify correction boundary and live Issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git cat-file -e 6568d9bd0d897abb0bcabf8eaf04f2e54f50177f^{commit}
+          git cat-file -e b8063ff71c3b9b7aa05a5c6cae2325901af6d531^{commit}
+          git cat-file -e 08403a21ef34462149b3a22228c3f3a02300b50f^{commit}
+          test -f research/US-FDIC-BRANCH-F01/staging/f01_result.json
+          test ! -e research/US-FDIC-BRANCH-F01/staging/attempt-02/f01_result.json
+          gh issue view 160 --repo '${{ github.repository }}' --json state --jq '.state' | grep -qx OPEN
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          cp=json.loads(Path('context/checkpoint.json').read_text())
+          assert cp['active_issue']==160
+          assert cp['active_research']=='US-FDIC-BRANCH-F01'
+          assert cp['last_decision']=='DEC-232'
+          x=json.loads(Path('research/US-FDIC-BRANCH-F01/staging/f01_result.json').read_text())
+          assert x['requirements_passed']==17
+          assert x['requirements'][7]['number']==8 and not x['requirements'][7]['pass']
+          assert x['diagnostics']['structurally_usable_branch_year_rows']==233669
+          PY
+      - name: Execute rowless 2025 schema-resolution correction
+        run: python tools/run_us_fdic_branch_f01_attempt02.py
+      - name: Verify frozen contract unchanged and future rows sealed
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          x=json.loads(Path('research/US-FDIC-BRANCH-F01/staging/attempt-02/f01_result.json').read_text())
+          assert x['contract_commit']=='6568d9bd0d897abb0bcabf8eaf04f2e54f50177f'
+          assert x['requirements_total']==18
+          assert x['gate'] in {
+            'PASS_US_FDIC_BRANCH_F01_EXACT_PHYSICAL_BRANCH_LONGITUDINAL_DESIGN_READY',
+            'HOLD_US_FDIC_BRANCH_F01_EXACT_PHYSICAL_BRANCH_LONGITUDINAL_DESIGN_NOT_READY'
+          }
+          b=x['boundaries']
+          assert not b['future_2025_sod_data_rows_opened']
+          assert not b['future_branch_membership_opened']
+          assert not b['future_history_event_membership_opened']
+          assert not b['future_closure_noncontinuation_computed']
+          assert x['incremental_monetary_cost_usd']==0
+          e=json.loads(Path('research/US-FDIC-BRANCH-F01/staging/attempt-02/rowless_2025_schema_evidence.json').read_text())
+          assert e['method']=='HEAD' and e['response_body_read'] is False
+          print(x['gate'])
+          print('requirements',x['requirements_passed'],'/18')
+          PY
+      - name: Commit immutable attempt 02 evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-FDIC-BRANCH-F01/staging/attempt-02
+          git commit -m 'Record US-FDIC-BRANCH-F01 immutable attempt 02 result'
+          git push origin HEAD:main
+      - name: Confirm boundary
+        run: |
+          echo 'Attempt 01 remains immutable.'
+          echo 'Attempt 02 changes only schema-resolution transport for frozen requirement #8.'
+          echo 'No 2025 SOD response body or future branch/event membership was opened; cost=0 USD.'
