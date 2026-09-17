@@ -1,10 +1,10 @@
 ---
-checkpoint_id: CHK-20260917-US-EPA-XMEDIA-F01-ACTIVE
-active_issue: 150
-active_research: US-EPA-XMEDIA-F01
-last_completed_issue: 149
-last_completed_research: PORTFOLIO-R34
-last_decision: DEC-212
+checkpoint_id: CHK-20260917-US-EPA-XMEDIA-F01-TERMINAL
+active_issue: none
+active_research: NONE
+last_completed_issue: 150
+last_completed_research: US-EPA-XMEDIA-F01
+last_decision: DEC-213
 updated: 2026-09-17
 ---
 
@@ -12,19 +12,18 @@ updated: 2026-09-17
 
 ## Canonical state / 정본 상태
 
-- state: `US_EPA_XMEDIA_F01_ACTIVE__OUTCOME_BLIND_EXACT_FRS_CROSS_PROGRAM_FEASIBILITY`
-- active Issue: `#150`
-- authorization: `DEC-212`
-- pre-Issue contract commit: `86a7a01ba3b64160ee21a7ea821536d3d1adbb14`
-- RCRA source: `pipeline_rcra_downloads.zip`
-- FRS source: `frs_downloads.zip`
-- NPDES source: `npdes_downloads.zip` (Part 1 only)
-- exact identity: official FRS `REGISTRY_ID` bridge only
-- NPDES Part 2 opened: false
-- DMR outcome rows opened: false
-- relationship computed: false
+- state: `US_EPA_XMEDIA_F01_PASS__N01_AUTHORIZATION_REQUIRED`
+- gate: `PASS_US_EPA_XMEDIA_F01_EXACT_FRS_CROSS_PROGRAM_JOIN_READY`
+- corrected source run: `35166942067`
+- corrected immutable staging commit: `7a9599ae76af2e93d5806a0473ad17f6bbc1ac93`
+- FRS cross-program Registry intersection: 60,677
+- fully cross-supported Registry IDs: 18,415
+- RCRA exact FRS corroboration: 100.000000%
+- NPDES exact FRS corroboration: 99.997598%
+- Part 2/DMR outcome rows opened: false
+- relationship/prediction/causality: false
 - cost: 0 USD
 
 ## Exact restart point / 정확한 재개점
 
-Implement and run the frozen F01 source/schema/exact-FRS feasibility gate. Preserve implementation failures separately from scientific PASS/HOLD. Do not alter sources, thresholds, identity rules or outcome firewall after reading source bytes.
+Freeze `US-EPA-XMEDIA-N01` before Issue binding. Preserve the F01 source-level outcome firewall until a later separately authorized E01.

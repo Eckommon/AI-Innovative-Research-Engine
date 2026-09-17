@@ -216,3 +216,8 @@ F01 may not download/read/query/open/persist or derive:
 Bind this already-frozen contract to one dedicated Issue. Then create a separate activation decision and canonical active-state mirrors. Only after activation may the official-source-only runner download the three authorized ZIPs and evaluate the 18 frozen structural requirements. Part 2 effluent violations and DMR outcome rows must remain unopened.
 
 Incremental monetary cost remains **0 USD**.
+
+
+## Terminal F01 result / F01 최종 결과
+
+**`PASS_US_EPA_XMEDIA_F01_EXACT_FRS_CROSS_PROGRAM_JOIN_READY`** — corrected immutable Run `35166942067` passed all 18 frozen requirements. The original staging artifact is preserved; a mechanical date-parser correction changed no contract/source/threshold/identity/outcome boundary. Part 2 and DMR outcomes remain unopened. See `RESULT.md`.
