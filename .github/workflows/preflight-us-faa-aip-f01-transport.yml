@@ -1,0 +1,24 @@
+name: Preflight US-FAA-AIP-F01 transport
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/preflight_us_faa_aip_f01_transport.py'
+      - '.github/workflows/preflight-us-faa-aip-f01-transport.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install transport-only dependencies
+        run: python -m pip install --disable-pip-version-check -q requests beautifulsoup4
+      - name: Inspect official download transport without opening outcomes
+        run: python tools/preflight_us_faa_aip_f01_transport.py
+      - name: Confirm boundary
+        run: |
+          echo 'Preflight inspects only FAA file links, FAA LID header, and BTS Master Coordinate download form metadata.'
+          echo 'No delay/cancellation/diversion/cause values or empirical bridge-support counts are opened.'
