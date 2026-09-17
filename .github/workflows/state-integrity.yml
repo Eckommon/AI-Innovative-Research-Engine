@@ -18,6 +18,7 @@ name: State Integrity / 상태 무결성
 # US-EPA-XMEDIA-E01 terminal-state recheck: verify canonical no-positive terminal after bot-authored push/issue suppression.
 # PORTFOLIO-R35 terminal-state recheck: verify canonical FAA-AIP selection after bot-authored push/issue suppression.
 # US-FAA-AIP-F01 terminal-state recheck: verify canonical frozen state-concordance HOLD after bot-authored push/issue suppression.
+# US-FSIS-SAMPLE-F01 terminal-state recheck: verify transport-blocked terminal state is distinct from scientific HOLD.
 
 on:
   push:
