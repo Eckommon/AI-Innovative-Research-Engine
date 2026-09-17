@@ -1,10 +1,10 @@
 ---
-checkpoint_id: CHK-20260917-US-EPA-XMEDIA-F01-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20260917-US-EPA-XMEDIA-N01-ACTIVE
+active_issue: 151
+active_research: US-EPA-XMEDIA-N01
 last_completed_issue: 150
 last_completed_research: US-EPA-XMEDIA-F01
-last_decision: DEC-213
+last_decision: DEC-214
 updated: 2026-09-17
 ---
 
@@ -12,18 +12,16 @@ updated: 2026-09-17
 
 ## Canonical state / 정본 상태
 
-- state: `US_EPA_XMEDIA_F01_PASS__N01_AUTHORIZATION_REQUIRED`
-- gate: `PASS_US_EPA_XMEDIA_F01_EXACT_FRS_CROSS_PROGRAM_JOIN_READY`
-- corrected source run: `35166942067`
-- corrected immutable staging commit: `7a9599ae76af2e93d5806a0473ad17f6bbc1ac93`
-- FRS cross-program Registry intersection: 60,677
-- fully cross-supported Registry IDs: 18,415
-- RCRA exact FRS corroboration: 100.000000%
-- NPDES exact FRS corroboration: 99.997598%
-- Part 2/DMR outcome rows opened: false
+- state: `US_EPA_XMEDIA_N01_ACTIVE__OUTCOME_BLIND_MATCHED_MONITORING_INTENSITY_DESIGN`
+- Issue: #151
+- contract: `12f30d5d27d7d4f27022bc355c2a0c62a76e9f0c`
+- baseline window: 2018–2020
+- exposure window: 2021–2023
+- future E01 window: 2024
+- E90/DMR/RCRA outcome rows opened: false
 - relationship/prediction/causality: false
 - cost: 0 USD
 
 ## Exact restart point / 정확한 재개점
 
-Freeze `US-EPA-XMEDIA-N01` before Issue binding. Preserve the F01 source-level outcome firewall until a later separately authorized E01.
+Execute N01 exactly as frozen and persist a deterministic structural pair manifest plus PASS/HOLD staging result. Future E01 remains unauthorized.
