@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Trigger: Issue #161 now exists; scientific contract remains c0f9f412b88b4ff54fd9999ff57fc3c4be40f374.
 from pathlib import Path
 import json
 
