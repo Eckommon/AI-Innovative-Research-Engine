@@ -1,0 +1,70 @@
+name: Finalize US-EIA-GEN-F01 HOLD
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/finalize_us_eia_gen_f01.py'
+      - '.github/workflows/finalize-us-eia-gen-f01.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: write
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify immutable HOLD evidence and live Issue
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git cat-file -e 3cc19e706fa341c7bf27b919f8abd9e07855292d^{commit}
+          python - <<'PY'
+          import json, os, urllib.request
+          from pathlib import Path
+          x=json.loads(Path('research/US-EIA-GEN-F01/STAGING_RESULT.json').read_text())
+          assert x['gate']=='HOLD_US_EIA_GEN_F01_COLOCATED_SOLAR_STORAGE_LONGITUDINAL_DESIGN_NOT_READY'
+          assert x['requirements_passed']==17 and x['requirements_total']==18
+          failed=[r for r in x['requirements'] if not r['pass']]
+          assert len(failed)==1 and failed[0]['number']==8 and failed[0]['evidence']==664
+          cp=json.loads(Path('context/checkpoint.json').read_text())
+          assert str(cp['active_issue']) in {'156','#156'}
+          assert cp['active_research']=='US-EIA-GEN-F01'
+          assert cp['last_decision']=='DEC-224'
+          req=urllib.request.Request('https://api.github.com/repos/Eckommon/AI-Innovative-Research-Engine/issues/156',headers={'Authorization':f"Bearer {os.environ['GH_TOKEN']}",'Accept':'application/vnd.github+json'})
+          with urllib.request.urlopen(req,timeout=20) as r: issue=json.load(r)
+          assert issue['state']=='open'
+          PY
+      - name: Build terminal durable state
+        run: python tools/finalize_us_eia_gen_f01.py
+      - name: Verify local checkpoint mirrors
+        run: python tools/check_checkpoint.py
+      - name: Commit terminal state locally
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-EIA-GEN-F01/RESULT.md registry/DEC-225.md registry/DECISION_LOG.md context/checkpoint.json STATUS.md context/SESSION_HANDOFF.md
+          git commit -m 'Finalize US-EIA-GEN-F01 frozen cohort-size HOLD'
+      - name: Close Issue 156 completed
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY'
+          import json, os, urllib.request
+          url='https://api.github.com/repos/Eckommon/AI-Innovative-Research-Engine/issues/156'
+          data=json.dumps({'state':'closed','state_reason':'completed'}).encode()
+          req=urllib.request.Request(url,data=data,method='PATCH',headers={'Authorization':f"Bearer {os.environ['GH_TOKEN']}",'Accept':'application/vnd.github+json','Content-Type':'application/json'})
+          with urllib.request.urlopen(req,timeout=20) as r: x=json.load(r)
+          assert x['state']=='closed'
+          PY
+      - name: Push terminal state
+        run: git push origin HEAD:main
+      - name: Confirm terminal boundary
+        run: |
+          echo 'US-EIA-GEN-F01 terminal HOLD: frozen >=1000 focal cohort gate failed at 664.'
+          echo 'N01 remains unauthorized; future outcomes unopened; no threshold/window rescue; cost=0 USD.'
