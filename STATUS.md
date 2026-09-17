@@ -19,3 +19,5 @@ US-FDIC-BRANCH-F01 is terminal PASS at 18/18 frozen requirements. Exact `UNINUMB
 Design and freeze a separate outcome-blind `US-FDIC-BRANCH-N01` contract **before** opening its Issue. N01 may use only already-authorized historical structural evidence while prospectively fixing exposure/comparator and future-disposition adjudication rules. E01 remains unauthorized.
 
 Incremental monetary cost remains **0 USD**.
+
+<!-- terminal-state verification trigger: US-FDIC-BRANCH-F01 exact-UNINUMBR PASS -->
