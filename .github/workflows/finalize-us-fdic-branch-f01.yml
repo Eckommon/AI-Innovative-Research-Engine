@@ -1,0 +1,58 @@
+name: Finalize US-FDIC-BRANCH-F01 PASS
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/finalize_us_fdic_branch_f01.py'
+      - '.github/workflows/finalize-us-fdic-branch-f01.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: write
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify immutable PASS evidence and live Issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git cat-file -e bfba6b52c8b09257d3430f6661b663779c23eb63^{commit}
+          test ! -e registry/DEC-233.md
+          gh issue view 160 --repo '${{ github.repository }}' --json state --jq '.state' | grep -qx OPEN
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          cp=json.loads(Path('context/checkpoint.json').read_text())
+          assert cp['active_issue']==160 and cp['active_research']=='US-FDIC-BRANCH-F01'
+          assert cp['last_decision']=='DEC-232'
+          x=json.loads(Path('research/US-FDIC-BRANCH-F01/staging/attempt-02/f01_result.json').read_text())
+          assert x['gate']=='PASS_US_FDIC_BRANCH_F01_EXACT_PHYSICAL_BRANCH_LONGITUDINAL_DESIGN_READY'
+          assert x['requirements_passed']==18 and x['requirements_total']==18
+          assert all(v is False for v in x['boundaries'].values())
+          PY
+      - name: Build terminal durable state
+        run: python tools/finalize_us_fdic_branch_f01.py
+      - name: Verify local checkpoint mirrors
+        run: python tools/check_checkpoint.py
+      - name: Commit terminal state locally
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-FDIC-BRANCH-F01/RESULT.md registry/DEC-233.md registry/DECISION_LOG.md context/checkpoint.json STATUS.md context/SESSION_HANDOFF.md
+          git commit -m 'Finalize US-FDIC-BRANCH-F01 structural PASS'
+      - name: Close Issue 160 completed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh issue close 160 --repo '${{ github.repository }}' --reason completed
+      - name: Push terminal state
+        run: git push origin HEAD:main
+      - name: Confirm terminal boundary
+        run: |
+          echo 'F01 terminal PASS; N01 design only authorized.'
+          echo 'No 2025 SOD row or future branch/history membership has been opened.'
+          echo 'E01 remains unauthorized; cost=0 USD.'
