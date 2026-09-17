@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260917-US-EIA-GEN-F01-ACTIVE",
-  "active_issue": 156,
-  "active_research": "US-EIA-GEN-F01",
-  "last_completed_issue": 155,
-  "last_completed_research": "PORTFOLIO-R36",
-  "last_decision": "DEC-224",
+  "checkpoint_id": "CHK-20260917-US-EIA-GEN-F01-TERMINAL",
+  "active_issue": "none",
+  "active_research": "NONE",
+  "last_completed_issue": 156,
+  "last_completed_research": "US-EIA-GEN-F01",
+  "last_decision": "DEC-225",
   "updated": "2026-09-17"
 }
