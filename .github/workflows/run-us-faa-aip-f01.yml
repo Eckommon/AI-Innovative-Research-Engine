@@ -1,0 +1,68 @@
+name: Run US-FAA-AIP-F01
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/run_us_faa_aip_f01.py'
+      - '.github/workflows/run-us-faa-aip-f01.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: read
+jobs:
+  run-f01:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify frozen contract and active authorization
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          test -f research/US-FAA-AIP-F01/README.md
+          git cat-file -e 4f9a2a3491bc00c0fd1e00a7b0d3bc0bc62d4254^{commit}
+          python - <<'PY'
+          from pathlib import Path
+          import json, os, urllib.request
+          cp=json.loads(Path('context/checkpoint.json').read_text())
+          assert str(cp.get('active_issue')) in {'154','#154'}
+          assert cp.get('active_research') == 'US-FAA-AIP-F01'
+          assert cp.get('last_decision') == 'DEC-220'
+          req=urllib.request.Request('https://api.github.com/repos/Eckommon/AI-Innovative-Research-Engine/issues/154',headers={'Authorization':f"Bearer {os.environ['GH_TOKEN']}",'Accept':'application/vnd.github+json'})
+          with urllib.request.urlopen(req,timeout=20) as r: issue=json.load(r)
+          assert issue['state']=='open'
+          PY
+      - name: Install zero-cost parser dependencies
+        run: python -m pip install --disable-pip-version-check -q requests beautifulsoup4 openpyxl
+      - name: Execute immutable outcome-blind exact airport/time join gate
+        run: |
+          test ! -e research/US-FAA-AIP-F01/STAGING_RESULT.json
+          python tools/run_us_faa_aip_f01.py
+      - name: Verify outcome firewall and frozen gate shape
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('research/US-FAA-AIP-F01/STAGING_RESULT.json')
+          x=json.loads(p.read_text())
+          assert x['requirements_total']==17
+          assert x['gate'] in {'PASS_US_FAA_AIP_F01_EXACT_AIRPORT_TIME_JOIN_READY','HOLD_US_FAA_AIP_F01_EXACT_AIRPORT_TIME_JOIN_NOT_READY'}
+          b=x['boundaries']
+          forbidden=['delay_values_opened','cancellation_values_opened','diversion_values_opened','delay_cause_values_opened','relationship_computed','predictive_metric_computed','causal_claim_made','airport_ranking_made','project_effectiveness_computed','grant_conditioned_delay_statistics_computed','fuzzy_name_address_geo_manual_identity_repair_used']
+          assert all(b[k] is False for k in forbidden)
+          assert x['incremental_monetary_cost_usd']==0
+          PY
+      - name: Commit immutable F01 evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-FAA-AIP-F01/STAGING_RESULT.json
+          git commit -m 'Record US-FAA-AIP-F01 immutable structural result'
+          git push origin HEAD:main
+      - name: Confirm research boundary
+        run: |
+          echo 'F01 opens no delay, cancellation, diversion, or cause outcome values.'
+          echo 'No paid API or paid compute used.'
