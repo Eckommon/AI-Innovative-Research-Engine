@@ -1,0 +1,149 @@
+{
+  "docs": {
+    "bytes": 33773,
+    "sha256": "7cd38f317509a4ee44cfff06aceff872c6a8f2039eaa0240585289363956552e",
+    "url": "https://api.fdic.gov/banks/docs"
+  },
+  "future_row_requests_made": 0,
+  "historical_sod_pages": {
+    "2022": [
+      {
+        "bytes": 1134774,
+        "offset": 0,
+        "sha256": "55156f06b9eb3c439b9e5426be73f7bdc93b904290ff83b6224a377c3fad092b"
+      },
+      {
+        "bytes": 1155037,
+        "offset": 10000,
+        "sha256": "f709a9634bb56bed6e359c8971a245afd088568f17e4faf96c7c966832117bd5"
+      },
+      {
+        "bytes": 1133091,
+        "offset": 20000,
+        "sha256": "24b449fbe6596076aca2d32cf47925055593bbc1761e3c8ba4374bcb671ad77c"
+      },
+      {
+        "bytes": 1134714,
+        "offset": 30000,
+        "sha256": "7be8f09cbf0512a0141fb52ef47fbe97d187d6857c4f51c8877c8039558d1ae5"
+      },
+      {
+        "bytes": 1134563,
+        "offset": 40000,
+        "sha256": "3bede3bca6cc1838894e257018cb7b5be6651a887a13ac4426e137065167f20f"
+      },
+      {
+        "bytes": 1132163,
+        "offset": 50000,
+        "sha256": "e043a6ad8bb284fd0687bd006fc241080ae4405d41c0302e747738a11586e206"
+      },
+      {
+        "bytes": 1130415,
+        "offset": 60000,
+        "sha256": "a6adf9e2c31467e72ff5bd6abbc2af4e5e0c4e5e59fc9fd5d7bbd8ccbf00b8b6"
+      },
+      {
+        "bytes": 1037491,
+        "offset": 70000,
+        "sha256": "007a161faaac985d51e632d675044439e0ebd89330b2cf2bf1d45563a99ec512"
+      }
+    ],
+    "2023": [
+      {
+        "bytes": 1123455,
+        "offset": 0,
+        "sha256": "9fc825fb08306c706a050f65a211e9bb640855838f1d7140e03317c2cb3676a1"
+      },
+      {
+        "bytes": 1133258,
+        "offset": 10000,
+        "sha256": "597fca1ff46592421c5f5d22b1e614bdaaa29faa361a130ca2734f04665da9ee"
+      },
+      {
+        "bytes": 1124362,
+        "offset": 20000,
+        "sha256": "ea42c7c1b2bb332cc4e249ee545eaf059c4b925faf84a774c7e430409e2a5b64"
+      },
+      {
+        "bytes": 1138695,
+        "offset": 30000,
+        "sha256": "27bb9bd39264a255c726c0fd5e3cec53626963e1b4aac77c1333d9ca4b093ce6"
+      },
+      {
+        "bytes": 1130423,
+        "offset": 40000,
+        "sha256": "a76933d5e124c3fdc380ea6283879528001f996b27900e7eb73d227740118e14"
+      },
+      {
+        "bytes": 1128481,
+        "offset": 50000,
+        "sha256": "5be54bf8e936abce106c2e1fd14701b3ffd33fe000554b501da87df24c99eb03"
+      },
+      {
+        "bytes": 1139091,
+        "offset": 60000,
+        "sha256": "bc680e7d274e6bf1b058f82351d75ee8c573b74ae9a1e93ba40009b751f96f7d"
+      },
+      {
+        "bytes": 866707,
+        "offset": 70000,
+        "sha256": "e149bab661f375b303be9e07c19b85a8b2c33e88c7a569608d1aa82a1db01c5c"
+      }
+    ],
+    "2024": [
+      {
+        "bytes": 1123861,
+        "offset": 0,
+        "sha256": "fe8d1c32bff50fb601b0e4e83c78211880b18d2dd7d7fa534c4aca3643647781"
+      },
+      {
+        "bytes": 1133296,
+        "offset": 10000,
+        "sha256": "2e32205f5f78382ab7eb9cc97ffbfaee2f54885c9a78861cdfc5d1e3d412d4bb"
+      },
+      {
+        "bytes": 1124897,
+        "offset": 20000,
+        "sha256": "5e5e6d07621ccb6ee782ed623781ba250549df606d81b27af0e7ec5374f801be"
+      },
+      {
+        "bytes": 1138873,
+        "offset": 30000,
+        "sha256": "f8ff48803ba1a5c33fb73cde2b655d38a6268c04caf6420e376cdde7f1c8169f"
+      },
+      {
+        "bytes": 1128189,
+        "offset": 40000,
+        "sha256": "e756a5061a6d4cf5ee6df429329dbd4084db5fa313d5c8d0d6d6388821626d51"
+      },
+      {
+        "bytes": 1130142,
+        "offset": 50000,
+        "sha256": "11144b8e66ae557c352c2d88c2840e3e972a4a9d8f611c6144d746b638d19136"
+      },
+      {
+        "bytes": 1136957,
+        "offset": 60000,
+        "sha256": "62747702976b22efdd557d6727a4bd782e380cbfa84dd5a8f7837a7c4b51e75e"
+      },
+      {
+        "bytes": 750839,
+        "offset": 70000,
+        "sha256": "26bc7d70f680600f5bb6d158e262d6c7ea2ead34d6c542f7c26320480ab920ba"
+      }
+    ]
+  },
+  "history_row_requests_made": 0,
+  "location_row_requests_made": 0,
+  "openapi": {
+    "bytes": 34749,
+    "sha256": "854500ae68d77185a12fc9260e0bbc0194e3848df0e54086f828656ea508852b",
+    "url": "https://api.fdic.gov/banks/docs/swagger.yaml"
+  },
+  "preflight_commit": "b8063ff71c3b9b7aa05a5c6cae2325901af6d531",
+  "sod_custom_download_metadata": {
+    "bytes": 578,
+    "sha256": "81786742c6c8fb9fcae1694660f8ef873065edf49038a053f2a009c3b18f7cd9",
+    "url": "https://banks.data.fdic.gov/bankfind-suite/SOD/customDownload"
+  }
+}
