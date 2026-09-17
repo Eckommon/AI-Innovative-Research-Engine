@@ -1,0 +1,83 @@
+name: Run US-IRS-EO-F01 Immutable Gate Attempt 02
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/run-us-irs-eo-f01-attempt02.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: read
+jobs:
+  f01-attempt02:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify active authorization and immutable Attempt 02 slot
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git cat-file -e 689a00db411b650defcb679bef998beeb55a57da^{commit}
+          git cat-file -e d3026031bb7e5b90e63709589e226cd99babc590^{commit}
+          git cat-file -e 3c10711e25dfbd86cd143262d9ec12318465fb72^{commit}
+          gh issue view 163 --repo '${{ github.repository }}' --json state --jq '.state' | grep -qx OPEN
+          test -e research/US-IRS-EO-F01/evidence/attempt-01.json
+          test -e research/US-IRS-EO-F01/evidence/attempt-01.md
+          test ! -e research/US-IRS-EO-F01/evidence/attempt-02.json
+          test ! -e research/US-IRS-EO-F01/evidence/attempt-02.md
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          cp=json.loads(Path('context/checkpoint.json').read_text())
+          assert cp['checkpoint_id']=='CHK-20260918-US-IRS-EO-F01-ACTIVE'
+          assert cp['active_issue']==163
+          assert cp['active_research']=='US-IRS-EO-F01'
+          assert cp['last_decision']=='DEC-237'
+          a1=json.loads(Path('research/US-IRS-EO-F01/evidence/attempt-01.json').read_text())
+          assert a1['attempt_valid'] is True
+          assert a1['failed_gates']==[11]
+          assert a1['pass_count']==17
+          assert a1['future_outcome_rows_opened']==0
+          assert a1['future_form990_2025_2026_rows_opened']==0
+          assert a1['automatic_revocation_entity_body_bytes_consumed']==0
+          corr=Path('research/US-IRS-EO-F01/IMPLEMENTATION_CORRECTION_02.md').read_text()
+          assert 'Gate 11 threshold unchanged at **≥99.00%**' in corr
+          assert 'Scientific thresholds changed' not in corr or 'threshold' in corr
+          PY
+      - name: Execute parser-only corrected 18-gate attempt
+        env:
+          IRS_EO_F01_ISSUE_BOUND: '1'
+          IRS_EO_F01_CONTRACT_SHA: '689a00db411b650defcb679bef998beeb55a57da'
+        run: python tools/run_us_irs_eo_f01_attempt02.py
+      - name: Verify outcome firewall and correction boundary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          e=json.loads(Path('research/US-IRS-EO-F01/evidence/attempt-02.json').read_text())
+          assert e['attempt']==2
+          assert e['future_outcome_rows_opened']==0
+          assert e['future_form990_2025_2026_rows_opened']==0
+          assert e['automatic_revocation_entity_body_bytes_consumed']==0
+          assert e['nonfiling_streak_exposure_variables_constructed']==0
+          assert e['incremental_monetary_cost_usd']==0
+          assert e['scientific_threshold_changed'] is False
+          assert e['source_years_changed'] is False
+          assert e['identity_rule_changed'] is False
+          assert e['outcome_firewall_changed'] is False
+          print(e['disposition'], e.get('pass_count'), e.get('failed_gates'))
+          print(e.get('submission_date_precision_counts'))
+          PY
+      - name: Commit immutable Attempt 02 evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-IRS-EO-F01/evidence/attempt-02.json research/US-IRS-EO-F01/evidence/attempt-02.md
+          git commit -m 'Record US-IRS-EO-F01 immutable attempt 02'
+          git push origin HEAD:main
+      - name: Report boundary
+        run: |
+          echo 'Automatic Revocation rows remained sealed. Attempt 02 changed only the documented SUB_DATE parser representation.'
