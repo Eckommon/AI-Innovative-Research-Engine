@@ -1,0 +1,51 @@
+name: Activate US-IRS-EO-F01
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/activate-us-irs-eo-f01.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: read
+jobs:
+  activate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify frozen contract and live Issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git cat-file -e 689a00db411b650defcb679bef998beeb55a57da^{commit}
+          gh issue view 163 --repo '${{ github.repository }}' --json state --jq '.state' | grep -qx OPEN
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          cp=json.loads(Path('context/checkpoint.json').read_text())
+          assert cp['checkpoint_id']=='CHK-20260918-PORTFOLIO-R39-TERMINAL'
+          assert cp['last_decision']=='DEC-236'
+          c=Path('research/US-IRS-EO-F01/README.md').read_text()
+          assert 'status: CONTRACT_FROZEN_PRE_ISSUE' in c
+          assert 'future_outcome_membership_opened: false' in c
+          assert 'PASS_US_IRS_EO_F01_EXACT_EIN_JOIN_READY' in c
+          PY
+      - name: Build active durable state
+        run: python tools/activate_us_irs_eo_f01.py
+      - name: Verify checkpoint mirrors
+        run: python tools/check_checkpoint.py
+      - name: Commit active state
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add registry/DEC-237.md registry/DECISION_LOG.md context/checkpoint.json STATUS.md context/SESSION_HANDOFF.md
+          git commit -m 'Activate US-IRS-EO-F01 exact EIN gate'
+      - name: Push active state
+        run: git push origin HEAD:main
+      - name: Confirm firewall
+        run: |
+          echo 'Authorized: 2022-2024 Form-990 index rows only.'
+          echo 'Automatic Revocation rows unopened; 2025/2026 indexes unopened; nonfiling-trigger exposure prohibited; cost=0 USD.'
