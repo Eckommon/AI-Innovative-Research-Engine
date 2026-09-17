@@ -19,3 +19,5 @@ R36 selected `US-EIA-GEN-001` at 39/45. Candidate outcome rows remain unopened.
 Design and freeze a separate outcome-blind `US-EIA-GEN-F01` contract before opening its Issue. F01 must test official EIA source access, snapshot lineage, exact plant-code + generator-ID continuity, schedule/status schema and cardinality without calculating commissioning slippage.
 
 Incremental monetary cost remains **0 USD**.
+
+<!-- PORTFOLIO-R36 terminal State Integrity verification trigger -->
