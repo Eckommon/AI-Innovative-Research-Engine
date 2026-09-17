@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260918-US-FSIS-SAMPLE-F01-TERMINAL",
-  "active_issue": "none",
-  "active_research": "NONE",
+  "checkpoint_id": "CHK-20260918-PORTFOLIO-R38-ACTIVE",
+  "active_issue": 159,
+  "active_research": "PORTFOLIO-R38",
   "last_completed_issue": 158,
   "last_completed_research": "US-FSIS-SAMPLE-F01",
-  "last_decision": "DEC-229",
+  "last_decision": "DEC-230",
   "updated": "2026-09-18"
 }

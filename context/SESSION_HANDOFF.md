@@ -1,25 +1,21 @@
 ---
-checkpoint_id: CHK-20260918-US-FSIS-SAMPLE-F01-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20260918-PORTFOLIO-R38-ACTIVE
+active_issue: 159
+active_research: PORTFOLIO-R38
 last_completed_issue: 158
 last_completed_research: US-FSIS-SAMPLE-F01
-last_decision: DEC-229
+last_decision: DEC-230
 updated: 2026-09-18
 ---
 
 # Session Handoff / 세션 인계
 
-`US_FSIS_SAMPLE_F01_TRANSPORT_BLOCKED__SCIENTIFIC_GATE_NOT_EXECUTED__PORTFOLIO_RESELECTION_REQUIRED`
+`PORTFOLIO_R38_ACTIVE__SOURCE_LITERATURE_REVALIDATION_PENDING`
 
-- Issue #158 terminal operationally.
-- Frozen contract: `1c7496ad5f4f6d82900fd60f0a31d3406cf217dc`.
-- Scientific 18-gate execution: **NOT EXECUTED**.
-- Run `35197113668`: Azure westus + curl -> official FSIS landing page HTTP 403 before data access.
-- Run `35246170772`: Azure centralus + real Chromium -> same HTTP 403 before data access.
-- No `STAGING_RESULT.json` or exposure manifest exists.
-- No FY2021-FY2023 support count was observed.
-- Candidate 2024-2025 recall/public-health-alert membership remains unopened.
-- `US-FSIS-SAMPLE-N01` not authorized.
-- Next: independent portfolio reselection.
+- Issue #159 open.
+- Frozen contract: `81216245922df756667295a4ffeb89fb41bd274f`.
+- Candidates: FRA crossing, FDIC branch, FCC BDC provider, CMS dialysis.
+- Candidate outcome rows unopened.
+- FSIS remains transport-blocked; scientific gate not executed.
+- Next: revalidation -> one immutable scorecard -> at most one F01.
 - Cost: 0 USD.
