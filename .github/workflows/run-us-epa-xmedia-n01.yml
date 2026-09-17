@@ -1,0 +1,88 @@
+name: Run US-EPA-XMEDIA-N01
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/run-us-epa-xmedia-n01.yml'
+      - 'tools/run_us_epa_xmedia_n01.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: read
+
+jobs:
+  run-n01:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify active authorization and frozen contract
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python -m py_compile tools/run_us_epa_xmedia_f01.py tools/run_us_epa_xmedia_n01.py
+          test "$(git log -1 --format=%H -- research/US-EPA-XMEDIA-N01/README.md)" = "12f30d5d27d7d4f27022bc355c2a0c62a76e9f0c"
+          test "$(gh api repos/${GITHUB_REPOSITORY}/issues/151 --jq .state)" = "open"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c == {
+            'checkpoint_id':'CHK-20260917-US-EPA-XMEDIA-N01-ACTIVE',
+            'active_issue':151,
+            'active_research':'US-EPA-XMEDIA-N01',
+            'last_completed_issue':150,
+            'last_completed_research':'US-EPA-XMEDIA-F01',
+            'last_decision':'DEC-214',
+            'updated':'2026-09-17',
+          }
+          assert not Path('research/US-EPA-XMEDIA-N01/STAGING_RESULT.json').exists()
+          assert not Path('research/US-EPA-XMEDIA-N01/DESIGN_MANIFEST.json').exists()
+          src=Path('tools/run_us_epa_xmedia_n01.py').read_text()
+          # Runner inherits exactly the three F01-authorized structural ZIP routes.
+          assert 'run_us_epa_xmedia_f01' in src
+          assert 'NPDES_EFF_VIOLATIONS.csv' not in src
+          assert 'npdes_part2' not in src.lower()
+          assert 'dmr_downloads' not in src.lower()
+          print('US_EPA_XMEDIA_N01_AUTHORIZATION_VERIFY_PASS')
+          PY
+      - name: Execute immutable outcome-blind matched-design gate
+        run: python tools/run_us_epa_xmedia_n01.py
+      - name: Verify staging boundary and manifest
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('research/US-EPA-XMEDIA-N01/STAGING_RESULT.json').read_text())
+          m=json.loads(Path('research/US-EPA-XMEDIA-N01/DESIGN_MANIFEST.json').read_text())
+          assert r['contract_commit']=='12f30d5d27d7d4f27022bc355c2a0c62a76e9f0c'
+          assert r['requirements_total']==18 and len(r['requirements'])==18
+          assert r['gate'] in {
+            'PASS_US_EPA_XMEDIA_N01_MATCHED_MONITORING_INTENSITY_DESIGN_IDENTIFIABLE',
+            'HOLD_US_EPA_XMEDIA_N01_MATCHED_MONITORING_INTENSITY_DESIGN_NOT_IDENTIFIABLE',
+          }
+          b=r['boundaries']
+          for k in ('npdes_effluent_violation_rows_opened','dmr_outcome_rows_opened','rcra_violation_outcome_rows_opened','future_outcome_membership_opened','relationship_computed','predictive_metric_computed','causal_claim_made','identity_repair_used'):
+              assert b[k] is False, (k,b[k])
+          assert m['outcome_membership_included'] is False
+          assert m['canonical_core_sha256']==r['diagnostics']['manifest_sha256']
+          assert r['incremental_monetary_cost_usd']==0
+          print(r['gate'], f"{r['requirements_passed']}/18", 'eligible=',r['diagnostics']['eligible_registry_ids'],'pairs=',r['diagnostics']['matched_pairs'])
+          PY
+      - name: Commit immutable N01 design evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-EPA-XMEDIA-N01/STAGING_RESULT.json research/US-EPA-XMEDIA-N01/DESIGN_MANIFEST.json
+          git commit -m 'Record US-EPA-XMEDIA-N01 immutable design result'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Confirm outcome firewall
+        run: |
+          echo 'No Part 2/E90/DMR/RCRA violation outcome row was opened.'
+          echo 'Incremental monetary cost: 0 USD.'
