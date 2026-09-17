@@ -13,6 +13,7 @@ name: State Integrity / 상태 무결성
 # US-FTA-TRANSIT-F01 terminal-state recheck: verify canonical post-finalization state after bot-authored push/issue suppression.
 # US-FTA-TRANSIT-N01 terminal-state recheck: verify canonical post-finalization state after bot-authored push/issue suppression.
 # PORTFOLIO-R34 terminal-state recheck: verify canonical post-finalization state after bot-authored push/issue suppression.
+# US-EPA-XMEDIA-F01 terminal-state recheck: verify corrected canonical post-finalization state after bot-authored push/issue suppression.
 
 on:
   push:
