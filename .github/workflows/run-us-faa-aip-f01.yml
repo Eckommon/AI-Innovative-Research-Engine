@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - 'tools/run_us_faa_aip_f01.py'
+      - 'tools/run_us_faa_aip_f01_transport_fix.py'
       - '.github/workflows/run-us-faa-aip-f01.yml'
   workflow_dispatch:
 permissions:
@@ -40,7 +41,7 @@ jobs:
       - name: Execute immutable outcome-blind exact airport/time join gate
         run: |
           test ! -e research/US-FAA-AIP-F01/STAGING_RESULT.json
-          python tools/run_us_faa_aip_f01.py
+          python tools/run_us_faa_aip_f01_transport_fix.py
       - name: Verify outcome firewall and frozen gate shape
         run: |
           python - <<'PY'
