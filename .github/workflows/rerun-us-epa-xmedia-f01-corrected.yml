@@ -1,0 +1,98 @@
+name: Corrected rerun US-EPA-XMEDIA-F01
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/rerun-us-epa-xmedia-f01-corrected.yml'
+      - 'tools/run_us_epa_xmedia_f01_corrected.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: read
+
+jobs:
+  corrected-rerun:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify correction is implementation-only
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python -m py_compile tools/run_us_epa_xmedia_f01.py tools/run_us_epa_xmedia_f01_corrected.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c['checkpoint_id']=='CHK-20260917-US-EPA-XMEDIA-F01-ACTIVE'
+          assert c['active_issue']==150
+          assert c['last_decision']=='DEC-212'
+          old=json.loads(Path('research/US-EPA-XMEDIA-F01/STAGING_RESULT.json').read_text())
+          assert old['gate']=='PASS_US_EPA_XMEDIA_F01_EXACT_FRS_CROSS_PROGRAM_JOIN_READY'
+          assert old['requirements_passed']==18 and old['requirements_total']==18
+          assert old['effluent_violation_rows_opened'] is False
+          assert old['dmr_outcome_rows_opened'] is False
+          assert old['relationship_computed'] is False
+          assert not Path('research/US-EPA-XMEDIA-F01/STAGING_RESULT_CORRECTED.json').exists()
+          correction=Path('tools/run_us_epa_xmedia_f01_corrected.py').read_text()
+          assert 'contract_changed": False' in correction
+          assert 'sources_changed": False' in correction
+          assert 'thresholds_changed": False' in correction
+          assert 'identity_rules_changed": False' in correction
+          assert 'outcome_firewall_changed": False' in correction
+          print('US_EPA_XMEDIA_F01_IMPLEMENTATION_ONLY_CORRECTION_VERIFY_PASS')
+          PY
+          test "$(gh api repos/${GITHUB_REPOSITORY}/issues/150 --jq .state)" = "open"
+          test "$(git log -1 --format=%H -- research/US-EPA-XMEDIA-F01/README.md)" = "86a7a01ba3b64160ee21a7ea821536d3d1adbb14"
+
+      - name: Execute corrected immutable rerun
+        run: python tools/run_us_epa_xmedia_f01_corrected.py
+
+      - name: Verify corrected evidence and unchanged gate boundary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          old=json.loads(Path('research/US-EPA-XMEDIA-F01/STAGING_RESULT.json').read_text())
+          new=json.loads(Path('research/US-EPA-XMEDIA-F01/STAGING_RESULT_CORRECTED.json').read_text())
+          assert new['requirements_total']==18
+          assert new['gate'] in {
+            'PASS_US_EPA_XMEDIA_F01_EXACT_FRS_CROSS_PROGRAM_JOIN_READY',
+            'HOLD_US_EPA_XMEDIA_F01_SOURCE_SCHEMA_SCOPE_OR_IDENTITY',
+          }
+          assert new['effluent_violation_rows_opened'] is False
+          assert new['dmr_outcome_rows_opened'] is False
+          assert new['relationship_computed'] is False
+          assert new['predictive_metric_computed'] is False
+          assert new['causal_claim_made'] is False
+          assert new['incremental_monetary_cost_usd']==0
+          assert new['implementation_correction']['contract_changed'] is False
+          yrs=new['measurements']['npdes_permit_date_years']
+          assert all(1900 <= y <= 2100 for y in yrs)
+          print('old_gate=', old['gate'])
+          print('corrected_gate=', new['gate'])
+          print('corrected_requirements=', f"{new['requirements_passed']}/{new['requirements_total']}")
+          print('permit_year_range=', min(yrs), max(yrs), 'n=', len(yrs))
+          PY
+
+      - name: Commit corrected immutable staging evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-EPA-XMEDIA-F01/STAGING_RESULT_CORRECTED.json
+          git commit -m 'Record corrected US-EPA-XMEDIA-F01 staging result'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Confirm frozen boundary
+        run: |
+          echo 'Original staging evidence preserved.'
+          echo 'Contract, sources, thresholds, identity rules and outcome firewall unchanged.'
+          echo 'Incremental monetary cost: 0 USD.'
