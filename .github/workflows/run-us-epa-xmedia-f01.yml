@@ -1,0 +1,99 @@
+name: Run US-EPA-XMEDIA-F01
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/run-us-epa-xmedia-f01.yml'
+      - 'tools/run_us_epa_xmedia_f01.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: read
+
+jobs:
+  run-f01:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify active authorization and frozen contract
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python -m py_compile tools/run_us_epa_xmedia_f01.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c == {
+            'checkpoint_id':'CHK-20260917-US-EPA-XMEDIA-F01-ACTIVE',
+            'active_issue':150,
+            'active_research':'US-EPA-XMEDIA-F01',
+            'last_completed_issue':149,
+            'last_completed_research':'PORTFOLIO-R34',
+            'last_decision':'DEC-212',
+            'updated':'2026-09-17',
+          }
+          s=Path('research/US-EPA-XMEDIA-F01/README.md').read_text()
+          assert 'PASS_US_EPA_XMEDIA_F01_EXACT_FRS_CROSS_PROGRAM_JOIN_READY' in s
+          assert 'HOLD_US_EPA_XMEDIA_F01_SOURCE_SCHEMA_SCOPE_OR_IDENTITY' in s
+          assert 'effluent_violation_rows_opened: false' in s
+          assert 'relationship_computed: false' in s
+          assert not Path('research/US-EPA-XMEDIA-F01/STAGING_RESULT.json').exists()
+          src=Path('tools/run_us_epa_xmedia_f01.py').read_text()
+          # Exactly three authorized download URLs; no forbidden downstream endpoint URL.
+          assert src.count('https://echo.epa.gov/files/echodownloads/') == 3
+          assert 'NPDES_EFF_VIOLATIONS.csv' not in src
+          assert 'npdes_part2' not in src.lower()
+          print('US_EPA_XMEDIA_F01_AUTHORIZATION_VERIFY_PASS')
+          PY
+          test "$(git log -1 --format=%H -- research/US-EPA-XMEDIA-F01/README.md)" = "86a7a01ba3b64160ee21a7ea821536d3d1adbb14"
+          test "$(gh api repos/${GITHUB_REPOSITORY}/issues/150 --jq .state)" = "open"
+
+      - name: Execute immutable outcome-blind structural gate
+        run: python tools/run_us_epa_xmedia_f01.py
+
+      - name: Verify staging outcome firewall and requirement ledger
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('research/US-EPA-XMEDIA-F01/STAGING_RESULT.json')
+          r=json.loads(p.read_text())
+          assert r['contract_commit']=='86a7a01ba3b64160ee21a7ea821536d3d1adbb14'
+          assert r['activation_decision']=='DEC-212'
+          assert r['requirements_total']==18
+          assert len(r['requirements'])==18
+          assert r['gate'] in {
+            'PASS_US_EPA_XMEDIA_F01_EXACT_FRS_CROSS_PROGRAM_JOIN_READY',
+            'HOLD_US_EPA_XMEDIA_F01_SOURCE_SCHEMA_SCOPE_OR_IDENTITY',
+          }
+          assert r['effluent_violation_rows_opened'] is False
+          assert r['dmr_outcome_rows_opened'] is False
+          assert r['relationship_computed'] is False
+          assert r['predictive_metric_computed'] is False
+          assert r['causal_claim_made'] is False
+          assert r['incremental_monetary_cost_usd']==0
+          print(r['gate'], f"{r['requirements_passed']}/{r['requirements_total']}")
+          PY
+
+      - name: Commit immutable staging evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-EPA-XMEDIA-F01/STAGING_RESULT.json
+          git commit -m 'Record US-EPA-XMEDIA-F01 immutable staging result'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Confirm zero-cost boundary
+        run: |
+          echo 'Only official EPA public ZIPs were used.'
+          echo 'No Part 2 effluent-violation or DMR outcome source was accessed.'
+          echo 'Incremental monetary cost: 0 USD.'
