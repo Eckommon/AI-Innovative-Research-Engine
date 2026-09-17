@@ -1,23 +1,21 @@
 ---
-checkpoint_id: CHK-20260918-PORTFOLIO-R38-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20260918-US-FDIC-BRANCH-F01-ACTIVE
+active_issue: 160
+active_research: US-FDIC-BRANCH-F01
 last_completed_issue: 159
 last_completed_research: PORTFOLIO-R38
-last_decision: DEC-231
+last_decision: DEC-232
 updated: 2026-09-18
 ---
 
 # Session Handoff / 세션 인계
 
-`PORTFOLIO_R38_SELECTED_US_FDIC_BRANCH_001__F01_AUTHORIZATION_REQUIRED`
+`US_FDIC_BRANCH_F01_ACTIVE__OUTCOME_BLIND_EXACT_PHYSICAL_BRANCH_GATE`
 
-- Issue #159 completed.
-- Contract: `81216245922df756667295a4ffeb89fb41bd274f`.
-- Revalidation: `51c51480bd1adff6e37676266d15b42a54ca29fd`.
-- Scorecard: `293ee57618f94b934312ffcdc776277e24d76691`.
-- Selected: FDIC branch 39/45.
-- CMS 36 HOLD; FRA 35 HOLD; FCC 34 HOLD.
-- Candidate future event membership unopened.
-- Next: pre-Issue `US-FDIC-BRANCH-F01` structural contract.
+- Issue #160 open.
+- Contract: `6568d9bd0d897abb0bcabf8eaf04f2e54f50177f`.
+- Historical row access authorized: SOD 2022, 2023, 2024 only.
+- Primary identity: exact UNINUMBR.
+- Future 2024-07-01–2025-06-30 closure/event membership unopened.
+- N01/E01 not authorized.
 - Cost: 0 USD.
