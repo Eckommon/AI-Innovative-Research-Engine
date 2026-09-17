@@ -1,0 +1,59 @@
+name: Finalize US-FDIC-BRANCH-N01 HOLD
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/finalize_us_fdic_branch_n01.py'
+      - '.github/workflows/finalize-us-fdic-branch-n01.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: write
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify immutable HOLD evidence and live Issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git cat-file -e 074df7191d38970e3082cb846fd7a397dfe30ce9^{commit}
+          test ! -e registry/DEC-235.md
+          gh issue view 161 --repo '${{ github.repository }}' --json state --jq '.state' | grep -qx OPEN
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          cp=json.loads(Path('context/checkpoint.json').read_text())
+          assert cp['active_issue']==161 and cp['active_research']=='US-FDIC-BRANCH-N01'
+          assert cp['last_decision']=='DEC-234'
+          x=json.loads(Path('research/US-FDIC-BRANCH-N01/staging/n01_result.json').read_text())
+          assert x['gate']=='HOLD_US_FDIC_BRANCH_N01_MATCHED_NETWORK_POSITION_TRAJECTORY_DESIGN_NOT_IDENTIFIABLE'
+          assert x['requirements_passed']==15 and x['requirements_total']==18
+          assert [r['number'] for r in x['requirements'] if not r['pass']]==[12,13,14]
+          assert all(v is False for v in x['boundaries'].values())
+          PY
+      - name: Build terminal durable state
+        run: python tools/finalize_us_fdic_branch_n01.py
+      - name: Verify local checkpoint mirrors
+        run: python tools/check_checkpoint.py
+      - name: Commit terminal state locally
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-FDIC-BRANCH-N01/RESULT.md registry/DEC-235.md registry/DECISION_LOG.md context/checkpoint.json STATUS.md context/SESSION_HANDOFF.md
+          git commit -m 'Finalize US-FDIC-BRANCH-N01 baseline-balance HOLD'
+      - name: Close Issue 161 completed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh issue close 161 --repo '${{ github.repository }}' --reason completed
+      - name: Push terminal state
+        run: git push origin HEAD:main
+      - name: Confirm terminal boundary
+        run: |
+          echo 'N01 terminal scientific HOLD; E01 not authorized.'
+          echo 'No 2025 SOD or future BankFind branch/event membership was opened.'
+          echo 'Do not relax the frozen balance/matching design; cost=0 USD.'
