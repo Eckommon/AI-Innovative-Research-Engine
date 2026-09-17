@@ -1,21 +1,21 @@
 ---
-checkpoint_id: CHK-20260917-US-EPA-XMEDIA-E01-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20260917-PORTFOLIO-R35-ACTIVE
+active_issue: 153
+active_research: PORTFOLIO-R35
 last_completed_issue: 152
 last_completed_research: US-EPA-XMEDIA-E01
-last_decision: DEC-217
+last_decision: DEC-218
 updated: 2026-09-17
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `US_EPA_XMEDIA_E01_TERMINAL_NO_PREREGISTERED_POSITIVE__PORTFOLIO_RESELECTION_REQUIRED`
+**State / 상태:** `PORTFOLIO_R35_ACTIVE__SOURCE_LITERATURE_REVALIDATION_PENDING`
 
-US-EPA-XMEDIA-E01 is terminal at **`NO_PREREGISTERED_POSITIVE_US_EPA_XMEDIA_E01_RELATIONSHIP`**. Frozen 307-pair calendar-2024 E90 outcome: HIGH **5.54%**, LOW **3.58%**, RD **+1.95pp**, exact p **0.237885**. The preregistered positive/material gate was not met.
+PORTFOLIO-R35 is active under pre-Issue contract `4febd519dfae899897bed8d2c8ab45edb85fb33c`. Exactly four candidates are frozen: `US-FAA-AIP-001`, `US-EPA-DWSRF-001`, `US-PHMSA-LI-001`, and `US-NRC-ROP-001`.
 
 ## Exact next action / 정확한 다음 행동
 
-Start independent `PORTFOLIO-R35` Stage-0 reselection. Do not rescue the EPA branch by changing endpoint, window, threshold, matching or secondary outcomes.
+Persist `research/PORTFOLIO-R35/SOURCE_REVALIDATION.md` for all four candidates without opening candidate outcomes, then persist exactly one immutable scorecard and select at most one next outcome-blind F01.
 
 Incremental monetary cost remains **0 USD**.
