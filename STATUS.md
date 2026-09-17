@@ -19,3 +19,5 @@ US-EIA-GEN-F01 is terminal HOLD: 17/18 frozen gates passed, but the focal planne
 Return to an independent portfolio reselection. Do not lower the 1,000-unit threshold or broaden the January-2024/2024–2025 exposure definition after observing support.
 
 Incremental monetary cost remains **0 USD**.
+
+<!-- US-EIA-GEN-F01 terminal State Integrity verification trigger -->
