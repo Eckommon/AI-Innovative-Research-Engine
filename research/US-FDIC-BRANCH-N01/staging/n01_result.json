@@ -1,0 +1,192 @@
+{
+  "boundaries": {
+    "branch_or_bank_ranking_made": false,
+    "causal_claim_made": false,
+    "future_2025_sod_rows_opened": false,
+    "future_branch_membership_opened": false,
+    "future_closure_noncontinuation_computed": false,
+    "future_structure_event_membership_opened": false,
+    "fuzzy_name_address_zip_geo_manual_identity_repair_used": false,
+    "novelty_claim_made": false,
+    "predictive_metric_computed": false,
+    "relationship_computed": false
+  },
+  "contract_commit": "c0f9f412b88b4ff54fd9999ff57fc3c4be40f374",
+  "diagnostics": {
+    "baseline_2022_deposit_balance_rate": 0.6849502666858873,
+    "baseline_2023_deposit_balance_rate": 0.7346835807986161,
+    "baseline_share_balance_rate": 0.6849502666858873,
+    "candidate_extreme_units": 27748,
+    "dropped_strata_no_strict_separation": 0,
+    "eligible_strata_n_ge8": 1650,
+    "exact_duplicate_rows_collapsed": 0,
+    "exclusions": {
+      "cert_changed_2022_2024": 2381,
+      "nonpositive_2022_or_2024_deposit": 2195,
+      "not_all_three_years": 6520,
+      "state_changed_2022_2024": 9
+    },
+    "historically_eligible_stable_branches": 70113,
+    "matched_pairs": 13874,
+    "pair_manifest_sha256": "c8256947e131df0ae7f98f59f43afb862327e9c782e7db2778ab2fe87b5a2fe8",
+    "positive_2023_pair_count": 13874,
+    "raw_rows": 233669,
+    "same_year_conflict_uninumbr": 0,
+    "states_in_pairs": 52
+  },
+  "gate": "HOLD_US_FDIC_BRANCH_N01_MATCHED_NETWORK_POSITION_TRAJECTORY_DESIGN_NOT_IDENTIFIABLE",
+  "incremental_monetary_cost_usd": 0,
+  "issue": 161,
+  "requirements": [
+    {
+      "evidence": {
+        "pages": 24,
+        "rows": 233669
+      },
+      "name": "official SOD 2022-2024 reproducibly machine-readable at zero incremental cost",
+      "number": 1,
+      "pass": true
+    },
+    {
+      "evidence": [
+        "YEAR",
+        "CERT",
+        "BRNUM",
+        "UNINUMBR",
+        "STALPBR",
+        "DEPSUMBR"
+      ],
+      "name": "all six frozen historical fields present in each year",
+      "number": 2,
+      "pass": true
+    },
+    {
+      "evidence": {
+        "branch_or_bank_ranking_made": false,
+        "causal_claim_made": false,
+        "future_2025_sod_rows_opened": false,
+        "future_branch_membership_opened": false,
+        "future_closure_noncontinuation_computed": false,
+        "future_structure_event_membership_opened": false,
+        "fuzzy_name_address_zip_geo_manual_identity_repair_used": false,
+        "novelty_claim_made": false,
+        "predictive_metric_computed": false,
+        "relationship_computed": false
+      },
+      "name": "no 2025 SOD row or future BankFind branch/event membership opened",
+      "number": 3,
+      "pass": true
+    },
+    {
+      "evidence": {
+        "cert_change_excluded": 2381,
+        "conflict_uninumbr": 0
+      },
+      "name": "exact UNINUMBR only; historical conflicts and ownership changes excluded fail-closed; identity repair false",
+      "number": 4,
+      "pass": true
+    },
+    {
+      "evidence": 70113,
+      "name": ">=50000 historically eligible stable-ownership branches",
+      "number": 5,
+      "pass": true
+    },
+    {
+      "evidence": 1650,
+      "name": ">=500 eligible CERT x STALPBR strata with n>=8",
+      "number": 6,
+      "pass": true
+    },
+    {
+      "evidence": 13874,
+      "name": ">=2000 matched DECLINE-GAIN pairs",
+      "number": 7,
+      "pass": true
+    },
+    {
+      "evidence": 52,
+      "name": "matched pairs span >=30 STALPBR values",
+      "number": 8,
+      "pass": true
+    },
+    {
+      "evidence": true,
+      "name": "every pair has delta DECLINE < delta GAIN",
+      "number": 9,
+      "pass": true
+    },
+    {
+      "evidence": true,
+      "name": "every pair shares exact CERT and STALPBR",
+      "number": 10,
+      "pass": true
+    },
+    {
+      "evidence": true,
+      "name": "no UNINUMBR appears in more than one pair",
+      "number": 11,
+      "pass": true
+    },
+    {
+      "evidence": 0.6849502666858873,
+      "name": ">=75% pairs have 2022 deposit-share ratio within [1/3,3]",
+      "number": 12,
+      "pass": false
+    },
+    {
+      "evidence": 0.6849502666858873,
+      "name": ">=75% pairs have 2022 absolute deposit ratio within [1/3,3]",
+      "number": 13,
+      "pass": false
+    },
+    {
+      "evidence": {
+        "denominator": 13874,
+        "rate": 0.7346835807986161
+      },
+      "name": ">=75% positive-2023 pairs have 2023 absolute deposit ratio within [1/3,3]",
+      "number": 14,
+      "pass": false
+    },
+    {
+      "evidence": "c8256947e131df0ae7f98f59f43afb862327e9c782e7db2778ab2fe87b5a2fe8",
+      "name": "deterministic canonical pair-manifest SHA-256 persisted",
+      "number": 15,
+      "pass": true
+    },
+    {
+      "evidence": {
+        "branch_or_bank_ranking_made": false,
+        "causal_claim_made": false,
+        "future_2025_sod_rows_opened": false,
+        "future_branch_membership_opened": false,
+        "future_closure_noncontinuation_computed": false,
+        "future_structure_event_membership_opened": false,
+        "fuzzy_name_address_zip_geo_manual_identity_repair_used": false,
+        "novelty_claim_made": false,
+        "predictive_metric_computed": false,
+        "relationship_computed": false
+      },
+      "name": "all future-outcome/firewall booleans remain false",
+      "number": 16,
+      "pass": true
+    },
+    {
+      "evidence": false,
+      "name": "relationship prediction causality ranking novelty all remain false",
+      "number": 17,
+      "pass": true
+    },
+    {
+      "evidence": 0,
+      "name": "incremental monetary cost exactly 0 USD",
+      "number": 18,
+      "pass": true
+    }
+  ],
+  "requirements_passed": 15,
+  "requirements_total": 18,
+  "research": "US-FDIC-BRANCH-N01",
+  "scientific_disposition": "HOLD"
+}
