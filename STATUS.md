@@ -1,21 +1,21 @@
 ---
-checkpoint_id: CHK-20260917-PORTFOLIO-R34-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20260917-US-EPA-XMEDIA-F01-ACTIVE
+active_issue: 150
+active_research: US-EPA-XMEDIA-F01
 last_completed_issue: 149
 last_completed_research: PORTFOLIO-R34
-last_decision: DEC-211
+last_decision: DEC-212
 updated: 2026-09-17
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `PORTFOLIO_R34_SELECTED_US_EPA_XMEDIA_001__F01_AUTHORIZATION_REQUIRED`
+**State / 상태:** `US_EPA_XMEDIA_F01_ACTIVE__OUTCOME_BLIND_EXACT_FRS_CROSS_PROGRAM_FEASIBILITY`
 
-PORTFOLIO-R34 is completed with **`SELECT_US_EPA_XMEDIA_001_RCRA_TO_NPDES_F01`** under DEC-211 / CLM-187. Frozen scores: EPA cross-media **41/45**, USCG vessel **38/45**, MSHA **36/45**, BTS-Port **30/45**. No tie-break was required and no candidate outcome magnitude or relationship was opened.
+US-EPA-XMEDIA-F01 is active under Issue #150 / DEC-212. The official RCRA Pipeline, FRS Program Linkages and ICIS-NPDES Part 1 sources, exact FRS identity rules, structural time/cardinality thresholds and all 18 PASS requirements were frozen before Issue binding. NPDES Part 2 effluent-violation rows and DMR outcomes remain unopened and are prohibited in F01.
 
 ## Exact next action / 정확한 다음 행동
 
-Freeze a separate `US-EPA-XMEDIA-F01` contract **before opening its Issue**. F01 must verify current official RCRAInfo / RCRA Pipeline, FRS Program Linkages and ICIS-NPDES source/schema access, exact official Registry-ID cross-program identity, structural date support, aggregate exact facility / permit overlap and deterministic fingerprints. It must not open RCRA-conditioned NPDES effluent-violation occurrence or magnitude.
+Build and execute the official-source-only F01 runner. Evaluate source ZIP integrity, required schemas, exact RCRA↔FRS and NPDES↔FRS identity corroboration, structural date support, aggregate exact cross-program Registry-ID overlap and deterministic fingerprints. Do not access Part 2 effluent violations or DMR outcomes.
 
 Incremental monetary cost remains **0 USD**.
