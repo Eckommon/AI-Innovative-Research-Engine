@@ -1,0 +1,65 @@
+name: Run US-FDIC-BRANCH-N01
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/run_us_fdic_branch_n01.py'
+      - '.github/workflows/run-us-fdic-branch-n01.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: read
+jobs:
+  run-n01:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify active authorization and frozen contract
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git cat-file -e c0f9f412b88b4ff54fd9999ff57fc3c4be40f374^{commit}
+          test ! -e research/US-FDIC-BRANCH-N01/staging/n01_result.json
+          gh issue view 161 --repo '${{ github.repository }}' --json state --jq '.state' | grep -qx OPEN
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          cp=json.loads(Path('context/checkpoint.json').read_text())
+          assert cp['active_issue']==161
+          assert cp['active_research']=='US-FDIC-BRANCH-N01'
+          assert cp['last_decision']=='DEC-234'
+          PY
+      - name: Execute immutable historical matched-design gate
+        run: python tools/run_us_fdic_branch_n01.py
+      - name: Verify future-outcome firewall and frozen gate
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          x=json.loads(Path('research/US-FDIC-BRANCH-N01/staging/n01_result.json').read_text())
+          assert x['requirements_total']==18
+          assert x['gate'] in {
+            'PASS_US_FDIC_BRANCH_N01_MATCHED_NETWORK_POSITION_TRAJECTORY_DESIGN_IDENTIFIABLE',
+            'HOLD_US_FDIC_BRANCH_N01_MATCHED_NETWORK_POSITION_TRAJECTORY_DESIGN_NOT_IDENTIFIABLE'
+          }
+          assert all(v is False for v in x['boundaries'].values())
+          assert x['incremental_monetary_cost_usd']==0
+          print(x['gate'])
+          print('requirements',x['requirements_passed'],'/18')
+          PY
+      - name: Commit immutable N01 evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-FDIC-BRANCH-N01/staging
+          git commit -m 'Record US-FDIC-BRANCH-N01 immutable matched-design result'
+          git push origin HEAD:main
+      - name: Confirm research boundary
+        run: |
+          echo 'Only historical SOD 2022-2024 rows were opened.'
+          echo 'No 2025 SOD or future BankFind branch/event membership was queried.'
+          echo 'E01 remains unauthorized pending terminal N01 PASS finalization.'
+          echo 'Incremental cost = 0 USD.'
