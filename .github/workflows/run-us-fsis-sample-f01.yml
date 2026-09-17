@@ -4,6 +4,7 @@ on:
     branches: [main]
     paths:
       - 'tools/run_us_fsis_sample_f01.py'
+      - 'tools/run_us_fsis_sample_f01_transport.py'
       - '.github/workflows/run-us-fsis-sample-f01.yml'
   workflow_dispatch:
 permissions:
@@ -32,7 +33,7 @@ jobs:
           assert 'HOLD_US_FSIS_SAMPLE_F01_EXACT_ESTABLISHMENT_LONGITUDINAL_JOIN_NOT_READY' in text
           PY
       - name: Execute immutable outcome-blind exact-establishment gate
-        run: python tools/run_us_fsis_sample_f01.py
+        run: python tools/run_us_fsis_sample_f01_transport.py
       - name: Verify recall firewall and frozen gate shape
         run: |
           python - <<'PY'
