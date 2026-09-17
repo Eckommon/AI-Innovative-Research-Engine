@@ -12,8 +12,8 @@ permissions:
   issues: read
 jobs:
   run-f01:
-    runs-on: macos-latest
-    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
@@ -32,6 +32,10 @@ jobs:
           assert 'PASS_US_FSIS_SAMPLE_F01_EXACT_ESTABLISHMENT_LONGITUDINAL_JOIN_READY' in text
           assert 'HOLD_US_FSIS_SAMPLE_F01_EXACT_ESTABLISHMENT_LONGITUDINAL_JOIN_NOT_READY' in text
           PY
+      - name: Install browser transport only
+        run: |
+          python -m pip install --disable-pip-version-check playwright
+          python -m playwright install chromium
       - name: Execute immutable outcome-blind exact-establishment gate
         run: python tools/run_us_fsis_sample_f01_transport.py
       - name: Verify recall firewall and frozen gate shape
