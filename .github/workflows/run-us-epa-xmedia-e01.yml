@@ -1,0 +1,93 @@
+name: Run US-EPA-XMEDIA-E01
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/run-us-epa-xmedia-e01.yml'
+      - 'tools/run_us_epa_xmedia_e01.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: read
+
+jobs:
+  run-e01:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify frozen design and active outcome authorization
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python -m py_compile tools/run_us_epa_xmedia_e01.py
+          test "$(git log -1 --format=%H -- research/US-EPA-XMEDIA-E01/README.md)" = "46938afda3fbeaf9349a3c508502f8d4a3c973a3"
+          test "$(git log -1 --format=%H -- research/US-EPA-XMEDIA-N01/DESIGN_MANIFEST.json)" = "78f0f0f1458463c79c326c016d415dc5533af026"
+          test "$(gh api repos/${GITHUB_REPOSITORY}/issues/152 --jq .state)" = "open"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c == {
+            'checkpoint_id':'CHK-20260917-US-EPA-XMEDIA-E01-ACTIVE',
+            'active_issue':152,
+            'active_research':'US-EPA-XMEDIA-E01',
+            'last_completed_issue':151,
+            'last_completed_research':'US-EPA-XMEDIA-N01',
+            'last_decision':'DEC-216',
+            'updated':'2026-09-17',
+          }
+          m=json.loads(Path('research/US-EPA-XMEDIA-N01/DESIGN_MANIFEST.json').read_text())
+          assert len(m['pairs'])==307
+          assert m['canonical_core_sha256']=='19e1b3a1963fe008811aa230336e12ec69a348b03cf37bd656ea9d3fba8e5aaf'
+          assert not Path('research/US-EPA-XMEDIA-E01/STAGING_RESULT.json').exists()
+          src=Path('tools/run_us_epa_xmedia_e01.py').read_text()
+          assert 'NPDES_EFF_VIOLATIONS.zip' in src
+          assert 'DMRS_LIMITS' not in src and 'DMRS_VALUES' not in src
+          print('US_EPA_XMEDIA_E01_FROZEN_AUTHORIZATION_VERIFY_PASS')
+          PY
+      - name: Execute immutable preregistered E01
+        run: python tools/run_us_epa_xmedia_e01.py
+      - name: Verify aggregate-only staging result
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('research/US-EPA-XMEDIA-E01/STAGING_RESULT.json').read_text())
+          assert r['contract_commit']=='46938afda3fbeaf9349a3c508502f8d4a3c973a3'
+          assert r['n01_manifest_sha256']=='19e1b3a1963fe008811aa230336e12ec69a348b03cf37bd656ea9d3fba8e5aaf'
+          assert r['integrity']['frozen_pairs']==307 and r['integrity']['frozen_npdes_ids']==614
+          assert r['integrity']['facility_level_outcome_labels_persisted'] is False
+          assert r['integrity']['pair_membership_changed'] is False
+          assert r['integrity']['endpoint_changed'] is False
+          assert r['integrity']['window_changed'] is False
+          assert r['integrity']['threshold_changed'] is False
+          assert r['gate'] in {
+            'PASS_POSITIVE_MATERIAL_US_EPA_XMEDIA_E01_RELATIONSHIP',
+            'POSITIVE_BELOW_MATERIALITY_US_EPA_XMEDIA_E01_RELATIONSHIP',
+            'NO_PREREGISTERED_POSITIVE_US_EPA_XMEDIA_E01_RELATIONSHIP',
+          }
+          assert r['interpretation_boundary']['facility_ranking_computed'] is False
+          assert r['interpretation_boundary']['enforcement_targeting_score_computed'] is False
+          assert r['interpretation_boundary']['secondary_endpoint_computed'] is False
+          assert r['interpretation_boundary']['dmr_values_or_limits_opened'] is False
+          assert r['incremental_monetary_cost_usd']==0
+          print(r['gate'], r['primary'])
+          PY
+      - name: Commit immutable aggregate outcome evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions-bot@users.noreply.github.com'
+          git add research/US-EPA-XMEDIA-E01/STAGING_RESULT.json
+          git commit -m 'Record US-EPA-XMEDIA-E01 immutable outcome result'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Confirm bounded interpretation
+        run: |
+          echo 'Aggregate preregistered E01 only; no facility-level labels/rankings persisted.'
+          echo 'Incremental monetary cost: 0 USD.'
