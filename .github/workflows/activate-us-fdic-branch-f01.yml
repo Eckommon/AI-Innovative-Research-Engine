@@ -1,0 +1,50 @@
+name: Activate US-FDIC-BRANCH-F01
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/activate_us_fdic_branch_f01.py'
+      - '.github/workflows/activate-us-fdic-branch-f01.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: read
+jobs:
+  activate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify pre-Issue contract and live Issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git cat-file -e 6568d9bd0d897abb0bcabf8eaf04f2e54f50177f^{commit}
+          test ! -e registry/DEC-232.md
+          gh issue view 160 --repo '${{ github.repository }}' --json state --jq '.state' | grep -qx OPEN
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          cp=json.loads(Path('context/checkpoint.json').read_text())
+          assert str(cp['active_issue']).lower() in {'none','null','n/a'}
+          assert cp['active_research']=='NONE'
+          assert cp['last_completed_issue']==159
+          assert cp['last_decision']=='DEC-231'
+          PY
+      - name: Activate canonical state
+        run: python tools/activate_us_fdic_branch_f01.py
+      - name: Verify active mirrors
+        run: python tools/check_checkpoint.py
+      - name: Commit activation
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add registry/DEC-232.md registry/DECISION_LOG.md context/checkpoint.json STATUS.md context/SESSION_HANDOFF.md
+          git commit -m 'Activate US-FDIC-BRANCH-F01'
+          git push origin HEAD:main
+      - name: Confirm future-outcome firewall
+        run: |
+          echo 'Only 2022-2024 historical SOD rows authorized.'
+          echo 'Future 2024-07-01..2025-06-30 branch/event membership remains unopened; cost=0 USD.'
