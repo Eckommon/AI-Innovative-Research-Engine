@@ -1,21 +1,21 @@
 ---
-checkpoint_id: CHK-20260918-PORTFOLIO-R39-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20260918-US-IRS-EO-F01-ACTIVE
+active_issue: 163
+active_research: US-IRS-EO-F01
 last_completed_issue: 162
 last_completed_research: PORTFOLIO-R39
-last_decision: DEC-236
+last_decision: DEC-237
 updated: 2026-09-18
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `PORTFOLIO_R39_SELECTED_US_IRS_EO_001__F01_CONTRACT_REQUIRED`
+**State / 상태:** `US_IRS_EO_F01_ACTIVE__OUTCOME_BLIND_EXACT_EIN_GATE`
 
-PORTFOLIO-R39 is terminal. `US-IRS-EO-001` was selected at 41/45 from the immutable scorecard. Candidate future automatic-revocation membership remained unopened. The scientific selection was not changed by terminal canonicalization.
+US-IRS-EO-F01 is active under its frozen 18-gate contract. Only 2022–2024 Form-990 index rows are authorized. Automatic Revocation List rows, 2025/2026 Form-990 index rows, and statutory nonfiling-trigger exposures remain sealed/prohibited.
 
 ## Exact next action / 정확한 다음 행동
 
-Design and freeze a separate outcome-blind `US-IRS-EO-F01` structural contract **before creating its Issue**. F01 may test historical Form-990 XML/index access, exact EIN semantics/coverage, historical filed-organization longitudinal support, documented automatic-revocation schema/date semantics and a future-membership firewall. It may not use prior nonfiling/missed-filing streaks as exposure or open future revocation membership.
+Execute the immutable 18-gate historical-index/cardinality/source-metadata runner. The automatic-revocation ZIP may receive body-free HEAD only.
 
 Incremental monetary cost remains **0 USD**.
