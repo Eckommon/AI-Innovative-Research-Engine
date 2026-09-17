@@ -1,23 +1,21 @@
 ---
-checkpoint_id: CHK-20260918-US-FDIC-BRANCH-N01-TERMINAL
+checkpoint_id: CHK-20260918-PORTFOLIO-R39-TERMINAL
 active_issue: none
 active_research: NONE
-last_completed_issue: 161
-last_completed_research: US-FDIC-BRANCH-N01
-last_decision: DEC-235
+last_completed_issue: 162
+last_completed_research: PORTFOLIO-R39
+last_decision: DEC-236
 updated: 2026-09-18
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `US_FDIC_BRANCH_N01_HOLD__PORTFOLIO_RESELECTION_REQUIRED`
+**State / 상태:** `PORTFOLIO_R39_SELECTED_US_IRS_EO_001__F01_CONTRACT_REQUIRED`
 
-US-FDIC-BRANCH-N01 is terminal scientific HOLD: 15/18 frozen gates passed, but all three prospectively frozen baseline-balance gates failed. Future branch closure/non-continuation outcomes remained unopened. E01 is not authorized.
+PORTFOLIO-R39 is terminal. `US-IRS-EO-001` was selected at 41/45 from the immutable scorecard. Candidate future automatic-revocation membership remained unopened. The scientific selection was not changed by terminal canonicalization.
 
 ## Exact next action / 정확한 다음 행동
 
-Return to an independent portfolio reselection. Do not relax the 75% balance gates, ratio band, quartile exposure, matching order, or CERT × STALPBR strata after observing N01 support.
+Design and freeze a separate outcome-blind `US-IRS-EO-F01` structural contract **before creating its Issue**. F01 may test historical Form-990 XML/index access, exact EIN semantics/coverage, historical filed-organization longitudinal support, documented automatic-revocation schema/date semantics and a future-membership firewall. It may not use prior nonfiling/missed-filing streaks as exposure or open future revocation membership.
 
 Incremental monetary cost remains **0 USD**.
-
-<!-- terminal-state verification trigger: US-FDIC-BRANCH-N01 baseline-balance HOLD -->
