@@ -1,0 +1,61 @@
+name: Run US-FSIS-SAMPLE-F01
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/run_us_fsis_sample_f01.py'
+      - '.github/workflows/run-us-fsis-sample-f01.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: read
+jobs:
+  run-f01:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify active authorization and frozen contract
+        run: |
+          git cat-file -e 1c7496ad5f4f6d82900fd60f0a31d3406cf217dc^{commit}
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          cp=json.loads(Path('context/checkpoint.json').read_text())
+          assert str(cp['active_issue']) in {'158','#158'}
+          assert cp['active_research']=='US-FSIS-SAMPLE-F01'
+          assert cp['last_decision']=='DEC-228'
+          text=Path('research/US-FSIS-SAMPLE-F01/README.md').read_text()
+          assert 'PASS_US_FSIS_SAMPLE_F01_EXACT_ESTABLISHMENT_LONGITUDINAL_JOIN_READY' in text
+          assert 'HOLD_US_FSIS_SAMPLE_F01_EXACT_ESTABLISHMENT_LONGITUDINAL_JOIN_NOT_READY' in text
+          PY
+      - name: Execute immutable outcome-blind exact-establishment gate
+        run: python tools/run_us_fsis_sample_f01.py
+      - name: Verify recall firewall and frozen gate shape
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          x=json.loads(Path('research/US-FSIS-SAMPLE-F01/STAGING_RESULT.json').read_text())
+          assert x['requirements_total']==18
+          assert x['gate'] in {'PASS_US_FSIS_SAMPLE_F01_EXACT_ESTABLISHMENT_LONGITUDINAL_JOIN_READY','HOLD_US_FSIS_SAMPLE_F01_EXACT_ESTABLISHMENT_LONGITUDINAL_JOIN_NOT_READY'}
+          b=x['boundaries']
+          assert b['candidate_2024_2025_recall_rows_opened'] is False
+          assert b['candidate_recall_membership_opened'] is False
+          assert b['sampling_to_recall_relationship_computed'] is False
+          assert b['fuzzy_name_address_geo_manual_identity_repair_used'] is False
+          assert x['incremental_monetary_cost_usd']==0
+          PY
+      - name: Commit immutable F01 evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-FSIS-SAMPLE-F01/STAGING_RESULT.json research/US-FSIS-SAMPLE-F01/EXPOSURE_MANIFEST.csv
+          git commit -m 'Record US-FSIS-SAMPLE-F01 immutable structural result'
+          git push origin HEAD:main
+      - name: Confirm research boundary
+        run: |
+          echo 'Candidate 2024-2025 recall membership was not requested or opened.'
+          echo 'No sampling-to-recall relationship, prediction, ranking, causal or novelty claim; cost=0 USD.'
