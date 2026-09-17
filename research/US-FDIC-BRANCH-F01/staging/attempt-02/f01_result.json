@@ -1,0 +1,230 @@
+{
+  "attempt": 2,
+  "base_attempt_sha256": "c35712646c9147eaac1edc1c1c740d03b5820bf83d6955d04d05fd19cded79f4",
+  "boundaries": {
+    "branch_or_bank_ranking_made": false,
+    "causal_claim_made": false,
+    "future_2025_sod_data_rows_opened": false,
+    "future_branch_membership_opened": false,
+    "future_closure_noncontinuation_computed": false,
+    "future_history_event_membership_opened": false,
+    "fuzzy_name_address_zip_geo_manual_identity_repair_used": false,
+    "novelty_claim_made": false,
+    "predictive_metric_computed": false,
+    "relationship_computed": false
+  },
+  "contract_commit": "6568d9bd0d897abb0bcabf8eaf04f2e54f50177f",
+  "diagnostics": {
+    "distinct_uninumbr": 81218,
+    "historical_rows_total": 233669,
+    "rows_by_year": {
+      "2022": 79172,
+      "2023": 77770,
+      "2024": 76727
+    },
+    "structurally_usable_branch_year_rows": 233669,
+    "uninumbr_in_all3_years": 74698,
+    "uninumbr_in_ge2_years": 77753,
+    "uninumbr_with_cert_change": 2499,
+    "valid_identity_rate": 1.0
+  },
+  "gate": "PASS_US_FDIC_BRANCH_F01_EXACT_PHYSICAL_BRANCH_LONGITUDINAL_DESIGN_READY",
+  "implementation_correction_commit": "08403a21ef34462149b3a22228c3f3a02300b50f",
+  "incremental_monetary_cost_usd": 0,
+  "issue": 160,
+  "requirements": [
+    {
+      "evidence": {
+        "rows": 233669,
+        "years": [
+          2022,
+          2023,
+          2024
+        ]
+      },
+      "name": "official FDIC SOD public machine-readable source accessible at zero cost",
+      "number": 1,
+      "pass": true
+    },
+    {
+      "evidence": {
+        "bytes": 34749,
+        "sha256": "854500ae68d77185a12fc9260e0bbc0194e3848df0e54086f828656ea508852b",
+        "url": "https://api.fdic.gov/banks/docs/swagger.yaml"
+      },
+      "name": "official SOD variable/definition metadata accessible and fingerprinted",
+      "number": 2,
+      "pass": true
+    },
+    {
+      "evidence": {
+        "2022": 8,
+        "2023": 8,
+        "2024": 8
+      },
+      "name": "national SOD 2022, 2023, 2024 reproducibly accessible and fingerprinted",
+      "number": 3,
+      "pass": true
+    },
+    {
+      "evidence": [
+        "YEAR",
+        "CERT",
+        "BRNUM",
+        "UNINUMBR",
+        "DEPSUMBR"
+      ],
+      "name": "YEAR CERT BRNUM UNINUMBR present in historical snapshots and deposit measure documented",
+      "number": 4,
+      "pass": true
+    },
+    {
+      "evidence": {
+        "preflight_commit": "b8063ff71c3b9b7aa05a5c6cae2325901af6d531"
+      },
+      "name": "official documentation supporting UNINUMBR physical-location identity persisted before counts",
+      "number": 5,
+      "pass": true
+    },
+    {
+      "evidence": {
+        "location_rows_opened": false,
+        "openapi_sha256": "854500ae68d77185a12fc9260e0bbc0194e3848df0e54086f828656ea508852b"
+      },
+      "name": "official BankFind Locations source/schema machine-readable and fingerprintable",
+      "number": 6,
+      "pass": true
+    },
+    {
+      "evidence": {
+        "history_rows_opened": false,
+        "openapi_sha256": "854500ae68d77185a12fc9260e0bbc0194e3848df0e54086f828656ea508852b",
+        "preflight": true
+      },
+      "name": "BankFind History/Structure Change metadata expose event semantics before future memberships",
+      "number": 7,
+      "pass": true
+    },
+    {
+      "evidence": {
+        "future_2025_rows_opened": false,
+        "official_current_sod_mandatory_schema_preflight": true,
+        "openapi_sha256": "854500ae68d77185a12fc9260e0bbc0194e3848df0e54086f828656ea508852b",
+        "rowless_2025_sod_head": {
+          "content_length": "326",
+          "content_type": "application/json; charset=utf-8",
+          "correction_commit": "08403a21ef34462149b3a22228c3f3a02300b50f",
+          "future_2025_rows_opened": false,
+          "http_status": 200,
+          "method": "HEAD",
+          "preflight_commit": "b8063ff71c3b9b7aa05a5c6cae2325901af6d531",
+          "request_evidence_sha256": "de482e9284be8a429c28e27ac3f46e7021d74ae6161c28248d515df8b7bc229e",
+          "response_body_read": false,
+          "schema_fields_requested": [
+            "YEAR",
+            "CERT",
+            "BRNUM",
+            "UNINUMBR"
+          ],
+          "url": "https://api.fdic.gov/banks/sod?filters=YEAR%3A2025&fields=YEAR%2CCERT%2CBRNUM%2CUNINUMBR&limit=1&offset=0"
+        },
+        "sod_metadata_sha256": "81786742c6c8fb9fcae1694660f8ef873065edf49038a053f2a009c3b18f7cd9"
+      },
+      "name": "2025 SOD source accessible/fingerprintable and schema confirms UNINUMBR without reading 2025 row",
+      "number": 8,
+      "pass": true
+    },
+    {
+      "evidence": {
+        "branch_or_bank_ranking_made": false,
+        "causal_claim_made": false,
+        "future_2025_sod_data_rows_opened": false,
+        "future_branch_membership_opened": false,
+        "future_closure_noncontinuation_computed": false,
+        "future_history_event_membership_opened": false,
+        "fuzzy_name_address_zip_geo_manual_identity_repair_used": false,
+        "novelty_claim_made": false,
+        "predictive_metric_computed": false,
+        "relationship_computed": false
+      },
+      "name": "future branch/event rows unopened and no future disposition computed",
+      "number": 9,
+      "pass": true
+    },
+    {
+      "evidence": false,
+      "name": "no fuzzy/manual/name/address/ZIP/geospatial identity repair",
+      "number": 10,
+      "pass": true
+    },
+    {
+      "evidence": 233669,
+      "name": ">=150000 structurally usable branch-year rows across 2022-2024",
+      "number": 11,
+      "pass": true
+    },
+    {
+      "evidence": 81218,
+      "name": ">=60000 distinct valid UNINUMBR",
+      "number": 12,
+      "pass": true
+    },
+    {
+      "evidence": 77753,
+      "name": ">=50000 distinct UNINUMBR observed in at least 2 of 3 years",
+      "number": 13,
+      "pass": true
+    },
+    {
+      "evidence": 74698,
+      "name": ">=40000 distinct UNINUMBR observed in all 3 years",
+      "number": 14,
+      "pass": true
+    },
+    {
+      "evidence": 1.0,
+      "name": ">=99% historical branch rows have valid UNINUMBR CERT BRNUM YEAR",
+      "number": 15,
+      "pass": true
+    },
+    {
+      "evidence": 2499,
+      "name": ">=100 exact UNINUMBR show CERT change across 2022-2024",
+      "number": 16,
+      "pass": true
+    },
+    {
+      "evidence": {
+        "boundaries": {
+          "branch_or_bank_ranking_made": false,
+          "causal_claim_made": false,
+          "future_2025_sod_data_rows_opened": false,
+          "future_branch_membership_opened": false,
+          "future_closure_noncontinuation_computed": false,
+          "future_history_event_membership_opened": false,
+          "fuzzy_name_address_zip_geo_manual_identity_repair_used": false,
+          "novelty_claim_made": false,
+          "predictive_metric_computed": false,
+          "relationship_computed": false
+        },
+        "manifest_sha256": "b68fe4bdcb8f924c812c6eaa087aef49e469cf424ce952dd077b8b88ea383def",
+        "source_manifest_sha256": "dbdb74b75ee42d61d8cba210e906b96795e54cdacc57c9677b85fb5ec6d41e5e"
+      },
+      "name": "deterministic fingerprints parser exclusions and exposure-only manifest persisted; no downstream science",
+      "number": 17,
+      "pass": true
+    },
+    {
+      "evidence": 0,
+      "name": "zero incremental monetary cost",
+      "number": 18,
+      "pass": true
+    }
+  ],
+  "requirements_passed": 18,
+  "requirements_total": 18,
+  "research": "US-FDIC-BRANCH-F01",
+  "scientific_disposition": "PASS",
+  "source_preflight_commit": "b8063ff71c3b9b7aa05a5c6cae2325901af6d531",
+  "supersedes_for_implementation_only": "staging/f01_result.json"
+}
