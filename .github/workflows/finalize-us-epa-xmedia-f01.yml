@@ -1,0 +1,95 @@
+name: Finalize US-EPA-XMEDIA-F01 corrected PASS
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/finalize-us-epa-xmedia-f01.yml'
+      - 'tools/finalize_us_epa_xmedia_f01.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify corrected immutable evidence and live Issue
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python -m py_compile tools/finalize_us_epa_xmedia_f01.py
+          test "$(git log -1 --format=%H -- research/US-EPA-XMEDIA-F01/STAGING_RESULT_CORRECTED.json)" = "7a9599ae76af2e93d5806a0473ad17f6bbc1ac93"
+          test "$(gh api repos/${GITHUB_REPOSITORY}/issues/150 --jq .state)" = "open"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('research/US-EPA-XMEDIA-F01/STAGING_RESULT_CORRECTED.json').read_text())
+          assert r['gate']=='PASS_US_EPA_XMEDIA_F01_EXACT_FRS_CROSS_PROGRAM_JOIN_READY'
+          assert r['requirements_passed']==18 and r['requirements_total']==18
+          assert r['effluent_violation_rows_opened'] is False
+          assert r['dmr_outcome_rows_opened'] is False
+          assert r['relationship_computed'] is False
+          assert r['predictive_metric_computed'] is False
+          assert r['causal_claim_made'] is False
+          for k in ('contract_changed','sources_changed','thresholds_changed','identity_rules_changed','outcome_firewall_changed'):
+              assert r['implementation_correction'][k] is False
+          print('US_EPA_XMEDIA_F01_CORRECTED_TERMINAL_EVIDENCE_VERIFY_PASS')
+          PY
+
+      - name: Build terminal canonical state
+        run: python tools/finalize_us_epa_xmedia_f01.py
+
+      - name: Verify terminal mirrors
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c == {
+            'checkpoint_id':'CHK-20260917-US-EPA-XMEDIA-F01-TERMINAL',
+            'active_issue':'none',
+            'active_research':'NONE',
+            'last_completed_issue':150,
+            'last_completed_research':'US-EPA-XMEDIA-F01',
+            'last_decision':'DEC-213',
+            'updated':'2026-09-17',
+          }
+          assert 'US_EPA_XMEDIA_F01_PASS__N01_AUTHORIZATION_REQUIRED' in Path('STATUS.md').read_text()
+          assert Path('registry/DEC-213.md').exists()
+          assert Path('registry/CLM-188.md').exists()
+          assert 'PASS_US_EPA_XMEDIA_F01_EXACT_FRS_CROSS_PROGRAM_JOIN_READY' in Path('research/US-EPA-XMEDIA-F01/RESULT.md').read_text()
+          print('US_EPA_XMEDIA_F01_TERMINAL_MIRRORS_VERIFY_PASS')
+          PY
+
+      - name: Close Issue 150 as completed
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api --method PATCH repos/${GITHUB_REPOSITORY}/issues/150 -f state=closed -f state_reason=completed >/tmp/issue.json
+          test "$(jq -r .state /tmp/issue.json)" = "closed"
+          test "$(jq -r .state_reason /tmp/issue.json)" = "completed"
+
+      - name: Commit terminal state
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-EPA-XMEDIA-F01/README.md research/US-EPA-XMEDIA-F01/RESULT.md registry/DEC-213.md registry/CLM-188.md registry/DECISION_LOG.md registry/CLAIM_LEDGER.md STATUS.md context/checkpoint.json context/SESSION_HANDOFF.md
+          git commit -m 'Finalize US-EPA-XMEDIA-F01 corrected PASS'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Confirm terminal outcome firewall
+        run: |
+          echo 'F01 terminal PASS records structural feasibility only.'
+          echo 'Part 2 effluent violations and DMR outcomes remain unopened.'
+          echo 'Incremental monetary cost: 0 USD.'
