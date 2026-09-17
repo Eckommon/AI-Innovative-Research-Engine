@@ -16,6 +16,7 @@ name: State Integrity / 상태 무결성
 # US-EPA-XMEDIA-F01 terminal-state recheck: verify corrected canonical post-finalization state after bot-authored push/issue suppression.
 # US-EPA-XMEDIA-N01 terminal-state recheck: verify canonical post-finalization state after bot-authored push/issue suppression.
 # US-EPA-XMEDIA-E01 terminal-state recheck: verify canonical no-positive terminal after bot-authored push/issue suppression.
+# PORTFOLIO-R35 terminal-state recheck: verify canonical FAA-AIP selection after bot-authored push/issue suppression.
 
 on:
   push:
