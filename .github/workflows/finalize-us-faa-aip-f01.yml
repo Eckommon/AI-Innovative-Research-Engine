@@ -1,0 +1,69 @@
+name: Finalize US-FAA-AIP-F01 HOLD
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/finalize_us_faa_aip_f01.py'
+      - '.github/workflows/finalize-us-faa-aip-f01.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: write
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify immutable HOLD evidence and live Issue
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git cat-file -e e194c692251f867fd378d052f2ccb51001ada1a4^{commit}
+          python - <<'PY'
+          import json, os, urllib.request
+          from pathlib import Path
+          x=json.loads(Path('research/US-FAA-AIP-F01/STAGING_RESULT.json').read_text())
+          assert x['gate']=='HOLD_US_FAA_AIP_F01_EXACT_AIRPORT_TIME_JOIN_NOT_READY'
+          assert x['requirements_passed']==16 and x['requirements_total']==17
+          assert x['requirements'][12]['number']==13 and x['requirements'][12]['pass'] is False
+          cp=json.loads(Path('context/checkpoint.json').read_text())
+          assert str(cp['active_issue']) in {'154','#154'}
+          assert cp['active_research']=='US-FAA-AIP-F01'
+          assert cp['last_decision']=='DEC-220'
+          req=urllib.request.Request('https://api.github.com/repos/Eckommon/AI-Innovative-Research-Engine/issues/154',headers={'Authorization':f"Bearer {os.environ['GH_TOKEN']}",'Accept':'application/vnd.github+json'})
+          with urllib.request.urlopen(req,timeout=20) as r: issue=json.load(r)
+          assert issue['state']=='open'
+          PY
+      - name: Build terminal durable state
+        run: python tools/finalize_us_faa_aip_f01.py
+      - name: Verify local checkpoint mirrors
+        run: python tools/check_checkpoint.py
+      - name: Commit terminal state locally
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-FAA-AIP-F01/RESULT.md registry/DEC-221.md registry/DECISION_LOG.md context/checkpoint.json STATUS.md context/SESSION_HANDOFF.md
+          git commit -m 'Finalize US-FAA-AIP-F01 frozen state-concordance HOLD'
+      - name: Close Issue 154 completed
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY'
+          import json, os, urllib.request
+          url='https://api.github.com/repos/Eckommon/AI-Innovative-Research-Engine/issues/154'
+          data=json.dumps({'state':'closed','state_reason':'completed'}).encode()
+          req=urllib.request.Request(url,data=data,method='PATCH',headers={'Authorization':f"Bearer {os.environ['GH_TOKEN']}",'Accept':'application/vnd.github+json','Content-Type':'application/json'})
+          with urllib.request.urlopen(req,timeout=20) as r: x=json.load(r)
+          assert x['state']=='closed'
+          PY
+      - name: Push terminal state
+        run: git push origin HEAD:main
+      - name: Confirm terminal scientific boundary
+        run: |
+          echo 'US-FAA-AIP-F01 terminal HOLD: frozen 99% state-concordance gate failed.'
+          echo 'N01 remains unauthorized; no outcome values opened; no post-hoc rescue; cost=0 USD.'
