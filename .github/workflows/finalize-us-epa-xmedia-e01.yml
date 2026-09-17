@@ -1,0 +1,91 @@
+name: Finalize US-EPA-XMEDIA-E01 terminal
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/finalize-us-epa-xmedia-e01.yml'
+      - 'tools/finalize_us_epa_xmedia_e01.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Verify immutable E01 evidence and live Issue
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python -m py_compile tools/finalize_us_epa_xmedia_e01.py
+          test "$(git log -1 --format=%H -- research/US-EPA-XMEDIA-E01/STAGING_RESULT.json)" = "3852773636146fb48414c98a825d6bedb8cfd6c1"
+          test "$(gh api repos/${GITHUB_REPOSITORY}/issues/152 --jq .state)" = "open"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=json.loads(Path('research/US-EPA-XMEDIA-E01/STAGING_RESULT.json').read_text())
+          assert r['gate']=='NO_PREREGISTERED_POSITIVE_US_EPA_XMEDIA_E01_RELATIONSHIP'
+          assert r['contract_commit']=='46938afda3fbeaf9349a3c508502f8d4a3c973a3'
+          assert r['n01_manifest_sha256']=='19e1b3a1963fe008811aa230336e12ec69a348b03cf37bd656ea9d3fba8e5aaf'
+          assert r['integrity']['frozen_pairs']==307
+          assert r['primary']['risk_difference'] < 0.05
+          assert r['primary']['exact_two_sided_mcnemar_binomial_p'] >= 0.05
+          assert r['integrity']['pair_membership_changed'] is False
+          assert r['integrity']['endpoint_changed'] is False
+          assert r['integrity']['window_changed'] is False
+          assert r['integrity']['threshold_changed'] is False
+          assert r['integrity']['facility_level_outcome_labels_persisted'] is False
+          assert r['interpretation_boundary']['secondary_endpoint_computed'] is False
+          assert r['incremental_monetary_cost_usd']==0
+          print('US_EPA_XMEDIA_E01_TERMINAL_EVIDENCE_VERIFY_PASS')
+          PY
+
+      - name: Build terminal state
+        run: python tools/finalize_us_epa_xmedia_e01.py
+
+      - name: Verify terminal mirrors
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c['checkpoint_id']=='CHK-20260917-US-EPA-XMEDIA-E01-TERMINAL'
+          assert c['active_issue']=='none'
+          assert c['last_completed_issue']==152
+          assert c['last_decision']=='DEC-217'
+          assert Path('registry/DEC-217.md').exists()
+          assert Path('registry/CLM-190.md').exists()
+          assert 'US_EPA_XMEDIA_E01_TERMINAL_NO_PREREGISTERED_POSITIVE__PORTFOLIO_RESELECTION_REQUIRED' in Path('STATUS.md').read_text()
+          assert 'PORTFOLIO-R35' in Path('context/SESSION_HANDOFF.md').read_text()
+          print('US_EPA_XMEDIA_E01_TERMINAL_MIRRORS_VERIFY_PASS')
+          PY
+
+      - name: Close Issue 152
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api --method PATCH repos/${GITHUB_REPOSITORY}/issues/152 -f state=closed -f state_reason=completed >/tmp/i.json
+          test "$(jq -r .state /tmp/i.json)" = "closed"
+          test "$(jq -r .state_reason /tmp/i.json)" = "completed"
+
+      - name: Commit terminal state
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions-bot@users.noreply.github.com'
+          git add research/US-EPA-XMEDIA-E01/README.md research/US-EPA-XMEDIA-E01/RESULT.md registry/DEC-217.md registry/CLM-190.md registry/DECISION_LOG.md registry/CLAIM_LEDGER.md STATUS.md context/checkpoint.json context/SESSION_HANDOFF.md
+          git commit -m 'Finalize US-EPA-XMEDIA-E01 no-positive terminal'
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Confirm no descendant rescue
+        run: echo 'E01 is terminal; endpoint/window/threshold/rematching/secondary-outcome rescue is prohibited. Next is independent PORTFOLIO-R35.'
