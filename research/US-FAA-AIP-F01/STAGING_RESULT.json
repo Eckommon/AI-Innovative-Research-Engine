@@ -1,0 +1,534 @@
+{
+  "boundaries": {
+    "airport_ranking_made": false,
+    "cancellation_values_opened": false,
+    "causal_claim_made": false,
+    "delay_cause_values_opened": false,
+    "delay_values_opened": false,
+    "diversion_values_opened": false,
+    "fuzzy_name_address_geo_manual_identity_repair_used": false,
+    "grant_conditioned_delay_statistics_computed": false,
+    "predictive_metric_computed": false,
+    "project_effectiveness_computed": false,
+    "relationship_computed": false
+  },
+  "contract_commit": "4f9a2a3491bc00c0fd1e00a7b0d3bc0bc62d4254",
+  "diagnostics": {
+    "aip_distinct_valid_locids": 2314,
+    "aip_rows_total": 17584,
+    "aip_valid_rows": 16691,
+    "bridged_in_ontime_universe": 390,
+    "bridged_multi_aip_year": 1146,
+    "bridged_recent_2023_2025": 1134,
+    "bts_ambiguous_codes_excluded": 6,
+    "exact_bridged_airports": 1196,
+    "exclusions": {
+      "bts_code_missing": 1046,
+      "bts_multiple_airport_ids": 6,
+      "faa_lid_not_exact_one_airport_record": 17,
+      "state_conflict": 49
+    },
+    "longitudinal_identity_stability_rate": 1.0,
+    "potential_followup_airports": 390,
+    "state_concordance_rate": 0.9606425702811245
+  },
+  "gate": "HOLD_US_FAA_AIP_F01_EXACT_AIRPORT_TIME_JOIN_NOT_READY",
+  "generated_utc": "2026-09-17T04:56:04.263936+00:00",
+  "incremental_monetary_cost_usd": 0,
+  "issue": 154,
+  "requirements": [
+    {
+      "evidence": 5,
+      "name": ">=4 official AIP annual files machine-readable",
+      "number": 1,
+      "pass": true
+    },
+    {
+      "evidence": [
+        {
+          "header_row_1based": 3,
+          "headers": [
+            "State",
+            "City",
+            "Worksite",
+            "LocID",
+            "Grant Number",
+            "Sponsor",
+            "Award Date",
+            "Entitlement",
+            "Discretionary",
+            "Supp Discretionary Amount",
+            "CARES Amount",
+            "AIG",
+            "FCT",
+            "ATRM",
+            "Total Amount",
+            "Project Summary"
+          ],
+          "sheet": "Export Worksheet"
+        },
+        {
+          "header_row_1based": 2,
+          "headers": [
+            "State",
+            "City",
+            "Worksite",
+            "LocID",
+            "Grant Number",
+            "Sponsor",
+            "Award Date",
+            "Entitlement",
+            "Discretionary",
+            "Supp Discretionary Amount",
+            "CARES Amount",
+            "AIG",
+            "FCT",
+            "ATRM",
+            "Total Amount",
+            "Project Summary",
+            ""
+          ],
+          "sheet": "2022 FAA Grants"
+        },
+        {
+          "header_row_1based": 1,
+          "headers": [
+            "State",
+            "City",
+            "Worksite",
+            "LocID",
+            "Sponsor",
+            "Grant Number",
+            "Award Date",
+            "Entitlement",
+            "Discretionary",
+            "Supp Discretionary",
+            "CARES",
+            "Econ Recover",
+            "AIG",
+            "FCT",
+            "ATRM",
+            "Total Amount",
+            "Project Summary"
+          ],
+          "sheet": "Export Worksheet"
+        },
+        {
+          "header_row_1based": 3,
+          "headers": [
+            "State",
+            "City",
+            "Worksite",
+            "LocID",
+            "Sponsor",
+            "Grant Number",
+            "Award Date",
+            "Entitlement",
+            "Discretionary",
+            "SUM(DISC_NOISE_AMT)",
+            "SUM(DISC_MAP_AMT)",
+            "Supp Discretionary",
+            "CARES",
+            "Econ Recover",
+            "AIG",
+            "FCT",
+            "ATRM",
+            "Total Amount",
+            "Project Summary"
+          ],
+          "sheet": "Export Worksheet"
+        },
+        {
+          "header_row_1based": 3,
+          "headers": [
+            "State",
+            "City",
+            "Worksite",
+            "LocID",
+            "Sponsor",
+            "Grant Number",
+            "Award Date",
+            "Entitlement",
+            "Discretionary",
+            "Discretionary Noise",
+            "Discretionary MAP",
+            "Supp Discretionary",
+            "CARES",
+            "Econ Recover",
+            "AIG",
+            "FCT",
+            "ATRM",
+            "Total Amount",
+            "Project Summary"
+          ],
+          "sheet": "Data"
+        }
+      ],
+      "name": "AIP LocID/year/project structure present",
+      "number": 2,
+      "pass": true
+    },
+    {
+      "evidence": [
+        "LocID",
+        "Facility",
+        "Location",
+        "FLTWO",
+        "Tie-in Facility",
+        "Center"
+      ],
+      "name": "FAA LID accessible with LocID/facility/state metadata",
+      "number": 3,
+      "pass": true
+    },
+    {
+      "evidence": [
+        "AIRPORT_SEQ_ID",
+        "AIRPORT_ID",
+        "AIRPORT",
+        "AIRPORT_STATE_CODE",
+        "AIRPORT_START_DATE",
+        "AIRPORT_THRU_DATE",
+        "AIRPORT_IS_CLOSED",
+        "AIRPORT_IS_LATEST"
+      ],
+      "name": "BTS Master Coordinate reproducibly machine-readable",
+      "number": 4,
+      "pass": true
+    },
+    {
+      "evidence": [
+        "AIRPORT_SEQ_ID",
+        "AIRPORT_ID",
+        "AIRPORT",
+        "AIRPORT_STATE_CODE",
+        "AIRPORT_START_DATE",
+        "AIRPORT_THRU_DATE",
+        "AIRPORT_IS_CLOSED",
+        "AIRPORT_IS_LATEST"
+      ],
+      "name": "BTS required identity/longitudinal fields present",
+      "number": 5,
+      "pass": true
+    },
+    {
+      "evidence": {
+        "airport_ranking_made": false,
+        "cancellation_values_opened": false,
+        "causal_claim_made": false,
+        "delay_cause_values_opened": false,
+        "delay_values_opened": false,
+        "diversion_values_opened": false,
+        "fuzzy_name_address_geo_manual_identity_repair_used": false,
+        "grant_conditioned_delay_statistics_computed": false,
+        "predictive_metric_computed": false,
+        "project_effectiveness_computed": false,
+        "relationship_computed": false
+      },
+      "name": "candidate outcomes unopened",
+      "number": 6,
+      "pass": true
+    },
+    {
+      "evidence": false,
+      "name": "no fuzzy/manual identity repair",
+      "number": 7,
+      "pass": true
+    },
+    {
+      "evidence": 1196,
+      "name": ">=300 distinct AIP LocIDs pass exact bridge",
+      "number": 8,
+      "pass": true
+    },
+    {
+      "evidence": 390,
+      "name": ">=100 bridged airports in BTS on-time identity universe",
+      "number": 9,
+      "pass": true
+    },
+    {
+      "evidence": 1146,
+      "name": ">=75 bridged airports in >=2 AIP fiscal years",
+      "number": 10,
+      "pass": true
+    },
+    {
+      "evidence": 1134,
+      "name": ">=100 bridged airports with FY2023-2025 grant row",
+      "number": 11,
+      "pass": true
+    },
+    {
+      "evidence": 1.0,
+      "name": ">=95% longitudinal BTS identity stability after ambiguity exclusion",
+      "number": 12,
+      "pass": true
+    },
+    {
+      "evidence": {
+        "concordant": 1196,
+        "conflicts_excluded": 49,
+        "denominator": 1245,
+        "rate": 0.9606425702811245
+      },
+      "name": ">=99% state concordance; conflicts excluded",
+      "number": 13,
+      "pass": false
+    },
+    {
+      "evidence": 390,
+      "name": ">=80 bridged airports with potential grant-year + subsequent on-time year in 2021-2026",
+      "number": 14,
+      "pass": true
+    },
+    {
+      "evidence": {
+        "aip": [
+          {
+            "sha256": "2f8d9c32a720e698dd50b2921dbce9747f742247b41ce2567a542d802aa94bdd",
+            "year": 2021
+          },
+          {
+            "sha256": "8421d71e674ed740d140b157a41e29b68c8a59312c51b52f11b6c063436cccca",
+            "year": 2022
+          },
+          {
+            "sha256": "8125df0ecc5ebdb4fd159f07e28aa3e9e4b7d9349983eb1aca0d69fc1ac291de",
+            "year": 2023
+          },
+          {
+            "sha256": "784d1e445b42f63c7c2fde46617099be4a30979825cd3dd9a230d7b0ff5a9ca3",
+            "year": 2024
+          },
+          {
+            "sha256": "1c16930f818879bc144d5d531c85f4dc1c3e992b08ceb937dadddc4a7484adcb",
+            "year": 2025
+          }
+        ],
+        "bts_master": "b14813a6bbaae7966479d980724b0f3fbf5fac89798c741e7fc8eb5714d773b6",
+        "bts_ontime_airport_list": "ef713b33a5f7ee9574c68648111e0541bebe02e0553f90a5005edea91b4a3ec5",
+        "lid": "b811bc87dfeda86ff75390248f613c99453e8218538857bf3268495cca12a02e"
+      },
+      "name": "deterministic source fingerprints persisted",
+      "number": 15,
+      "pass": true
+    },
+    {
+      "evidence": {
+        "airport_ranking_made": false,
+        "cancellation_values_opened": false,
+        "causal_claim_made": false,
+        "delay_cause_values_opened": false,
+        "delay_values_opened": false,
+        "diversion_values_opened": false,
+        "fuzzy_name_address_geo_manual_identity_repair_used": false,
+        "grant_conditioned_delay_statistics_computed": false,
+        "predictive_metric_computed": false,
+        "project_effectiveness_computed": false,
+        "relationship_computed": false
+      },
+      "name": "no relationship/prediction/causality/ranking/project-effectiveness/grant-conditioned delay stats",
+      "number": 16,
+      "pass": true
+    },
+    {
+      "evidence": 0,
+      "name": "zero incremental monetary cost",
+      "number": 17,
+      "pass": true
+    }
+  ],
+  "requirements_passed": 16,
+  "requirements_total": 17,
+  "research": "US-FAA-AIP-F01",
+  "scientific_disposition": "HOLD",
+  "sources": {
+    "aip": [
+      {
+        "bytes": 492199,
+        "schema": {
+          "header_row_1based": 3,
+          "headers": [
+            "State",
+            "City",
+            "Worksite",
+            "LocID",
+            "Grant Number",
+            "Sponsor",
+            "Award Date",
+            "Entitlement",
+            "Discretionary",
+            "Supp Discretionary Amount",
+            "CARES Amount",
+            "AIG",
+            "FCT",
+            "ATRM",
+            "Total Amount",
+            "Project Summary"
+          ],
+          "sheet": "Export Worksheet"
+        },
+        "sha256": "2f8d9c32a720e698dd50b2921dbce9747f742247b41ce2567a542d802aa94bdd",
+        "url": "https://www.faa.gov/sites/faa.gov/files/2023-07/FY2021-AIP-grants.xlsx",
+        "year": 2021
+      },
+      {
+        "bytes": 401349,
+        "schema": {
+          "header_row_1based": 2,
+          "headers": [
+            "State",
+            "City",
+            "Worksite",
+            "LocID",
+            "Grant Number",
+            "Sponsor",
+            "Award Date",
+            "Entitlement",
+            "Discretionary",
+            "Supp Discretionary Amount",
+            "CARES Amount",
+            "AIG",
+            "FCT",
+            "ATRM",
+            "Total Amount",
+            "Project Summary",
+            ""
+          ],
+          "sheet": "2022 FAA Grants"
+        },
+        "sha256": "8421d71e674ed740d140b157a41e29b68c8a59312c51b52f11b6c063436cccca",
+        "url": "https://www.faa.gov/sites/faa.gov/files/2022-12/FY2022-AIP-grants.xlsx",
+        "year": 2022
+      },
+      {
+        "bytes": 294467,
+        "schema": {
+          "header_row_1based": 1,
+          "headers": [
+            "State",
+            "City",
+            "Worksite",
+            "LocID",
+            "Sponsor",
+            "Grant Number",
+            "Award Date",
+            "Entitlement",
+            "Discretionary",
+            "Supp Discretionary",
+            "CARES",
+            "Econ Recover",
+            "AIG",
+            "FCT",
+            "ATRM",
+            "Total Amount",
+            "Project Summary"
+          ],
+          "sheet": "Export Worksheet"
+        },
+        "sha256": "8125df0ecc5ebdb4fd159f07e28aa3e9e4b7d9349983eb1aca0d69fc1ac291de",
+        "url": "https://www.faa.gov/sites/faa.gov/files/2023-10/FY2023-AIP-grants.xlsx",
+        "year": 2023
+      },
+      {
+        "bytes": 316840,
+        "schema": {
+          "header_row_1based": 3,
+          "headers": [
+            "State",
+            "City",
+            "Worksite",
+            "LocID",
+            "Sponsor",
+            "Grant Number",
+            "Award Date",
+            "Entitlement",
+            "Discretionary",
+            "SUM(DISC_NOISE_AMT)",
+            "SUM(DISC_MAP_AMT)",
+            "Supp Discretionary",
+            "CARES",
+            "Econ Recover",
+            "AIG",
+            "FCT",
+            "ATRM",
+            "Total Amount",
+            "Project Summary"
+          ],
+          "sheet": "Export Worksheet"
+        },
+        "sha256": "784d1e445b42f63c7c2fde46617099be4a30979825cd3dd9a230d7b0ff5a9ca3",
+        "url": "https://www.faa.gov/sites/faa.gov/files/2024-10/FY2024-AIP-grants.xlsx",
+        "year": 2024
+      },
+      {
+        "bytes": 430906,
+        "schema": {
+          "header_row_1based": 3,
+          "headers": [
+            "State",
+            "City",
+            "Worksite",
+            "LocID",
+            "Sponsor",
+            "Grant Number",
+            "Award Date",
+            "Entitlement",
+            "Discretionary",
+            "Discretionary Noise",
+            "Discretionary MAP",
+            "Supp Discretionary",
+            "CARES",
+            "Econ Recover",
+            "AIG",
+            "FCT",
+            "ATRM",
+            "Total Amount",
+            "Project Summary"
+          ],
+          "sheet": "Data"
+        },
+        "sha256": "1c16930f818879bc144d5d531c85f4dc1c3e992b08ceb937dadddc4a7484adcb",
+        "url": "https://www.faa.gov/sites/faa.gov/files/2025-11/FY_2025_AIP_Grants.xlsx",
+        "year": 2025
+      }
+    ],
+    "bts_master": {
+      "fields": [
+        "AIRPORT_SEQ_ID",
+        "AIRPORT_ID",
+        "AIRPORT",
+        "AIRPORT_STATE_CODE",
+        "AIRPORT_START_DATE",
+        "AIRPORT_THRU_DATE",
+        "AIRPORT_IS_CLOSED",
+        "AIRPORT_IS_LATEST"
+      ],
+      "member": "T_MASTER_CORD.csv",
+      "member_sha256": "b14813a6bbaae7966479d980724b0f3fbf5fac89798c741e7fc8eb5714d773b6",
+      "url": "https://www.transtats.bts.gov/DL_SelectFields.aspx?QO_fu146_anzr=N8vn6v10&gnoyr_VQ=FLL",
+      "zip_bytes": 182003,
+      "zip_sha256": "c470ece8834f54ef7843a0ee267d40ce5624f658aec434a005c79d8f52bc2476"
+    },
+    "bts_ontime_airport_list": {
+      "bytes": 79905,
+      "code_count": 415,
+      "sha256": "ef713b33a5f7ee9574c68648111e0541bebe02e0553f90a5005edea91b4a3ec5",
+      "url": "https://www.transtats.bts.gov/OT_Delay/NewAirportList.asp?flag=undefined&xpage=OT_DelayCause1.asp"
+    },
+    "faa_lid": {
+      "bytes": 1340855,
+      "fields": [
+        "LocID",
+        "Facility",
+        "Location",
+        "FLTWO",
+        "Tie-in Facility",
+        "Center"
+      ],
+      "sha256": "b811bc87dfeda86ff75390248f613c99453e8218538857bf3268495cca12a02e",
+      "url": "https://www.fly.faa.gov/rmt/data_file/locid_db.csv"
+    }
+  }
+}
