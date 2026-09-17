@@ -1,0 +1,50 @@
+name: Activate PORTFOLIO-R38
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/activate_portfolio_r38.py'
+      - '.github/workflows/activate-portfolio-r38.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: read
+jobs:
+  activate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify pre-Issue contract and live Issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git cat-file -e 81216245922df756667295a4ffeb89fb41bd274f^{commit}
+          test ! -e registry/DEC-230.md
+          gh issue view 159 --repo '${{ github.repository }}' --json state --jq '.state' | grep -qx OPEN
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          cp=json.loads(Path('context/checkpoint.json').read_text())
+          assert str(cp['active_issue']).lower() in {'none','null','n/a'}
+          assert cp['active_research']=='NONE'
+          assert cp['last_completed_issue']==158
+          assert cp['last_decision']=='DEC-229'
+          PY
+      - name: Activate canonical state
+        run: python tools/activate_portfolio_r38.py
+      - name: Verify active mirrors
+        run: python tools/check_checkpoint.py
+      - name: Commit activation
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add registry/DEC-230.md registry/DECISION_LOG.md context/checkpoint.json STATUS.md context/SESSION_HANDOFF.md
+          git commit -m 'Activate PORTFOLIO-R38'
+          git push origin HEAD:main
+      - name: Confirm outcome firewall
+        run: |
+          echo 'Candidate outcome rows remain unopened.'
+          echo 'FSIS transport failure is not scientific HOLD; cost=0 USD.'
