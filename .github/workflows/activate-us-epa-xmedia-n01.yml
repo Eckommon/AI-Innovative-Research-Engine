@@ -1,0 +1,73 @@
+name: Activate US-EPA-XMEDIA-N01
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/activate-us-epa-xmedia-n01.yml'
+      - 'tools/activate_us_epa_xmedia_n01.py'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: read
+
+jobs:
+  activate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify pre-Issue contract and live Issue
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python -m py_compile tools/activate_us_epa_xmedia_n01.py
+          test "$(git log -1 --format=%H -- research/US-EPA-XMEDIA-N01/README.md)" = "12f30d5d27d7d4f27022bc355c2a0c62a76e9f0c"
+          test "$(gh api repos/${GITHUB_REPOSITORY}/issues/151 --jq .state)" = "open"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c['checkpoint_id']=='CHK-20260917-US-EPA-XMEDIA-F01-TERMINAL'
+          assert c['active_issue']=='none'
+          assert c['last_completed_issue']==150
+          assert c['last_decision']=='DEC-213'
+          s=Path('research/US-EPA-XMEDIA-N01/README.md').read_text()
+          assert 'status: CONTRACT_FROZEN_PRE_ISSUE' in s
+          assert 'NPDES_EFF_VIOLATIONS.csv' in s
+          assert 'npdes_effluent_violation_rows_opened: false' in s
+          assert 'PASS_US_EPA_XMEDIA_N01_MATCHED_MONITORING_INTENSITY_DESIGN_IDENTIFIABLE' in s
+          print('US_EPA_XMEDIA_N01_PREISSUE_VERIFY_PASS')
+          PY
+      - name: Activate canonical state
+        run: python tools/activate_us_epa_xmedia_n01.py
+      - name: Verify active mirrors
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert c['checkpoint_id']=='CHK-20260917-US-EPA-XMEDIA-N01-ACTIVE'
+          assert c['active_issue']==151
+          assert c['active_research']=='US-EPA-XMEDIA-N01'
+          assert c['last_decision']=='DEC-214'
+          assert 'US_EPA_XMEDIA_N01_ACTIVE__OUTCOME_BLIND_MATCHED_MONITORING_INTENSITY_DESIGN' in Path('STATUS.md').read_text()
+          assert Path('registry/DEC-214.md').exists()
+          print('US_EPA_XMEDIA_N01_ACTIVATION_VERIFY_PASS')
+          PY
+      - name: Commit activation
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add registry/DEC-214.md registry/DECISION_LOG.md STATUS.md context/checkpoint.json context/SESSION_HANDOFF.md
+          git commit -m 'Activate US-EPA-XMEDIA-N01'
+          git pull --rebase origin main
+          git push origin HEAD:main
+      - name: Confirm outcome firewall
+        run: |
+          echo 'Part 2, E90 membership, DMR and RCRA violation outcomes remain unopened.'
+          echo 'Incremental monetary cost: 0 USD.'
