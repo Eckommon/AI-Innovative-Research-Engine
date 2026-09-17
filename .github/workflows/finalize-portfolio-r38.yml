@@ -1,0 +1,58 @@
+name: Finalize PORTFOLIO-R38 Selection
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/finalize_portfolio_r38.py'
+      - '.github/workflows/finalize-portfolio-r38.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: write
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify frozen R38 evidence and live Issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git cat-file -e 81216245922df756667295a4ffeb89fb41bd274f^{commit}
+          git cat-file -e 51c51480bd1adff6e37676266d15b42a54ca29fd^{commit}
+          git cat-file -e 293ee57618f94b934312ffcdc776277e24d76691^{commit}
+          gh issue view 159 --repo '${{ github.repository }}' --json state --jq '.state' | grep -qx OPEN
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          cp=json.loads(Path('context/checkpoint.json').read_text())
+          assert str(cp['active_issue']) in {'159','#159'}
+          assert cp['active_research']=='PORTFOLIO-R38'
+          assert cp['last_decision']=='DEC-230'
+          s=Path('research/PORTFOLIO-R38/SCORECARD.md').read_text()
+          assert 'US-FDIC-BRANCH-001' in s and '**39**' in s and '**SELECT_F01**' in s
+          assert 'candidate_outcomes_opened: false' in s
+          PY
+      - name: Build terminal durable state
+        run: python tools/finalize_portfolio_r38.py
+      - name: Verify local checkpoint mirrors
+        run: python tools/check_checkpoint.py
+      - name: Commit terminal state locally
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/PORTFOLIO-R38/RESULT.md registry/DEC-231.md registry/DECISION_LOG.md context/checkpoint.json STATUS.md context/SESSION_HANDOFF.md
+          git commit -m 'Finalize PORTFOLIO-R38 FDIC branch selection'
+      - name: Close Issue 159 completed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh issue close 159 --repo '${{ github.repository }}' --reason completed
+      - name: Push terminal state
+        run: git push origin HEAD:main
+      - name: Confirm selection boundary
+        run: |
+          echo 'Selected FDIC branch F01 candidate only; future closure membership unopened.'
+          echo 'No relationship, prediction, ranking, causal or novelty claim; cost=0 USD.'
