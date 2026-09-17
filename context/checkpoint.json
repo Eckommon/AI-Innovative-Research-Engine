@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260917-US-EPA-XMEDIA-N01-TERMINAL",
-  "active_issue": "none",
-  "active_research": "NONE",
+  "checkpoint_id": "CHK-20260917-US-EPA-XMEDIA-E01-ACTIVE",
+  "active_issue": 152,
+  "active_research": "US-EPA-XMEDIA-E01",
   "last_completed_issue": 151,
   "last_completed_research": "US-EPA-XMEDIA-N01",
-  "last_decision": "DEC-215",
+  "last_decision": "DEC-216",
   "updated": "2026-09-17"
 }
