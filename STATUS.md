@@ -1,21 +1,21 @@
 ---
-checkpoint_id: CHK-20260918-US-IRS-EO-N01-TERMINAL
+checkpoint_id: CHK-20260918-PORTFOLIO-R40-TERMINAL
 active_issue: none
 active_research: NONE
-last_completed_issue: 164
-last_completed_research: US-IRS-EO-N01
-last_decision: DEC-240
+last_completed_issue: 165
+last_completed_research: PORTFOLIO-R40
+last_decision: DEC-241
 updated: 2026-09-18
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `US_IRS_EO_N01_HOLD_GATE5_SCHEMA_MAPPING__PORTFOLIO_RESELECTION_REQUIRED`
+**State / 상태:** `PORTFOLIO_R40_SELECTED_US_FCC_ULS_001__F01_CONTRACT_REQUIRED`
 
-US-IRS-EO-N01 is terminal scientific HOLD at frozen Gate 5. The authorized 2019 Form-990-only XML source cannot deterministically enforce the frozen application-pending eligibility exclusion. No historical organization-return row or Automatic Revocation row was opened.
+PORTFOLIO-R40 is terminal. `US-FCC-ULS-001` was selected at 39/45 from the immutable scorecard. Candidate-specific future cancellation/termination membership was not used for scoring, and canonicalization does not change the scientific selection.
 
 ## Exact next action / 정확한 다음 행동
 
-Execute independent outcome-blind `PORTFOLIO-R40` reselection. Do not rescue N01 by dropping the application-pending criterion, changing the source year, admitting 990-EZ/PF, using a proxy, or opening revocation membership. E01 remains unauthorized.
+Design and freeze a separate outcome-blind `US-FCC-ULS-F01` structural contract **before creating its Issue and before opening any future cancelled/terminated event cohort**. F01 must prospectively freeze one radio-service family and source windows, then test official file access, exact 9-digit system-ID semantics/coverage, action/status/date semantics, historical transaction lineage, support/cardinality, deterministic fingerprints, and an outcome firewall.
 
 Incremental monetary cost remains **0 USD**.
