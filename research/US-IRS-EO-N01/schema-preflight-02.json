@@ -1,0 +1,492 @@
+{
+  "automatic_revocation_entity_body_bytes_consumed": 0,
+  "candidate_declarations": {
+    "AmendedReturnInd": [
+      {
+        "file": "2019v5.1/TEGE/TEGE990/IRS990/IRS990.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/TEGE/TEGE990EZ/IRS990EZ/IRS990EZ.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/TEGE/TEGE990PF/IRS990PF/IRS990PF.xsd",
+        "mode": "name"
+      }
+    ],
+    "ApplicationPendingInd": [],
+    "CYTotalExpensesAmt": [
+      {
+        "file": "2019v5.1/TEGE/TEGE990/IRS990/IRS990.xsd",
+        "mode": "name"
+      }
+    ],
+    "CYTotalRevenueAmt": [
+      {
+        "file": "2019v5.1/TEGE/TEGE990/IRS990/IRS990.xsd",
+        "mode": "name"
+      }
+    ],
+    "EIN": [
+      {
+        "file": "2019v5.0/TEGE/Common/ReturnHeader990x.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/Dependencies/GeneralDependencyMedium.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/Dependencies/GeneralDependencySmall.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/Dependencies/IncomeTaxReturnsStatement.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/Dependencies/Owned10PercentInterestInForeignPartnershipStatement.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS1040ScheduleF/IRS1040ScheduleF.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS3115/ConsolidatedGroupInformationStatement.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS3115/IRS3115.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS3115/ParentCorporationInformationStatement.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS3115/PrivateLetterRulingChgInAcctMthdTechAdviceReqStatement.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS3115/ReducedUserFeeStatement.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS3468/IRS3468.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS4684/IRS4684.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS4797/IRS4797.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS5471/Category3FilerStatement.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS5471/IRS5471.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS5471/OwnsForeignEntitiesStatement.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS5471/OwnsForeignPartnershipStmt.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS5471/PersonMeetingFilingRequirementsStatement.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS5471ScheduleJ/IRS5471ScheduleJ.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS5471ScheduleM/IRS5471ScheduleM.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS5471ScheduleO/IRS5471ScheduleO.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS5713/IRS5713.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS5713ScheduleA/IRS5713ScheduleA.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS5713ScheduleB/IRS5713ScheduleB.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS5713ScheduleC/IRS5713ScheduleC.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS8594/IRS8594.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS8621/DeemedDivElectRespectFormerPFICStmt.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS8621/DeemedDivElectSec1297ePFICStmt.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS8621/DeemedDividendElectionStatement.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS8621/IRS8621.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS8621/QEFDistributionStatement.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS8697/IdentificationOfPassThroughEntitiesStatement.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS8697/IRS8697.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS8824/IRS8824.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS8825/IRS8825.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS8833/IRS8833.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS8838/IRS8838.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS8838P/IRS8838P.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS8858/IRS8858.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS8865/ItemizedOrdinaryIncomeLossStatement.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS8865ScheduleO/IRS8865ScheduleO.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS8865ScheduleP/IRS8865ScheduleP.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS8874/IRS8874.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS8883/IRS8883.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS8886/ContinuationOfForm8886ExpectedTaxBenefitsExplanation.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS8886/IRS8886.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS8900/AssigneeRailroadTrackMilesStatement.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS8900/AssignorRailroadTrackMilesStatement.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS970/IRS970.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRSFormT/IRSFormT.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/IndividualIncomeTax/Common/IRS8949/IRS8949.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/Shared/IRS5471ScheduleE/IRS5471ScheduleE.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/Shared/IRS5471ScheduleH/IRS5471ScheduleH.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/Shared/IRS5471ScheduleI1/IRS5471ScheduleI1.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/Shared/IRS5471ScheduleP/IRS5471ScheduleP.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/Shared/IRS8865ScheduleH/IRS8865ScheduleH.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/Shared/IRS8992/IRS8992.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/Shared/IRS8997/IRS8997.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/Shared/IRS965B/IRS965B.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/TEGE/Common/Dependencies/AffiliateListing.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/TEGE/Common/IRS990ScheduleA/IRS990ScheduleA.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/TEGE/Common/IRS990ScheduleC/AffiliatedGroupSchedule.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/TEGE/Common/IRS990ScheduleC/IRS990ScheduleC.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/TEGE/Common/IRS990ScheduleF/IRS990ScheduleF.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/TEGE/Common/IRS990ScheduleN/IRS990ScheduleN.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/TEGE/Common/IRS990ScheduleR/IRS990ScheduleR.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/TEGE/TEGE990PF/IRS990PF/TransfersFromControlledEntitiesSchedule.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/TEGE/TEGE990PF/IRS990PF/TransfersToControlledEntitiesSchedule.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "ReturnHeader990x_rev.xsd",
+        "mode": "name"
+      }
+    ],
+    "FinalReturnInd": [
+      {
+        "file": "2019v5.1/TEGE/TEGE990/IRS990/IRS990.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/TEGE/TEGE990EZ/IRS990EZ/IRS990EZ.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/TEGE/TEGE990PF/IRS990PF/IRS990PF.xsd",
+        "mode": "name"
+      }
+    ],
+    "GroupReturnForAffiliatesInd": [
+      {
+        "file": "2019v5.1/TEGE/TEGE990/IRS990/IRS990.xsd",
+        "mode": "name"
+      }
+    ],
+    "InitialReturnInd": [
+      {
+        "file": "2019v5.1/TEGE/TEGE990/IRS990/IRS990.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/TEGE/TEGE990EZ/IRS990EZ/IRS990EZ.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/TEGE/TEGE990PF/IRS990PF/IRS990PF.xsd",
+        "mode": "name"
+      }
+    ],
+    "NetAssetsOrFundBalancesEOYAmt": [
+      {
+        "file": "2019v5.1/TEGE/TEGE990/IRS990/IRS990.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/TEGE/TEGE990EZ/IRS990EZ/IRS990EZ.xsd",
+        "mode": "name"
+      }
+    ],
+    "Organization501c3Ind": [
+      {
+        "file": "2019v5.1/TEGE/TEGE990/IRS990/IRS990.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/TEGE/TEGE990EZ/IRS990EZ/IRS990EZ.xsd",
+        "mode": "name"
+      }
+    ],
+    "ReturnTypeCd": [
+      {
+        "file": "2019v5.0/TEGE/Common/ReturnHeader990x.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS5471ScheduleO/IRS5471ScheduleO.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "ReturnHeader990x_rev.xsd",
+        "mode": "name"
+      }
+    ],
+    "StateAbbreviationCd": [
+      {
+        "file": "2019v5.1/Common/efileTypes.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/PartnershipIncome/Common/IRS8912/AdditionalBondCurrentYearCreditStatement.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/PartnershipIncome/Common/IRS8912/IRS8912.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/TEGE/Common/IRS990ScheduleA/IRS990ScheduleA.xsd",
+        "mode": "name"
+      }
+    ],
+    "TaxPeriodBeginDt": [
+      {
+        "file": "2019v5.0/TEGE/Common/ReturnHeader990x.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/Common/efileAttachments.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS2439/IRS2439.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "ReturnHeader990x_rev.xsd",
+        "mode": "name"
+      }
+    ],
+    "TaxPeriodEndDt": [
+      {
+        "file": "2019v5.0/TEGE/Common/ReturnHeader990x.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/Common/efileAttachments.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS2439/IRS2439.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "ReturnHeader990x_rev.xsd",
+        "mode": "name"
+      }
+    ],
+    "TotalAssetsEOYAmt": [
+      {
+        "file": "2019v5.1/CorporateIncomeTax/Common/IRS8865/IRS8865.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/TEGE/TEGE990/IRS990/IRS990.xsd",
+        "mode": "name"
+      },
+      {
+        "file": "2019v5.1/TEGE/TEGE990PF/IRS990PF/IRS990PF.xsd",
+        "mode": "name"
+      }
+    ],
+    "VotingMembersGoverningBodyCnt": [
+      {
+        "file": "2019v5.1/TEGE/TEGE990/IRS990/IRS990.xsd",
+        "mode": "name"
+      }
+    ],
+    "VotingMembersIndependentCnt": [
+      {
+        "file": "2019v5.1/TEGE/TEGE990/IRS990/IRS990.xsd",
+        "mode": "name"
+      }
+    ]
+  },
+  "candidate_resolved": {
+    "AmendedReturnInd": true,
+    "ApplicationPendingInd": false,
+    "CYTotalExpensesAmt": true,
+    "CYTotalRevenueAmt": true,
+    "EIN": true,
+    "FinalReturnInd": true,
+    "GroupReturnForAffiliatesInd": true,
+    "InitialReturnInd": true,
+    "NetAssetsOrFundBalancesEOYAmt": true,
+    "Organization501c3Ind": true,
+    "ReturnTypeCd": true,
+    "StateAbbreviationCd": true,
+    "TaxPeriodBeginDt": true,
+    "TaxPeriodEndDt": true,
+    "TotalAssetsEOYAmt": true,
+    "VotingMembersGoverningBodyCnt": true,
+    "VotingMembersIndependentCnt": true
+  },
+  "contract_sha": "70898f12e1b1fb2ad233aaf0a1cb13ff49d73fe8",
+  "future_outcome_rows_opened": 0,
+  "historical_index_rows_opened": 0,
+  "historical_xml_return_rows_opened": 0,
+  "incremental_monetary_cost_usd": 0,
+  "issue": 164,
+  "research": "US-IRS-EO-N01",
+  "schema_sha256": "32bc81b2767da3caf4700bfb90d015f17c670aa73bc481e7ac65410d1f03b9d7",
+  "schema_url": "https://www.irs.gov/pub/irs-tege/990x-schema-2019v5.1.zip",
+  "scientific_contract_changed": false,
+  "type": "schema_mapping_preflight_02"
+}
