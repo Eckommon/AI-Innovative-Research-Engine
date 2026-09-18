@@ -1,0 +1,60 @@
+name: Preflight US-IRS-EO-N01 Schema and Sources
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/preflight_us_irs_eo_n01_schema.py'
+      - '.github/workflows/preflight-us-irs-eo-n01-schema.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: read
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify active N01 boundary
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git cat-file -e 70898f12e1b1fb2ad233aaf0a1cb13ff49d73fe8^{commit}
+          gh issue view 164 --repo '${{ github.repository }}' --json state --jq '.state' | grep -qx OPEN
+          test ! -e research/US-IRS-EO-N01/schema-preflight.json
+          test ! -e research/US-IRS-EO-N01/SCHEMA_PREFLIGHT.md
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          cp=json.loads(Path('context/checkpoint.json').read_text())
+          assert cp['checkpoint_id']=='CHK-20260918-US-IRS-EO-N01-ACTIVE'
+          assert cp['active_issue']==164
+          assert cp['active_research']=='US-IRS-EO-N01'
+          assert cp['last_decision']=='DEC-239'
+          PY
+      - name: Execute schema/source metadata preflight
+        run: python tools/preflight_us_irs_eo_n01_schema.py
+      - name: Verify no empirical or outcome rows were opened
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          e=json.loads(Path('research/US-IRS-EO-N01/schema-preflight.json').read_text())
+          assert e['historical_index_rows_opened']==0
+          assert e['historical_xml_return_rows_opened']==0
+          assert e['future_outcome_rows_opened']==0
+          assert e['automatic_revocation_entity_body_bytes_consumed']==0
+          assert e['incremental_monetary_cost_usd']==0
+          assert e['index_head']['status']==200
+          assert all(x['status']==200 for x in e['historical_xml_zip_heads'])
+          print(e['candidate_element_presence'])
+          PY
+      - name: Commit immutable preflight
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-IRS-EO-N01/schema-preflight.json research/US-IRS-EO-N01/SCHEMA_PREFLIGHT.md
+          git commit -m 'Record US-IRS-EO-N01 schema source preflight'
+          git push origin HEAD:main
