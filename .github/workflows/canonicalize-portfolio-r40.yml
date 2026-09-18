@@ -1,0 +1,53 @@
+name: Canonicalize PORTFOLIO-R40 Terminal Selection
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/canonicalize-portfolio-r40.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: read
+jobs:
+  canonicalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify frozen R40 evidence and completed Issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git cat-file -e 22ff4cc6045bb895e5e4fe45dccca42bfc25867f^{commit}
+          git cat-file -e 1700a3877e540b68ebec1e85f8624fbe0a02727d^{commit}
+          git cat-file -e 4c2977bc5b2b386d09193010244629dfec63969f^{commit}
+          git cat-file -e f3a4e615b640e668a56759305fe4a783591a3cfb^{commit}
+          gh issue view 165 --repo '${{ github.repository }}' --json state,stateReason --jq '.state + ":" + (.stateReason // "")' | grep -Ei '^CLOSED:(COMPLETED|completed)$'
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          cp=json.loads(Path('context/checkpoint.json').read_text())
+          assert cp['checkpoint_id']=='CHK-20260918-US-IRS-EO-N01-TERMINAL'
+          assert cp['last_completed_issue']==164
+          assert cp['last_decision']=='DEC-240'
+          s=Path('research/PORTFOLIO-R40/SCORECARD.md').read_text()
+          assert '`US-FCC-ULS-001` | 4 | 3 | 5 | 5 | 4 | 5 | 5 | 5 | 3 | **39** | **SELECT_F01**' in s
+          assert 'candidate_future_event_membership_used_for_scoring: false' in s
+          PY
+      - name: Build terminal canonical state
+        run: python tools/canonicalize_portfolio_r40.py
+      - name: Verify checkpoint mirrors
+        run: python tools/check_checkpoint.py
+      - name: Commit terminal canonical state
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add registry/DEC-241.md registry/DECISION_LOG.md context/checkpoint.json STATUS.md context/SESSION_HANDOFF.md
+          git commit -m 'Canonicalize PORTFOLIO-R40 FCC ULS selection'
+          git push origin HEAD:main
+      - name: Confirm boundary
+        run: |
+          echo 'R40 science unchanged; FCC ULS F01 selected 39/45.'
+          echo 'Future cancelled/terminated event cohort not authorized; cost=0 USD.'
