@@ -1,4 +1,5 @@
 name: Canonicalize PORTFOLIO-R40 Terminal Selection
+# second-push trigger: execute frozen R40 terminal canonicalizer
 on:
   push:
     branches: [main]
