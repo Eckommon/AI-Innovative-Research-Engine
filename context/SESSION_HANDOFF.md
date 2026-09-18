@@ -1,26 +1,25 @@
 ---
-checkpoint_id: CHK-20260918-US-IRS-EO-N01-TERMINAL
+checkpoint_id: CHK-20260918-PORTFOLIO-R40-TERMINAL
 active_issue: none
 active_research: NONE
-last_completed_issue: 164
-last_completed_research: US-IRS-EO-N01
-last_decision: DEC-240
+last_completed_issue: 165
+last_completed_research: PORTFOLIO-R40
+last_decision: DEC-241
 updated: 2026-09-18
 ---
 
 # Session Handoff / 세션 인계
 
-`US_IRS_EO_N01_HOLD_GATE5_SCHEMA_MAPPING__PORTFOLIO_RESELECTION_REQUIRED`
+`PORTFOLIO_R40_SELECTED_US_FCC_ULS_001__F01_CONTRACT_REQUIRED`
 
-- Issue #164 completed.
-- Contract: `70898f12e1b1fb2ad233aaf0a1cb13ff49d73fe8`.
-- Terminal disposition: `HOLD_US_IRS_EO_N01_MATCHED_GOVERNANCE_INDEPENDENCE_DESIGN_NOT_IDENTIFIABLE`.
-- Failed frozen requirement: Gate 5 — deterministic official-IRS semantic mapping.
-- 2019 schema SHA-256: `32bc81b2767da3caf4700bfb90d015f17c670aa73bc481e7ac65410d1f03b9d7`.
-- `ApplicationPendingInd`: absent from scanned 2019v5.1 schema.
-- `ApplicationPending`: declared only in IRS990EZ and IRS990PF, not IRS990.
-- Historical organization-return rows opened: 0.
-- Automatic Revocation rows opened: 0; entity-body bytes consumed: 0.
-- E01 not authorized.
-- Next: independent outcome-blind `PORTFOLIO-R40`.
+- Issue #165 completed.
+- Contract: `22ff4cc6045bb895e5e4fe45dccca42bfc25867f`.
+- Revalidation: `1700a3877e540b68ebec1e85f8624fbe0a02727d`.
+- Scorecard: `4c2977bc5b2b386d09193010244629dfec63969f`.
+- Result: `f3a4e615b640e668a56759305fe4a783591a3cfb`.
+- Selected: `US-FCC-ULS-001` 39/45.
+- FMCSA 38 HOLD; SEC 36 HOLD; NCES 36 HOLD.
+- No candidate-specific future-event membership was used for scoring.
+- Next: freeze pre-Issue `US-FCC-ULS-F01` structural contract.
+- Radio-service family and historical/future source windows must be fixed before empirical event membership.
 - Cost: 0 USD.
