@@ -1,0 +1,54 @@
+name: Preflight US-IRS-EO-N01 Schema References
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/preflight_us_irs_eo_n01_schema02.py'
+      - '.github/workflows/preflight-us-irs-eo-n01-schema02.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: read
+jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify active N01 and immutable slot
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue view 164 --repo '${{ github.repository }}' --json state --jq '.state' | grep -qx OPEN
+          test -e research/US-IRS-EO-N01/schema-preflight.json
+          test ! -e research/US-IRS-EO-N01/schema-preflight-02.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          cp=json.loads(Path('context/checkpoint.json').read_text())
+          assert cp['active_issue']==164 and cp['active_research']=='US-IRS-EO-N01'
+          assert cp['last_decision']=='DEC-239'
+          PY
+      - name: Execute schema name/ref mapping preflight
+        run: python tools/preflight_us_irs_eo_n01_schema02.py
+      - name: Verify firewall
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          e=json.loads(Path('research/US-IRS-EO-N01/schema-preflight-02.json').read_text())
+          assert e['historical_index_rows_opened']==0
+          assert e['historical_xml_return_rows_opened']==0
+          assert e['future_outcome_rows_opened']==0
+          assert e['automatic_revocation_entity_body_bytes_consumed']==0
+          assert e['scientific_contract_changed'] is False
+          assert e['incremental_monetary_cost_usd']==0
+          print(e['candidate_resolved'])
+          PY
+      - name: Commit immutable preflight 02
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-IRS-EO-N01/schema-preflight-02.json research/US-IRS-EO-N01/SCHEMA_PREFLIGHT_02.md
+          git commit -m 'Record US-IRS-EO-N01 schema reference preflight'
+          git push origin HEAD:main
