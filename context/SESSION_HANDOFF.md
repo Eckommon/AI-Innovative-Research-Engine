@@ -1,24 +1,26 @@
 ---
-checkpoint_id: CHK-20260918-US-IRS-EO-N01-ACTIVE
-active_issue: 164
-active_research: US-IRS-EO-N01
-last_completed_issue: 163
-last_completed_research: US-IRS-EO-F01
-last_decision: DEC-239
+checkpoint_id: CHK-20260918-US-IRS-EO-N01-TERMINAL
+active_issue: none
+active_research: NONE
+last_completed_issue: 164
+last_completed_research: US-IRS-EO-N01
+last_decision: DEC-240
 updated: 2026-09-18
 ---
 
 # Session Handoff / 세션 인계
 
-`US_IRS_EO_N01_ACTIVE__OUTCOME_BLIND_MATCHED_GOVERNANCE_DESIGN`
+`US_IRS_EO_N01_HOLD_GATE5_SCHEMA_MAPPING__PORTFOLIO_RESELECTION_REQUIRED`
 
-- Issue #164 open.
+- Issue #164 completed.
 - Contract: `70898f12e1b1fb2ad233aaf0a1cb13ff49d73fe8`.
-- Parent F01: 18/18 PASS under DEC-238.
-- Authorized historical source: official IRS 2019 Form 990 index + nine frozen 2019 XML ZIP bundles only.
-- Unit: exact 9-digit EIN; U.S. 501(c)(3), Form 990 only.
-- Exposure: governing-body independence ratio, bottom vs top quartile.
-- Matching: exact state × tax-period-end year × board-size bin × revenue decile; deterministic historical balance matching.
-- Automatic Revocation rows opened: 0.
+- Terminal disposition: `HOLD_US_IRS_EO_N01_MATCHED_GOVERNANCE_INDEPENDENCE_DESIGN_NOT_IDENTIFIABLE`.
+- Failed frozen requirement: Gate 5 — deterministic official-IRS semantic mapping.
+- 2019 schema SHA-256: `32bc81b2767da3caf4700bfb90d015f17c670aa73bc481e7ac65410d1f03b9d7`.
+- `ApplicationPendingInd`: absent from scanned 2019v5.1 schema.
+- `ApplicationPending`: declared only in IRS990EZ and IRS990PF, not IRS990.
+- Historical organization-return rows opened: 0.
+- Automatic Revocation rows opened: 0; entity-body bytes consumed: 0.
 - E01 not authorized.
+- Next: independent outcome-blind `PORTFOLIO-R40`.
 - Cost: 0 USD.
