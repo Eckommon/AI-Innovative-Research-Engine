@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260918-US-IRS-EO-F01-ACTIVE",
-  "active_issue": 163,
-  "active_research": "US-IRS-EO-F01",
-  "last_completed_issue": 162,
-  "last_completed_research": "PORTFOLIO-R39",
-  "last_decision": "DEC-237",
+  "checkpoint_id": "CHK-20260918-US-IRS-EO-F01-TERMINAL",
+  "active_issue": "none",
+  "active_research": "NONE",
+  "last_completed_issue": 163,
+  "last_completed_research": "US-IRS-EO-F01",
+  "last_decision": "DEC-238",
   "updated": "2026-09-18"
 }
