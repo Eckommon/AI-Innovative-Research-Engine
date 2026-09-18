@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260918-US-IRS-EO-N01-TERMINAL",
+  "checkpoint_id": "CHK-20260918-PORTFOLIO-R40-TERMINAL",
   "active_issue": "none",
   "active_research": "NONE",
-  "last_completed_issue": 164,
-  "last_completed_research": "US-IRS-EO-N01",
-  "last_decision": "DEC-240",
+  "last_completed_issue": 165,
+  "last_completed_research": "PORTFOLIO-R40",
+  "last_decision": "DEC-241",
   "updated": "2026-09-18"
 }
