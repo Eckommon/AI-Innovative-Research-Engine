@@ -1,0 +1,21 @@
+{
+  "contract_sha": "70898f12e1b1fb2ad233aaf0a1cb13ff49d73fe8",
+  "future_outcome_rows_opened": 0,
+  "historical_return_rows_opened": 0,
+  "hits": [
+    {
+      "declaration": "<xsd:element name=\"ApplicationPending\" type=\"CheckboxType\" minOccurs=\"0\">",
+      "file": "2019v5.1/TEGE/TEGE990EZ/IRS990EZ/IRS990EZ.xsd",
+      "tag": "ApplicationPending"
+    },
+    {
+      "declaration": "<xsd:element name=\"ApplicationPending\" type=\"CheckboxType\" minOccurs=\"0\">",
+      "file": "2019v5.1/TEGE/TEGE990PF/IRS990PF/IRS990PF.xsd",
+      "tag": "ApplicationPending"
+    }
+  ],
+  "incremental_monetary_cost_usd": 0,
+  "research": "US-IRS-EO-N01",
+  "schema_sha256": "32bc81b2767da3caf4700bfb90d015f17c670aa73bc481e7ac65410d1f03b9d7",
+  "scientific_contract_changed": false
+}
