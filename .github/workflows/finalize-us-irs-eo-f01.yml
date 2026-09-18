@@ -1,0 +1,68 @@
+name: Finalize US-IRS-EO-F01 PASS
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/finalize_us_irs_eo_f01.py'
+      - '.github/workflows/finalize-us-irs-eo-f01.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: write
+jobs:
+  finalize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify immutable PASS evidence and live Issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git cat-file -e ab7651c49e2c739734c6330d9d239201514d21e3^{commit}
+          git cat-file -e 689a00db411b650defcb679bef998beeb55a57da^{commit}
+          test ! -e registry/DEC-238.md
+          gh issue view 163 --repo '${{ github.repository }}' --json state --jq '.state' | grep -qx OPEN
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          cp=json.loads(Path('context/checkpoint.json').read_text())
+          assert cp['active_issue']==163 and cp['active_research']=='US-IRS-EO-F01'
+          assert cp['last_decision']=='DEC-237'
+          a1=json.loads(Path('research/US-IRS-EO-F01/evidence/attempt-01.json').read_text())
+          a2=json.loads(Path('research/US-IRS-EO-F01/evidence/attempt-02.json').read_text())
+          assert a1['pass_count']==17 and a1['failed_gates']==[11]
+          assert a2['disposition']=='PASS_US_IRS_EO_F01_EXACT_EIN_JOIN_READY'
+          assert a2['pass_count']==18 and a2['failed_gates']==[]
+          assert a2['scientific_threshold_changed'] is False
+          assert a2['source_years_changed'] is False
+          assert a2['identity_rule_changed'] is False
+          assert a2['outcome_firewall_changed'] is False
+          assert a2['future_outcome_rows_opened']==0
+          assert a2['future_form990_2025_2026_rows_opened']==0
+          assert a2['automatic_revocation_entity_body_bytes_consumed']==0
+          assert a2['incremental_monetary_cost_usd']==0
+          PY
+      - name: Build terminal durable state
+        run: python tools/finalize_us_irs_eo_f01.py
+      - name: Verify local checkpoint mirrors
+        run: python tools/check_checkpoint.py
+      - name: Commit terminal state locally
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-IRS-EO-F01/RESULT.md registry/DEC-238.md registry/DECISION_LOG.md context/checkpoint.json STATUS.md context/SESSION_HANDOFF.md
+          git commit -m 'Finalize US-IRS-EO-F01 structural PASS'
+      - name: Close Issue 163 completed
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh issue close 163 --repo '${{ github.repository }}' --reason completed
+      - name: Push terminal state
+        run: git push origin HEAD:main
+      - name: Confirm terminal boundary
+        run: |
+          echo 'F01 terminal PASS; US-IRS-EO-N01 design only authorized.'
+          echo 'Automatic Revocation membership and 2025/2026 Form-990 index rows remain unopened.'
+          echo 'E01 remains unauthorized; cost=0 USD.'
