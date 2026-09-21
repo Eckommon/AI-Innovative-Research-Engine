@@ -1,0 +1,513 @@
+{
+  "attempt": 2,
+  "attempt_01_commit": "73ce4cfe7f475bb177186ab7d38ce7374f5e8fee",
+  "attempt_valid": true,
+  "causal_claim_made": false,
+  "contract_sha": "73eec2f714f3e1c89d0441ffb9f746721bda3443",
+  "corrected_runner_base_commit": "857f33dd9fcffd20b7163014963a2e2f8d2f86b4",
+  "disposition": "HOLD_US_HUD_MF_F01_EXACT_PROJECT_ADVERSE_TERMINATION_DESIGN_NOT_READY",
+  "failed_gates": [
+    5,
+    7,
+    8,
+    13,
+    15
+  ],
+  "future_adverse_membership_opened": false,
+  "future_entity_body_bytes_consumed": 0,
+  "future_outcome_firewall_changed": false,
+  "future_terminated_rows_opened": 0,
+  "gates": [
+    {
+      "gate": 1,
+      "observed": {
+        "active_issue": 168,
+        "active_research": "US-HUD-MF-F01",
+        "checkpoint_id": "CHK-20260921-US-HUD-MF-F01-ACTIVE",
+        "last_completed_issue": 167,
+        "last_completed_research": "PORTFOLIO-R41",
+        "last_decision": "DEC-246",
+        "updated": "2026-09-21"
+      },
+      "pass": true
+    },
+    {
+      "gate": 2,
+      "observed": {
+        "contract_sha": "73eec2f714f3e1c89d0441ffb9f746721bda3443",
+        "issue": 168
+      },
+      "pass": true
+    },
+    {
+      "gate": 3,
+      "observed": {
+        "inspection": {
+          "bytes": 150045,
+          "content_length_header": null,
+          "content_type": "text/html; charset=UTF-8",
+          "entity_body_bytes_consumed": 150045,
+          "etag": null,
+          "last_modified": "Wed, 16 Sep 2026 19:36:44 GMT",
+          "requested_url": "https://www.hud.gov/stat/mfh/inspection-scores",
+          "sha256": "d789e59bbf8c92c1f9daa14c00251272ff7d64eecba00a04ec11d8af0772da22",
+          "status": 200
+        },
+        "mortgage": {
+          "bytes": 151305,
+          "content_length_header": null,
+          "content_type": "text/html; charset=UTF-8",
+          "entity_body_bytes_consumed": 151305,
+          "etag": null,
+          "last_modified": "Mon, 21 Sep 2026 14:25:36 GMT",
+          "requested_url": "https://www.hud.gov/hud-partners/multifamily-fhasl-active",
+          "sha256": "7010565ce3e737daf9aad97173565b0589da792f4b80d502b5a0553fec3cd452",
+          "status": 200
+        },
+        "property": {
+          "bytes": 152860,
+          "content_length_header": null,
+          "content_type": "text/html; charset=UTF-8",
+          "entity_body_bytes_consumed": 152860,
+          "etag": null,
+          "last_modified": "Mon, 21 Sep 2026 14:18:17 GMT",
+          "requested_url": "https://www.hud.gov/hud-partners/multifamily-preservation",
+          "sha256": "e95e2aead8a8f26fa16576a0223d32a31ace78c0e736f2820af06f431c1f64f6",
+          "status": 200
+        },
+        "snapshot_text_ok": true
+      },
+      "pass": true
+    },
+    {
+      "gate": 4,
+      "observed": {
+        "active": "https://www.hud.gov/sites/default/files/Housing/documents/FHA-BF90-RM-A.xlsx",
+        "inspection": "https://www.hud.gov/sites/default/files/Housing/documents/MF-Inspection-Report.xls",
+        "property": "https://www.hud.gov/sites/dfiles/Housing/documents/activeportfoliopropdata.xlsx",
+        "terminated": "https://www.hud.gov/sites/default/files/Housing/documents/FHA-BF90-RM-T.xlsx"
+      },
+      "pass": true
+    },
+    {
+      "gate": 5,
+      "observed": {
+        "distinct_valid_fha": 0,
+        "header_row": 3,
+        "headers": [
+          "HUD PROJECT NUMBER",
+          "PROPERTY NAME",
+          "PROPERTY CITY",
+          "PROPERTY STATE",
+          "PROPERTY ZIP",
+          "UNITS",
+          "INITIAL ENDORSEMENT DATE",
+          "FINAL ENDORSEMENT DATE",
+          "ORIGINAL MORTGAGE AMOUNT",
+          "FIRST PAYMENT DATE",
+          "MATURITY DATE",
+          "TERM IN MONTHS",
+          "INTEREST RATE",
+          "CURRENT PRINCIPAL AND INTEREST",
+          "AMORITIZED PRINCIPAL BALANCE",
+          "HOLDER NAME",
+          "HOLDER CITY",
+          "HOLDER STATE",
+          "SERVICER NAME",
+          "SERVICER CITY",
+          "SERVICER STATE",
+          "SECTION OF ACT CODE",
+          "SOA CATEGORY/SUB CATEGORY",
+          "TE",
+          "TC",
+          "BUSINESS_TYPE",
+          "SA_TYPE_CODE"
+        ],
+        "nonblank_fha": 0,
+        "rows": 0,
+        "sheet": "08312026",
+        "syntax_rate": 0.0,
+        "valid_fha": 0
+      },
+      "pass": false
+    },
+    {
+      "gate": 6,
+      "observed": {
+        "bytes": 9283051,
+        "content_length_header": "9283051",
+        "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "entity_body_bytes_consumed": 9283051,
+        "etag": "\"8da5eb-65a70a216b786\"",
+        "final_url": "https://www.hud.gov/sites/default/files/Housing/documents/FHA-BF90-RM-T.xlsx",
+        "last_modified": "Tue, 01 Sep 2026 19:07:42 GMT",
+        "requested_url": "https://www.hud.gov/sites/default/files/Housing/documents/FHA-BF90-RM-T.xlsx",
+        "sha256": "2faaeb67e03e54a9a176a63ea34abe863e35c4db9309a278606a98ff0530de71",
+        "status": 200
+      },
+      "pass": true
+    },
+    {
+      "gate": 7,
+      "observed": {
+        "nonblank": 0,
+        "rate": 0.0,
+        "valid": 0
+      },
+      "pass": false
+    },
+    {
+      "gate": 8,
+      "observed": {
+        "distinct_qualified_active_fha": 0,
+        "threshold": 10000
+      },
+      "pass": false
+    },
+    {
+      "gate": 9,
+      "observed": {
+        "header_row": 3,
+        "headers": [
+          "HUD PROJECT NUMBER",
+          "PROPERTY NAME",
+          "PROPERTY CITY",
+          "PROPERTY STATE",
+          "PROPERTY ZIP",
+          "UNITS",
+          "INITIAL ENDORSEMENT DATE",
+          "FINAL ENDORSEMENT DATE",
+          "ORIGINAL MORTGAGE AMOUNT",
+          "FIRST PAYMENT DATE",
+          "MATURITY DATE",
+          "TERM IN MONTHS",
+          "INTEREST RATE",
+          "HOLDER NAME",
+          "HOLDER CITY",
+          "HOLDER STATE",
+          "SERVICER NAME",
+          "SERVICER CITY",
+          "SERVICER STATE",
+          "SECTION OF ACT CODE",
+          "SOA CATEGORY/Sub Category",
+          "TERM_TYPE",
+          "TERMINATION TYPE DESCRIPTION",
+          "TYPE (Claim/Non Claim)",
+          "TERM_DATE",
+          "TC",
+          "TE",
+          "Status",
+          "BUSINESS_TYPE",
+          "SA_TYPE_CODE"
+        ],
+        "qualified_fha_rows": 58780,
+        "reason_top50": [
+          [
+            "Prepayment",
+            41807
+          ],
+          [
+            "Assignment",
+            6387
+          ],
+          [
+            "Maturity",
+            3160
+          ],
+          [
+            "Voluntary",
+            1511
+          ],
+          [
+            "OMHAR re engineering W/PARTIAL CLAIM",
+            1485
+          ],
+          [
+            "Acquired",
+            1250
+          ],
+          [
+            "Coinsurance Convt to Full Insurance",
+            947
+          ],
+          [
+            "Missing termination type-old case",
+            677
+          ],
+          [
+            "CONVEYANCE",
+            658
+          ],
+          [
+            "OMHAR re engineering W/O Partial Claim",
+            267
+          ],
+          [
+            "TRANSFER WITH REINSURANCE",
+            119
+          ],
+          [
+            "SUPERSESSION",
+            112
+          ],
+          [
+            "Re engineering WITH PARTIAL CLAIM",
+            105
+          ],
+          [
+            "Coinsurance CLAIM",
+            94
+          ],
+          [
+            "CANCELLED",
+            59
+          ],
+          [
+            "Risk Share Claim",
+            38
+          ],
+          [
+            "CORRECTION/CANCELLATION",
+            32
+          ],
+          [
+            "NON-CONVEYED",
+            21
+          ],
+          [
+            "Change to correct SOA and Project number",
+            21
+          ],
+          [
+            "PARTIAL PAYMENT OF CLAIM",
+            6
+          ],
+          [
+            "Re engineering WITHOUT PARTIAL CLAIM",
+            6
+          ],
+          [
+            "PARTIAL RELEASES",
+            5
+          ],
+          [
+            "OMHAR re engineering W/PARTIAL CLAIM and Supplemental",
+            3
+          ],
+          [
+            "NONPAYMENT",
+            3
+          ]
+        ],
+        "rows": 58780,
+        "sheet": "08312026",
+        "termination_date_parseable": 58774,
+        "termination_reason_nonblank": 58773
+      },
+      "pass": true
+    },
+    {
+      "gate": 10,
+      "observed": {
+        "date_rate": 0.9998979244641034,
+        "qualified_rows": 58780,
+        "reason_rate": 0.9998809118747873
+      },
+      "pass": true
+    },
+    {
+      "gate": 11,
+      "observed": {
+        "adverse_source_labels": [
+          "Coinsurance CLAIM",
+          "OMHAR re engineering W/O Partial Claim",
+          "OMHAR re engineering W/PARTIAL CLAIM",
+          "OMHAR re engineering W/PARTIAL CLAIM and Supplemental",
+          "PARTIAL PAYMENT OF CLAIM",
+          "Re engineering WITH PARTIAL CLAIM",
+          "Re engineering WITHOUT PARTIAL CLAIM",
+          "Risk Share Claim"
+        ],
+        "routine_source_labels": [
+          "Maturity",
+          "Prepayment",
+          "Voluntary"
+        ],
+        "semantic_rule": "source-native labels only; adverse tokens frozen={default,claim,foreclos}; routine tokens frozen={prepay,voluntary,matur,refinan}"
+      },
+      "pass": true
+    },
+    {
+      "gate": 12,
+      "observed": {
+        "distinct_property_ids": 17734,
+        "header_row": 1,
+        "headers": [
+          "property_name_text",
+          "property_id",
+          "fha_number",
+          "soa_code",
+          "soa_numeric_name",
+          "soa_description_text",
+          "is_primary_fha_ind",
+          "is_insured_ind",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "qualified_fha": 17734,
+        "rows": 36815,
+        "sheet": "All active Properties with FHA "
+      },
+      "pass": true
+    },
+    {
+      "gate": 13,
+      "observed": {
+        "active_ids": 0,
+        "matched_active_fha": 0,
+        "rate": 0.0,
+        "threshold": 0.7
+      },
+      "pass": false
+    },
+    {
+      "gate": 14,
+      "observed": {
+        "header_row": 1,
+        "headers": [
+          "REMS Property Id",
+          "has_active_financing_ind",
+          "has_active_assistance_ind",
+          "Inspection Id 1",
+          "Inspection Score1",
+          "Release Date 1",
+          "Inspection Id 2",
+          "Inspection Score2",
+          "Release Date 2",
+          "Inspection Id 3",
+          "Inspection Score3",
+          "Release Date 3",
+          "Property Name",
+          "state_name_text",
+          "City",
+          "state_code"
+        ],
+        "property_ids_with_pre_cutoff_inspection": 25912,
+        "rows": 25912,
+        "sheet": "Sheet1"
+      },
+      "pass": true
+    },
+    {
+      "gate": 15,
+      "observed": {
+        "active_fha_with_exact_property_and_inspection": 0,
+        "threshold": 5000
+      },
+      "pass": false
+    },
+    {
+      "gate": 16,
+      "observed": {
+        "future_entity_body_bytes_consumed": 0,
+        "future_request_policy": "no post-2026-09-21 terminated-workbook body URL is defined or requested by this runner",
+        "future_terminated_rows_opened": 0
+      },
+      "pass": true
+    },
+    {
+      "gate": 17,
+      "observed": {
+        "causal_claim_made": false,
+        "future_adverse_membership_opened": false,
+        "future_terminated_rows_opened": 0,
+        "name_address_fuzzy_geo_manual_identity_repair_used": false,
+        "prediction_computed": false,
+        "ranking_computed": false,
+        "relationship_computed": false
+      },
+      "pass": true
+    },
+    {
+      "gate": 18,
+      "observed": {
+        "contract_sha": "73eec2f714f3e1c89d0441ffb9f746721bda3443",
+        "cost_usd": 0,
+        "runner_sha256": "f3cbecb3290f3cd241186328c95d4cc6bdb74c1690951c3a38ede3eb2892e7fa",
+        "source_sha256": {
+          "active": "72ae185f05fd94a5eda54dc55cd36332153c2307b88776fdc139d41a266e5c36",
+          "inspection": "0ff6b86e54762df917058bca832088f343dc174e78332b002dc6fbfa400cd883",
+          "property": "6c375b2b3491d7c7931ce58a1f715a8632a6ceb05b6c10a36ff8624b9c547a01",
+          "terminated": "2faaeb67e03e54a9a176a63ea34abe863e35c4db9309a278606a98ff0530de71"
+        }
+      },
+      "pass": true
+    }
+  ],
+  "github_run_id": "35614642101",
+  "identity_rule_changed": false,
+  "implementation_correction_commit": "5780fbfe2258d901d615cd23bcba45a71279328c",
+  "incremental_monetary_cost_usd": 0,
+  "issue": 168,
+  "name_address_fuzzy_geo_manual_identity_repair_used": false,
+  "pass_count": 13,
+  "prediction_computed": false,
+  "ranking_computed": false,
+  "relationship_computed": false,
+  "research": "US-HUD-MF-F01",
+  "runner_sha256": "f3cbecb3290f3cd241186328c95d4cc6bdb74c1690951c3a38ede3eb2892e7fa",
+  "scientific_threshold_changed": false,
+  "snapshot_changed": false,
+  "source_fingerprints": {
+    "active": "72ae185f05fd94a5eda54dc55cd36332153c2307b88776fdc139d41a266e5c36",
+    "inspection": "0ff6b86e54762df917058bca832088f343dc174e78332b002dc6fbfa400cd883",
+    "property": "6c375b2b3491d7c7931ce58a1f715a8632a6ceb05b6c10a36ff8624b9c547a01",
+    "terminated": "2faaeb67e03e54a9a176a63ea34abe863e35c4db9309a278606a98ff0530de71"
+  }
+}
