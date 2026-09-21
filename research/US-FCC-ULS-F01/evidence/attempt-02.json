@@ -1,0 +1,583 @@
+{
+  "archive_members": [
+    "counts",
+    "AN.dat",
+    "AS.dat",
+    "BC.dat",
+    "BF.dat",
+    "CO.dat",
+    "CP.dat",
+    "CS.dat",
+    "EC.dat",
+    "EM.dat",
+    "EN.dat",
+    "F2.dat",
+    "FF.dat",
+    "FR.dat",
+    "HD.dat",
+    "HS.dat",
+    "L2.dat",
+    "LA.dat",
+    "LF.dat",
+    "LM.dat",
+    "LO.dat",
+    "LS.dat",
+    "MF.dat",
+    "MK.dat",
+    "MW.dat",
+    "OP.dat",
+    "PA.dat",
+    "RC.dat",
+    "SC.dat",
+    "SF.dat",
+    "SG.dat",
+    "a3.dat",
+    "f3.dat",
+    "f5.dat",
+    "f6.dat",
+    "ir.dat",
+    "lc.dat",
+    "ll.dat",
+    "p2.dat",
+    "tp.dat"
+  ],
+  "attempt": 2,
+  "attempt02_wrapper_sha256": "16c590b7197586075cf4d4d029badd6b027bec0aeb3dcf5b08f7c20a9194877d",
+  "attempt_valid": true,
+  "base_runner_commit": "92bbf04d8a9786f9c62417f24fd0d16dc74828a4",
+  "baseline": {
+    "attempted_urls": [
+      {
+        "result": "selected",
+        "status": 200,
+        "url": "https://data.fcc.gov/download/pub/uls/complete/l_micro.zip"
+      }
+    ],
+    "bytes": 211037826,
+    "content_type": "application/zip",
+    "contract_logical_url": "https://data.fcc.gov/download/pub/uls/complete/l_micro.zip",
+    "final_url": "https://data.fcc.gov/download/pub/uls/complete/l_micro.zip",
+    "requested_url": "https://data.fcc.gov/download/pub/uls/complete/l_micro.zip",
+    "sha256": "3ade0c1fcf335fa9d50ce4ecc9bf11b53839d7a40de49baa8f8fa7877e636803",
+    "status": 200,
+    "transport": "curl"
+  },
+  "causal_claim_made": false,
+  "contract_sha": "287f0e3dfe203beee3d9ca1f21e67e51ef2db6a5",
+  "daily_entity_body_bytes_consumed": 0,
+  "daily_metadata": {
+    "https://data.fcc.gov/download/pub/uls/daily/l_mw_fri.zip": {
+      "attempted_urls": [
+        {
+          "result": "selected",
+          "status": 200,
+          "url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_fri.zip"
+        }
+      ],
+      "content_type": "application/zip",
+      "contract_logical_url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_fri.zip",
+      "entity_body_bytes_consumed": 0,
+      "final_url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_fri.zip",
+      "method": "HEAD",
+      "requested_url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_fri.zip",
+      "status": 200,
+      "transport": "curl"
+    },
+    "https://data.fcc.gov/download/pub/uls/daily/l_mw_mon.zip": {
+      "attempted_urls": [
+        {
+          "result": "selected",
+          "status": 200,
+          "url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_mon.zip"
+        }
+      ],
+      "content_type": "application/zip",
+      "contract_logical_url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_mon.zip",
+      "entity_body_bytes_consumed": 0,
+      "final_url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_mon.zip",
+      "method": "HEAD",
+      "requested_url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_mon.zip",
+      "status": 200,
+      "transport": "curl"
+    },
+    "https://data.fcc.gov/download/pub/uls/daily/l_mw_thu.zip": {
+      "attempted_urls": [
+        {
+          "result": "selected",
+          "status": 200,
+          "url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_thu.zip"
+        }
+      ],
+      "content_type": "application/zip",
+      "contract_logical_url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_thu.zip",
+      "entity_body_bytes_consumed": 0,
+      "final_url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_thu.zip",
+      "method": "HEAD",
+      "requested_url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_thu.zip",
+      "status": 200,
+      "transport": "curl"
+    },
+    "https://data.fcc.gov/download/pub/uls/daily/l_mw_tue.zip": {
+      "attempted_urls": [
+        {
+          "result": "selected",
+          "status": 200,
+          "url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_tue.zip"
+        }
+      ],
+      "content_type": "application/zip",
+      "contract_logical_url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_tue.zip",
+      "entity_body_bytes_consumed": 0,
+      "final_url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_tue.zip",
+      "method": "HEAD",
+      "requested_url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_tue.zip",
+      "status": 200,
+      "transport": "curl"
+    },
+    "https://data.fcc.gov/download/pub/uls/daily/l_mw_wed.zip": {
+      "attempted_urls": [
+        {
+          "result": "selected",
+          "status": 200,
+          "url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_wed.zip"
+        }
+      ],
+      "content_type": "application/zip",
+      "contract_logical_url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_wed.zip",
+      "entity_body_bytes_consumed": 0,
+      "final_url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_wed.zip",
+      "method": "HEAD",
+      "requested_url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_wed.zip",
+      "status": 200,
+      "transport": "curl"
+    }
+  },
+  "disposition": "HOLD_US_FCC_ULS_F01_MICROWAVE_EXACT_SYSTEM_ID_FUTURE_EVENT_DESIGN_NOT_READY",
+  "failed_gates": [
+    3,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "future_cancelled_terminated_membership_opened": false,
+  "future_daily_rows_opened": 0,
+  "future_relationship_computed": false,
+  "future_window_changed": false,
+  "gates": [
+    {
+      "gate": 1,
+      "observed": {
+        "active_issue": 166,
+        "active_research": "US-FCC-ULS-F01",
+        "checkpoint_id": "CHK-20260921-US-FCC-ULS-F01-ACTIVE",
+        "last_completed_issue": 165,
+        "last_completed_research": "PORTFOLIO-R40",
+        "last_decision": "DEC-242",
+        "updated": "2026-09-21"
+      },
+      "pass": true
+    },
+    {
+      "gate": 2,
+      "observed": {
+        "contract_sha": "287f0e3dfe203beee3d9ca1f21e67e51ef2db6a5",
+        "issue": 166
+      },
+      "pass": true
+    },
+    {
+      "gate": 3,
+      "observed": {
+        "https://wireless.fcc.gov/uls/documentation/pa_intro24.pdf": {
+          "attempted_urls": [
+            {
+              "result": "selected",
+              "status": 200,
+              "url": "https://wireless.fcc.gov/uls/documentation/pa_intro24.pdf"
+            }
+          ],
+          "bytes": 225341,
+          "content_type": "application/pdf",
+          "contract_logical_url": "https://wireless.fcc.gov/uls/documentation/pa_intro24.pdf",
+          "final_url": "https://wireless.fcc.gov/uls/documentation/pa_intro24.pdf",
+          "requested_url": "https://wireless.fcc.gov/uls/documentation/pa_intro24.pdf",
+          "sha256": "df03acbcbf5c080a077d04c9a672508b9a8ec962788742731e1e1f02c401cefe",
+          "status": 200,
+          "transport": "curl"
+        },
+        "https://wireless.fcc.gov/uls/releases/d992205c.pdf": {
+          "attempted_urls": [
+            {
+              "result": "selected",
+              "status": 200,
+              "url": "https://wireless.fcc.gov/uls/releases/d992205c.pdf"
+            }
+          ],
+          "bytes": 24205,
+          "content_type": "application/pdf",
+          "contract_logical_url": "https://wireless.fcc.gov/uls/releases/d992205c.pdf",
+          "final_url": "https://wireless.fcc.gov/uls/releases/d992205c.pdf",
+          "requested_url": "https://wireless.fcc.gov/uls/releases/d992205c.pdf",
+          "sha256": "dbc63ca7015d7bc059a58b622df8b577c23cf7e20698d87c3c5cc767b320298f",
+          "status": 200,
+          "transport": "curl"
+        },
+        "https://wireless.fcc.gov/wtbfiles/pa_ddef51.pdf": {
+          "attempted_urls": [
+            {
+              "result": "selected",
+              "status": 200,
+              "url": "https://wireless.fcc.gov/wtbfiles/pa_ddef51.pdf"
+            }
+          ],
+          "bytes": 547619,
+          "content_type": "application/pdf",
+          "contract_logical_url": "https://wireless.fcc.gov/wtbfiles/pa_ddef51.pdf",
+          "final_url": "https://wireless.fcc.gov/wtbfiles/pa_ddef51.pdf",
+          "requested_url": "https://wireless.fcc.gov/wtbfiles/pa_ddef51.pdf",
+          "sha256": "b6038f9a83218eddc85f81704bfad2d4ade84bdf78fc8e2c2977ceef49ec996d",
+          "status": 200,
+          "transport": "curl"
+        },
+        "https://www.fcc.gov/wireless/data/public-access-files-database-downloads": {
+          "attempted_urls": [
+            {
+              "error": "RuntimeError:curl rc=22: % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\n  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\n  0   441    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\ncurl: (22) The requested URL returned error: 403",
+              "result": "error",
+              "url": "https://www.fcc.gov/wireless/data/public-access-files-database-downloads"
+            },
+            {
+              "error": "RuntimeError:curl rc=22: % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n\n  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\n  0   406    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0\ncurl: (22) The requested URL returned error: 403",
+              "result": "error",
+              "url": "https://www.fcc.gov/uls/transactions/daily-weekly"
+            }
+          ],
+          "contract_logical_url": "https://www.fcc.gov/wireless/data/public-access-files-database-downloads",
+          "status": null,
+          "transport_error": true
+        }
+      },
+      "pass": false
+    },
+    {
+      "gate": 4,
+      "observed": {
+        "complete": "l_micro.zip",
+        "daily": [
+          "l_mw_mon.zip",
+          "l_mw_tue.zip",
+          "l_mw_wed.zip",
+          "l_mw_thu.zip",
+          "l_mw_fri.zip"
+        ],
+        "family": "Microwave and Microwave Broadcast Auxiliary"
+      },
+      "pass": true
+    },
+    {
+      "gate": 5,
+      "observed": {
+        "attempted_urls": [
+          {
+            "result": "selected",
+            "status": 200,
+            "url": "https://data.fcc.gov/download/pub/uls/complete/l_micro.zip"
+          }
+        ],
+        "bytes": 211037826,
+        "content_type": "application/zip",
+        "contract_logical_url": "https://data.fcc.gov/download/pub/uls/complete/l_micro.zip",
+        "final_url": "https://data.fcc.gov/download/pub/uls/complete/l_micro.zip",
+        "parseable_zip": true,
+        "requested_url": "https://data.fcc.gov/download/pub/uls/complete/l_micro.zip",
+        "sha256": "3ade0c1fcf335fa9d50ce4ecc9bf11b53839d7a40de49baa8f8fa7877e636803",
+        "status": 200,
+        "transport": "curl"
+      },
+      "pass": true
+    },
+    {
+      "gate": 6,
+      "observed": {
+        "HD": "HD.dat",
+        "HS": "HS.dat"
+      },
+      "pass": true
+    },
+    {
+      "gate": 7,
+      "observed": {
+        "positions": {
+          "call_sign": 5,
+          "cancellation_date": 10,
+          "effective_date": 43,
+          "expired_date": 9,
+          "grant_date": 8,
+          "last_action_date": 44,
+          "license_status": 6,
+          "radio_service_code": 7,
+          "unique_system_id": 2
+        },
+        "rows": 366807,
+        "short_rows_lt_44_fields": 0
+      },
+      "pass": true
+    },
+    {
+      "gate": 8,
+      "observed": {
+        "nonblank_id_rows": 366807,
+        "rate": 0.0,
+        "valid_9digit_id_rows": 0
+      },
+      "pass": false
+    },
+    {
+      "gate": 9,
+      "observed": {
+        "distinct_valid_system_ids": 0,
+        "threshold": 20000
+      },
+      "pass": false
+    },
+    {
+      "gate": 10,
+      "observed": {
+        "distinct_active_system_ids": 0,
+        "threshold": 10000
+      },
+      "pass": false
+    },
+    {
+      "gate": 11,
+      "observed": {
+        "counts": {
+          "A": 165713,
+          "C": 132479,
+          "E": 48865,
+          "P": 503,
+          "T": 19247
+        },
+        "documented_A_C_E_T_rows": 366304,
+        "nonblank_status_rows": 366807,
+        "rate": 0.998628706649546
+      },
+      "pass": false
+    },
+    {
+      "gate": 12,
+      "observed": {
+        "active_rows": 0,
+        "grant_or_effective_parseable": 0,
+        "rate": 0.0
+      },
+      "pass": false
+    },
+    {
+      "gate": 13,
+      "observed": {
+        "active_ids": 0,
+        "active_ids_with_hs": 0,
+        "hs_rows": 4950382,
+        "rate": 0.0,
+        "short_hs_rows_lt_6_fields": 0
+      },
+      "pass": false
+    },
+    {
+      "gate": 14,
+      "observed": {
+        "code_and_date_valid_rows": 0,
+        "linked_hs_rows": 0,
+        "rate": 0.0
+      },
+      "pass": false
+    },
+    {
+      "gate": 15,
+      "observed": {
+        "AN.dat": {
+          "joinable": false,
+          "member": "AN.dat",
+          "overlap_hd_ids": 0,
+          "scanned_rows_cap": 200000,
+          "valid_id_rows": 0
+        },
+        "CP.dat": {
+          "joinable": false,
+          "member": "CP.dat",
+          "overlap_hd_ids": 0,
+          "scanned_rows_cap": 74239,
+          "valid_id_rows": 0
+        },
+        "FR.dat": {
+          "joinable": false,
+          "member": "FR.dat",
+          "overlap_hd_ids": 0,
+          "scanned_rows_cap": 200000,
+          "valid_id_rows": 0
+        },
+        "LO.dat": {
+          "joinable": false,
+          "member": "LO.dat",
+          "overlap_hd_ids": 0,
+          "scanned_rows_cap": 200000,
+          "valid_id_rows": 0
+        },
+        "MW.dat": {
+          "joinable": false,
+          "member": "MW.dat",
+          "overlap_hd_ids": 0,
+          "scanned_rows_cap": 200000,
+          "valid_id_rows": 0
+        }
+      },
+      "pass": false
+    },
+    {
+      "gate": 16,
+      "observed": {
+        "https://data.fcc.gov/download/pub/uls/daily/l_mw_fri.zip": {
+          "attempted_urls": [
+            {
+              "result": "selected",
+              "status": 200,
+              "url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_fri.zip"
+            }
+          ],
+          "content_type": "application/zip",
+          "contract_logical_url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_fri.zip",
+          "entity_body_bytes_consumed": 0,
+          "final_url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_fri.zip",
+          "method": "HEAD",
+          "requested_url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_fri.zip",
+          "status": 200,
+          "transport": "curl"
+        },
+        "https://data.fcc.gov/download/pub/uls/daily/l_mw_mon.zip": {
+          "attempted_urls": [
+            {
+              "result": "selected",
+              "status": 200,
+              "url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_mon.zip"
+            }
+          ],
+          "content_type": "application/zip",
+          "contract_logical_url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_mon.zip",
+          "entity_body_bytes_consumed": 0,
+          "final_url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_mon.zip",
+          "method": "HEAD",
+          "requested_url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_mon.zip",
+          "status": 200,
+          "transport": "curl"
+        },
+        "https://data.fcc.gov/download/pub/uls/daily/l_mw_thu.zip": {
+          "attempted_urls": [
+            {
+              "result": "selected",
+              "status": 200,
+              "url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_thu.zip"
+            }
+          ],
+          "content_type": "application/zip",
+          "contract_logical_url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_thu.zip",
+          "entity_body_bytes_consumed": 0,
+          "final_url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_thu.zip",
+          "method": "HEAD",
+          "requested_url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_thu.zip",
+          "status": 200,
+          "transport": "curl"
+        },
+        "https://data.fcc.gov/download/pub/uls/daily/l_mw_tue.zip": {
+          "attempted_urls": [
+            {
+              "result": "selected",
+              "status": 200,
+              "url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_tue.zip"
+            }
+          ],
+          "content_type": "application/zip",
+          "contract_logical_url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_tue.zip",
+          "entity_body_bytes_consumed": 0,
+          "final_url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_tue.zip",
+          "method": "HEAD",
+          "requested_url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_tue.zip",
+          "status": 200,
+          "transport": "curl"
+        },
+        "https://data.fcc.gov/download/pub/uls/daily/l_mw_wed.zip": {
+          "attempted_urls": [
+            {
+              "result": "selected",
+              "status": 200,
+              "url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_wed.zip"
+            }
+          ],
+          "content_type": "application/zip",
+          "contract_logical_url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_wed.zip",
+          "entity_body_bytes_consumed": 0,
+          "final_url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_wed.zip",
+          "method": "HEAD",
+          "requested_url": "https://data.fcc.gov/download/pub/uls/daily/l_mw_wed.zip",
+          "status": 200,
+          "transport": "curl"
+        }
+      },
+      "pass": true
+    },
+    {
+      "gate": 17,
+      "observed": {
+        "causal_claim_made": false,
+        "daily_entity_body_bytes_consumed": 0,
+        "future_cancelled_terminated_membership_opened": false,
+        "future_daily_rows_opened": 0,
+        "future_relationship_computed": false,
+        "name_address_call_sign_only_fuzzy_geo_manual_identity_repair_used": false,
+        "predictive_metric_computed": false,
+        "ranking_computed": false
+      },
+      "pass": true
+    },
+    {
+      "gate": 18,
+      "observed": {
+        "baseline_sha256": "3ade0c1fcf335fa9d50ce4ecc9bf11b53839d7a40de49baa8f8fa7877e636803",
+        "contract_sha": "287f0e3dfe203beee3d9ca1f21e67e51ef2db6a5",
+        "cost_usd": 0,
+        "runner_sha256": "33290528493ec5efa8e35501ae36c93abcc5b625a61c364465fb37a958303cf6"
+      },
+      "pass": true
+    }
+  ],
+  "github_run_id": "35555505050",
+  "hd_schema_positions": {
+    "call_sign": 5,
+    "cancellation_date": 10,
+    "effective_date": 43,
+    "expired_date": 9,
+    "grant_date": 8,
+    "last_action_date": 44,
+    "license_status": 6,
+    "radio_service_code": 7,
+    "unique_system_id": 2
+  },
+  "identity_rule_changed": false,
+  "implementation_correction_commit": "486624cf803c291217baef97b8514294691fce82",
+  "incremental_monetary_cost_usd": 0,
+  "issue": 166,
+  "name_address_call_sign_only_fuzzy_geo_manual_identity_repair_used": false,
+  "pass_count": 9,
+  "predictive_metric_computed": false,
+  "ranking_computed": false,
+  "research": "US-FCC-ULS-F01",
+  "runner_sha256": "33290528493ec5efa8e35501ae36c93abcc5b625a61c364465fb37a958303cf6",
+  "scientific_threshold_changed": false,
+  "service_family_changed": false,
+  "transport_only_correction": true
+}
