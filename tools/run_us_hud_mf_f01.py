@@ -14,6 +14,7 @@ import subprocess
 import tempfile
 
 from openpyxl import load_workbook
+import xlrd
 
 ROOT = Path(__file__).resolve().parents[1]
 CONTRACT_SHA = "73eec2f714f3e1c89d0441ffb9f746721bda3443"
@@ -140,11 +141,39 @@ def parse_date(v):
         except ValueError: pass
     return None
 
+class XlrdSheetAdapter:
+    def __init__(self, sheet):
+        self._sheet=sheet
+        self.title=sheet.name
+    def iter_rows(self, min_row=1, max_row=None, values_only=True):
+        start=max(0,min_row-1)
+        end=min(self._sheet.nrows, max_row if max_row is not None else self._sheet.nrows)
+        for r in range(start,end):
+            vals=[]
+            for c in range(self._sheet.ncols):
+                cell=self._sheet.cell(r,c)
+                v=cell.value
+                if cell.ctype==xlrd.XL_CELL_DATE:
+                    try:
+                        dt=xlrd.xldate.xldate_as_datetime(v,self._sheet.book.datemode)
+                        v=dt
+                    except Exception:
+                        pass
+                vals.append(v)
+            yield tuple(vals)
+
+class XlrdBookAdapter:
+    def __init__(self, book):
+        self.worksheets=[XlrdSheetAdapter(book.sheet_by_index(i)) for i in range(book.nsheets)]
+
 def open_xlsx(path: Path):
+    magic=path.read_bytes()[:8]
     try:
+        if magic.startswith(b"\xd0\xcf\x11\xe0"):
+            return XlrdBookAdapter(xlrd.open_workbook(path))
         return load_workbook(path, read_only=True, data_only=True)
     except Exception as e:
-        raise RuntimeError(f"XLSX_PARSE_ERROR:{path.name}:{type(e).__name__}:{e}")
+        raise RuntimeError(f"EXCEL_PARSE_ERROR:{path.name}:{type(e).__name__}:{e}")
 
 def find_header(ws, required_groups: list[tuple[str,...]], max_rows=30):
     for ridx,row in enumerate(ws.iter_rows(min_row=1,max_row=max_rows,values_only=True),1):
@@ -216,7 +245,9 @@ def main():
             files={}
             for key,u in urls.items():
                 if not u: continue
-                p=td/f"{key}.xlsx"; metas[key]=download(u,p); files[key]=p
+                ext=Path(urlparse(u).path).suffix.lower()
+                if ext not in {".xlsx",".xls"}: ext=".xlsx"
+                p=td/f"{key}{ext}"; metas[key]=download(u,p); files[key]=p
             ev["source_fingerprints"]={k:v["sha256"] for k,v in metas.items()}
 
             # Active workbook
@@ -225,9 +256,9 @@ def main():
             active_ok=False
             if "active" in files:
                 wb=open_xlsx(files["active"])
-                ws,(hr,headers,norms)=choose_sheet(wb,[("fha","projectnumber","fhanumber"),("unit",),("mortgage","amount"),("maturity",),("principal","balance","upb")])
+                ws,(hr,headers,norms)=choose_sheet(wb,[("hudprojectnumber","fhaprojectnumber","projectnumber","fhanumber"),("unit",),("mortgage","amount"),("maturity",),("principal","balance","upb")])
                 if ws:
-                    fi=idx_for(norms,("fhaprojectnumber","projectfhanumber","fhanumber"))
+                    fi=idx_for(norms,("hudprojectnumber","fhaprojectnumber","projectfhanumber","fhanumber"))
                     ui=idx_for(norms,("numberoftotalunits","totalunits","units"))
                     ai=idx_for(norms,("originalmortgageamount","mortgageamount"))
                     mi=idx_for(norms,("maturitydate","loanmaturitydate"))
@@ -253,9 +284,9 @@ def main():
             term_stats={}; term_schema=False; qualified_term=term_date=term_reason=0; reason_counts=Counter()
             if "terminated" in files:
                 wb=open_xlsx(files["terminated"])
-                ws,(hr,headers,norms)=choose_sheet(wb,[("fha","projectnumber","fhanumber")])
+                ws,(hr,headers,norms)=choose_sheet(wb,[("hudprojectnumber","fhaprojectnumber","projectnumber","fhanumber"),("termination","term"),("property","project")])
                 if ws:
-                    fi=idx_for(norms,("fhaprojectnumber","projectfhanumber","fhanumber"))
+                    fi=idx_for(norms,("hudprojectnumber","fhaprojectnumber","projectfhanumber","fhanumber"))
                     di=idx_for(norms,("terminationdate","terminationdt","termdate"))
                     ri=idx_for(norms,("terminationreason","terminationcode","terminationtype","termreason","termcode"))
                     term_schema=fi is not None and di is not None and ri is not None
