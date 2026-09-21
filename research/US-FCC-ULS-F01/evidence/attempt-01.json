@@ -1,0 +1,99 @@
+{
+  "attempt": 1,
+  "attempt_valid": false,
+  "causal_claim_made": false,
+  "contract_sha": "287f0e3dfe203beee3d9ca1f21e67e51ef2db6a5",
+  "daily_entity_body_bytes_consumed": 0,
+  "disposition": "IMPLEMENTATION_BLOCKED_US_FCC_ULS_F01_ATTEMPT_01",
+  "failed_gates": [],
+  "future_cancelled_terminated_membership_opened": false,
+  "future_daily_rows_opened": 0,
+  "future_relationship_computed": false,
+  "gates": [
+    {
+      "gate": 1,
+      "observed": {
+        "active_issue": 166,
+        "active_research": "US-FCC-ULS-F01",
+        "checkpoint_id": "CHK-20260921-US-FCC-ULS-F01-ACTIVE",
+        "last_completed_issue": 165,
+        "last_completed_research": "PORTFOLIO-R40",
+        "last_decision": "DEC-242",
+        "updated": "2026-09-21"
+      },
+      "pass": true
+    },
+    {
+      "gate": 2,
+      "observed": {
+        "contract_sha": "287f0e3dfe203beee3d9ca1f21e67e51ef2db6a5",
+        "issue": 166
+      },
+      "pass": true
+    },
+    {
+      "gate": 3,
+      "observed": {
+        "https://wireless.fcc.gov/uls/documentation/pa_intro24.pdf": {
+          "bytes": 225341,
+          "content_length_header": "225341",
+          "content_type": "application/pdf",
+          "final_url": "https://wireless.fcc.gov/uls/documentation/pa_intro24.pdf",
+          "last_modified": "Tue, 02 Dec 2014 21:38:00 GMT",
+          "sha256": "df03acbcbf5c080a077d04c9a672508b9a8ec962788742731e1e1f02c401cefe",
+          "status": 200
+        },
+        "https://wireless.fcc.gov/uls/releases/d992205c.pdf": {
+          "bytes": 24205,
+          "content_length_header": "24205",
+          "content_type": "application/pdf",
+          "final_url": "https://wireless.fcc.gov/uls/releases/d992205c.pdf",
+          "last_modified": "Thu, 01 Nov 2001 14:59:53 GMT",
+          "sha256": "dbc63ca7015d7bc059a58b622df8b577c23cf7e20698d87c3c5cc767b320298f",
+          "status": 200
+        },
+        "https://wireless.fcc.gov/wtbfiles/pa_ddef51.pdf": {
+          "bytes": 547619,
+          "content_length_header": "547619",
+          "content_type": "application/pdf",
+          "final_url": "https://wireless.fcc.gov/wtbfiles/pa_ddef51.pdf",
+          "last_modified": "Wed, 18 Jul 2018 15:29:05 GMT",
+          "sha256": "b6038f9a83218eddc85f81704bfad2d4ade84bdf78fc8e2c2977ceef49ec996d",
+          "status": 200
+        },
+        "https://www.fcc.gov/wireless/data/public-access-files-database-downloads": {
+          "error": "HTTPError:HTTP Error 403: Forbidden"
+        }
+      },
+      "pass": false
+    },
+    {
+      "gate": 4,
+      "observed": {
+        "complete": "l_micro.zip",
+        "daily": [
+          "l_mw_mon.zip",
+          "l_mw_tue.zip",
+          "l_mw_wed.zip",
+          "l_mw_thu.zip",
+          "l_mw_fri.zip"
+        ],
+        "family": "Microwave and Microwave Broadcast Auxiliary"
+      },
+      "pass": true
+    }
+  ],
+  "github_run_id": "35555305664",
+  "implementation_error": {
+    "message": "HTTP Error 403: Forbidden",
+    "type": "HTTPError"
+  },
+  "incremental_monetary_cost_usd": 0,
+  "issue": 166,
+  "name_address_call_sign_only_fuzzy_geo_manual_identity_repair_used": false,
+  "pass_count": 3,
+  "predictive_metric_computed": false,
+  "ranking_computed": false,
+  "research": "US-FCC-ULS-F01",
+  "runner_sha256": "33290528493ec5efa8e35501ae36c93abcc5b625a61c364465fb37a958303cf6"
+}
