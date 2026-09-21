@@ -1,0 +1,321 @@
+{
+  "attempt": 1,
+  "attempt_valid": false,
+  "causal_claim_made": false,
+  "contract_sha": "73eec2f714f3e1c89d0441ffb9f746721bda3443",
+  "disposition": "IMPLEMENTATION_BLOCKED_US_HUD_MF_F01_ATTEMPT_01",
+  "failed_gates": [],
+  "future_adverse_membership_opened": false,
+  "future_entity_body_bytes_consumed": 0,
+  "future_terminated_rows_opened": 0,
+  "gates": [
+    {
+      "gate": 1,
+      "observed": {
+        "active_issue": 168,
+        "active_research": "US-HUD-MF-F01",
+        "checkpoint_id": "CHK-20260921-US-HUD-MF-F01-ACTIVE",
+        "last_completed_issue": 167,
+        "last_completed_research": "PORTFOLIO-R41",
+        "last_decision": "DEC-246",
+        "updated": "2026-09-21"
+      },
+      "pass": true
+    },
+    {
+      "gate": 2,
+      "observed": {
+        "contract_sha": "73eec2f714f3e1c89d0441ffb9f746721bda3443",
+        "issue": 168
+      },
+      "pass": true
+    },
+    {
+      "gate": 3,
+      "observed": {
+        "inspection": {
+          "bytes": 150045,
+          "content_length_header": null,
+          "content_type": "text/html; charset=UTF-8",
+          "entity_body_bytes_consumed": 150045,
+          "etag": null,
+          "last_modified": "Wed, 16 Sep 2026 19:36:44 GMT",
+          "requested_url": "https://www.hud.gov/stat/mfh/inspection-scores",
+          "sha256": "4bce1d7e86b706c267d02345a48d3d5d6c9991489b723b01bae600a273861312",
+          "status": 200
+        },
+        "mortgage": {
+          "bytes": 151305,
+          "content_length_header": null,
+          "content_type": "text/html; charset=UTF-8",
+          "entity_body_bytes_consumed": 151305,
+          "etag": null,
+          "last_modified": "Mon, 21 Sep 2026 14:25:36 GMT",
+          "requested_url": "https://www.hud.gov/hud-partners/multifamily-fhasl-active",
+          "sha256": "864dc61bbd9148a5c6389348c146cf267dfae4c2eb7972cf6e0be9dbe2f1f002",
+          "status": 200
+        },
+        "property": {
+          "bytes": 152860,
+          "content_length_header": null,
+          "content_type": "text/html; charset=UTF-8",
+          "entity_body_bytes_consumed": 152860,
+          "etag": null,
+          "last_modified": "Mon, 21 Sep 2026 14:18:17 GMT",
+          "requested_url": "https://www.hud.gov/hud-partners/multifamily-preservation",
+          "sha256": "ee13e2cf4271a690987b9cd283c07e9c5b086469ebda938704386938a32cdc59",
+          "status": 200
+        },
+        "snapshot_text_ok": true
+      },
+      "pass": true
+    },
+    {
+      "gate": 4,
+      "observed": {
+        "active": "https://www.hud.gov/sites/default/files/Housing/documents/FHA-BF90-RM-A.xlsx",
+        "inspection": "https://www.hud.gov/sites/default/files/Housing/documents/MF-Inspection-Report.xls",
+        "property": "https://www.hud.gov/sites/dfiles/Housing/documents/activeportfoliopropdata.xlsx",
+        "terminated": "https://www.hud.gov/sites/default/files/Housing/documents/FHA-BF90-RM-T.xlsx"
+      },
+      "pass": true
+    },
+    {
+      "gate": 5,
+      "observed": {
+        "distinct_valid_fha": 0,
+        "header_row": 3,
+        "headers": [
+          "HUD PROJECT NUMBER",
+          "PROPERTY NAME",
+          "PROPERTY CITY",
+          "PROPERTY STATE",
+          "PROPERTY ZIP",
+          "UNITS",
+          "INITIAL ENDORSEMENT DATE",
+          "FINAL ENDORSEMENT DATE",
+          "ORIGINAL MORTGAGE AMOUNT",
+          "FIRST PAYMENT DATE",
+          "MATURITY DATE",
+          "TERM IN MONTHS",
+          "INTEREST RATE",
+          "CURRENT PRINCIPAL AND INTEREST",
+          "AMORITIZED PRINCIPAL BALANCE",
+          "HOLDER NAME",
+          "HOLDER CITY",
+          "HOLDER STATE",
+          "SERVICER NAME",
+          "SERVICER CITY",
+          "SERVICER STATE",
+          "SECTION OF ACT CODE",
+          "SOA CATEGORY/SUB CATEGORY",
+          "TE",
+          "TC",
+          "BUSINESS_TYPE",
+          "SA_TYPE_CODE"
+        ],
+        "nonblank_fha": 0,
+        "rows": 0,
+        "sheet": "08312026",
+        "syntax_rate": 0.0,
+        "valid_fha": 0
+      },
+      "pass": false
+    },
+    {
+      "gate": 7,
+      "observed": {
+        "nonblank": 0,
+        "rate": 0.0,
+        "valid": 0
+      },
+      "pass": false
+    },
+    {
+      "gate": 8,
+      "observed": {
+        "distinct_qualified_active_fha": 0,
+        "threshold": 10000
+      },
+      "pass": false
+    },
+    {
+      "gate": 6,
+      "observed": {
+        "bytes": 9283051,
+        "content_length_header": "9283051",
+        "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "entity_body_bytes_consumed": 9283051,
+        "etag": "\"8da5eb-65a70a216b786\"",
+        "final_url": "https://www.hud.gov/sites/default/files/Housing/documents/FHA-BF90-RM-T.xlsx",
+        "last_modified": "Tue, 01 Sep 2026 19:07:42 GMT",
+        "requested_url": "https://www.hud.gov/sites/default/files/Housing/documents/FHA-BF90-RM-T.xlsx",
+        "sha256": "2faaeb67e03e54a9a176a63ea34abe863e35c4db9309a278606a98ff0530de71",
+        "status": 200
+      },
+      "pass": true
+    },
+    {
+      "gate": 9,
+      "observed": {
+        "header_row": 2,
+        "headers": [
+          "FHA_BF90_RM_T",
+          " 58780",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "qualified_fha_rows": 0,
+        "reason_top50": [],
+        "rows": 0,
+        "sheet": "08312026",
+        "termination_date_parseable": 0,
+        "termination_reason_nonblank": 0
+      },
+      "pass": false
+    },
+    {
+      "gate": 10,
+      "observed": {
+        "date_rate": 0.0,
+        "qualified_rows": 0,
+        "reason_rate": 0.0
+      },
+      "pass": false
+    },
+    {
+      "gate": 11,
+      "observed": {
+        "adverse_source_labels": [],
+        "routine_source_labels": [],
+        "semantic_rule": "source-native labels only; adverse tokens frozen={default,claim,foreclos}; routine tokens frozen={prepay,voluntary,matur,refinan}"
+      },
+      "pass": false
+    },
+    {
+      "gate": 12,
+      "observed": {
+        "distinct_property_ids": 17734,
+        "header_row": 1,
+        "headers": [
+          "property_name_text",
+          "property_id",
+          "fha_number",
+          "soa_code",
+          "soa_numeric_name",
+          "soa_description_text",
+          "is_primary_fha_ind",
+          "is_insured_ind",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "",
+          ""
+        ],
+        "qualified_fha": 17734,
+        "rows": 36815,
+        "sheet": "All active Properties with FHA "
+      },
+      "pass": true
+    },
+    {
+      "gate": 13,
+      "observed": {
+        "active_ids": 0,
+        "matched_active_fha": 0,
+        "rate": 0.0,
+        "threshold": 0.7
+      },
+      "pass": false
+    }
+  ],
+  "github_run_id": "35612698293",
+  "implementation_error": {
+    "message": "XLSX_PARSE_ERROR:inspection.xlsx:BadZipFile:File is not a zip file",
+    "type": "RuntimeError"
+  },
+  "incremental_monetary_cost_usd": 0,
+  "issue": 168,
+  "name_address_fuzzy_geo_manual_identity_repair_used": false,
+  "pass_count": 6,
+  "prediction_computed": false,
+  "ranking_computed": false,
+  "relationship_computed": false,
+  "research": "US-HUD-MF-F01",
+  "runner_sha256": "bedb40540104665c0abe2eb6aef21b3119204be2e34804d82ee4803c046e69d4",
+  "source_fingerprints": {
+    "active": "72ae185f05fd94a5eda54dc55cd36332153c2307b88776fdc139d41a266e5c36",
+    "inspection": "0ff6b86e54762df917058bca832088f343dc174e78332b002dc6fbfa400cd883",
+    "property": "6c375b2b3491d7c7931ce58a1f715a8632a6ceb05b6c10a36ff8624b9c547a01",
+    "terminated": "2faaeb67e03e54a9a176a63ea34abe863e35c4db9309a278606a98ff0530de71"
+  }
+}
