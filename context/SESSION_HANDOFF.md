@@ -1,24 +1,24 @@
 ---
-checkpoint_id: CHK-20260921-PORTFOLIO-R41-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20260921-US-HUD-MF-F01-ACTIVE
+active_issue: 168
+active_research: US-HUD-MF-F01
 last_completed_issue: 167
 last_completed_research: PORTFOLIO-R41
-last_decision: DEC-245
+last_decision: DEC-246
 updated: 2026-09-21
 ---
 
 # Session Handoff / 세션 인계
 
-`PORTFOLIO_R41_SELECTED_US_HUD_MF_001__F01_CONTRACT_REQUIRED`
+`US_HUD_MF_F01_ACTIVE__EXACT_PROJECT_ADVERSE_TERMINATION_GATE`
 
-- Issue #167 completed.
-- Frozen candidate contract: `b3e5e1cac40ba05e839930ed6dcd2e8d1d3962b0`.
-- Revalidation: `4f481865e2690ee0c6d7716daeb814c4935e5fc6`.
-- Immutable scorecard: `f03e225a5af67155cb3c558f30ed8c6ce1df4a6b`.
-- Selection: `US-HUD-MF-001` **38/45**.
-- SEC ADV 37, FAA Registry 36, UK Companies House 35 remain held; no tie-break used.
-- Future candidate event memberships opened: 0.
-- Next: freeze `US-HUD-MF-F01` before its Issue.
-- Core F01 falsification target: current HUD termination reason/date semantics must distinguish adverse default/claim from routine prepayment/voluntary/maturity/refinance; otherwise HOLD.
+- Issue #168 open.
+- Pre-Issue contract: `73eec2f714f3e1c89d0441ffb9f746721bda3443`.
+- Parent R41 selection: HUD 38/45 / `DEC-245`.
+- Frozen mortgage historical state: 2026-08-31 active + terminated.
+- Frozen property/inspection structural state: 2026-09-02.
+- Exact FHA ID normalization: trim + uppercase + remove literal hyphen/ASCII spaces only; resulting exact 8 digits; no zero-padding.
+- Historical terminated source authorized only for schema/reason/date support.
+- Future terminated membership after 2026-09-21: sealed.
+- Next: immutable 18-gate empirical runner.
 - Cost: 0 USD.
