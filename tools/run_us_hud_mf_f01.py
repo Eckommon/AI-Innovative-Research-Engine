@@ -55,48 +55,41 @@ class LinkParser(HTMLParser):
             self._text = []
 
 def curl_bytes(url: str, head: bool = False, timeout: int = 120) -> tuple[bytes, dict]:
-    cmd = ["curl", "-L", "--fail", "--silent", "--show-error", "--retry", "2",
-           "--connect-timeout", "20", "--max-time", str(timeout), "-A", UA,
-           "-D", "-"]
-    if head:
-        cmd += ["-I"]
-    cmd += [url]
-    p = subprocess.run(cmd, capture_output=True)
-    if p.returncode != 0:
-        raise RuntimeError(f"curl rc={p.returncode}: {p.stderr.decode('utf-8','replace')[:600]}")
-    raw = p.stdout
-    # -D - emits one or more header blocks before body. Split on final header terminator.
-    parts = re.split(br"\r?\n\r?\n", raw)
-    if head:
-        body = b""
-        header_blocks = parts
-    else:
-        body = parts[-1]
-        header_blocks = parts[:-1]
-    status = None
-    headers = {}
-    final_header = b""
-    for b in header_blocks:
-        if b.startswith(b"HTTP/"):
-            final_header = b
+    with tempfile.TemporaryDirectory() as td:
+        hp=Path(td)/"headers.txt"
+        bp=Path(td)/"body.bin"
+        cmd=["curl","-L","--fail","--silent","--show-error","--retry","2",
+             "--connect-timeout","20","--max-time",str(timeout),"-A",UA,
+             "-D",str(hp),"-o",str(bp)]
+        if head:
+            cmd += ["-I"]
+        cmd += [url]
+        p=subprocess.run(cmd,capture_output=True)
+        if p.returncode != 0:
+            raise RuntimeError(f"curl rc={p.returncode}: {p.stderr.decode('utf-8','replace')[:600]}")
+        header_raw=hp.read_bytes() if hp.exists() else b""
+        body=b"" if head else (bp.read_bytes() if bp.exists() else b"")
+    # Redirects may yield multiple header blocks; use the last HTTP block.
+    blocks=[b for b in re.split(br"\r?\n\r?\n",header_raw) if b.startswith(b"HTTP/")]
+    final_header=blocks[-1] if blocks else b""
+    status=None; headers={}
     if final_header:
-        lines = final_header.decode("iso-8859-1", "replace").splitlines()
-        m = re.match(r"HTTP/\S+\s+(\d+)", lines[0])
-        status = int(m.group(1)) if m else None
+        lines=final_header.decode("iso-8859-1","replace").splitlines()
+        m=re.match(r"HTTP/\S+\s+(\d+)",lines[0])
+        status=int(m.group(1)) if m else None
         for line in lines[1:]:
             if ":" in line:
-                k,v=line.split(":",1)
-                headers[k.strip().lower()] = v.strip()
-    return body, {
-        "status": status,
-        "content_type": headers.get("content-type"),
-        "content_length_header": headers.get("content-length"),
-        "last_modified": headers.get("last-modified"),
-        "etag": headers.get("etag"),
-        "sha256": hashlib.sha256(body).hexdigest() if not head else None,
-        "bytes": len(body),
-        "entity_body_bytes_consumed": len(body),
-        "requested_url": url,
+                k,v=line.split(":",1); headers[k.strip().lower()]=v.strip()
+    return body,{
+        "status":status,
+        "content_type":headers.get("content-type"),
+        "content_length_header":headers.get("content-length"),
+        "last_modified":headers.get("last-modified"),
+        "etag":headers.get("etag"),
+        "sha256":hashlib.sha256(body).hexdigest() if not head else None,
+        "bytes":len(body),
+        "entity_body_bytes_consumed":len(body),
+        "requested_url":url,
     }
 
 def page(url: str) -> tuple[str, dict]:
