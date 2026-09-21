@@ -1,5 +1,9 @@
 name: Run US-HUD-MF-F01 Attempt 03
 on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/run-us-hud-mf-f01-attempt03.yml'
   workflow_dispatch:
   issues:
     types: [edited]
