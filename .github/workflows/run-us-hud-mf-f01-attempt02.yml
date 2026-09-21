@@ -1,14 +1,11 @@
 name: Run US-HUD-MF-F01 Attempt 02
 on:
   workflow_dispatch:
-  issues:
-    types: [edited]
 permissions:
   contents: write
   issues: read
 jobs:
   hud-mf-f01-attempt02:
-    if: github.event_name != 'issues' || github.event.issue.number == 168
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
