@@ -1,21 +1,21 @@
 ---
-checkpoint_id: CHK-20260921-US-FCC-ULS-F01-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20260921-PORTFOLIO-R41-ACTIVE
+active_issue: 167
+active_research: PORTFOLIO-R41
 last_completed_issue: 166
 last_completed_research: US-FCC-ULS-F01
-last_decision: DEC-243
+last_decision: DEC-244
 updated: 2026-09-21
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `US_FCC_ULS_F01_HOLD__PORTFOLIO_RESELECTION_REQUIRED`
+**State / 상태:** `PORTFOLIO_R41_ACTIVE__OUTCOME_BLIND_RESELECTION`
 
-US-FCC-ULS-F01 is terminal scientific HOLD under its unchanged pre-Issue 18-gate contract. Immutable Attempt 02 passed 9/18 gates; failed gates are 3, 8, 9, 10, 11, 12, 13, 14 and 15. Future Microwave daily transaction bodies and cancelled/terminated membership remain unopened.
+PORTFOLIO-R41 is active under pre-Issue contract `b3e5e1cac40ba05e839930ed6dcd2e8d1d3962b0`. The frozen candidate universe is HUD multifamily, FAA aircraft registration, SEC investment advisers, and UK Companies House. Candidate future-event memberships and relationship values remain unopened.
 
 ## Exact next action / 정확한 다음 행동
 
-Return to an independent outcome-blind Stage-0 portfolio reselection. Do not rescue the FCC Microwave branch by reinterpreting/zero-padding the frozen ID rule, lowering thresholds, broadening the radio-service family, substituting another identifier, or opening future daily transaction bodies.
+Perform bounded official-source/current-access, canonical-overlap, and external literature/framework revalidation, then persist exactly one immutable /45 scorecard and select at most one separate outcome-blind F01 under the frozen tie-break.
 
 Incremental monetary cost remains **0 USD**.
