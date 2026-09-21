@@ -1,0 +1,80 @@
+name: Run US-FCC-ULS-F01 Immutable Gate Attempt 02
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/run-us-fcc-uls-f01-attempt02.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: read
+jobs:
+  f01-attempt02:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify active authorization and immutable Attempt 02 slot
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git cat-file -e 287f0e3dfe203beee3d9ca1f21e67e51ef2db6a5^{commit}
+          git cat-file -e 486624cf803c291217baef97b8514294691fce82^{commit}
+          git cat-file -e d05fa7f61a3c2be1c13ab5ffb8b05c58b441a776^{commit}
+          gh issue view 166 --repo '${{ github.repository }}' --json state --jq '.state' | grep -qx OPEN
+          test -e research/US-FCC-ULS-F01/evidence/attempt-01.json
+          test ! -e research/US-FCC-ULS-F01/evidence/attempt-02.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          cp=json.loads(Path('context/checkpoint.json').read_text())
+          assert cp['checkpoint_id']=='CHK-20260921-US-FCC-ULS-F01-ACTIVE'
+          assert cp['active_issue']==166
+          assert cp['active_research']=='US-FCC-ULS-F01'
+          assert cp['last_decision']=='DEC-242'
+          a1=json.loads(Path('research/US-FCC-ULS-F01/evidence/attempt-01.json').read_text())
+          assert a1['attempt_valid'] is False
+          assert a1['disposition']=='IMPLEMENTATION_BLOCKED_US_FCC_ULS_F01_ATTEMPT_01'
+          assert a1['future_daily_rows_opened']==0
+          assert a1['future_cancelled_terminated_membership_opened'] is False
+          assert a1['daily_entity_body_bytes_consumed']==0
+          PY
+      - name: Execute transport-corrected frozen 18-gate attempt
+        env:
+          FCC_ULS_F01_ISSUE_BOUND: '1'
+          FCC_ULS_F01_CONTRACT_SHA: '287f0e3dfe203beee3d9ca1f21e67e51ef2db6a5'
+        run: python tools/run_us_fcc_uls_f01_attempt02.py
+      - name: Verify scientific and future-event boundary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          e=json.loads(Path('research/US-FCC-ULS-F01/evidence/attempt-02.json').read_text())
+          assert e['attempt']==2
+          assert e['future_daily_rows_opened']==0
+          assert e['future_cancelled_terminated_membership_opened'] is False
+          assert e['daily_entity_body_bytes_consumed']==0
+          assert e['future_relationship_computed'] is False
+          assert e['predictive_metric_computed'] is False
+          assert e['ranking_computed'] is False
+          assert e['causal_claim_made'] is False
+          assert e['name_address_call_sign_only_fuzzy_geo_manual_identity_repair_used'] is False
+          assert e['incremental_monetary_cost_usd']==0
+          assert e['scientific_threshold_changed'] is False
+          assert e['service_family_changed'] is False
+          assert e['identity_rule_changed'] is False
+          assert e['future_window_changed'] is False
+          print(e['disposition'], e.get('pass_count'), e.get('failed_gates'))
+          PY
+      - name: Commit immutable Attempt 02 evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-FCC-ULS-F01/evidence/attempt-02.json research/US-FCC-ULS-F01/evidence/attempt-02.md
+          git commit -m 'Record US-FCC-ULS-F01 immutable attempt 02'
+          git push origin HEAD:main
+      - name: Report boundary
+        run: |
+          echo 'Attempt 02 changed transport only. Future Microwave daily transaction bodies remained sealed.'
