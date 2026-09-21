@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260918-PORTFOLIO-R40-TERMINAL",
-  "active_issue": "none",
-  "active_research": "NONE",
+  "checkpoint_id": "CHK-20260921-US-FCC-ULS-F01-ACTIVE",
+  "active_issue": 166,
+  "active_research": "US-FCC-ULS-F01",
   "last_completed_issue": 165,
   "last_completed_research": "PORTFOLIO-R40",
-  "last_decision": "DEC-241",
-  "updated": "2026-09-18"
+  "last_decision": "DEC-242",
+  "updated": "2026-09-21"
 }
