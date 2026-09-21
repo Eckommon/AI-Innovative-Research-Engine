@@ -1,0 +1,84 @@
+name: Run US-HUD-MF-F01 Attempt 02
+on:
+  workflow_dispatch:
+  issues:
+    types: [edited]
+permissions:
+  contents: write
+  issues: read
+jobs:
+  hud-mf-f01-attempt02:
+    if: github.event_name != 'issues' || github.event.issue.number == 168
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify frozen authorization and Attempt 02 boundary
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git cat-file -e 73eec2f714f3e1c89d0441ffb9f746721bda3443^{commit}
+          git cat-file -e 73ce4cfe7f475bb177186ab7d38ce7374f5e8fee^{commit}
+          git cat-file -e 5780fbfe2258d901d615cd23bcba45a71279328c^{commit}
+          gh issue view 168 --repo '${{ github.repository }}' --json state --jq '.state' | grep -qx OPEN
+          test -e research/US-HUD-MF-F01/evidence/attempt-01.json
+          test -e research/US-HUD-MF-F01/evidence/attempt-01.md
+          test ! -e research/US-HUD-MF-F01/evidence/attempt-02.json
+          test ! -e research/US-HUD-MF-F01/evidence/attempt-02.md
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          cp=json.loads(Path('context/checkpoint.json').read_text())
+          assert cp['checkpoint_id']=='CHK-20260921-US-HUD-MF-F01-ACTIVE'
+          assert cp['active_issue']==168
+          assert cp['active_research']=='US-HUD-MF-F01'
+          assert cp['last_decision']=='DEC-246'
+          a1=json.loads(Path('research/US-HUD-MF-F01/evidence/attempt-01.json').read_text())
+          assert a1['attempt_valid'] is False
+          assert a1['disposition']=='IMPLEMENTATION_BLOCKED_US_HUD_MF_F01_ATTEMPT_01'
+          assert a1['future_terminated_rows_opened']==0
+          assert a1['future_adverse_membership_opened'] is False
+          PY
+      - name: Install deterministic workbook parsers
+        run: python -m pip install --disable-pip-version-check --no-input 'openpyxl==3.1.5' 'xlrd==2.0.1'
+      - name: Execute frozen Attempt 02
+        env:
+          HUD_MF_F01_ISSUE_BOUND: '1'
+          HUD_MF_F01_CONTRACT_SHA: '73eec2f714f3e1c89d0441ffb9f746721bda3443'
+        run: python tools/run_us_hud_mf_f01_attempt02.py
+      - name: Verify immutable correction and future-outcome firewall
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          e=json.loads(Path('research/US-HUD-MF-F01/evidence/attempt-02.json').read_text())
+          assert e['attempt']==2
+          assert e['attempt_01_commit']=='73ce4cfe7f475bb177186ab7d38ce7374f5e8fee'
+          assert e['implementation_correction_commit']=='5780fbfe2258d901d615cd23bcba45a71279328c'
+          assert e['scientific_threshold_changed'] is False
+          assert e['snapshot_changed'] is False
+          assert e['identity_rule_changed'] is False
+          assert e['future_outcome_firewall_changed'] is False
+          assert e['future_terminated_rows_opened']==0
+          assert e['future_adverse_membership_opened'] is False
+          assert e['future_entity_body_bytes_consumed']==0
+          assert e['relationship_computed'] is False
+          assert e['prediction_computed'] is False
+          assert e['ranking_computed'] is False
+          assert e['causal_claim_made'] is False
+          assert e['incremental_monetary_cost_usd']==0
+          print(e['disposition'], e.get('attempt_valid'), e.get('pass_count'), e.get('failed_gates'))
+          PY
+      - name: Commit immutable Attempt 02 evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-HUD-MF-F01/evidence/attempt-02.json research/US-HUD-MF-F01/evidence/attempt-02.md
+          git commit -m 'Record US-HUD-MF-F01 immutable attempt 02'
+          git push origin HEAD:main
+      - name: Report boundary
+        run: |
+          echo 'Scientific thresholds, source snapshots, identity rule, and future firewall remained unchanged.'
+          echo 'No post-2026-09-21 terminated-mortgage snapshot body was opened.'
