@@ -1,4 +1,5 @@
 name: State Integrity / 상태 무결성
+# US-HUD-MF-N01 terminal-state recheck: verify frozen 17/18 balance HOLD, closed Issue #169, and portfolio-reselection checkpoint.
 # US-FCC-ULS-F01 terminal-state recheck: verify frozen 9/18 HOLD, closed Issue #166, and portfolio-reselection checkpoint.
 # PORTFOLIO-R40 manual-canonical-sync recheck: DEC-241 / checkpoint mirrors.
 # US-IRS-EO-F01 terminal-state recheck: verify canonical PASS/N01-authorized state after bot-authored finalizer push suppression.
