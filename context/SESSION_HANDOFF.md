@@ -1,25 +1,28 @@
 ---
-checkpoint_id: CHK-20260928-US-HUD-MF-N01-ACTIVE
-active_issue: 169
-active_research: US-HUD-MF-N01
-last_completed_issue: 168
-last_completed_research: US-HUD-MF-F01
-last_decision: DEC-248
+checkpoint_id: CHK-20260928-US-HUD-MF-N01-TERMINAL
+active_issue: none
+active_research: NONE
+last_completed_issue: 169
+last_completed_research: US-HUD-MF-N01
+last_decision: DEC-249
 updated: 2026-09-28
 ---
 
 # Session Handoff / 세션 인계
 
-`US_HUD_MF_N01_ACTIVE__OUTCOME_BLIND_MATCHED_INSPECTION_DESIGN`
+`US_HUD_MF_N01_HOLD__PORTFOLIO_RESELECTION_REQUIRED`
 
-- Issue #169 open.
+- Issue #169 completed.
 - Pre-Issue N01 contract: `01c5a19215a30572c74309cd5b1dbe9851880224`.
-- Parent F01: 18/18 PASS / `DEC-247`.
-- Historical source hashes are fixed to F01 Attempt 03.
-- Exposure: latest pre-2026-09-21 inspection score.
-- LOW/HIGH: frozen linear Q25/Q75 tails.
-- Matching: exact state × SOA category/sub-category + deterministic 1:1 nearest-neighbor over five baseline covariates.
-- Frozen minimums: eligible 7,000; LOW/HIGH 1,500 each; pairs 1,200; states 20; SOA 8; all |SMD| <= 0.15.
-- Future terminated rows opened: 0; future adverse membership unopened.
-- Next: immutable N01 historical design runner.
+- Immutable Attempt 01: `a18d9a1dd157cde5f393312831f500d0939513f7` / Run `36395660448`.
+- Terminal result: **17/18 PASS**.
+- Eligible baseline cohort: **8,247**.
+- Q25/Q75 inspection scores: **87 / 97**.
+- LOW/HIGH candidates: **2,151 / 2,116**.
+- Matched pairs: **1,438** across **50 states** and **16 SOA categories**.
+- Pair manifest: `65426aa525f0caab7544aefa8ba3259d087ea5eb5db35a27989b440d80ad812b`.
+- Gate 15 failed only: `log1p(UNITS)` |SMD| **0.178049 > 0.15**; all other continuous balance metrics passed.
+- Future terminated rows opened: **0**; future adverse membership opened: **false**.
+- E01 not authorized; no post-hoc matching rescue.
+- Next: independent Stage-0 portfolio reselection.
 - Cost: 0 USD.
