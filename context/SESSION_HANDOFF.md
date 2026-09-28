@@ -1,28 +1,22 @@
 ---
-checkpoint_id: CHK-20260928-US-HUD-MF-N01-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20260928-PORTFOLIO-R42-ACTIVE
+active_issue: 170
+active_research: PORTFOLIO-R42
 last_completed_issue: 169
 last_completed_research: US-HUD-MF-N01
-last_decision: DEC-249
+last_decision: DEC-250
 updated: 2026-09-28
 ---
 
 # Session Handoff / 세션 인계
 
-`US_HUD_MF_N01_HOLD__PORTFOLIO_RESELECTION_REQUIRED`
+`PORTFOLIO_R42_ACTIVE__OUTCOME_BLIND_RESELECTION`
 
-- Issue #169 completed.
-- Pre-Issue N01 contract: `01c5a19215a30572c74309cd5b1dbe9851880224`.
-- Immutable Attempt 01: `a18d9a1dd157cde5f393312831f500d0939513f7` / Run `36395660448`.
-- Terminal result: **17/18 PASS**.
-- Eligible baseline cohort: **8,247**.
-- Q25/Q75 inspection scores: **87 / 97**.
-- LOW/HIGH candidates: **2,151 / 2,116**.
-- Matched pairs: **1,438** across **50 states** and **16 SOA categories**.
-- Pair manifest: `65426aa525f0caab7544aefa8ba3259d087ea5eb5db35a27989b440d80ad812b`.
-- Gate 15 failed only: `log1p(UNITS)` |SMD| **0.178049 > 0.15**; all other continuous balance metrics passed.
-- Future terminated rows opened: **0**; future adverse membership opened: **false**.
-- E01 not authorized; no post-hoc matching rescue.
-- Next: independent Stage-0 portfolio reselection.
+- Issue #170 open.
+- Pre-Issue contract: `3defb5494bee758cf671ef358599a4e50c60161c`.
+- Activation: `DEC-250`.
+- Candidates: `UK-CQC-LOC-001`, `US-BSEE-OCS-001`, `US-SAM-ENTITY-001`, `UK-OFSTED-URN-001`.
+- Parent HUD N01 is terminal negative evidence and not rescuable.
+- Candidate future-event memberships/effects remain unopened.
+- Next: bounded revalidation and one immutable /45 scorecard.
 - Cost: 0 USD.
