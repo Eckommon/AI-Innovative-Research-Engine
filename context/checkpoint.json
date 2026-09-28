@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260921-US-HUD-MF-F01-ACTIVE",
-  "active_issue": 168,
-  "active_research": "US-HUD-MF-F01",
-  "last_completed_issue": 167,
-  "last_completed_research": "PORTFOLIO-R41",
-  "last_decision": "DEC-246",
+  "checkpoint_id": "CHK-20260921-US-HUD-MF-F01-TERMINAL",
+  "active_issue": "none",
+  "active_research": "NONE",
+  "last_completed_issue": 168,
+  "last_completed_research": "US-HUD-MF-F01",
+  "last_decision": "DEC-247",
   "updated": "2026-09-21"
 }
