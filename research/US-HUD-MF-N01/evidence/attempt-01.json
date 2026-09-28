@@ -1,0 +1,210 @@
+{
+  "attempt": 1,
+  "attempt_valid": true,
+  "causal_claim_made": false,
+  "contract_sha": "01c5a19215a30572c74309cd5b1dbe9851880224",
+  "disposition": "HOLD_US_HUD_MF_N01_MATCHED_INSPECTION_DESIGN_NOT_IDENTIFIABLE",
+  "failed_gates": [
+    15
+  ],
+  "future_adverse_membership_opened": false,
+  "future_entity_body_bytes_consumed": 0,
+  "future_terminated_rows_opened": 0,
+  "gates": [
+    {
+      "gate": 1,
+      "observed": {
+        "active_issue": 169,
+        "active_research": "US-HUD-MF-N01",
+        "checkpoint_id": "CHK-20260928-US-HUD-MF-N01-ACTIVE",
+        "last_completed_issue": 168,
+        "last_completed_research": "US-HUD-MF-F01",
+        "last_decision": "DEC-248",
+        "updated": "2026-09-28"
+      },
+      "pass": true
+    },
+    {
+      "gate": 2,
+      "observed": {
+        "contract_sha": "01c5a19215a30572c74309cd5b1dbe9851880224",
+        "issue": 169
+      },
+      "pass": true
+    },
+    {
+      "gate": 3,
+      "observed": {
+        "expected": {
+          "active": "72ae185f05fd94a5eda54dc55cd36332153c2307b88776fdc139d41a266e5c36",
+          "inspection": "0ff6b86e54762df917058bca832088f343dc174e78332b002dc6fbfa400cd883",
+          "property": "6c375b2b3491d7c7931ce58a1f715a8632a6ceb05b6c10a36ff8624b9c547a01"
+        },
+        "observed": {
+          "active": "72ae185f05fd94a5eda54dc55cd36332153c2307b88776fdc139d41a266e5c36",
+          "inspection": "0ff6b86e54762df917058bca832088f343dc174e78332b002dc6fbfa400cd883",
+          "property": "6c375b2b3491d7c7931ce58a1f715a8632a6ceb05b6c10a36ff8624b9c547a01"
+        }
+      },
+      "pass": true
+    },
+    {
+      "gate": 4,
+      "observed": {
+        "distinct": 15632,
+        "expected": 15632,
+        "nonblank": 15632,
+        "valid": 15632
+      },
+      "pass": true
+    },
+    {
+      "gate": 5,
+      "observed": {
+        "excluded_multi_property": 0,
+        "mapped": 15425
+      },
+      "pass": true
+    },
+    {
+      "gate": 6,
+      "observed": {
+        "deterministic_latest_property_ids": 23865,
+        "excluded_same_date_score_conflicts": 0
+      },
+      "pass": true
+    },
+    {
+      "gate": 7,
+      "observed": {
+        "eligible": 8247,
+        "exclusions": {
+          "balance_ratio": 1,
+          "inspection": 7177,
+          "property": 207
+        },
+        "threshold": 7000
+      },
+      "pass": true
+    },
+    {
+      "gate": 8,
+      "observed": {
+        "method": "linear",
+        "q25": 87.0,
+        "q75": 97.0
+      },
+      "pass": true
+    },
+    {
+      "gate": 9,
+      "observed": {
+        "low": 2151,
+        "threshold": 1500
+      },
+      "pass": true
+    },
+    {
+      "gate": 10,
+      "observed": {
+        "high": 2116,
+        "threshold": 1500
+      },
+      "pass": true
+    },
+    {
+      "gate": 11,
+      "observed": {
+        "candidate_rows": 4267,
+        "complete": true
+      },
+      "pass": true
+    },
+    {
+      "gate": 12,
+      "observed": {
+        "pairs": 1438,
+        "threshold": 1200
+      },
+      "pass": true
+    },
+    {
+      "gate": 13,
+      "observed": {
+        "states": 50,
+        "threshold": 20
+      },
+      "pass": true
+    },
+    {
+      "gate": 14,
+      "observed": {
+        "soa_categories": 16,
+        "threshold": 8
+      },
+      "pass": true
+    },
+    {
+      "gate": 15,
+      "observed": {
+        "abs_smd": {
+          "balance_ratio": 0.056564840910815053,
+          "interest_rate": 0.017181695221286302,
+          "log1p_original_mortgage": 0.08707915650410197,
+          "log1p_units": 0.1780490313988611,
+          "months_to_maturity": 0.05605747716327263
+        },
+        "exact_soa": true,
+        "exact_state": true,
+        "threshold": 0.15
+      },
+      "pass": false
+    },
+    {
+      "gate": 16,
+      "observed": {
+        "pair_manifest_sha256": "65426aa525f0caab7544aefa8ba3259d087ea5eb5db35a27989b440d80ad812b",
+        "projects_in_pairs": 2876,
+        "unique_projects": 2876
+      },
+      "pass": true
+    },
+    {
+      "gate": 17,
+      "observed": {
+        "causal_claim_made": false,
+        "future_adverse_membership_opened": false,
+        "future_entity_body_bytes_consumed": 0,
+        "future_terminated_rows_opened": 0,
+        "prediction_computed": false,
+        "ranking_computed": false,
+        "relationship_computed": false
+      },
+      "pass": true
+    },
+    {
+      "gate": 18,
+      "observed": {
+        "cost_usd": 0,
+        "pair_manifest_sha256": "65426aa525f0caab7544aefa8ba3259d087ea5eb5db35a27989b440d80ad812b",
+        "runner_sha256": "18419686c25cf2df39eabd0d70f8cb78909eeda0613a974259265419f724d69f",
+        "source_sha256": {
+          "active": "72ae185f05fd94a5eda54dc55cd36332153c2307b88776fdc139d41a266e5c36",
+          "inspection": "0ff6b86e54762df917058bca832088f343dc174e78332b002dc6fbfa400cd883",
+          "property": "6c375b2b3491d7c7931ce58a1f715a8632a6ceb05b6c10a36ff8624b9c547a01"
+        }
+      },
+      "pass": true
+    }
+  ],
+  "github_run_id": "36395660448",
+  "incremental_monetary_cost_usd": 0,
+  "issue": 169,
+  "pair_manifest_sha256": "65426aa525f0caab7544aefa8ba3259d087ea5eb5db35a27989b440d80ad812b",
+  "pass_count": 17,
+  "prediction_computed": false,
+  "ranking_computed": false,
+  "relationship_computed": false,
+  "research": "US-HUD-MF-N01",
+  "runner_sha256": "18419686c25cf2df39eabd0d70f8cb78909eeda0613a974259265419f724d69f"
+}
