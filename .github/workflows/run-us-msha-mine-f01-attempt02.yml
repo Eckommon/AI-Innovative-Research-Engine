@@ -1,0 +1,71 @@
+name: Run US-MSHA-MINE-F01 Attempt 02
+on:
+  workflow_dispatch:
+  issues:
+    types: [edited]
+permissions:
+  contents: write
+  issues: read
+jobs:
+  msha-mine-f01-attempt02:
+    if: github.event_name != 'issues' || github.event.issue.number == 177
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify frozen authorization and immutable Attempt 02 slot
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git cat-file -e 18a90079c3566641bc3856f7d802acdc75b53388^{commit}
+          git cat-file -e 41ba21671503757516a7528477b1deb9fbea9ec8^{commit}
+          git cat-file -e 43c2cc7768500407e13058322988c206aa31c2a8^{commit}
+          gh issue view 177 --repo '${{ github.repository }}' --json state --jq '.state' | grep -qx OPEN
+          test -e research/US-MSHA-MINE-F01/evidence/attempt-01.json
+          test ! -e research/US-MSHA-MINE-F01/evidence/attempt-02.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          cp=json.loads(Path('context/checkpoint.json').read_text())
+          assert cp['checkpoint_id']=='CHK-20260929-US-MSHA-MINE-F01-ACTIVE'
+          assert cp['active_issue']==177
+          assert cp['active_research']=='US-MSHA-MINE-F01'
+          assert cp['last_decision']=='DEC-264'
+          a1=json.loads(Path('research/US-MSHA-MINE-F01/evidence/attempt-01.json').read_text())
+          assert a1['attempt_valid'] is True
+          assert a1['pass_count']==17
+          assert a1['failed_gates']==[3]
+          assert a1['future_serious_fatal_event_membership_opened'] is False
+          assert a1['relationship_computed'] is False
+          corr=Path('research/US-MSHA-MINE-F01/IMPLEMENTATION_CORRECTION_02.md').read_text()
+          assert 'any HTTP **2xx** response' in corr
+          PY
+      - name: Execute frozen Attempt 02
+        env:
+          MSHA_F01_BOUND: '1'
+          MSHA_F01_CONTRACT_SHA: '18a90079c3566641bc3856f7d802acdc75b53388'
+        run: python tools/run_us_msha_mine_f01_attempt02.py
+      - name: Verify future-outcome and cost firewall
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          e=json.loads(Path('research/US-MSHA-MINE-F01/evidence/attempt-02.json').read_text())
+          assert e['attempt']==2
+          assert e['future_serious_fatal_event_membership_opened'] is False
+          assert e['relationship_computed'] is False
+          assert e['prediction_computed'] is False
+          assert e['ranking_computed'] is False
+          assert e['causal_claim_made'] is False
+          assert e['incremental_monetary_cost_usd']==0
+          print(e['disposition'], e.get('pass_count'), e.get('failed_gates'))
+          PY
+      - name: Commit immutable Attempt 02 evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-MSHA-MINE-F01/evidence/attempt-02.json research/US-MSHA-MINE-F01/evidence/attempt-02.md
+          git commit -m 'Record US-MSHA-MINE-F01 immutable attempt 02'
+          git push origin HEAD:main
