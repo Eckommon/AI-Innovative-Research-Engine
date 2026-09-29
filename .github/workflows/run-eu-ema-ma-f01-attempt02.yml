@@ -1,0 +1,75 @@
+name: Run EU-EMA-MA-F01 Attempt 02
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/run-eu-ema-ma-f01-attempt02.yml'
+  workflow_dispatch:
+  issues:
+    types: [edited]
+permissions:
+  contents: write
+  issues: read
+jobs:
+  ema-ma-f01-attempt02:
+    if: github.event_name != 'issues' || github.event.issue.number == 175
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify frozen authorization and immutable Attempt 02 slot
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git cat-file -e 215cd9dd74a358e412a86de5d41a039c2f8186cb^{commit}
+          git cat-file -e 56c557a334ee82401217e99d4700825889f248a9^{commit}
+          git cat-file -e 04c6a70767ebfca5bcf9c369a938ae0b0d888950^{commit}
+          gh issue view 175 --repo '${{ github.repository }}' --json state --jq '.state' | grep -qx OPEN
+          test -e research/EU-EMA-MA-F01/evidence/attempt-01.json
+          test ! -e research/EU-EMA-MA-F01/evidence/attempt-02.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          cp=json.loads(Path('context/checkpoint.json').read_text())
+          assert cp['checkpoint_id']=='CHK-20260929-EU-EMA-MA-F01-ACTIVE'
+          assert cp['active_issue']==175
+          assert cp['active_research']=='EU-EMA-MA-F01'
+          assert cp['last_decision']=='DEC-260'
+          a1=json.loads(Path('research/EU-EMA-MA-F01/evidence/attempt-01.json').read_text())
+          assert a1['attempt_valid'] is False
+          assert a1['future_event_membership_opened'] is False
+          assert a1['future_entity_pages_consumed']==0
+          assert a1['implementation_error']['type']=='InvalidFileException'
+          PY
+      - name: Install deterministic parser
+        run: python -m pip install --disable-pip-version-check --no-input 'openpyxl==3.1.5'
+      - name: Execute frozen Attempt 02
+        env:
+          EMA_F01_BOUND: '1'
+          EMA_F01_CONTRACT_SHA: '215cd9dd74a358e412a86de5d41a039c2f8186cb'
+        run: python tools/run_eu_ema_ma_f01_attempt02.py
+      - name: Verify future-outcome and cost firewall
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          e=json.loads(Path('research/EU-EMA-MA-F01/evidence/attempt-02.json').read_text())
+          assert e['attempt']==2
+          assert e['future_event_membership_opened'] is False
+          assert e['future_entity_pages_consumed']==0
+          assert e['relationship_computed'] is False
+          assert e['prediction_computed'] is False
+          assert e['ranking_computed'] is False
+          assert e['causal_claim_made'] is False
+          assert e['incremental_monetary_cost_usd']==0
+          print(e['disposition'],e.get('pass_count'),e.get('failed_gates'))
+          PY
+      - name: Commit immutable Attempt 02 evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/EU-EMA-MA-F01/evidence/attempt-02.json research/EU-EMA-MA-F01/evidence/attempt-02.md
+          git commit -m 'Record EU-EMA-MA-F01 immutable attempt 02'
+          git push origin HEAD:main
