@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260929-UK-CQC-LOC-F01-ACTIVE",
-  "active_issue": 171,
-  "active_research": "UK-CQC-LOC-F01",
-  "last_completed_issue": 170,
-  "last_completed_research": "PORTFOLIO-R42",
-  "last_decision": "DEC-252",
+  "checkpoint_id": "CHK-20260929-UK-CQC-LOC-F01-TERMINAL",
+  "active_issue": "none",
+  "active_research": "NONE",
+  "last_completed_issue": 171,
+  "last_completed_research": "UK-CQC-LOC-F01",
+  "last_decision": "DEC-253",
   "updated": "2026-09-29"
 }
