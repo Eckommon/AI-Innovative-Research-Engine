@@ -1,23 +1,24 @@
 ---
-checkpoint_id: CHK-20260929-PORTFOLIO-R46-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20260929-US-USDA-ORG-F01-ACTIVE
+active_issue: 180
+active_research: US-USDA-ORG-F01
 last_completed_issue: 179
 last_completed_research: PORTFOLIO-R46
-last_decision: DEC-269
+last_decision: DEC-270
 updated: 2026-09-29
 ---
 
 # Session Handoff / 세션 인계
 
-`PORTFOLIO_R46_SELECTED_US_USDA_ORG_001__F01_CONTRACT_REQUIRED`
+`US_USDA_ORG_F01_ACTIVE__EXACT_OPERATION_SUSPENSION_REVOCATION_GATE`
 
-- Issue #179 completed.
-- Frozen candidate contract: `cd713015b669a89db9f8dfd715a67fc7e06a2827`.
-- Revalidation: `82e2cb89f58079ced9aa126c58436b87b561a4f3`.
-- Immutable scorecard: `a613a87ee436621ea1f639866a85909a5a6fa511`.
-- Selection: `US-USDA-ORG-001` **42/45**.
-- PHMSA 40, TGA 39, ECHA 38 remain held.
-- Future candidate event memberships opened: 0.
-- Next: freeze `US-USDA-ORG-F01` before Issue creation.
+- Issue #180 open.
+- Pre-Issue contract: `d1ccc1e745c0881a64f8cf7e2ab481fb69215adc`.
+- Parent selection: USDA Organic 42/45 / `DEC-269`.
+- Exact identity: 10-digit NOP Operation ID; no padding/repair/substitution.
+- Baseline: current official public Organic INTEGRITY operation export resolved after Issue binding.
+- Suspended/Revoked adverse; Surrendered separate and non-adverse.
+- Historical source cutoff: 2026-09-29.
+- Future adverse-status window from 2026-09-30: sealed.
+- Next: immutable 18-gate structural runner.
 - Cost: 0 USD.
