@@ -1,0 +1,35 @@
+# CA-CORP-F01 — Attempt 01
+
+**Disposition:** `HOLD_CA_CORP_F01_EXACT_ID_SECTION212_FUTURE_EVENT_DESIGN_NOT_READY`
+
+- Attempt valid: `True`
+- Gates passed: **14/18**
+- Failed gates: `[5, 9, 10, 13]`
+- Future rows opened: **0**
+- Future section-212 membership opened: **False**
+- Incremental monetary cost: **0 USD**
+
+## Gate ledger
+
+| Gate | PASS | Observed |
+|---:|:---:|---|
+| 1 | PASS | `{"active_issue": 173, "active_research": "CA-CORP-F01", "checkpoint_id": "CHK-20260929-CA-CORP-F01-ACTIVE", "last_completed_issue": 172, "last_completed_research": "PORTFOLIO-R43", "last_decision": "DEC-256", "updated": "2026-09-29"}` |
+| 2 | PASS | `{"contract_sha": "b97728c4e6338386bf47ec28be0c34afdf7a4737", "issue": 173}` |
+| 3 | PASS | `{"api_docs": {"bytes": 34494, "content_type": "text/html; charset=UTF-8", "etag": "\"1790660250\"", "last_modified": "Tue, 29 Sep 2026 05:37:30 GMT", "requested_url": "https://ised-isde.canada.ca/site/corporations-canada/en/accessing-federal-corporation-json-datasets", "sha256": "23085557514aea179f217af85fd6e516d7d3d586dc98d01bca642ccb53ecdc80", "status": 200}, "data_services": {"bytes": 27477, "content_type": "text/html; charset=UTF-8", "etag": "\"1790660250\"", "last_modified": "Tue, 29 Sep 2026 05:37:30 GMT", "requested_url": "https://ised-isde.canada.ca/site/corporations-canada/en/data-services", "sha256": "4413b13e58369f76ef929c7021a73cc4ec467ddfd1fee84fa84d57d6a12ca607", "status": 200}, "monthly": {"bytes": 24193, "content_type": "text/html; charset=UTF-8", "etag": "\"1790660251\"", "last_modified": "Tue, 29 Sep 2026 05:37:31 GMT", "requested_url": "https://ised-isde.canada.ca/site/corporations-canada/en/data-services/monthly-transactions", "sha256": "aad41d4d6c4efc5a4045b0229...` |
+| 4 | PASS | `{"record_status": 200, "resources": {"active_cbca": "https://d4bf66bykfyaf.cloudfront.net/corporations-active-cbca-en.csv", "active_non_cbca": "https://d4bf66bykfyaf.cloudfront.net/corporations-active-non-cbca-en.csv", "inactive_cbca": "https://d4bf66bykfyaf.cloudfront.net/corporations-inactive-or-dissolved-cbca-en.csv", "inactive_non_cbca": "https://d4bf66bykfyaf.cloudfront.net/corporations-inactive-or-dissolved-non-cbca-en.csv"}}` |
+| 5 | FAIL | `{"active_cbca": {"date_col": null, "headers": ["Corporation number", "Business number (BN)", "Corporate name - form 1", "Corporate name - form 2", "Governing legislation", "Status", "Status Detail", "Anniversary date", "Year of last annual filing", "Date of last annual meeting", "Street", "Street 2", "City/town", "Province/territory", "Country", "Postal code", "Minimum number of directors", "Maximum number of directors"], "id_col": 0, "legislation_col": 4, "nonblank_ids": 644887, "rows": 644887, "schema_ok": true, "status_col": 5, "status_counts": {"Active": 644887}, "valid_ids": 644887}, "active_non_cbca": {"date_col": null, "headers": ["Corporation number", "Business number (BN)", "Corporate name - form 1", "Corporate name - form 2", "Governing legislation", "Status", "Status Detail", "Anniversary date", "Year of last annual filing", "Date of last annual meeting", "Street", "Street 2", "City/town", "Province/territory", "Country", "Postal code", "Minimum number of directors", "Max...` |
+| 6 | PASS | `{"nonblank": 1569191, "rate": 1.0, "threshold": 0.999, "valid": 1569191}` |
+| 7 | PASS | `{"distinct_active_cbca": 644887, "threshold": 250000}` |
+| 8 | PASS | `{"distinct_complete_federal_ids": 1569191, "threshold": 500000}` |
+| 9 | FAIL | `{"documented_labels_found": false, "recognized_rate": 1.0, "status_counts": {"Active": 644887, "Dissolved": 733832, "Inactive": 96759}, "unknown_statuses": []}` |
+| 10 | FAIL | `{"count": 1, "distinct_months": ["2026-07-01"], "sample_links": [["July 2026", "https://ised-isde.canada.ca/site/corporations-canada/en/data-services/monthly-transactions/monthly-transactions-june-2026"]], "threshold": 18}` |
+| 11 | PASS | `{"distinct_historical_section212_ids": 5054, "effective_max": "2026-07-31", "effective_min": "2026-07-01", "rows": 5054, "section212_page": {"bytes": 1183870, "content_type": "text/html; charset=UTF-8", "etag": "\"1790660262\"", "last_modified": "Tue, 29 Sep 2026 05:37:42 GMT", "requested_url": "https://ised-isde.canada.ca/site/corporations-canada/en/data-services/monthly-transactions/certificates-dissolution-cbca-section-212", "sha256": "7a4c44708216dc7816bcae600a689218b787b29922e3fef3b2a810ab36cc1ca3", "status": 200}, "threshold": 5000}` |
+| 12 | PASS | `{"exact_matches": 5045, "historical_ids": 5054, "rate": 0.9982192322912544, "threshold": 0.95}` |
+| 13 | FAIL | `{"amalgamation_family": false, "discontinuance_family": false, "section210211_label": true, "section212_label": true}` |
+| 14 | PASS | `{"available": 8, "concordant": 8, "rate": 1.0, "requested": 100, "results": [{"concordant": false, "error": "JSONDecodeError:Expecting value: line 1 column 1 (char 0)", "requested": "10000019", "returned": null}, {"concordant": false, "error": "JSONDecodeError:Expecting value: line 1 column 1 (char 0)", "requested": "10000027", "returned": null}, {"concordant": false, "error": "JSONDecodeError:Expecting value: line 1 column 1 (char 0)", "requested": "10000035", "returned": null}, {"concordant": false, "error": "JSONDecodeError:Expecting value: line 1 column 1 (char 0)", "requested": "1000004", "returned": null}, {"concordant": false, "error": "JSONDecodeError:Expecting value: line 1 column 1 (char 0)", "requested": "10000043", "returned": null}, {"concordant": false, "error": "JSONDecodeError:Expecting value: line 1 column 1 (char 0)", "requested": "10000051", "returned": null}, {"concordant": false, "error": "JSONDecodeError:Expecting value: line 1 column 1 (char 0)", "requested": ...` |
+| 15 | PASS | `{"computed": false, "prohibited_fields": ["annual_filing_overdue", "notice_of_intent_to_dissolve", "dissolution_pending", "active_intent_to_dissolve", "compliance_certificate_ineligibility", "section212_trigger"]}` |
+| 16 | PASS | `{"future_entity_body_bytes_consumed": 0, "future_rows_opened": 0, "future_section212_membership_opened": false, "policy": "no post-2026-09-29 transaction entity page is requested"}` |
+| 17 | PASS | `{"business_number_name_address_director_fuzzy_geo_manual_repair_used": false, "causal_claim_made": false, "prediction_computed": false, "ranking_computed": false, "relationship_computed": false}` |
+| 18 | PASS | `{"contract_sha": "b97728c4e6338386bf47ec28be0c34afdf7a4737", "cost_usd": 0, "runner_sha256": "1f0a712b78a53b85119aec27343848a991519e75ce36a4bf6c4845db82705e9f", "source_sha256": {"active_cbca": "ccfa3b352fcf876a31d8c679c74702461831002b1beb86e52feca25fe2bf8c3b", "active_non_cbca": "e38709e49ef9bb703492b0550c8b397c6a9594913db1178838af602618677557", "inactive_cbca": "84f67bd3c6ad0cf6fdd42f3678c0374974b00eea24390090a35010f45ba8aeab", "inactive_non_cbca": "8ed59b84a4d389f11e8b758ec4db0ec6e2f275d909a7582c0e85caa7028801d3"}}` |
+
+No post-2026-09-29 transaction entity row was authorized or opened. No prohibited section-212 trigger exposure was computed.
