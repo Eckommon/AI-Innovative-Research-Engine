@@ -1,23 +1,24 @@
 ---
-checkpoint_id: CHK-20260930-PORTFOLIO-R47-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20260930-US-EPA-SDWIS-F01-ACTIVE
+active_issue: 182
+active_research: US-EPA-SDWIS-F01
 last_completed_issue: 181
 last_completed_research: PORTFOLIO-R47
-last_decision: DEC-273
+last_decision: DEC-274
 updated: 2026-09-30
 ---
 
 # Session Handoff / 세션 인계
 
-`PORTFOLIO_R47_SELECTED_US_EPA_SDWIS_001__F01_CONTRACT_REQUIRED`
+`US_EPA_SDWIS_F01_ACTIVE__EXACT_PWSID_HEALTH_VIOLATION_GATE`
 
-- Issue #181 completed.
-- Frozen contract: `c3bfe8cd3f85516e7adf4e700103992ab9a29193`.
-- Revalidation: `be77edbf75164a0ef50e7d932c146f1e81fa8a29`.
-- Immutable scorecard: `1b8a57f551b3d032ff8f66cfb2bcd6517042eb8d`.
-- Selection: `US-EPA-SDWIS-001` **43/45**.
-- U.S. postsecondary 38, ASIC 35, EMAS 34 remain held.
-- Candidate future-event memberships opened: 0.
-- Next: freeze `US-EPA-SDWIS-F01` before Issue creation.
+- Issue #182 open.
+- Pre-Issue contract: `5546edebea1c09f68eb98075b286b3f20bd69b46`.
+- Parent R47 selection: SDWIS 43/45 / `DEC-273`.
+- Baseline: first post-Issue official `SDWA_latest_downloads.zip` body.
+- Exact identity: source-native PWSID only.
+- Health event prospect: `IS_HEALTH_BASED_IND == Y`, exact PWSID + VIOLATION_ID, onset at NON_COMPL_PER_BEGIN_DATE.
+- Current baseline rows are historical support only; later quarterly ZIP is sealed.
+- No compliance/enforcement/outcome-proximal predictive exposure.
+- Next: immutable 18-gate Attempt 01.
 - Cost: 0 USD.
