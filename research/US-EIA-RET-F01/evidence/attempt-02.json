@@ -1,0 +1,4424 @@
+{
+  "attempt": 2,
+  "attempt01_commit": "3bdc8193ccb5c9ce7e40bea5a483047d57d4fdbe",
+  "attempt_valid": true,
+  "causal_claim_made": false,
+  "contract_sha": "cce869991b94d8c1ef21c0b3dff401cfd57b0fe3",
+  "disposition": "PASS_US_EIA_RET_F01_EXACT_GENERATOR_FUTURE_RETIREMENT_DESIGN_READY",
+  "eia923_row_bodies_opened": 0,
+  "failed_gates": [],
+  "future_firewall_changed": false,
+  "future_retirement_membership_opened": false,
+  "gates": [
+    {
+      "gate": 1,
+      "observed": {
+        "active_issue": 184,
+        "active_research": "US-EIA-RET-F01",
+        "checkpoint_id": "CHK-20260930-US-EIA-RET-F01-ACTIVE",
+        "last_completed_issue": 183,
+        "last_completed_research": "PORTFOLIO-R48",
+        "last_decision": "DEC-279",
+        "updated": "2026-09-30"
+      },
+      "pass": true
+    },
+    {
+      "gate": 2,
+      "observed": {
+        "contract_sha": "cce869991b94d8c1ef21c0b3dff401cfd57b0fe3",
+        "issue": 184
+      },
+      "pass": true
+    },
+    {
+      "gate": 3,
+      "observed": {
+        "eia923_monthly_annual_generation_fuel": true,
+        "pages": {
+          "eia860": {
+            "bytes": 67547,
+            "content_type": "text/html; charset=UTF-8",
+            "etag": null,
+            "final_url": "https://www.eia.gov/electricity/data/eia860/index.php",
+            "last_modified": null,
+            "requested_url": "https://www.eia.gov/electricity/data/eia860/index.php",
+            "sha256": "bc500cb9c8a37f2427b64799c13f3fe19be53b2cfd2c98617cf7a67c9cfe5c30",
+            "status": 200
+          },
+          "eia860m": {
+            "bytes": 93617,
+            "content_type": "text/html; charset=UTF-8",
+            "etag": null,
+            "final_url": "https://www.eia.gov/electricity/data/eia860m/index.php",
+            "last_modified": null,
+            "requested_url": "https://www.eia.gov/electricity/data/eia860m/index.php",
+            "sha256": "8282bbdbd7558ee86ffaeff031f630f5fbd015631593bc4974c1aa4f64164b96",
+            "status": 200
+          },
+          "eia923": {
+            "bytes": 66717,
+            "content_type": "text/html; charset=UTF-8",
+            "etag": null,
+            "final_url": "https://www.eia.gov/electricity/data/eia923/index.php",
+            "last_modified": null,
+            "requested_url": "https://www.eia.gov/electricity/data/eia923/index.php",
+            "sha256": "8cf7c9e8f5148e60e27e28aa077e60b11810912898df7e12e8a23e573abe6c09",
+            "status": 200
+          }
+        },
+        "retired_semantics": true
+      },
+      "pass": true
+    },
+    {
+      "gate": 4,
+      "observed": {
+        "expected": [
+          "2025-09",
+          "2025-10",
+          "2025-11",
+          "2025-12",
+          "2026-01",
+          "2026-02",
+          "2026-03",
+          "2026-04",
+          "2026-05",
+          "2026-06",
+          "2026-07",
+          "2026-08"
+        ],
+        "observed_matching_links": [
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/xls/august_generator2026.xlsx",
+            "link_text": "XLS",
+            "month": "2026-08"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/july_generator2026.xlsx",
+            "link_text": "XLS",
+            "month": "2026-07"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/june_generator2026.xlsx",
+            "link_text": "XLS",
+            "month": "2026-06"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/may_generator2026.xlsx",
+            "link_text": "XLS",
+            "month": "2026-05"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/april_generator2026.xlsx",
+            "link_text": "XLS",
+            "month": "2026-04"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/march_generator2026.xlsx",
+            "link_text": "XLS",
+            "month": "2026-03"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/february_generator2026.xlsx",
+            "link_text": "XLS",
+            "month": "2026-02"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/january_generator2026.xlsx",
+            "link_text": "XLS",
+            "month": "2026-01"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/december_generator2025.xlsx",
+            "link_text": "XLS",
+            "month": "2025-12"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/november_generator2025.xlsx",
+            "link_text": "XLS",
+            "month": "2025-11"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/october_generator2025.xlsx",
+            "link_text": "XLS",
+            "month": "2025-10"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/september_generator2025.xlsx",
+            "link_text": "XLS",
+            "month": "2025-09"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/august_generator2025.xlsx",
+            "link_text": "XLS",
+            "month": "2025-08"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/july_generator2025.xlsx",
+            "link_text": "XLS",
+            "month": "2025-07"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/june_generator2025.xlsx",
+            "link_text": "XLS",
+            "month": "2025-06"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/may_generator2025.xlsx",
+            "link_text": "XLS",
+            "month": "2025-05"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/april_generator2025.xlsx",
+            "link_text": "XLS",
+            "month": "2025-04"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/march_generator2025.xlsx",
+            "link_text": "XLS",
+            "month": "2025-03"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/february_generator2025.xlsx",
+            "link_text": "XLS",
+            "month": "2025-02"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/january_generator2025.xlsx",
+            "link_text": "XLS",
+            "month": "2025-01"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/december_generator2024.xlsx",
+            "link_text": "XLS",
+            "month": "2024-12"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/november_generator2024.xlsx",
+            "link_text": "XLS",
+            "month": "2024-11"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/october_generator2024.xlsx",
+            "link_text": "XLS",
+            "month": "2024-10"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/september_generator2024.xlsx",
+            "link_text": "XLS",
+            "month": "2024-09"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/august_generator2024.xlsx",
+            "link_text": "XLS",
+            "month": "2024-08"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/july_generator2024.xlsx",
+            "link_text": "XLS",
+            "month": "2024-07"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/june_generator2024.xlsx",
+            "link_text": "XLS",
+            "month": "2024-06"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/may_generator2024.xlsx",
+            "link_text": "XLS",
+            "month": "2024-05"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/april_generator2024.xlsx",
+            "link_text": "XLS",
+            "month": "2024-04"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/march_generator2024.xlsx",
+            "link_text": "XLS",
+            "month": "2024-03"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/february_generator2024.xlsx",
+            "link_text": "XLS",
+            "month": "2024-02"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/january_generator2024.xlsx",
+            "link_text": "XLS",
+            "month": "2024-01"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/december_generator2023.xlsx",
+            "link_text": "XLS",
+            "month": "2023-12"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/november_generator2023.xlsx",
+            "link_text": "XLS",
+            "month": "2023-11"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/october_generator2023.xlsx",
+            "link_text": "XLS",
+            "month": "2023-10"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/september_generator2023.xlsx",
+            "link_text": "XLS",
+            "month": "2023-09"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/august_generator2023.xlsx",
+            "link_text": "XLS",
+            "month": "2023-08"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/july_generator2023.xlsx",
+            "link_text": "XLS",
+            "month": "2023-07"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/june_generator2023.xlsx",
+            "link_text": "XLS",
+            "month": "2023-06"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/may_generator2023.xlsx",
+            "link_text": "XLS",
+            "month": "2023-05"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/april_generator2023.xlsx",
+            "link_text": "XLS",
+            "month": "2023-04"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/march_generator2023.xlsx",
+            "link_text": "XLS",
+            "month": "2023-03"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/february_generator2023.xlsx",
+            "link_text": "XLS",
+            "month": "2023-02"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/january_generator2023.xlsx",
+            "link_text": "XLS",
+            "month": "2023-01"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/december_generator2022.xlsx",
+            "link_text": "XLS",
+            "month": "2022-12"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/november_generator2022.xlsx",
+            "link_text": "XLS",
+            "month": "2022-11"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/october_generator2022.xlsx",
+            "link_text": "XLS",
+            "month": "2022-10"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/september_generator2022.xlsx",
+            "link_text": "XLS",
+            "month": "2022-09"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/august_generator2022.xlsx",
+            "link_text": "XLS",
+            "month": "2022-08"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/july_generator2022.xlsx",
+            "link_text": "XLS",
+            "month": "2022-07"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/june_generator2022.xlsx",
+            "link_text": "XLS",
+            "month": "2022-06"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/may_generator2022.xlsx",
+            "link_text": "XLS",
+            "month": "2022-05"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/april_generator2022.xlsx",
+            "link_text": "XLS",
+            "month": "2022-04"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/march_generator2022.xlsx",
+            "link_text": "XLS",
+            "month": "2022-03"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/february_generator2022.xlsx",
+            "link_text": "XLS",
+            "month": "2022-02"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/january_generator2022.xlsx",
+            "link_text": "XLS",
+            "month": "2022-01"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/december_generator2021.xlsx",
+            "link_text": "XLS",
+            "month": "2021-12"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/november_generator2021.xlsx",
+            "link_text": "XLS",
+            "month": "2021-11"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/october_generator2021.xlsx",
+            "link_text": "XLS",
+            "month": "2021-10"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/september_generator2021.xlsx",
+            "link_text": "XLS",
+            "month": "2021-09"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/august_generator2021.xlsx",
+            "link_text": "XLS",
+            "month": "2021-08"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/july_generator2021.xlsx",
+            "link_text": "XLS",
+            "month": "2021-07"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/june_generator2021.xlsx",
+            "link_text": "XLS",
+            "month": "2021-06"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/may_generator2021.xlsx",
+            "link_text": "XLS",
+            "month": "2021-05"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/april_generator2021.xlsx",
+            "link_text": "XLS",
+            "month": "2021-04"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/march_generator2021.xlsx",
+            "link_text": "XLS",
+            "month": "2021-03"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/february_generator2021.xlsx",
+            "link_text": "XLS",
+            "month": "2021-02"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/january_generator2021.xlsx",
+            "link_text": "XLS",
+            "month": "2021-01"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/december_generator2020.xlsx",
+            "link_text": "XLS",
+            "month": "2020-12"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/november_generator2020.xlsx",
+            "link_text": "XLS",
+            "month": "2020-11"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/october_generator2020.xlsx",
+            "link_text": "XLS",
+            "month": "2020-10"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/september_generator2020.xlsx",
+            "link_text": "XLS",
+            "month": "2020-09"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/august_generator2020.xlsx",
+            "link_text": "XLS",
+            "month": "2020-08"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/july_generator2020.xlsx",
+            "link_text": "XLS",
+            "month": "2020-07"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/june_generator2020.xlsx",
+            "link_text": "XLS",
+            "month": "2020-06"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/may_generator2020.xlsx",
+            "link_text": "XLS",
+            "month": "2020-05"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/april_generator2020.xlsx",
+            "link_text": "XLS",
+            "month": "2020-04"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/march_generator2020.xlsx",
+            "link_text": "XLS",
+            "month": "2020-03"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/february_generator2020.xlsx",
+            "link_text": "XLS",
+            "month": "2020-02"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/january_generator2020.xlsx",
+            "link_text": "XLS",
+            "month": "2020-01"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/december_generator2019.xlsx",
+            "link_text": "XLS",
+            "month": "2019-12"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/november_generator2019.xlsx",
+            "link_text": "XLS",
+            "month": "2019-11"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/october_generator2019.xlsx",
+            "link_text": "XLS",
+            "month": "2019-10"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/september_generator2019.xlsx",
+            "link_text": "XLS",
+            "month": "2019-09"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/august_generator2019.xlsx",
+            "link_text": "XLS",
+            "month": "2019-08"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/july_generator2019.xlsx",
+            "link_text": "XLS",
+            "month": "2019-07"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/june_generator2019.xlsx",
+            "link_text": "XLS",
+            "month": "2019-06"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/may_generator2019.xlsx",
+            "link_text": "XLS",
+            "month": "2019-05"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/april_generator2019.xlsx",
+            "link_text": "XLS",
+            "month": "2019-04"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/march_generator2019.xlsx",
+            "link_text": "XLS",
+            "month": "2019-03"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/february_generator2019.xlsx",
+            "link_text": "XLS",
+            "month": "2019-02"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/january_generator2019.xlsx",
+            "link_text": "XLS",
+            "month": "2019-01"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/december_generator2018.xlsx",
+            "link_text": "XLS",
+            "month": "2018-12"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/november_generator2018.xlsx",
+            "link_text": "XLS",
+            "month": "2018-11"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/october_generator2018.xlsx",
+            "link_text": "XLS",
+            "month": "2018-10"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/september_generator2018.xlsx",
+            "link_text": "XLS",
+            "month": "2018-09"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/august_generator2018.xlsx",
+            "link_text": "XLS",
+            "month": "2018-08"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/july_generator2018.xlsx",
+            "link_text": "XLS",
+            "month": "2018-07"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/june_generator2018.xlsx",
+            "link_text": "XLS",
+            "month": "2018-06"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/may_generator2018.xlsx",
+            "link_text": "XLS",
+            "month": "2018-05"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/april_generator2018.xlsx",
+            "link_text": "XLS",
+            "month": "2018-04"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/march_generator2018.xlsx",
+            "link_text": "XLS",
+            "month": "2018-03"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/february_generator2018.xlsx",
+            "link_text": "XLS",
+            "month": "2018-02"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/january_generator2018.xlsx",
+            "link_text": "XLS",
+            "month": "2018-01"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/december_generator2017.xlsx",
+            "link_text": "XLS",
+            "month": "2017-12"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/november_generator2017.xlsx",
+            "link_text": "XLS",
+            "month": "2017-11"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/october_generator2017.xlsx",
+            "link_text": "XLS",
+            "month": "2017-10"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/september_generator2017.xlsx",
+            "link_text": "XLS",
+            "month": "2017-09"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/august_generator2017.xlsx",
+            "link_text": "XLS",
+            "month": "2017-08"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/july_generator2017.xlsx",
+            "link_text": "XLS",
+            "month": "2017-07"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/june_generator2017.xlsx",
+            "link_text": "XLS",
+            "month": "2017-06"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/may_generator2017.xlsx",
+            "link_text": "XLS",
+            "month": "2017-05"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/april_generator2017.xlsx",
+            "link_text": "XLS",
+            "month": "2017-04"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/march_generator2017.xlsx",
+            "link_text": "XLS",
+            "month": "2017-03"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/february_generator2017.xlsx",
+            "link_text": "XLS",
+            "month": "2017-02"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/january_generator2017.xlsx",
+            "link_text": "XLS",
+            "month": "2017-01"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/december_generator2016.xlsx",
+            "link_text": "XLS",
+            "month": "2016-12"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/november_generator2016.xlsx",
+            "link_text": "XLS",
+            "month": "2016-11"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/october_generator2016.xlsx",
+            "link_text": "XLS",
+            "month": "2016-10"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/september_generator2016.xlsx",
+            "link_text": "XLS",
+            "month": "2016-09"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/august_generator2016.xlsx",
+            "link_text": "XLS",
+            "month": "2016-08"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/july_generator2016.xlsx",
+            "link_text": "XLS",
+            "month": "2016-07"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/june_generator2016.xlsx",
+            "link_text": "XLS",
+            "month": "2016-06"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/may_generator2016.xlsx",
+            "link_text": "XLS",
+            "month": "2016-05"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/april_generator2016.xlsx",
+            "link_text": "XLS",
+            "month": "2016-04"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/march_generator2016.xlsx",
+            "link_text": "XLS",
+            "month": "2016-03"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/february_generator2016.xlsx",
+            "link_text": "XLS",
+            "month": "2016-02"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/january_generator2016.xlsx",
+            "link_text": "XLS",
+            "month": "2016-01"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/december_generator2015.xlsx",
+            "link_text": "XLS",
+            "month": "2015-12"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/november_generator2015.xlsx",
+            "link_text": "XLS",
+            "month": "2015-11"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/october_generator2015.xlsx",
+            "link_text": "XLS",
+            "month": "2015-10"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/september_generator2015.xlsx",
+            "link_text": "XLS",
+            "month": "2015-09"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/august_generator2015.xlsx",
+            "link_text": "XLS",
+            "month": "2015-08"
+          },
+          {
+            "href": "https://www.eia.gov/electricity/data/eia860m/archive/xls/july_generator2015.xlsx",
+            "link_text": "XLS",
+            "month": "2015-07"
+          }
+        ],
+        "resolved": {
+          "2025-09": [
+            "https://www.eia.gov/electricity/data/eia860m/archive/xls/september_generator2025.xlsx"
+          ],
+          "2025-10": [
+            "https://www.eia.gov/electricity/data/eia860m/archive/xls/october_generator2025.xlsx"
+          ],
+          "2025-11": [
+            "https://www.eia.gov/electricity/data/eia860m/archive/xls/november_generator2025.xlsx"
+          ],
+          "2025-12": [
+            "https://www.eia.gov/electricity/data/eia860m/archive/xls/december_generator2025.xlsx"
+          ],
+          "2026-01": [
+            "https://www.eia.gov/electricity/data/eia860m/archive/xls/january_generator2026.xlsx"
+          ],
+          "2026-02": [
+            "https://www.eia.gov/electricity/data/eia860m/archive/xls/february_generator2026.xlsx"
+          ],
+          "2026-03": [
+            "https://www.eia.gov/electricity/data/eia860m/archive/xls/march_generator2026.xlsx"
+          ],
+          "2026-04": [
+            "https://www.eia.gov/electricity/data/eia860m/archive/xls/april_generator2026.xlsx"
+          ],
+          "2026-05": [
+            "https://www.eia.gov/electricity/data/eia860m/archive/xls/may_generator2026.xlsx"
+          ],
+          "2026-06": [
+            "https://www.eia.gov/electricity/data/eia860m/archive/xls/june_generator2026.xlsx"
+          ],
+          "2026-07": [
+            "https://www.eia.gov/electricity/data/eia860m/archive/xls/july_generator2026.xlsx"
+          ],
+          "2026-08": [
+            "https://www.eia.gov/electricity/data/eia860m/xls/august_generator2026.xlsx"
+          ]
+        }
+      },
+      "pass": true
+    },
+    {
+      "gate": 5,
+      "observed": {
+        "months": {
+          "2025-09": {
+            "bytes": 12885889,
+            "content_length_header": "12885889",
+            "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "etag": "\"07a29bafc44dc1:0\"",
+            "final_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/september_generator2025.xlsx",
+            "last_modified": "Fri, 24 Oct 2025 15:41:56 GMT",
+            "requested_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/september_generator2025.xlsx",
+            "sha256": "069de3bee5de7c560297a814a3e90beeb6b5e10642c5c83bf4a49c4ef74da08b",
+            "status": 200
+          },
+          "2025-10": {
+            "bytes": 13303898,
+            "content_length_header": "13303898",
+            "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "etag": "\"031b5c6205edc1:0\"",
+            "final_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/october_generator2025.xlsx",
+            "last_modified": "Tue, 25 Nov 2025 15:32:58 GMT",
+            "requested_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/october_generator2025.xlsx",
+            "sha256": "cf560a5e9f3b4438bf5a1e485e07f6eee50fe16b52e224480c61e7fcb060a308",
+            "status": 200
+          },
+          "2025-11": {
+            "bytes": 13335660,
+            "content_length_header": "13335660",
+            "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "etag": "\"0457dbf1774dc1:0\"",
+            "final_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/november_generator2025.xlsx",
+            "last_modified": "Tue, 23 Dec 2025 14:23:46 GMT",
+            "requested_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/november_generator2025.xlsx",
+            "sha256": "5dc458f278b68504830b048b8728539f104057de100f8eae6ed301d3d603ea12",
+            "status": 200
+          },
+          "2025-12": {
+            "bytes": 13463993,
+            "content_length_header": "13463993",
+            "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "etag": "\"80a3918ee08edc1:0\"",
+            "final_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/december_generator2025.xlsx",
+            "last_modified": "Mon, 26 Jan 2026 16:26:43 GMT",
+            "requested_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/december_generator2025.xlsx",
+            "sha256": "1264f1c37cf51ef41319067c4c0915f951535851df93c97d02e2e823e337ea2b",
+            "status": 200
+          },
+          "2026-01": {
+            "bytes": 13518786,
+            "content_length_header": "13518786",
+            "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "etag": "\"80fad0f710a5dc1:0\"",
+            "final_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/january_generator2026.xlsx",
+            "last_modified": "Mon, 23 Feb 2026 22:08:41 GMT",
+            "requested_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/january_generator2026.xlsx",
+            "sha256": "a02a0262c98e6b4fc8451e3f88c3983c2edd015b1bff2c5174df91e331ae9cf8",
+            "status": 200
+          },
+          "2026-02": {
+            "bytes": 13468269,
+            "content_length_header": "13468269",
+            "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "etag": "\"0e1dd1a87bbdc1:0\"",
+            "final_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/february_generator2026.xlsx",
+            "last_modified": "Tue, 24 Mar 2026 12:09:46 GMT",
+            "requested_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/february_generator2026.xlsx",
+            "sha256": "9f76e3a186ba0814ea836a357213bab0ea8e18955d862a92e877dc028af755e8",
+            "status": 200
+          },
+          "2026-03": {
+            "bytes": 13696844,
+            "content_length_header": "13696844",
+            "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "etag": "\"0ee394f3bd3dc1:0\"",
+            "final_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/march_generator2026.xlsx",
+            "last_modified": "Thu, 23 Apr 2026 16:07:40 GMT",
+            "requested_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/march_generator2026.xlsx",
+            "sha256": "93f2b2501cd42ba1290136ec04fd616346d974e0dfd6020cd8ec5e532ef7cec6",
+            "status": 200
+          },
+          "2026-04": {
+            "bytes": 13670943,
+            "content_length_header": "13670943",
+            "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "etag": "\"04821f42e9dc1:0\"",
+            "final_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/april_generator2026.xlsx",
+            "last_modified": "Thu, 21 May 2026 16:51:52 GMT",
+            "requested_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/april_generator2026.xlsx",
+            "sha256": "ec15bae939cc7cf8ee7e3f0dcb9a06d0f91d5fbab3714f0f36ecaeef3bde82b6",
+            "status": 200
+          },
+          "2026-05": {
+            "bytes": 13797847,
+            "content_length_header": "13797847",
+            "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "etag": "\"045f439fa3dd1:0\"",
+            "final_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/may_generator2026.xlsx",
+            "last_modified": "Wed, 24 Jun 2026 16:55:14 GMT",
+            "requested_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/may_generator2026.xlsx",
+            "sha256": "46ff71d90723e4dfe766f6fe191160d92ff28cb17d5d5f5a55eeed562067995d",
+            "status": 200
+          },
+          "2026-06": {
+            "bytes": 13860880,
+            "content_length_header": "13860880",
+            "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "etag": "\"073ff3bd1add1:0\"",
+            "final_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/june_generator2026.xlsx",
+            "last_modified": "Thu, 23 Jul 2026 16:11:42 GMT",
+            "requested_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/june_generator2026.xlsx",
+            "sha256": "47d28a1e5599135b619d249971f35f03fef8a5b3062c2d66c436b55e8f8c3072",
+            "status": 200
+          },
+          "2026-07": {
+            "bytes": 13932124,
+            "content_length_header": "13932124",
+            "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "etag": "\"80c74d6bb434dd1:0\"",
+            "final_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/july_generator2026.xlsx",
+            "last_modified": "Tue, 25 Aug 2026 17:08:59 GMT",
+            "requested_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/july_generator2026.xlsx",
+            "sha256": "9f348be6d6609b7e0c49a8c3cf872354a3bd2370051d0d4720246dc81bbe540d",
+            "status": 200
+          },
+          "2026-08": {
+            "bytes": 13955142,
+            "content_length_header": "13955142",
+            "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            "etag": "\"8098ac47aa4bdd1:0\"",
+            "final_url": "https://www.eia.gov/electricity/data/eia860m/xls/august_generator2026.xlsx",
+            "last_modified": "Wed, 23 Sep 2026 22:24:21 GMT",
+            "requested_url": "https://www.eia.gov/electricity/data/eia860m/xls/august_generator2026.xlsx",
+            "sha256": "b4b70abb4c217e8e2658c3bde7608a3d530e86a81279ccc572ced82a200e9f1c",
+            "status": 200
+          }
+        },
+        "parseable_all": true
+      },
+      "pass": true
+    },
+    {
+      "gate": 6,
+      "observed": {
+        "planned_proposed_row_bodies_opened": 0,
+        "sheet_inventory_ok": true,
+        "sheets": {
+          "2025-09": [
+            "Operating",
+            "Planned",
+            "Retired",
+            "Canceled or Postponed",
+            "Operating_PR",
+            "Planned_PR",
+            "Retired_PR"
+          ],
+          "2025-10": [
+            "Operating",
+            "Planned",
+            "Retired",
+            "Canceled or Postponed",
+            "Operating_PR",
+            "Planned_PR",
+            "Retired_PR"
+          ],
+          "2025-11": [
+            "Operating",
+            "Planned",
+            "Retired",
+            "Canceled or Postponed",
+            "Operating_PR",
+            "Planned_PR",
+            "Retired_PR"
+          ],
+          "2025-12": [
+            "Operating",
+            "Planned",
+            "Retired",
+            "Canceled or Postponed",
+            "Operating_PR",
+            "Planned_PR",
+            "Retired_PR"
+          ],
+          "2026-01": [
+            "Operating",
+            "Planned",
+            "Retired",
+            "Canceled or Postponed",
+            "Operating_PR",
+            "Planned_PR",
+            "Retired_PR"
+          ],
+          "2026-02": [
+            "Operating",
+            "Planned",
+            "Retired",
+            "Canceled or Postponed",
+            "Operating_PR",
+            "Planned_PR",
+            "Retired_PR"
+          ],
+          "2026-03": [
+            "Operating",
+            "Planned",
+            "Retired",
+            "Canceled or Postponed",
+            "Operating_PR",
+            "Planned_PR",
+            "Retired_PR"
+          ],
+          "2026-04": [
+            "Operating",
+            "Planned",
+            "Retired",
+            "Canceled or Postponed",
+            "Operating_PR",
+            "Planned_PR",
+            "Retired_PR"
+          ],
+          "2026-05": [
+            "Operating",
+            "Planned",
+            "Retired",
+            "Canceled or Postponed",
+            "Operating_PR",
+            "Planned_PR",
+            "Retired_PR"
+          ],
+          "2026-06": [
+            "Operating",
+            "Planned",
+            "Retired",
+            "Canceled or Postponed",
+            "Operating_PR",
+            "Planned_PR",
+            "Retired_PR"
+          ],
+          "2026-07": [
+            "Operating",
+            "Planned",
+            "Retired",
+            "Canceled or Postponed",
+            "Operating_PR",
+            "Planned_PR",
+            "Retired_PR"
+          ],
+          "2026-08": [
+            "Operating",
+            "Planned",
+            "Retired",
+            "Canceled or Postponed",
+            "Operating_PR",
+            "Planned_PR",
+            "Retired_PR"
+          ]
+        }
+      },
+      "pass": true
+    },
+    {
+      "gate": 7,
+      "observed": {
+        "headers": {
+          "2025-09": {
+            "operable": {
+              "gen": 10,
+              "headers": [
+                "ENTITY ID",
+                "ENTITY NAME",
+                "PLANT ID",
+                "PLANT NAME",
+                "GOOGLE MAP",
+                "BING MAP",
+                "PLANT STATE",
+                "COUNTY",
+                "BALANCING AUTHORITY CODE",
+                "SECTOR",
+                "GENERATOR ID",
+                "UNIT CODE",
+                "NAMEPLATE CAPACITY MW",
+                "NET SUMMER CAPACITY MW",
+                "NET WINTER CAPACITY MW",
+                "TECHNOLOGY",
+                "ENERGY SOURCE CODE",
+                "PRIME MOVER CODE",
+                "OPERATING MONTH",
+                "OPERATING YEAR",
+                "PLANNED RETIREMENT MONTH",
+                "PLANNED RETIREMENT YEAR",
+                "STATUS",
+                "NAMEPLATE ENERGY CAPACITY MWH",
+                "DC NET CAPACITY MW",
+                "PLANNED DERATE YEAR",
+                "PLANNED DERATE MONTH",
+                "PLANNED DERATE OF SUMMER CAPACITY MW",
+                "PLANNED UPRATE YEAR",
+                "PLANNED UPRATE MONTH",
+                "PLANNED UPRATE OF SUMMER CAPACITY MW",
+                "LATITUDE",
+                "LONGITUDE"
+              ],
+              "plant": 2,
+              "ret_month": 20,
+              "ret_year": 21,
+              "row": 3,
+              "score": 4
+            },
+            "retired": {
+              "gen": 10,
+              "headers": [
+                "ENTITY ID",
+                "ENTITY NAME",
+                "PLANT ID",
+                "PLANT NAME",
+                "GOOGLE MAP",
+                "BING MAP",
+                "PLANT STATE",
+                "COUNTY",
+                "BALANCING AUTHORITY CODE",
+                "SECTOR",
+                "GENERATOR ID",
+                "UNIT CODE",
+                "NAMEPLATE CAPACITY MW",
+                "NET SUMMER CAPACITY MW",
+                "NET WINTER CAPACITY MW",
+                "TECHNOLOGY",
+                "ENERGY SOURCE CODE",
+                "PRIME MOVER CODE",
+                "OPERATING MONTH",
+                "OPERATING YEAR",
+                "RETIREMENT MONTH",
+                "RETIREMENT YEAR",
+                "NAMEPLATE ENERGY CAPACITY MWH",
+                "DC NET CAPACITY MW",
+                "LATITUDE",
+                "LONGITUDE"
+              ],
+              "plant": 2,
+              "ret_month": 20,
+              "ret_year": 21,
+              "row": 3,
+              "score": 4
+            }
+          },
+          "2025-10": {
+            "operable": {
+              "gen": 10,
+              "headers": [
+                "ENTITY ID",
+                "ENTITY NAME",
+                "PLANT ID",
+                "PLANT NAME",
+                "GOOGLE MAP",
+                "BING MAP",
+                "PLANT STATE",
+                "COUNTY",
+                "BALANCING AUTHORITY CODE",
+                "SECTOR",
+                "GENERATOR ID",
+                "UNIT CODE",
+                "NAMEPLATE CAPACITY MW",
+                "NET SUMMER CAPACITY MW",
+                "NET WINTER CAPACITY MW",
+                "TECHNOLOGY",
+                "ENERGY SOURCE CODE",
+                "PRIME MOVER CODE",
+                "OPERATING MONTH",
+                "OPERATING YEAR",
+                "PLANNED RETIREMENT MONTH",
+                "PLANNED RETIREMENT YEAR",
+                "STATUS",
+                "NAMEPLATE ENERGY CAPACITY MWH",
+                "DC NET CAPACITY MW",
+                "PLANNED DERATE YEAR",
+                "PLANNED DERATE MONTH",
+                "PLANNED DERATE OF SUMMER CAPACITY MW",
+                "PLANNED UPRATE YEAR",
+                "PLANNED UPRATE MONTH",
+                "PLANNED UPRATE OF SUMMER CAPACITY MW",
+                "PLANNED REPOWER YEAR",
+                "PLANNED REPOWER MONTH",
+                "OTHER MODIFICATION YEAR",
+                "OTHER MODIFICATION MONTH",
+                "LATITUDE",
+                "LONGITUDE"
+              ],
+              "plant": 2,
+              "ret_month": 20,
+              "ret_year": 21,
+              "row": 3,
+              "score": 4
+            },
+            "retired": {
+              "gen": 10,
+              "headers": [
+                "ENTITY ID",
+                "ENTITY NAME",
+                "PLANT ID",
+                "PLANT NAME",
+                "GOOGLE MAP",
+                "BING MAP",
+                "PLANT STATE",
+                "COUNTY",
+                "BALANCING AUTHORITY CODE",
+                "SECTOR",
+                "GENERATOR ID",
+                "UNIT CODE",
+                "NAMEPLATE CAPACITY MW",
+                "NET SUMMER CAPACITY MW",
+                "NET WINTER CAPACITY MW",
+                "TECHNOLOGY",
+                "ENERGY SOURCE CODE",
+                "PRIME MOVER CODE",
+                "OPERATING MONTH",
+                "OPERATING YEAR",
+                "RETIREMENT MONTH",
+                "RETIREMENT YEAR",
+                "NAMEPLATE ENERGY CAPACITY MWH",
+                "DC NET CAPACITY MW",
+                "LATITUDE",
+                "LONGITUDE"
+              ],
+              "plant": 2,
+              "ret_month": 20,
+              "ret_year": 21,
+              "row": 3,
+              "score": 4
+            }
+          },
+          "2025-11": {
+            "operable": {
+              "gen": 10,
+              "headers": [
+                "ENTITY ID",
+                "ENTITY NAME",
+                "PLANT ID",
+                "PLANT NAME",
+                "GOOGLE MAP",
+                "BING MAP",
+                "PLANT STATE",
+                "COUNTY",
+                "BALANCING AUTHORITY CODE",
+                "SECTOR",
+                "GENERATOR ID",
+                "UNIT CODE",
+                "NAMEPLATE CAPACITY MW",
+                "NET SUMMER CAPACITY MW",
+                "NET WINTER CAPACITY MW",
+                "TECHNOLOGY",
+                "ENERGY SOURCE CODE",
+                "PRIME MOVER CODE",
+                "OPERATING MONTH",
+                "OPERATING YEAR",
+                "PLANNED RETIREMENT MONTH",
+                "PLANNED RETIREMENT YEAR",
+                "STATUS",
+                "NAMEPLATE ENERGY CAPACITY MWH",
+                "DC NET CAPACITY MW",
+                "PLANNED DERATE YEAR",
+                "PLANNED DERATE MONTH",
+                "PLANNED DERATE OF SUMMER CAPACITY MW",
+                "PLANNED UPRATE YEAR",
+                "PLANNED UPRATE MONTH",
+                "PLANNED UPRATE OF SUMMER CAPACITY MW",
+                "PLANNED REPOWER YEAR",
+                "PLANNED REPOWER MONTH",
+                "OTHER MODIFICATION YEAR",
+                "OTHER MODIFICATION MONTH",
+                "LATITUDE",
+                "LONGITUDE"
+              ],
+              "plant": 2,
+              "ret_month": 20,
+              "ret_year": 21,
+              "row": 3,
+              "score": 4
+            },
+            "retired": {
+              "gen": 10,
+              "headers": [
+                "ENTITY ID",
+                "ENTITY NAME",
+                "PLANT ID",
+                "PLANT NAME",
+                "GOOGLE MAP",
+                "BING MAP",
+                "PLANT STATE",
+                "COUNTY",
+                "BALANCING AUTHORITY CODE",
+                "SECTOR",
+                "GENERATOR ID",
+                "UNIT CODE",
+                "NAMEPLATE CAPACITY MW",
+                "NET SUMMER CAPACITY MW",
+                "NET WINTER CAPACITY MW",
+                "TECHNOLOGY",
+                "ENERGY SOURCE CODE",
+                "PRIME MOVER CODE",
+                "OPERATING MONTH",
+                "OPERATING YEAR",
+                "RETIREMENT MONTH",
+                "RETIREMENT YEAR",
+                "NAMEPLATE ENERGY CAPACITY MWH",
+                "DC NET CAPACITY MW",
+                "LATITUDE",
+                "LONGITUDE"
+              ],
+              "plant": 2,
+              "ret_month": 20,
+              "ret_year": 21,
+              "row": 3,
+              "score": 4
+            }
+          },
+          "2025-12": {
+            "operable": {
+              "gen": 10,
+              "headers": [
+                "ENTITY ID",
+                "ENTITY NAME",
+                "PLANT ID",
+                "PLANT NAME",
+                "GOOGLE MAP",
+                "BING MAP",
+                "PLANT STATE",
+                "COUNTY",
+                "BALANCING AUTHORITY CODE",
+                "SECTOR",
+                "GENERATOR ID",
+                "UNIT CODE",
+                "NAMEPLATE CAPACITY MW",
+                "NET SUMMER CAPACITY MW",
+                "NET WINTER CAPACITY MW",
+                "TECHNOLOGY",
+                "ENERGY SOURCE CODE",
+                "PRIME MOVER CODE",
+                "OPERATING MONTH",
+                "OPERATING YEAR",
+                "PLANNED RETIREMENT MONTH",
+                "PLANNED RETIREMENT YEAR",
+                "STATUS",
+                "NAMEPLATE ENERGY CAPACITY MWH",
+                "DC NET CAPACITY MW",
+                "PLANNED DERATE YEAR",
+                "PLANNED DERATE MONTH",
+                "PLANNED DERATE OF SUMMER CAPACITY MW",
+                "PLANNED UPRATE YEAR",
+                "PLANNED UPRATE MONTH",
+                "PLANNED UPRATE OF SUMMER CAPACITY MW",
+                "PLANNED REPOWER YEAR",
+                "PLANNED REPOWER MONTH",
+                "OTHER MODIFICATION YEAR",
+                "OTHER MODIFICATION MONTH",
+                "LATITUDE",
+                "LONGITUDE"
+              ],
+              "plant": 2,
+              "ret_month": 20,
+              "ret_year": 21,
+              "row": 3,
+              "score": 4
+            },
+            "retired": {
+              "gen": 10,
+              "headers": [
+                "ENTITY ID",
+                "ENTITY NAME",
+                "PLANT ID",
+                "PLANT NAME",
+                "GOOGLE MAP",
+                "BING MAP",
+                "PLANT STATE",
+                "COUNTY",
+                "BALANCING AUTHORITY CODE",
+                "SECTOR",
+                "GENERATOR ID",
+                "UNIT CODE",
+                "NAMEPLATE CAPACITY MW",
+                "NET SUMMER CAPACITY MW",
+                "NET WINTER CAPACITY MW",
+                "TECHNOLOGY",
+                "ENERGY SOURCE CODE",
+                "PRIME MOVER CODE",
+                "OPERATING MONTH",
+                "OPERATING YEAR",
+                "RETIREMENT MONTH",
+                "RETIREMENT YEAR",
+                "NAMEPLATE ENERGY CAPACITY MWH",
+                "DC NET CAPACITY MW",
+                "LATITUDE",
+                "LONGITUDE"
+              ],
+              "plant": 2,
+              "ret_month": 20,
+              "ret_year": 21,
+              "row": 3,
+              "score": 4
+            }
+          },
+          "2026-01": {
+            "operable": {
+              "gen": 10,
+              "headers": [
+                "ENTITY ID",
+                "ENTITY NAME",
+                "PLANT ID",
+                "PLANT NAME",
+                "GOOGLE MAP",
+                "BING MAP",
+                "PLANT STATE",
+                "COUNTY",
+                "BALANCING AUTHORITY CODE",
+                "SECTOR",
+                "GENERATOR ID",
+                "UNIT CODE",
+                "NAMEPLATE CAPACITY MW",
+                "NET SUMMER CAPACITY MW",
+                "NET WINTER CAPACITY MW",
+                "TECHNOLOGY",
+                "ENERGY SOURCE CODE",
+                "PRIME MOVER CODE",
+                "OPERATING MONTH",
+                "OPERATING YEAR",
+                "PLANNED RETIREMENT MONTH",
+                "PLANNED RETIREMENT YEAR",
+                "STATUS",
+                "NAMEPLATE ENERGY CAPACITY MWH",
+                "DC NET CAPACITY MW",
+                "PLANNED DERATE YEAR",
+                "PLANNED DERATE MONTH",
+                "PLANNED DERATE OF SUMMER CAPACITY MW",
+                "PLANNED UPRATE YEAR",
+                "PLANNED UPRATE MONTH",
+                "PLANNED UPRATE OF SUMMER CAPACITY MW",
+                "PLANNED REPOWER YEAR",
+                "PLANNED REPOWER MONTH",
+                "OTHER MODIFICATION YEAR",
+                "OTHER MODIFICATION MONTH",
+                "LATITUDE",
+                "LONGITUDE"
+              ],
+              "plant": 2,
+              "ret_month": 20,
+              "ret_year": 21,
+              "row": 3,
+              "score": 4
+            },
+            "retired": {
+              "gen": 10,
+              "headers": [
+                "ENTITY ID",
+                "ENTITY NAME",
+                "PLANT ID",
+                "PLANT NAME",
+                "GOOGLE MAP",
+                "BING MAP",
+                "PLANT STATE",
+                "COUNTY",
+                "BALANCING AUTHORITY CODE",
+                "SECTOR",
+                "GENERATOR ID",
+                "UNIT CODE",
+                "NAMEPLATE CAPACITY MW",
+                "NET SUMMER CAPACITY MW",
+                "NET WINTER CAPACITY MW",
+                "TECHNOLOGY",
+                "ENERGY SOURCE CODE",
+                "PRIME MOVER CODE",
+                "OPERATING MONTH",
+                "OPERATING YEAR",
+                "RETIREMENT MONTH",
+                "RETIREMENT YEAR",
+                "NAMEPLATE ENERGY CAPACITY MWH",
+                "DC NET CAPACITY MW",
+                "LATITUDE",
+                "LONGITUDE"
+              ],
+              "plant": 2,
+              "ret_month": 20,
+              "ret_year": 21,
+              "row": 3,
+              "score": 4
+            }
+          },
+          "2026-02": {
+            "operable": {
+              "gen": 10,
+              "headers": [
+                "ENTITY ID",
+                "ENTITY NAME",
+                "PLANT ID",
+                "PLANT NAME",
+                "GOOGLE MAP",
+                "BING MAP",
+                "PLANT STATE",
+                "COUNTY",
+                "BALANCING AUTHORITY CODE",
+                "SECTOR",
+                "GENERATOR ID",
+                "UNIT CODE",
+                "NAMEPLATE CAPACITY MW",
+                "NET SUMMER CAPACITY MW",
+                "NET WINTER CAPACITY MW",
+                "TECHNOLOGY",
+                "ENERGY SOURCE CODE",
+                "PRIME MOVER CODE",
+                "OPERATING MONTH",
+                "OPERATING YEAR",
+                "PLANNED RETIREMENT MONTH",
+                "PLANNED RETIREMENT YEAR",
+                "STATUS",
+                "NAMEPLATE ENERGY CAPACITY MWH",
+                "DC NET CAPACITY MW",
+                "PLANNED DERATE YEAR",
+                "PLANNED DERATE MONTH",
+                "PLANNED DERATE OF SUMMER CAPACITY MW",
+                "PLANNED UPRATE YEAR",
+                "PLANNED UPRATE MONTH",
+                "PLANNED UPRATE OF SUMMER CAPACITY MW",
+                "PLANNED REPOWER YEAR",
+                "PLANNED REPOWER MONTH",
+                "OTHER MODIFICATION YEAR",
+                "OTHER MODIFICATION MONTH",
+                "LATITUDE",
+                "LONGITUDE"
+              ],
+              "plant": 2,
+              "ret_month": 20,
+              "ret_year": 21,
+              "row": 3,
+              "score": 4
+            },
+            "retired": {
+              "gen": 10,
+              "headers": [
+                "ENTITY ID",
+                "ENTITY NAME",
+                "PLANT ID",
+                "PLANT NAME",
+                "GOOGLE MAP",
+                "BING MAP",
+                "PLANT STATE",
+                "COUNTY",
+                "BALANCING AUTHORITY CODE",
+                "SECTOR",
+                "GENERATOR ID",
+                "UNIT CODE",
+                "NAMEPLATE CAPACITY MW",
+                "NET SUMMER CAPACITY MW",
+                "NET WINTER CAPACITY MW",
+                "TECHNOLOGY",
+                "ENERGY SOURCE CODE",
+                "PRIME MOVER CODE",
+                "OPERATING MONTH",
+                "OPERATING YEAR",
+                "RETIREMENT MONTH",
+                "RETIREMENT YEAR",
+                "NAMEPLATE ENERGY CAPACITY MWH",
+                "DC NET CAPACITY MW",
+                "LATITUDE",
+                "LONGITUDE"
+              ],
+              "plant": 2,
+              "ret_month": 20,
+              "ret_year": 21,
+              "row": 3,
+              "score": 4
+            }
+          },
+          "2026-03": {
+            "operable": {
+              "gen": 10,
+              "headers": [
+                "ENTITY ID",
+                "ENTITY NAME",
+                "PLANT ID",
+                "PLANT NAME",
+                "GOOGLE MAP",
+                "BING MAP",
+                "PLANT STATE",
+                "COUNTY",
+                "BALANCING AUTHORITY CODE",
+                "SECTOR",
+                "GENERATOR ID",
+                "UNIT CODE",
+                "NAMEPLATE CAPACITY MW",
+                "NET SUMMER CAPACITY MW",
+                "NET WINTER CAPACITY MW",
+                "TECHNOLOGY",
+                "ENERGY SOURCE CODE",
+                "PRIME MOVER CODE",
+                "OPERATING MONTH",
+                "OPERATING YEAR",
+                "PLANNED RETIREMENT MONTH",
+                "PLANNED RETIREMENT YEAR",
+                "STATUS",
+                "NAMEPLATE ENERGY CAPACITY MWH",
+                "DC NET CAPACITY MW",
+                "PLANNED DERATE YEAR",
+                "PLANNED DERATE MONTH",
+                "PLANNED DERATE OF SUMMER CAPACITY MW",
+                "PLANNED UPRATE YEAR",
+                "PLANNED UPRATE MONTH",
+                "PLANNED UPRATE OF SUMMER CAPACITY MW",
+                "PLANNED REPOWER YEAR",
+                "PLANNED REPOWER MONTH",
+                "OTHER MODIFICATION YEAR",
+                "OTHER MODIFICATION MONTH",
+                "LATITUDE",
+                "LONGITUDE"
+              ],
+              "plant": 2,
+              "ret_month": 20,
+              "ret_year": 21,
+              "row": 3,
+              "score": 4
+            },
+            "retired": {
+              "gen": 10,
+              "headers": [
+                "ENTITY ID",
+                "ENTITY NAME",
+                "PLANT ID",
+                "PLANT NAME",
+                "GOOGLE MAP",
+                "BING MAP",
+                "PLANT STATE",
+                "COUNTY",
+                "BALANCING AUTHORITY CODE",
+                "SECTOR",
+                "GENERATOR ID",
+                "UNIT CODE",
+                "NAMEPLATE CAPACITY MW",
+                "NET SUMMER CAPACITY MW",
+                "NET WINTER CAPACITY MW",
+                "TECHNOLOGY",
+                "ENERGY SOURCE CODE",
+                "PRIME MOVER CODE",
+                "OPERATING MONTH",
+                "OPERATING YEAR",
+                "RETIREMENT MONTH",
+                "RETIREMENT YEAR",
+                "NAMEPLATE ENERGY CAPACITY MWH",
+                "DC NET CAPACITY MW",
+                "LATITUDE",
+                "LONGITUDE"
+              ],
+              "plant": 2,
+              "ret_month": 20,
+              "ret_year": 21,
+              "row": 3,
+              "score": 4
+            }
+          },
+          "2026-04": {
+            "operable": {
+              "gen": 10,
+              "headers": [
+                "ENTITY ID",
+                "ENTITY NAME",
+                "PLANT ID",
+                "PLANT NAME",
+                "GOOGLE MAP",
+                "BING MAP",
+                "PLANT STATE",
+                "COUNTY",
+                "BALANCING AUTHORITY CODE",
+                "SECTOR",
+                "GENERATOR ID",
+                "UNIT CODE",
+                "NAMEPLATE CAPACITY MW",
+                "NET SUMMER CAPACITY MW",
+                "NET WINTER CAPACITY MW",
+                "TECHNOLOGY",
+                "ENERGY SOURCE CODE",
+                "PRIME MOVER CODE",
+                "OPERATING MONTH",
+                "OPERATING YEAR",
+                "PLANNED RETIREMENT MONTH",
+                "PLANNED RETIREMENT YEAR",
+                "STATUS",
+                "NAMEPLATE ENERGY CAPACITY MWH",
+                "DC NET CAPACITY MW",
+                "PLANNED DERATE YEAR",
+                "PLANNED DERATE MONTH",
+                "PLANNED DERATE OF SUMMER CAPACITY MW",
+                "PLANNED UPRATE YEAR",
+                "PLANNED UPRATE MONTH",
+                "PLANNED UPRATE OF SUMMER CAPACITY MW",
+                "PLANNED REPOWER YEAR",
+                "PLANNED REPOWER MONTH",
+                "OTHER MODIFICATION YEAR",
+                "OTHER MODIFICATION MONTH",
+                "LATITUDE",
+                "LONGITUDE"
+              ],
+              "plant": 2,
+              "ret_month": 20,
+              "ret_year": 21,
+              "row": 3,
+              "score": 4
+            },
+            "retired": {
+              "gen": 10,
+              "headers": [
+                "ENTITY ID",
+                "ENTITY NAME",
+                "PLANT ID",
+                "PLANT NAME",
+                "GOOGLE MAP",
+                "BING MAP",
+                "PLANT STATE",
+                "COUNTY",
+                "BALANCING AUTHORITY CODE",
+                "SECTOR",
+                "GENERATOR ID",
+                "UNIT CODE",
+                "NAMEPLATE CAPACITY MW",
+                "NET SUMMER CAPACITY MW",
+                "NET WINTER CAPACITY MW",
+                "TECHNOLOGY",
+                "ENERGY SOURCE CODE",
+                "PRIME MOVER CODE",
+                "OPERATING MONTH",
+                "OPERATING YEAR",
+                "RETIREMENT MONTH",
+                "RETIREMENT YEAR",
+                "NAMEPLATE ENERGY CAPACITY MWH",
+                "DC NET CAPACITY MW",
+                "LATITUDE",
+                "LONGITUDE"
+              ],
+              "plant": 2,
+              "ret_month": 20,
+              "ret_year": 21,
+              "row": 3,
+              "score": 4
+            }
+          },
+          "2026-05": {
+            "operable": {
+              "gen": 10,
+              "headers": [
+                "ENTITY ID",
+                "ENTITY NAME",
+                "PLANT ID",
+                "PLANT NAME",
+                "GOOGLE MAP",
+                "BING MAP",
+                "PLANT STATE",
+                "COUNTY",
+                "BALANCING AUTHORITY CODE",
+                "SECTOR",
+                "GENERATOR ID",
+                "UNIT CODE",
+                "NAMEPLATE CAPACITY MW",
+                "NET SUMMER CAPACITY MW",
+                "NET WINTER CAPACITY MW",
+                "TECHNOLOGY",
+                "ENERGY SOURCE CODE",
+                "PRIME MOVER CODE",
+                "OPERATING MONTH",
+                "OPERATING YEAR",
+                "PLANNED RETIREMENT MONTH",
+                "PLANNED RETIREMENT YEAR",
+                "STATUS",
+                "NAMEPLATE ENERGY CAPACITY MWH",
+                "DC NET CAPACITY MW",
+                "PLANNED DERATE YEAR",
+                "PLANNED DERATE MONTH",
+                "PLANNED DERATE OF SUMMER CAPACITY MW",
+                "PLANNED UPRATE YEAR",
+                "PLANNED UPRATE MONTH",
+                "PLANNED UPRATE OF SUMMER CAPACITY MW",
+                "PLANNED REPOWER YEAR",
+                "PLANNED REPOWER MONTH",
+                "OTHER MODIFICATION YEAR",
+                "OTHER MODIFICATION MONTH",
+                "LATITUDE",
+                "LONGITUDE"
+              ],
+              "plant": 2,
+              "ret_month": 20,
+              "ret_year": 21,
+              "row": 3,
+              "score": 4
+            },
+            "retired": {
+              "gen": 10,
+              "headers": [
+                "ENTITY ID",
+                "ENTITY NAME",
+                "PLANT ID",
+                "PLANT NAME",
+                "GOOGLE MAP",
+                "BING MAP",
+                "PLANT STATE",
+                "COUNTY",
+                "BALANCING AUTHORITY CODE",
+                "SECTOR",
+                "GENERATOR ID",
+                "UNIT CODE",
+                "NAMEPLATE CAPACITY MW",
+                "NET SUMMER CAPACITY MW",
+                "NET WINTER CAPACITY MW",
+                "TECHNOLOGY",
+                "ENERGY SOURCE CODE",
+                "PRIME MOVER CODE",
+                "OPERATING MONTH",
+                "OPERATING YEAR",
+                "RETIREMENT MONTH",
+                "RETIREMENT YEAR",
+                "NAMEPLATE ENERGY CAPACITY MWH",
+                "DC NET CAPACITY MW",
+                "LATITUDE",
+                "LONGITUDE"
+              ],
+              "plant": 2,
+              "ret_month": 20,
+              "ret_year": 21,
+              "row": 3,
+              "score": 4
+            }
+          },
+          "2026-06": {
+            "operable": {
+              "gen": 10,
+              "headers": [
+                "ENTITY ID",
+                "ENTITY NAME",
+                "PLANT ID",
+                "PLANT NAME",
+                "GOOGLE MAP",
+                "BING MAP",
+                "PLANT STATE",
+                "COUNTY",
+                "BALANCING AUTHORITY CODE",
+                "SECTOR",
+                "GENERATOR ID",
+                "UNIT CODE",
+                "NAMEPLATE CAPACITY MW",
+                "NET SUMMER CAPACITY MW",
+                "NET WINTER CAPACITY MW",
+                "TECHNOLOGY",
+                "ENERGY SOURCE CODE",
+                "PRIME MOVER CODE",
+                "OPERATING MONTH",
+                "OPERATING YEAR",
+                "PLANNED RETIREMENT MONTH",
+                "PLANNED RETIREMENT YEAR",
+                "STATUS",
+                "NAMEPLATE ENERGY CAPACITY MWH",
+                "DC NET CAPACITY MW",
+                "PLANNED DERATE YEAR",
+                "PLANNED DERATE MONTH",
+                "PLANNED DERATE OF SUMMER CAPACITY MW",
+                "PLANNED UPRATE YEAR",
+                "PLANNED UPRATE MONTH",
+                "PLANNED UPRATE OF SUMMER CAPACITY MW",
+                "PLANNED REPOWER YEAR",
+                "PLANNED REPOWER MONTH",
+                "OTHER MODIFICATION YEAR",
+                "OTHER MODIFICATION MONTH",
+                "LATITUDE",
+                "LONGITUDE"
+              ],
+              "plant": 2,
+              "ret_month": 20,
+              "ret_year": 21,
+              "row": 3,
+              "score": 4
+            },
+            "retired": {
+              "gen": 10,
+              "headers": [
+                "ENTITY ID",
+                "ENTITY NAME",
+                "PLANT ID",
+                "PLANT NAME",
+                "GOOGLE MAP",
+                "BING MAP",
+                "PLANT STATE",
+                "COUNTY",
+                "BALANCING AUTHORITY CODE",
+                "SECTOR",
+                "GENERATOR ID",
+                "UNIT CODE",
+                "NAMEPLATE CAPACITY MW",
+                "NET SUMMER CAPACITY MW",
+                "NET WINTER CAPACITY MW",
+                "TECHNOLOGY",
+                "ENERGY SOURCE CODE",
+                "PRIME MOVER CODE",
+                "OPERATING MONTH",
+                "OPERATING YEAR",
+                "RETIREMENT MONTH",
+                "RETIREMENT YEAR",
+                "NAMEPLATE ENERGY CAPACITY MWH",
+                "DC NET CAPACITY MW",
+                "LATITUDE",
+                "LONGITUDE"
+              ],
+              "plant": 2,
+              "ret_month": 20,
+              "ret_year": 21,
+              "row": 3,
+              "score": 4
+            }
+          },
+          "2026-07": {
+            "operable": {
+              "gen": 10,
+              "headers": [
+                "ENTITY ID",
+                "ENTITY NAME",
+                "PLANT ID",
+                "PLANT NAME",
+                "GOOGLE MAP",
+                "BING MAP",
+                "PLANT STATE",
+                "COUNTY",
+                "BALANCING AUTHORITY CODE",
+                "SECTOR",
+                "GENERATOR ID",
+                "UNIT CODE",
+                "NAMEPLATE CAPACITY MW",
+                "NET SUMMER CAPACITY MW",
+                "NET WINTER CAPACITY MW",
+                "TECHNOLOGY",
+                "ENERGY SOURCE CODE",
+                "PRIME MOVER CODE",
+                "OPERATING MONTH",
+                "OPERATING YEAR",
+                "PLANNED RETIREMENT MONTH",
+                "PLANNED RETIREMENT YEAR",
+                "STATUS",
+                "NAMEPLATE ENERGY CAPACITY MWH",
+                "DC NET CAPACITY MW",
+                "PLANNED DERATE YEAR",
+                "PLANNED DERATE MONTH",
+                "PLANNED DERATE OF SUMMER CAPACITY MW",
+                "PLANNED UPRATE YEAR",
+                "PLANNED UPRATE MONTH",
+                "PLANNED UPRATE OF SUMMER CAPACITY MW",
+                "PLANNED REPOWER YEAR",
+                "PLANNED REPOWER MONTH",
+                "OTHER MODIFICATION YEAR",
+                "OTHER MODIFICATION MONTH",
+                "LATITUDE",
+                "LONGITUDE"
+              ],
+              "plant": 2,
+              "ret_month": 20,
+              "ret_year": 21,
+              "row": 3,
+              "score": 4
+            },
+            "retired": {
+              "gen": 10,
+              "headers": [
+                "ENTITY ID",
+                "ENTITY NAME",
+                "PLANT ID",
+                "PLANT NAME",
+                "GOOGLE MAP",
+                "BING MAP",
+                "PLANT STATE",
+                "COUNTY",
+                "BALANCING AUTHORITY CODE",
+                "SECTOR",
+                "GENERATOR ID",
+                "UNIT CODE",
+                "NAMEPLATE CAPACITY MW",
+                "NET SUMMER CAPACITY MW",
+                "NET WINTER CAPACITY MW",
+                "TECHNOLOGY",
+                "ENERGY SOURCE CODE",
+                "PRIME MOVER CODE",
+                "OPERATING MONTH",
+                "OPERATING YEAR",
+                "RETIREMENT MONTH",
+                "RETIREMENT YEAR",
+                "NAMEPLATE ENERGY CAPACITY MWH",
+                "DC NET CAPACITY MW",
+                "LATITUDE",
+                "LONGITUDE"
+              ],
+              "plant": 2,
+              "ret_month": 20,
+              "ret_year": 21,
+              "row": 3,
+              "score": 4
+            }
+          },
+          "2026-08": {
+            "operable": {
+              "gen": 10,
+              "headers": [
+                "ENTITY ID",
+                "ENTITY NAME",
+                "PLANT ID",
+                "PLANT NAME",
+                "GOOGLE MAP",
+                "BING MAP",
+                "PLANT STATE",
+                "COUNTY",
+                "BALANCING AUTHORITY CODE",
+                "SECTOR",
+                "GENERATOR ID",
+                "UNIT CODE",
+                "NAMEPLATE CAPACITY MW",
+                "NET SUMMER CAPACITY MW",
+                "NET WINTER CAPACITY MW",
+                "TECHNOLOGY",
+                "ENERGY SOURCE CODE",
+                "PRIME MOVER CODE",
+                "OPERATING MONTH",
+                "OPERATING YEAR",
+                "PLANNED RETIREMENT MONTH",
+                "PLANNED RETIREMENT YEAR",
+                "STATUS",
+                "NAMEPLATE ENERGY CAPACITY MWH",
+                "DC NET CAPACITY MW",
+                "PLANNED DERATE YEAR",
+                "PLANNED DERATE MONTH",
+                "PLANNED DERATE OF SUMMER CAPACITY MW",
+                "PLANNED UPRATE YEAR",
+                "PLANNED UPRATE MONTH",
+                "PLANNED UPRATE OF SUMMER CAPACITY MW",
+                "PLANNED REPOWER YEAR",
+                "PLANNED REPOWER MONTH",
+                "OTHER MODIFICATION YEAR",
+                "OTHER MODIFICATION MONTH",
+                "LATITUDE",
+                "LONGITUDE"
+              ],
+              "plant": 2,
+              "ret_month": 20,
+              "ret_year": 21,
+              "row": 3,
+              "score": 4
+            },
+            "retired": {
+              "gen": 10,
+              "headers": [
+                "ENTITY ID",
+                "ENTITY NAME",
+                "PLANT ID",
+                "PLANT NAME",
+                "GOOGLE MAP",
+                "BING MAP",
+                "PLANT STATE",
+                "COUNTY",
+                "BALANCING AUTHORITY CODE",
+                "SECTOR",
+                "GENERATOR ID",
+                "UNIT CODE",
+                "NAMEPLATE CAPACITY MW",
+                "NET SUMMER CAPACITY MW",
+                "NET WINTER CAPACITY MW",
+                "TECHNOLOGY",
+                "ENERGY SOURCE CODE",
+                "PRIME MOVER CODE",
+                "OPERATING MONTH",
+                "OPERATING YEAR",
+                "RETIREMENT MONTH",
+                "RETIREMENT YEAR",
+                "NAMEPLATE ENERGY CAPACITY MWH",
+                "DC NET CAPACITY MW",
+                "LATITUDE",
+                "LONGITUDE"
+              ],
+              "plant": 2,
+              "ret_month": 20,
+              "ret_year": 21,
+              "row": 3,
+              "score": 4
+            }
+          }
+        },
+        "schema_ok": true
+      },
+      "pass": true
+    },
+    {
+      "gate": 8,
+      "observed": {
+        "identity_nonblank_rows": 420610,
+        "identity_valid_rows": 420598,
+        "rate": 0.9999714700078457,
+        "threshold": 0.9999
+      },
+      "pass": true
+    },
+    {
+      "gate": 9,
+      "observed": {
+        "minimum_month_sheet_unique_rate": 1.0,
+        "per_month": {
+          "2025-09": {
+            "operable": 1.0,
+            "retired": 1.0
+          },
+          "2025-10": {
+            "operable": 1.0,
+            "retired": 1.0
+          },
+          "2025-11": {
+            "operable": 1.0,
+            "retired": 1.0
+          },
+          "2025-12": {
+            "operable": 1.0,
+            "retired": 1.0
+          },
+          "2026-01": {
+            "operable": 1.0,
+            "retired": 1.0
+          },
+          "2026-02": {
+            "operable": 1.0,
+            "retired": 1.0
+          },
+          "2026-03": {
+            "operable": 1.0,
+            "retired": 1.0
+          },
+          "2026-04": {
+            "operable": 1.0,
+            "retired": 1.0
+          },
+          "2026-05": {
+            "operable": 1.0,
+            "retired": 1.0
+          },
+          "2026-06": {
+            "operable": 1.0,
+            "retired": 1.0
+          },
+          "2026-07": {
+            "operable": 1.0,
+            "retired": 1.0
+          },
+          "2026-08": {
+            "operable": 1.0,
+            "retired": 1.0
+          }
+        },
+        "threshold": 0.9999
+      },
+      "pass": true
+    },
+    {
+      "gate": 10,
+      "observed": {
+        "distinct_workbook_sha256": 12,
+        "months": [
+          "2025-09",
+          "2025-10",
+          "2025-11",
+          "2025-12",
+          "2026-01",
+          "2026-02",
+          "2026-03",
+          "2026-04",
+          "2026-05",
+          "2026-06",
+          "2026-07",
+          "2026-08"
+        ],
+        "threshold": 10
+      },
+      "pass": true
+    },
+    {
+      "gate": 11,
+      "observed": {
+        "august_2026_operable_pairs": 28377,
+        "threshold": 20000
+      },
+      "pass": true
+    },
+    {
+      "gate": 12,
+      "observed": {
+        "appear_in_at_least_6_months": 27757,
+        "august_pairs": 28377,
+        "rate": 0.9781513197307679,
+        "threshold": 0.85
+      },
+      "pass": true
+    },
+    {
+      "gate": 13,
+      "observed": {
+        "distinct_retired_pairs_union": 7330,
+        "threshold": 3000
+      },
+      "pass": true
+    },
+    {
+      "gate": 14,
+      "observed": {
+        "pairs_with_parseable_retirement_year_month": 7314,
+        "rate": 0.9978171896316508,
+        "retired_pairs": 7330,
+        "threshold": 0.98
+      },
+      "pass": true
+    },
+    {
+      "gate": 15,
+      "observed": {
+        "rate": 0.9991787571858747,
+        "retired_pairs_seen_in_2plus_months": 7306,
+        "stable_identical_dates": 7300,
+        "threshold": 0.995,
+        "unstable_examples": [
+          {
+            "generator_id": "1",
+            "observations": [
+              [
+                "2025-09",
+                2025,
+                5,
+                "2025",
+                "5"
+              ],
+              [
+                "2025-10",
+                2025,
+                5,
+                "2025",
+                "5"
+              ],
+              [
+                "2025-11",
+                2025,
+                5,
+                "2025",
+                "5"
+              ],
+              [
+                "2025-12",
+                2025,
+                5,
+                "2025",
+                "5"
+              ],
+              [
+                "2026-01",
+                2025,
+                5,
+                "2025",
+                "5"
+              ],
+              [
+                "2026-02",
+                2025,
+                6,
+                "2025",
+                "6"
+              ],
+              [
+                "2026-03",
+                2025,
+                6,
+                "2025",
+                "6"
+              ],
+              [
+                "2026-04",
+                2025,
+                6,
+                "2025",
+                "6"
+              ],
+              [
+                "2026-05",
+                2025,
+                6,
+                "2025",
+                "6"
+              ],
+              [
+                "2026-06",
+                2025,
+                6,
+                "2025",
+                "6"
+              ],
+              [
+                "2026-07",
+                2025,
+                6,
+                "2025",
+                "6"
+              ],
+              [
+                "2026-08",
+                2025,
+                6,
+                "2025",
+                "6"
+              ]
+            ],
+            "plant_id": "1554"
+          },
+          {
+            "generator_id": "GT1",
+            "observations": [
+              [
+                "2025-09",
+                2025,
+                5,
+                "2025",
+                "5"
+              ],
+              [
+                "2025-10",
+                2025,
+                5,
+                "2025",
+                "5"
+              ],
+              [
+                "2025-11",
+                2025,
+                5,
+                "2025",
+                "5"
+              ],
+              [
+                "2025-12",
+                2025,
+                5,
+                "2025",
+                "5"
+              ],
+              [
+                "2026-01",
+                2025,
+                5,
+                "2025",
+                "5"
+              ],
+              [
+                "2026-02",
+                2025,
+                6,
+                "2025",
+                "6"
+              ],
+              [
+                "2026-03",
+                2025,
+                6,
+                "2025",
+                "6"
+              ],
+              [
+                "2026-04",
+                2025,
+                6,
+                "2025",
+                "6"
+              ],
+              [
+                "2026-05",
+                2025,
+                6,
+                "2025",
+                "6"
+              ],
+              [
+                "2026-06",
+                2025,
+                6,
+                "2025",
+                "6"
+              ],
+              [
+                "2026-07",
+                2025,
+                6,
+                "2025",
+                "6"
+              ],
+              [
+                "2026-08",
+                2025,
+                6,
+                "2025",
+                "6"
+              ]
+            ],
+            "plant_id": "1554"
+          },
+          {
+            "generator_id": "1",
+            "observations": [
+              [
+                "2025-09",
+                2025,
+                5,
+                "2025",
+                "5"
+              ],
+              [
+                "2025-10",
+                2025,
+                5,
+                "2025",
+                "5"
+              ],
+              [
+                "2025-11",
+                2025,
+                5,
+                "2025",
+                "5"
+              ],
+              [
+                "2025-12",
+                2025,
+                5,
+                "2025",
+                "5"
+              ],
+              [
+                "2026-01",
+                2025,
+                5,
+                "2025",
+                "5"
+              ],
+              [
+                "2026-02",
+                2025,
+                5,
+                "2025",
+                "5"
+              ],
+              [
+                "2026-03",
+                2025,
+                5,
+                "2025",
+                "5"
+              ],
+              [
+                "2026-04",
+                2025,
+                3,
+                "2025",
+                "3"
+              ],
+              [
+                "2026-05",
+                2025,
+                3,
+                "2025",
+                "3"
+              ],
+              [
+                "2026-06",
+                2025,
+                3,
+                "2025",
+                "3"
+              ],
+              [
+                "2026-07",
+                2025,
+                3,
+                "2025",
+                "3"
+              ],
+              [
+                "2026-08",
+                2025,
+                3,
+                "2025",
+                "3"
+              ]
+            ],
+            "plant_id": "56038"
+          },
+          {
+            "generator_id": "2",
+            "observations": [
+              [
+                "2025-09",
+                2025,
+                5,
+                "2025",
+                "5"
+              ],
+              [
+                "2025-10",
+                2025,
+                5,
+                "2025",
+                "5"
+              ],
+              [
+                "2025-11",
+                2025,
+                5,
+                "2025",
+                "5"
+              ],
+              [
+                "2025-12",
+                2025,
+                5,
+                "2025",
+                "5"
+              ],
+              [
+                "2026-01",
+                2025,
+                5,
+                "2025",
+                "5"
+              ],
+              [
+                "2026-02",
+                2025,
+                5,
+                "2025",
+                "5"
+              ],
+              [
+                "2026-03",
+                2025,
+                5,
+                "2025",
+                "5"
+              ],
+              [
+                "2026-04",
+                2025,
+                3,
+                "2025",
+                "3"
+              ],
+              [
+                "2026-05",
+                2025,
+                3,
+                "2025",
+                "3"
+              ],
+              [
+                "2026-06",
+                2025,
+                3,
+                "2025",
+                "3"
+              ],
+              [
+                "2026-07",
+                2025,
+                3,
+                "2025",
+                "3"
+              ],
+              [
+                "2026-08",
+                2025,
+                3,
+                "2025",
+                "3"
+              ]
+            ],
+            "plant_id": "56038"
+          },
+          {
+            "generator_id": "3",
+            "observations": [
+              [
+                "2025-09",
+                2025,
+                5,
+                "2025",
+                "5"
+              ],
+              [
+                "2025-10",
+                2025,
+                5,
+                "2025",
+                "5"
+              ],
+              [
+                "2025-11",
+                2025,
+                5,
+                "2025",
+                "5"
+              ],
+              [
+                "2025-12",
+                2025,
+                5,
+                "2025",
+                "5"
+              ],
+              [
+                "2026-01",
+                2025,
+                5,
+                "2025",
+                "5"
+              ],
+              [
+                "2026-02",
+                2025,
+                5,
+                "2025",
+                "5"
+              ],
+              [
+                "2026-03",
+                2025,
+                5,
+                "2025",
+                "5"
+              ],
+              [
+                "2026-04",
+                2025,
+                3,
+                "2025",
+                "3"
+              ],
+              [
+                "2026-05",
+                2025,
+                3,
+                "2025",
+                "3"
+              ],
+              [
+                "2026-06",
+                2025,
+                3,
+                "2025",
+                "3"
+              ],
+              [
+                "2026-07",
+                2025,
+                3,
+                "2025",
+                "3"
+              ],
+              [
+                "2026-08",
+                2025,
+                3,
+                "2025",
+                "3"
+              ]
+            ],
+            "plant_id": "56038"
+          },
+          {
+            "generator_id": "GP9",
+            "observations": [
+              [
+                "2025-09",
+                2021,
+                12,
+                "2021",
+                "12"
+              ],
+              [
+                "2025-10",
+                2021,
+                12,
+                "2021",
+                "12"
+              ],
+              [
+                "2025-11",
+                2021,
+                12,
+                "2021",
+                "12"
+              ],
+              [
+                "2025-12",
+                2021,
+                12,
+                "2021",
+                "12"
+              ],
+              [
+                "2026-01",
+                2021,
+                12,
+                "2021",
+                "12"
+              ],
+              [
+                "2026-02",
+                2021,
+                5,
+                "2021",
+                "5"
+              ],
+              [
+                "2026-03",
+                2021,
+                5,
+                "2021",
+                "5"
+              ],
+              [
+                "2026-04",
+                2021,
+                5,
+                "2021",
+                "5"
+              ],
+              [
+                "2026-05",
+                2021,
+                5,
+                "2021",
+                "5"
+              ],
+              [
+                "2026-06",
+                2021,
+                5,
+                "2021",
+                "5"
+              ],
+              [
+                "2026-07",
+                2021,
+                5,
+                "2021",
+                "5"
+              ],
+              [
+                "2026-08",
+                2021,
+                5,
+                "2021",
+                "5"
+              ]
+            ],
+            "plant_id": "61416"
+          }
+        ]
+      },
+      "pass": true
+    },
+    {
+      "gate": 16,
+      "observed": {
+        "august_operable_pairs": 28377,
+        "august_retired_pairs": 7324,
+        "overlap_pairs": 0,
+        "rate": 0.0,
+        "threshold": 0.001
+      },
+      "pass": true
+    },
+    {
+      "gate": 17,
+      "observed": {
+        "causal": false,
+        "eia923_row_bodies_opened": 0,
+        "future_retirement_membership_opened": false,
+        "identity_repair": false,
+        "planned_proposed_row_bodies_opened": 0,
+        "post_august_2026_860m_body_opened": false,
+        "prediction": false,
+        "ranking": false,
+        "relationship": false
+      },
+      "pass": true
+    },
+    {
+      "gate": 18,
+      "observed": {
+        "contract_sha": "cce869991b94d8c1ef21c0b3dff401cfd57b0fe3",
+        "cost_usd": 0,
+        "runner_sha256": "d4966ec99d82aeefa040ce31d67dd7e5a9281a9346f4e0d2360ce57b3893a245",
+        "workbook_sha256": {
+          "2025-09": "069de3bee5de7c560297a814a3e90beeb6b5e10642c5c83bf4a49c4ef74da08b",
+          "2025-10": "cf560a5e9f3b4438bf5a1e485e07f6eee50fe16b52e224480c61e7fcb060a308",
+          "2025-11": "5dc458f278b68504830b048b8728539f104057de100f8eae6ed301d3d603ea12",
+          "2025-12": "1264f1c37cf51ef41319067c4c0915f951535851df93c97d02e2e823e337ea2b",
+          "2026-01": "a02a0262c98e6b4fc8451e3f88c3983c2edd015b1bff2c5174df91e331ae9cf8",
+          "2026-02": "9f76e3a186ba0814ea836a357213bab0ea8e18955d862a92e877dc028af755e8",
+          "2026-03": "93f2b2501cd42ba1290136ec04fd616346d974e0dfd6020cd8ec5e532ef7cec6",
+          "2026-04": "ec15bae939cc7cf8ee7e3f0dcb9a06d0f91d5fbab3714f0f36ecaeef3bde82b6",
+          "2026-05": "46ff71d90723e4dfe766f6fe191160d92ff28cb17d5d5f5a55eeed562067995d",
+          "2026-06": "47d28a1e5599135b619d249971f35f03fef8a5b3062c2d66c436b55e8f8c3072",
+          "2026-07": "9f348be6d6609b7e0c49a8c3cf872354a3bd2370051d0d4720246dc81bbe540d",
+          "2026-08": "b4b70abb4c217e8e2658c3bde7608a3d530e86a81279ccc572ced82a200e9f1c"
+        }
+      },
+      "pass": true
+    }
+  ],
+  "github_run_id": "36631815352",
+  "historical_months_changed": false,
+  "identity_repair_used": false,
+  "identity_rule_changed": false,
+  "implementation_correction_commit": "1e844c6b127ba91c043a3badbb90a133addee806",
+  "incremental_monetary_cost_usd": 0,
+  "issue": 184,
+  "monthly": {
+    "2025-09": {
+      "operable": {
+        "duplicate_occurrences": 0,
+        "identity_nonblank": 27342,
+        "identity_valid": 27342,
+        "rows": 27342,
+        "syntax_rate": 1.0,
+        "unique_rate": 1.0
+      },
+      "operable_candidates": [
+        "Operating"
+      ],
+      "operable_header": {
+        "gen": 10,
+        "headers": [
+          "ENTITY ID",
+          "ENTITY NAME",
+          "PLANT ID",
+          "PLANT NAME",
+          "GOOGLE MAP",
+          "BING MAP",
+          "PLANT STATE",
+          "COUNTY",
+          "BALANCING AUTHORITY CODE",
+          "SECTOR",
+          "GENERATOR ID",
+          "UNIT CODE",
+          "NAMEPLATE CAPACITY MW",
+          "NET SUMMER CAPACITY MW",
+          "NET WINTER CAPACITY MW",
+          "TECHNOLOGY",
+          "ENERGY SOURCE CODE",
+          "PRIME MOVER CODE",
+          "OPERATING MONTH",
+          "OPERATING YEAR",
+          "PLANNED RETIREMENT MONTH",
+          "PLANNED RETIREMENT YEAR",
+          "STATUS",
+          "NAMEPLATE ENERGY CAPACITY MWH",
+          "DC NET CAPACITY MW",
+          "PLANNED DERATE YEAR",
+          "PLANNED DERATE MONTH",
+          "PLANNED DERATE OF SUMMER CAPACITY MW",
+          "PLANNED UPRATE YEAR",
+          "PLANNED UPRATE MONTH",
+          "PLANNED UPRATE OF SUMMER CAPACITY MW",
+          "LATITUDE",
+          "LONGITUDE"
+        ],
+        "plant": 2,
+        "ret_month": 20,
+        "ret_year": 21,
+        "row": 3,
+        "score": 4
+      },
+      "retired": {
+        "duplicate_occurrences": 0,
+        "identity_nonblank": 7056,
+        "identity_valid": 7056,
+        "rows": 7056,
+        "syntax_rate": 1.0,
+        "unique_rate": 1.0
+      },
+      "retired_candidates": [
+        "Retired"
+      ],
+      "retired_header": {
+        "gen": 10,
+        "headers": [
+          "ENTITY ID",
+          "ENTITY NAME",
+          "PLANT ID",
+          "PLANT NAME",
+          "GOOGLE MAP",
+          "BING MAP",
+          "PLANT STATE",
+          "COUNTY",
+          "BALANCING AUTHORITY CODE",
+          "SECTOR",
+          "GENERATOR ID",
+          "UNIT CODE",
+          "NAMEPLATE CAPACITY MW",
+          "NET SUMMER CAPACITY MW",
+          "NET WINTER CAPACITY MW",
+          "TECHNOLOGY",
+          "ENERGY SOURCE CODE",
+          "PRIME MOVER CODE",
+          "OPERATING MONTH",
+          "OPERATING YEAR",
+          "RETIREMENT MONTH",
+          "RETIREMENT YEAR",
+          "NAMEPLATE ENERGY CAPACITY MWH",
+          "DC NET CAPACITY MW",
+          "LATITUDE",
+          "LONGITUDE"
+        ],
+        "plant": 2,
+        "ret_month": 20,
+        "ret_year": 21,
+        "row": 3,
+        "score": 4
+      },
+      "sheet_names": [
+        "Operating",
+        "Planned",
+        "Retired",
+        "Canceled or Postponed",
+        "Operating_PR",
+        "Planned_PR",
+        "Retired_PR"
+      ],
+      "source": {
+        "bytes": 12885889,
+        "content_length_header": "12885889",
+        "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "etag": "\"07a29bafc44dc1:0\"",
+        "final_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/september_generator2025.xlsx",
+        "last_modified": "Fri, 24 Oct 2025 15:41:56 GMT",
+        "requested_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/september_generator2025.xlsx",
+        "sha256": "069de3bee5de7c560297a814a3e90beeb6b5e10642c5c83bf4a49c4ef74da08b",
+        "status": 200
+      }
+    },
+    "2025-10": {
+      "operable": {
+        "duplicate_occurrences": 0,
+        "identity_nonblank": 27446,
+        "identity_valid": 27446,
+        "rows": 27446,
+        "syntax_rate": 1.0,
+        "unique_rate": 1.0
+      },
+      "operable_candidates": [
+        "Operating"
+      ],
+      "operable_header": {
+        "gen": 10,
+        "headers": [
+          "ENTITY ID",
+          "ENTITY NAME",
+          "PLANT ID",
+          "PLANT NAME",
+          "GOOGLE MAP",
+          "BING MAP",
+          "PLANT STATE",
+          "COUNTY",
+          "BALANCING AUTHORITY CODE",
+          "SECTOR",
+          "GENERATOR ID",
+          "UNIT CODE",
+          "NAMEPLATE CAPACITY MW",
+          "NET SUMMER CAPACITY MW",
+          "NET WINTER CAPACITY MW",
+          "TECHNOLOGY",
+          "ENERGY SOURCE CODE",
+          "PRIME MOVER CODE",
+          "OPERATING MONTH",
+          "OPERATING YEAR",
+          "PLANNED RETIREMENT MONTH",
+          "PLANNED RETIREMENT YEAR",
+          "STATUS",
+          "NAMEPLATE ENERGY CAPACITY MWH",
+          "DC NET CAPACITY MW",
+          "PLANNED DERATE YEAR",
+          "PLANNED DERATE MONTH",
+          "PLANNED DERATE OF SUMMER CAPACITY MW",
+          "PLANNED UPRATE YEAR",
+          "PLANNED UPRATE MONTH",
+          "PLANNED UPRATE OF SUMMER CAPACITY MW",
+          "PLANNED REPOWER YEAR",
+          "PLANNED REPOWER MONTH",
+          "OTHER MODIFICATION YEAR",
+          "OTHER MODIFICATION MONTH",
+          "LATITUDE",
+          "LONGITUDE"
+        ],
+        "plant": 2,
+        "ret_month": 20,
+        "ret_year": 21,
+        "row": 3,
+        "score": 4
+      },
+      "retired": {
+        "duplicate_occurrences": 0,
+        "identity_nonblank": 7074,
+        "identity_valid": 7074,
+        "rows": 7074,
+        "syntax_rate": 1.0,
+        "unique_rate": 1.0
+      },
+      "retired_candidates": [
+        "Retired"
+      ],
+      "retired_header": {
+        "gen": 10,
+        "headers": [
+          "ENTITY ID",
+          "ENTITY NAME",
+          "PLANT ID",
+          "PLANT NAME",
+          "GOOGLE MAP",
+          "BING MAP",
+          "PLANT STATE",
+          "COUNTY",
+          "BALANCING AUTHORITY CODE",
+          "SECTOR",
+          "GENERATOR ID",
+          "UNIT CODE",
+          "NAMEPLATE CAPACITY MW",
+          "NET SUMMER CAPACITY MW",
+          "NET WINTER CAPACITY MW",
+          "TECHNOLOGY",
+          "ENERGY SOURCE CODE",
+          "PRIME MOVER CODE",
+          "OPERATING MONTH",
+          "OPERATING YEAR",
+          "RETIREMENT MONTH",
+          "RETIREMENT YEAR",
+          "NAMEPLATE ENERGY CAPACITY MWH",
+          "DC NET CAPACITY MW",
+          "LATITUDE",
+          "LONGITUDE"
+        ],
+        "plant": 2,
+        "ret_month": 20,
+        "ret_year": 21,
+        "row": 3,
+        "score": 4
+      },
+      "sheet_names": [
+        "Operating",
+        "Planned",
+        "Retired",
+        "Canceled or Postponed",
+        "Operating_PR",
+        "Planned_PR",
+        "Retired_PR"
+      ],
+      "source": {
+        "bytes": 13303898,
+        "content_length_header": "13303898",
+        "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "etag": "\"031b5c6205edc1:0\"",
+        "final_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/october_generator2025.xlsx",
+        "last_modified": "Tue, 25 Nov 2025 15:32:58 GMT",
+        "requested_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/october_generator2025.xlsx",
+        "sha256": "cf560a5e9f3b4438bf5a1e485e07f6eee50fe16b52e224480c61e7fcb060a308",
+        "status": 200
+      }
+    },
+    "2025-11": {
+      "operable": {
+        "duplicate_occurrences": 0,
+        "identity_nonblank": 27542,
+        "identity_valid": 27542,
+        "rows": 27542,
+        "syntax_rate": 1.0,
+        "unique_rate": 1.0
+      },
+      "operable_candidates": [
+        "Operating"
+      ],
+      "operable_header": {
+        "gen": 10,
+        "headers": [
+          "ENTITY ID",
+          "ENTITY NAME",
+          "PLANT ID",
+          "PLANT NAME",
+          "GOOGLE MAP",
+          "BING MAP",
+          "PLANT STATE",
+          "COUNTY",
+          "BALANCING AUTHORITY CODE",
+          "SECTOR",
+          "GENERATOR ID",
+          "UNIT CODE",
+          "NAMEPLATE CAPACITY MW",
+          "NET SUMMER CAPACITY MW",
+          "NET WINTER CAPACITY MW",
+          "TECHNOLOGY",
+          "ENERGY SOURCE CODE",
+          "PRIME MOVER CODE",
+          "OPERATING MONTH",
+          "OPERATING YEAR",
+          "PLANNED RETIREMENT MONTH",
+          "PLANNED RETIREMENT YEAR",
+          "STATUS",
+          "NAMEPLATE ENERGY CAPACITY MWH",
+          "DC NET CAPACITY MW",
+          "PLANNED DERATE YEAR",
+          "PLANNED DERATE MONTH",
+          "PLANNED DERATE OF SUMMER CAPACITY MW",
+          "PLANNED UPRATE YEAR",
+          "PLANNED UPRATE MONTH",
+          "PLANNED UPRATE OF SUMMER CAPACITY MW",
+          "PLANNED REPOWER YEAR",
+          "PLANNED REPOWER MONTH",
+          "OTHER MODIFICATION YEAR",
+          "OTHER MODIFICATION MONTH",
+          "LATITUDE",
+          "LONGITUDE"
+        ],
+        "plant": 2,
+        "ret_month": 20,
+        "ret_year": 21,
+        "row": 3,
+        "score": 4
+      },
+      "retired": {
+        "duplicate_occurrences": 0,
+        "identity_nonblank": 7076,
+        "identity_valid": 7076,
+        "rows": 7076,
+        "syntax_rate": 1.0,
+        "unique_rate": 1.0
+      },
+      "retired_candidates": [
+        "Retired"
+      ],
+      "retired_header": {
+        "gen": 10,
+        "headers": [
+          "ENTITY ID",
+          "ENTITY NAME",
+          "PLANT ID",
+          "PLANT NAME",
+          "GOOGLE MAP",
+          "BING MAP",
+          "PLANT STATE",
+          "COUNTY",
+          "BALANCING AUTHORITY CODE",
+          "SECTOR",
+          "GENERATOR ID",
+          "UNIT CODE",
+          "NAMEPLATE CAPACITY MW",
+          "NET SUMMER CAPACITY MW",
+          "NET WINTER CAPACITY MW",
+          "TECHNOLOGY",
+          "ENERGY SOURCE CODE",
+          "PRIME MOVER CODE",
+          "OPERATING MONTH",
+          "OPERATING YEAR",
+          "RETIREMENT MONTH",
+          "RETIREMENT YEAR",
+          "NAMEPLATE ENERGY CAPACITY MWH",
+          "DC NET CAPACITY MW",
+          "LATITUDE",
+          "LONGITUDE"
+        ],
+        "plant": 2,
+        "ret_month": 20,
+        "ret_year": 21,
+        "row": 3,
+        "score": 4
+      },
+      "sheet_names": [
+        "Operating",
+        "Planned",
+        "Retired",
+        "Canceled or Postponed",
+        "Operating_PR",
+        "Planned_PR",
+        "Retired_PR"
+      ],
+      "source": {
+        "bytes": 13335660,
+        "content_length_header": "13335660",
+        "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "etag": "\"0457dbf1774dc1:0\"",
+        "final_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/november_generator2025.xlsx",
+        "last_modified": "Tue, 23 Dec 2025 14:23:46 GMT",
+        "requested_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/november_generator2025.xlsx",
+        "sha256": "5dc458f278b68504830b048b8728539f104057de100f8eae6ed301d3d603ea12",
+        "status": 200
+      }
+    },
+    "2025-12": {
+      "operable": {
+        "duplicate_occurrences": 0,
+        "identity_nonblank": 27685,
+        "identity_valid": 27685,
+        "rows": 27685,
+        "syntax_rate": 1.0,
+        "unique_rate": 1.0
+      },
+      "operable_candidates": [
+        "Operating"
+      ],
+      "operable_header": {
+        "gen": 10,
+        "headers": [
+          "ENTITY ID",
+          "ENTITY NAME",
+          "PLANT ID",
+          "PLANT NAME",
+          "GOOGLE MAP",
+          "BING MAP",
+          "PLANT STATE",
+          "COUNTY",
+          "BALANCING AUTHORITY CODE",
+          "SECTOR",
+          "GENERATOR ID",
+          "UNIT CODE",
+          "NAMEPLATE CAPACITY MW",
+          "NET SUMMER CAPACITY MW",
+          "NET WINTER CAPACITY MW",
+          "TECHNOLOGY",
+          "ENERGY SOURCE CODE",
+          "PRIME MOVER CODE",
+          "OPERATING MONTH",
+          "OPERATING YEAR",
+          "PLANNED RETIREMENT MONTH",
+          "PLANNED RETIREMENT YEAR",
+          "STATUS",
+          "NAMEPLATE ENERGY CAPACITY MWH",
+          "DC NET CAPACITY MW",
+          "PLANNED DERATE YEAR",
+          "PLANNED DERATE MONTH",
+          "PLANNED DERATE OF SUMMER CAPACITY MW",
+          "PLANNED UPRATE YEAR",
+          "PLANNED UPRATE MONTH",
+          "PLANNED UPRATE OF SUMMER CAPACITY MW",
+          "PLANNED REPOWER YEAR",
+          "PLANNED REPOWER MONTH",
+          "OTHER MODIFICATION YEAR",
+          "OTHER MODIFICATION MONTH",
+          "LATITUDE",
+          "LONGITUDE"
+        ],
+        "plant": 2,
+        "ret_month": 20,
+        "ret_year": 21,
+        "row": 3,
+        "score": 4
+      },
+      "retired": {
+        "duplicate_occurrences": 0,
+        "identity_nonblank": 7104,
+        "identity_valid": 7104,
+        "rows": 7104,
+        "syntax_rate": 1.0,
+        "unique_rate": 1.0
+      },
+      "retired_candidates": [
+        "Retired"
+      ],
+      "retired_header": {
+        "gen": 10,
+        "headers": [
+          "ENTITY ID",
+          "ENTITY NAME",
+          "PLANT ID",
+          "PLANT NAME",
+          "GOOGLE MAP",
+          "BING MAP",
+          "PLANT STATE",
+          "COUNTY",
+          "BALANCING AUTHORITY CODE",
+          "SECTOR",
+          "GENERATOR ID",
+          "UNIT CODE",
+          "NAMEPLATE CAPACITY MW",
+          "NET SUMMER CAPACITY MW",
+          "NET WINTER CAPACITY MW",
+          "TECHNOLOGY",
+          "ENERGY SOURCE CODE",
+          "PRIME MOVER CODE",
+          "OPERATING MONTH",
+          "OPERATING YEAR",
+          "RETIREMENT MONTH",
+          "RETIREMENT YEAR",
+          "NAMEPLATE ENERGY CAPACITY MWH",
+          "DC NET CAPACITY MW",
+          "LATITUDE",
+          "LONGITUDE"
+        ],
+        "plant": 2,
+        "ret_month": 20,
+        "ret_year": 21,
+        "row": 3,
+        "score": 4
+      },
+      "sheet_names": [
+        "Operating",
+        "Planned",
+        "Retired",
+        "Canceled or Postponed",
+        "Operating_PR",
+        "Planned_PR",
+        "Retired_PR"
+      ],
+      "source": {
+        "bytes": 13463993,
+        "content_length_header": "13463993",
+        "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "etag": "\"80a3918ee08edc1:0\"",
+        "final_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/december_generator2025.xlsx",
+        "last_modified": "Mon, 26 Jan 2026 16:26:43 GMT",
+        "requested_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/december_generator2025.xlsx",
+        "sha256": "1264f1c37cf51ef41319067c4c0915f951535851df93c97d02e2e823e337ea2b",
+        "status": 200
+      }
+    },
+    "2026-01": {
+      "operable": {
+        "duplicate_occurrences": 0,
+        "identity_nonblank": 27768,
+        "identity_valid": 27768,
+        "rows": 27768,
+        "syntax_rate": 1.0,
+        "unique_rate": 1.0
+      },
+      "operable_candidates": [
+        "Operating"
+      ],
+      "operable_header": {
+        "gen": 10,
+        "headers": [
+          "ENTITY ID",
+          "ENTITY NAME",
+          "PLANT ID",
+          "PLANT NAME",
+          "GOOGLE MAP",
+          "BING MAP",
+          "PLANT STATE",
+          "COUNTY",
+          "BALANCING AUTHORITY CODE",
+          "SECTOR",
+          "GENERATOR ID",
+          "UNIT CODE",
+          "NAMEPLATE CAPACITY MW",
+          "NET SUMMER CAPACITY MW",
+          "NET WINTER CAPACITY MW",
+          "TECHNOLOGY",
+          "ENERGY SOURCE CODE",
+          "PRIME MOVER CODE",
+          "OPERATING MONTH",
+          "OPERATING YEAR",
+          "PLANNED RETIREMENT MONTH",
+          "PLANNED RETIREMENT YEAR",
+          "STATUS",
+          "NAMEPLATE ENERGY CAPACITY MWH",
+          "DC NET CAPACITY MW",
+          "PLANNED DERATE YEAR",
+          "PLANNED DERATE MONTH",
+          "PLANNED DERATE OF SUMMER CAPACITY MW",
+          "PLANNED UPRATE YEAR",
+          "PLANNED UPRATE MONTH",
+          "PLANNED UPRATE OF SUMMER CAPACITY MW",
+          "PLANNED REPOWER YEAR",
+          "PLANNED REPOWER MONTH",
+          "OTHER MODIFICATION YEAR",
+          "OTHER MODIFICATION MONTH",
+          "LATITUDE",
+          "LONGITUDE"
+        ],
+        "plant": 2,
+        "ret_month": 20,
+        "ret_year": 21,
+        "row": 3,
+        "score": 4
+      },
+      "retired": {
+        "duplicate_occurrences": 0,
+        "identity_nonblank": 7126,
+        "identity_valid": 7126,
+        "rows": 7126,
+        "syntax_rate": 1.0,
+        "unique_rate": 1.0
+      },
+      "retired_candidates": [
+        "Retired"
+      ],
+      "retired_header": {
+        "gen": 10,
+        "headers": [
+          "ENTITY ID",
+          "ENTITY NAME",
+          "PLANT ID",
+          "PLANT NAME",
+          "GOOGLE MAP",
+          "BING MAP",
+          "PLANT STATE",
+          "COUNTY",
+          "BALANCING AUTHORITY CODE",
+          "SECTOR",
+          "GENERATOR ID",
+          "UNIT CODE",
+          "NAMEPLATE CAPACITY MW",
+          "NET SUMMER CAPACITY MW",
+          "NET WINTER CAPACITY MW",
+          "TECHNOLOGY",
+          "ENERGY SOURCE CODE",
+          "PRIME MOVER CODE",
+          "OPERATING MONTH",
+          "OPERATING YEAR",
+          "RETIREMENT MONTH",
+          "RETIREMENT YEAR",
+          "NAMEPLATE ENERGY CAPACITY MWH",
+          "DC NET CAPACITY MW",
+          "LATITUDE",
+          "LONGITUDE"
+        ],
+        "plant": 2,
+        "ret_month": 20,
+        "ret_year": 21,
+        "row": 3,
+        "score": 4
+      },
+      "sheet_names": [
+        "Operating",
+        "Planned",
+        "Retired",
+        "Canceled or Postponed",
+        "Operating_PR",
+        "Planned_PR",
+        "Retired_PR"
+      ],
+      "source": {
+        "bytes": 13518786,
+        "content_length_header": "13518786",
+        "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "etag": "\"80fad0f710a5dc1:0\"",
+        "final_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/january_generator2026.xlsx",
+        "last_modified": "Mon, 23 Feb 2026 22:08:41 GMT",
+        "requested_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/january_generator2026.xlsx",
+        "sha256": "a02a0262c98e6b4fc8451e3f88c3983c2edd015b1bff2c5174df91e331ae9cf8",
+        "status": 200
+      }
+    },
+    "2026-02": {
+      "operable": {
+        "duplicate_occurrences": 0,
+        "identity_nonblank": 27716,
+        "identity_valid": 27716,
+        "rows": 27716,
+        "syntax_rate": 1.0,
+        "unique_rate": 1.0
+      },
+      "operable_candidates": [
+        "Operating"
+      ],
+      "operable_header": {
+        "gen": 10,
+        "headers": [
+          "ENTITY ID",
+          "ENTITY NAME",
+          "PLANT ID",
+          "PLANT NAME",
+          "GOOGLE MAP",
+          "BING MAP",
+          "PLANT STATE",
+          "COUNTY",
+          "BALANCING AUTHORITY CODE",
+          "SECTOR",
+          "GENERATOR ID",
+          "UNIT CODE",
+          "NAMEPLATE CAPACITY MW",
+          "NET SUMMER CAPACITY MW",
+          "NET WINTER CAPACITY MW",
+          "TECHNOLOGY",
+          "ENERGY SOURCE CODE",
+          "PRIME MOVER CODE",
+          "OPERATING MONTH",
+          "OPERATING YEAR",
+          "PLANNED RETIREMENT MONTH",
+          "PLANNED RETIREMENT YEAR",
+          "STATUS",
+          "NAMEPLATE ENERGY CAPACITY MWH",
+          "DC NET CAPACITY MW",
+          "PLANNED DERATE YEAR",
+          "PLANNED DERATE MONTH",
+          "PLANNED DERATE OF SUMMER CAPACITY MW",
+          "PLANNED UPRATE YEAR",
+          "PLANNED UPRATE MONTH",
+          "PLANNED UPRATE OF SUMMER CAPACITY MW",
+          "PLANNED REPOWER YEAR",
+          "PLANNED REPOWER MONTH",
+          "OTHER MODIFICATION YEAR",
+          "OTHER MODIFICATION MONTH",
+          "LATITUDE",
+          "LONGITUDE"
+        ],
+        "plant": 2,
+        "ret_month": 20,
+        "ret_year": 21,
+        "row": 3,
+        "score": 4
+      },
+      "retired": {
+        "duplicate_occurrences": 0,
+        "identity_nonblank": 7229,
+        "identity_valid": 7229,
+        "rows": 7229,
+        "syntax_rate": 1.0,
+        "unique_rate": 1.0
+      },
+      "retired_candidates": [
+        "Retired"
+      ],
+      "retired_header": {
+        "gen": 10,
+        "headers": [
+          "ENTITY ID",
+          "ENTITY NAME",
+          "PLANT ID",
+          "PLANT NAME",
+          "GOOGLE MAP",
+          "BING MAP",
+          "PLANT STATE",
+          "COUNTY",
+          "BALANCING AUTHORITY CODE",
+          "SECTOR",
+          "GENERATOR ID",
+          "UNIT CODE",
+          "NAMEPLATE CAPACITY MW",
+          "NET SUMMER CAPACITY MW",
+          "NET WINTER CAPACITY MW",
+          "TECHNOLOGY",
+          "ENERGY SOURCE CODE",
+          "PRIME MOVER CODE",
+          "OPERATING MONTH",
+          "OPERATING YEAR",
+          "RETIREMENT MONTH",
+          "RETIREMENT YEAR",
+          "NAMEPLATE ENERGY CAPACITY MWH",
+          "DC NET CAPACITY MW",
+          "LATITUDE",
+          "LONGITUDE"
+        ],
+        "plant": 2,
+        "ret_month": 20,
+        "ret_year": 21,
+        "row": 3,
+        "score": 4
+      },
+      "sheet_names": [
+        "Operating",
+        "Planned",
+        "Retired",
+        "Canceled or Postponed",
+        "Operating_PR",
+        "Planned_PR",
+        "Retired_PR"
+      ],
+      "source": {
+        "bytes": 13468269,
+        "content_length_header": "13468269",
+        "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "etag": "\"0e1dd1a87bbdc1:0\"",
+        "final_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/february_generator2026.xlsx",
+        "last_modified": "Tue, 24 Mar 2026 12:09:46 GMT",
+        "requested_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/february_generator2026.xlsx",
+        "sha256": "9f76e3a186ba0814ea836a357213bab0ea8e18955d862a92e877dc028af755e8",
+        "status": 200
+      }
+    },
+    "2026-03": {
+      "operable": {
+        "duplicate_occurrences": 0,
+        "identity_nonblank": 27837,
+        "identity_valid": 27837,
+        "rows": 27837,
+        "syntax_rate": 1.0,
+        "unique_rate": 1.0
+      },
+      "operable_candidates": [
+        "Operating"
+      ],
+      "operable_header": {
+        "gen": 10,
+        "headers": [
+          "ENTITY ID",
+          "ENTITY NAME",
+          "PLANT ID",
+          "PLANT NAME",
+          "GOOGLE MAP",
+          "BING MAP",
+          "PLANT STATE",
+          "COUNTY",
+          "BALANCING AUTHORITY CODE",
+          "SECTOR",
+          "GENERATOR ID",
+          "UNIT CODE",
+          "NAMEPLATE CAPACITY MW",
+          "NET SUMMER CAPACITY MW",
+          "NET WINTER CAPACITY MW",
+          "TECHNOLOGY",
+          "ENERGY SOURCE CODE",
+          "PRIME MOVER CODE",
+          "OPERATING MONTH",
+          "OPERATING YEAR",
+          "PLANNED RETIREMENT MONTH",
+          "PLANNED RETIREMENT YEAR",
+          "STATUS",
+          "NAMEPLATE ENERGY CAPACITY MWH",
+          "DC NET CAPACITY MW",
+          "PLANNED DERATE YEAR",
+          "PLANNED DERATE MONTH",
+          "PLANNED DERATE OF SUMMER CAPACITY MW",
+          "PLANNED UPRATE YEAR",
+          "PLANNED UPRATE MONTH",
+          "PLANNED UPRATE OF SUMMER CAPACITY MW",
+          "PLANNED REPOWER YEAR",
+          "PLANNED REPOWER MONTH",
+          "OTHER MODIFICATION YEAR",
+          "OTHER MODIFICATION MONTH",
+          "LATITUDE",
+          "LONGITUDE"
+        ],
+        "plant": 2,
+        "ret_month": 20,
+        "ret_year": 21,
+        "row": 3,
+        "score": 4
+      },
+      "retired": {
+        "duplicate_occurrences": 0,
+        "identity_nonblank": 7251,
+        "identity_valid": 7251,
+        "rows": 7251,
+        "syntax_rate": 1.0,
+        "unique_rate": 1.0
+      },
+      "retired_candidates": [
+        "Retired"
+      ],
+      "retired_header": {
+        "gen": 10,
+        "headers": [
+          "ENTITY ID",
+          "ENTITY NAME",
+          "PLANT ID",
+          "PLANT NAME",
+          "GOOGLE MAP",
+          "BING MAP",
+          "PLANT STATE",
+          "COUNTY",
+          "BALANCING AUTHORITY CODE",
+          "SECTOR",
+          "GENERATOR ID",
+          "UNIT CODE",
+          "NAMEPLATE CAPACITY MW",
+          "NET SUMMER CAPACITY MW",
+          "NET WINTER CAPACITY MW",
+          "TECHNOLOGY",
+          "ENERGY SOURCE CODE",
+          "PRIME MOVER CODE",
+          "OPERATING MONTH",
+          "OPERATING YEAR",
+          "RETIREMENT MONTH",
+          "RETIREMENT YEAR",
+          "NAMEPLATE ENERGY CAPACITY MWH",
+          "DC NET CAPACITY MW",
+          "LATITUDE",
+          "LONGITUDE"
+        ],
+        "plant": 2,
+        "ret_month": 20,
+        "ret_year": 21,
+        "row": 3,
+        "score": 4
+      },
+      "sheet_names": [
+        "Operating",
+        "Planned",
+        "Retired",
+        "Canceled or Postponed",
+        "Operating_PR",
+        "Planned_PR",
+        "Retired_PR"
+      ],
+      "source": {
+        "bytes": 13696844,
+        "content_length_header": "13696844",
+        "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "etag": "\"0ee394f3bd3dc1:0\"",
+        "final_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/march_generator2026.xlsx",
+        "last_modified": "Thu, 23 Apr 2026 16:07:40 GMT",
+        "requested_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/march_generator2026.xlsx",
+        "sha256": "93f2b2501cd42ba1290136ec04fd616346d974e0dfd6020cd8ec5e532ef7cec6",
+        "status": 200
+      }
+    },
+    "2026-04": {
+      "operable": {
+        "duplicate_occurrences": 0,
+        "identity_nonblank": 27971,
+        "identity_valid": 27971,
+        "rows": 27971,
+        "syntax_rate": 1.0,
+        "unique_rate": 1.0
+      },
+      "operable_candidates": [
+        "Operating"
+      ],
+      "operable_header": {
+        "gen": 10,
+        "headers": [
+          "ENTITY ID",
+          "ENTITY NAME",
+          "PLANT ID",
+          "PLANT NAME",
+          "GOOGLE MAP",
+          "BING MAP",
+          "PLANT STATE",
+          "COUNTY",
+          "BALANCING AUTHORITY CODE",
+          "SECTOR",
+          "GENERATOR ID",
+          "UNIT CODE",
+          "NAMEPLATE CAPACITY MW",
+          "NET SUMMER CAPACITY MW",
+          "NET WINTER CAPACITY MW",
+          "TECHNOLOGY",
+          "ENERGY SOURCE CODE",
+          "PRIME MOVER CODE",
+          "OPERATING MONTH",
+          "OPERATING YEAR",
+          "PLANNED RETIREMENT MONTH",
+          "PLANNED RETIREMENT YEAR",
+          "STATUS",
+          "NAMEPLATE ENERGY CAPACITY MWH",
+          "DC NET CAPACITY MW",
+          "PLANNED DERATE YEAR",
+          "PLANNED DERATE MONTH",
+          "PLANNED DERATE OF SUMMER CAPACITY MW",
+          "PLANNED UPRATE YEAR",
+          "PLANNED UPRATE MONTH",
+          "PLANNED UPRATE OF SUMMER CAPACITY MW",
+          "PLANNED REPOWER YEAR",
+          "PLANNED REPOWER MONTH",
+          "OTHER MODIFICATION YEAR",
+          "OTHER MODIFICATION MONTH",
+          "LATITUDE",
+          "LONGITUDE"
+        ],
+        "plant": 2,
+        "ret_month": 20,
+        "ret_year": 21,
+        "row": 3,
+        "score": 4
+      },
+      "retired": {
+        "duplicate_occurrences": 0,
+        "identity_nonblank": 7254,
+        "identity_valid": 7254,
+        "rows": 7254,
+        "syntax_rate": 1.0,
+        "unique_rate": 1.0
+      },
+      "retired_candidates": [
+        "Retired"
+      ],
+      "retired_header": {
+        "gen": 10,
+        "headers": [
+          "ENTITY ID",
+          "ENTITY NAME",
+          "PLANT ID",
+          "PLANT NAME",
+          "GOOGLE MAP",
+          "BING MAP",
+          "PLANT STATE",
+          "COUNTY",
+          "BALANCING AUTHORITY CODE",
+          "SECTOR",
+          "GENERATOR ID",
+          "UNIT CODE",
+          "NAMEPLATE CAPACITY MW",
+          "NET SUMMER CAPACITY MW",
+          "NET WINTER CAPACITY MW",
+          "TECHNOLOGY",
+          "ENERGY SOURCE CODE",
+          "PRIME MOVER CODE",
+          "OPERATING MONTH",
+          "OPERATING YEAR",
+          "RETIREMENT MONTH",
+          "RETIREMENT YEAR",
+          "NAMEPLATE ENERGY CAPACITY MWH",
+          "DC NET CAPACITY MW",
+          "LATITUDE",
+          "LONGITUDE"
+        ],
+        "plant": 2,
+        "ret_month": 20,
+        "ret_year": 21,
+        "row": 3,
+        "score": 4
+      },
+      "sheet_names": [
+        "Operating",
+        "Planned",
+        "Retired",
+        "Canceled or Postponed",
+        "Operating_PR",
+        "Planned_PR",
+        "Retired_PR"
+      ],
+      "source": {
+        "bytes": 13670943,
+        "content_length_header": "13670943",
+        "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "etag": "\"04821f42e9dc1:0\"",
+        "final_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/april_generator2026.xlsx",
+        "last_modified": "Thu, 21 May 2026 16:51:52 GMT",
+        "requested_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/april_generator2026.xlsx",
+        "sha256": "ec15bae939cc7cf8ee7e3f0dcb9a06d0f91d5fbab3714f0f36ecaeef3bde82b6",
+        "status": 200
+      }
+    },
+    "2026-05": {
+      "operable": {
+        "duplicate_occurrences": 0,
+        "identity_nonblank": 28046,
+        "identity_valid": 28046,
+        "rows": 28046,
+        "syntax_rate": 1.0,
+        "unique_rate": 1.0
+      },
+      "operable_candidates": [
+        "Operating"
+      ],
+      "operable_header": {
+        "gen": 10,
+        "headers": [
+          "ENTITY ID",
+          "ENTITY NAME",
+          "PLANT ID",
+          "PLANT NAME",
+          "GOOGLE MAP",
+          "BING MAP",
+          "PLANT STATE",
+          "COUNTY",
+          "BALANCING AUTHORITY CODE",
+          "SECTOR",
+          "GENERATOR ID",
+          "UNIT CODE",
+          "NAMEPLATE CAPACITY MW",
+          "NET SUMMER CAPACITY MW",
+          "NET WINTER CAPACITY MW",
+          "TECHNOLOGY",
+          "ENERGY SOURCE CODE",
+          "PRIME MOVER CODE",
+          "OPERATING MONTH",
+          "OPERATING YEAR",
+          "PLANNED RETIREMENT MONTH",
+          "PLANNED RETIREMENT YEAR",
+          "STATUS",
+          "NAMEPLATE ENERGY CAPACITY MWH",
+          "DC NET CAPACITY MW",
+          "PLANNED DERATE YEAR",
+          "PLANNED DERATE MONTH",
+          "PLANNED DERATE OF SUMMER CAPACITY MW",
+          "PLANNED UPRATE YEAR",
+          "PLANNED UPRATE MONTH",
+          "PLANNED UPRATE OF SUMMER CAPACITY MW",
+          "PLANNED REPOWER YEAR",
+          "PLANNED REPOWER MONTH",
+          "OTHER MODIFICATION YEAR",
+          "OTHER MODIFICATION MONTH",
+          "LATITUDE",
+          "LONGITUDE"
+        ],
+        "plant": 2,
+        "ret_month": 20,
+        "ret_year": 21,
+        "row": 3,
+        "score": 4
+      },
+      "retired": {
+        "duplicate_occurrences": 0,
+        "identity_nonblank": 7273,
+        "identity_valid": 7273,
+        "rows": 7273,
+        "syntax_rate": 1.0,
+        "unique_rate": 1.0
+      },
+      "retired_candidates": [
+        "Retired"
+      ],
+      "retired_header": {
+        "gen": 10,
+        "headers": [
+          "ENTITY ID",
+          "ENTITY NAME",
+          "PLANT ID",
+          "PLANT NAME",
+          "GOOGLE MAP",
+          "BING MAP",
+          "PLANT STATE",
+          "COUNTY",
+          "BALANCING AUTHORITY CODE",
+          "SECTOR",
+          "GENERATOR ID",
+          "UNIT CODE",
+          "NAMEPLATE CAPACITY MW",
+          "NET SUMMER CAPACITY MW",
+          "NET WINTER CAPACITY MW",
+          "TECHNOLOGY",
+          "ENERGY SOURCE CODE",
+          "PRIME MOVER CODE",
+          "OPERATING MONTH",
+          "OPERATING YEAR",
+          "RETIREMENT MONTH",
+          "RETIREMENT YEAR",
+          "NAMEPLATE ENERGY CAPACITY MWH",
+          "DC NET CAPACITY MW",
+          "LATITUDE",
+          "LONGITUDE"
+        ],
+        "plant": 2,
+        "ret_month": 20,
+        "ret_year": 21,
+        "row": 3,
+        "score": 4
+      },
+      "sheet_names": [
+        "Operating",
+        "Planned",
+        "Retired",
+        "Canceled or Postponed",
+        "Operating_PR",
+        "Planned_PR",
+        "Retired_PR"
+      ],
+      "source": {
+        "bytes": 13797847,
+        "content_length_header": "13797847",
+        "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "etag": "\"045f439fa3dd1:0\"",
+        "final_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/may_generator2026.xlsx",
+        "last_modified": "Wed, 24 Jun 2026 16:55:14 GMT",
+        "requested_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/may_generator2026.xlsx",
+        "sha256": "46ff71d90723e4dfe766f6fe191160d92ff28cb17d5d5f5a55eeed562067995d",
+        "status": 200
+      }
+    },
+    "2026-06": {
+      "operable": {
+        "duplicate_occurrences": 0,
+        "identity_nonblank": 28196,
+        "identity_valid": 28196,
+        "rows": 28196,
+        "syntax_rate": 1.0,
+        "unique_rate": 1.0
+      },
+      "operable_candidates": [
+        "Operating"
+      ],
+      "operable_header": {
+        "gen": 10,
+        "headers": [
+          "ENTITY ID",
+          "ENTITY NAME",
+          "PLANT ID",
+          "PLANT NAME",
+          "GOOGLE MAP",
+          "BING MAP",
+          "PLANT STATE",
+          "COUNTY",
+          "BALANCING AUTHORITY CODE",
+          "SECTOR",
+          "GENERATOR ID",
+          "UNIT CODE",
+          "NAMEPLATE CAPACITY MW",
+          "NET SUMMER CAPACITY MW",
+          "NET WINTER CAPACITY MW",
+          "TECHNOLOGY",
+          "ENERGY SOURCE CODE",
+          "PRIME MOVER CODE",
+          "OPERATING MONTH",
+          "OPERATING YEAR",
+          "PLANNED RETIREMENT MONTH",
+          "PLANNED RETIREMENT YEAR",
+          "STATUS",
+          "NAMEPLATE ENERGY CAPACITY MWH",
+          "DC NET CAPACITY MW",
+          "PLANNED DERATE YEAR",
+          "PLANNED DERATE MONTH",
+          "PLANNED DERATE OF SUMMER CAPACITY MW",
+          "PLANNED UPRATE YEAR",
+          "PLANNED UPRATE MONTH",
+          "PLANNED UPRATE OF SUMMER CAPACITY MW",
+          "PLANNED REPOWER YEAR",
+          "PLANNED REPOWER MONTH",
+          "OTHER MODIFICATION YEAR",
+          "OTHER MODIFICATION MONTH",
+          "LATITUDE",
+          "LONGITUDE"
+        ],
+        "plant": 2,
+        "ret_month": 20,
+        "ret_year": 21,
+        "row": 3,
+        "score": 4
+      },
+      "retired": {
+        "duplicate_occurrences": 0,
+        "identity_nonblank": 7288,
+        "identity_valid": 7288,
+        "rows": 7288,
+        "syntax_rate": 1.0,
+        "unique_rate": 1.0
+      },
+      "retired_candidates": [
+        "Retired"
+      ],
+      "retired_header": {
+        "gen": 10,
+        "headers": [
+          "ENTITY ID",
+          "ENTITY NAME",
+          "PLANT ID",
+          "PLANT NAME",
+          "GOOGLE MAP",
+          "BING MAP",
+          "PLANT STATE",
+          "COUNTY",
+          "BALANCING AUTHORITY CODE",
+          "SECTOR",
+          "GENERATOR ID",
+          "UNIT CODE",
+          "NAMEPLATE CAPACITY MW",
+          "NET SUMMER CAPACITY MW",
+          "NET WINTER CAPACITY MW",
+          "TECHNOLOGY",
+          "ENERGY SOURCE CODE",
+          "PRIME MOVER CODE",
+          "OPERATING MONTH",
+          "OPERATING YEAR",
+          "RETIREMENT MONTH",
+          "RETIREMENT YEAR",
+          "NAMEPLATE ENERGY CAPACITY MWH",
+          "DC NET CAPACITY MW",
+          "LATITUDE",
+          "LONGITUDE"
+        ],
+        "plant": 2,
+        "ret_month": 20,
+        "ret_year": 21,
+        "row": 3,
+        "score": 4
+      },
+      "sheet_names": [
+        "Operating",
+        "Planned",
+        "Retired",
+        "Canceled or Postponed",
+        "Operating_PR",
+        "Planned_PR",
+        "Retired_PR"
+      ],
+      "source": {
+        "bytes": 13860880,
+        "content_length_header": "13860880",
+        "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "etag": "\"073ff3bd1add1:0\"",
+        "final_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/june_generator2026.xlsx",
+        "last_modified": "Thu, 23 Jul 2026 16:11:42 GMT",
+        "requested_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/june_generator2026.xlsx",
+        "sha256": "47d28a1e5599135b619d249971f35f03fef8a5b3062c2d66c436b55e8f8c3072",
+        "status": 200
+      }
+    },
+    "2026-07": {
+      "operable": {
+        "duplicate_occurrences": 0,
+        "identity_nonblank": 28318,
+        "identity_valid": 28318,
+        "rows": 28318,
+        "syntax_rate": 1.0,
+        "unique_rate": 1.0
+      },
+      "operable_candidates": [
+        "Operating"
+      ],
+      "operable_header": {
+        "gen": 10,
+        "headers": [
+          "ENTITY ID",
+          "ENTITY NAME",
+          "PLANT ID",
+          "PLANT NAME",
+          "GOOGLE MAP",
+          "BING MAP",
+          "PLANT STATE",
+          "COUNTY",
+          "BALANCING AUTHORITY CODE",
+          "SECTOR",
+          "GENERATOR ID",
+          "UNIT CODE",
+          "NAMEPLATE CAPACITY MW",
+          "NET SUMMER CAPACITY MW",
+          "NET WINTER CAPACITY MW",
+          "TECHNOLOGY",
+          "ENERGY SOURCE CODE",
+          "PRIME MOVER CODE",
+          "OPERATING MONTH",
+          "OPERATING YEAR",
+          "PLANNED RETIREMENT MONTH",
+          "PLANNED RETIREMENT YEAR",
+          "STATUS",
+          "NAMEPLATE ENERGY CAPACITY MWH",
+          "DC NET CAPACITY MW",
+          "PLANNED DERATE YEAR",
+          "PLANNED DERATE MONTH",
+          "PLANNED DERATE OF SUMMER CAPACITY MW",
+          "PLANNED UPRATE YEAR",
+          "PLANNED UPRATE MONTH",
+          "PLANNED UPRATE OF SUMMER CAPACITY MW",
+          "PLANNED REPOWER YEAR",
+          "PLANNED REPOWER MONTH",
+          "OTHER MODIFICATION YEAR",
+          "OTHER MODIFICATION MONTH",
+          "LATITUDE",
+          "LONGITUDE"
+        ],
+        "plant": 2,
+        "ret_month": 20,
+        "ret_year": 21,
+        "row": 3,
+        "score": 4
+      },
+      "retired": {
+        "duplicate_occurrences": 0,
+        "identity_nonblank": 7299,
+        "identity_valid": 7299,
+        "rows": 7299,
+        "syntax_rate": 1.0,
+        "unique_rate": 1.0
+      },
+      "retired_candidates": [
+        "Retired"
+      ],
+      "retired_header": {
+        "gen": 10,
+        "headers": [
+          "ENTITY ID",
+          "ENTITY NAME",
+          "PLANT ID",
+          "PLANT NAME",
+          "GOOGLE MAP",
+          "BING MAP",
+          "PLANT STATE",
+          "COUNTY",
+          "BALANCING AUTHORITY CODE",
+          "SECTOR",
+          "GENERATOR ID",
+          "UNIT CODE",
+          "NAMEPLATE CAPACITY MW",
+          "NET SUMMER CAPACITY MW",
+          "NET WINTER CAPACITY MW",
+          "TECHNOLOGY",
+          "ENERGY SOURCE CODE",
+          "PRIME MOVER CODE",
+          "OPERATING MONTH",
+          "OPERATING YEAR",
+          "RETIREMENT MONTH",
+          "RETIREMENT YEAR",
+          "NAMEPLATE ENERGY CAPACITY MWH",
+          "DC NET CAPACITY MW",
+          "LATITUDE",
+          "LONGITUDE"
+        ],
+        "plant": 2,
+        "ret_month": 20,
+        "ret_year": 21,
+        "row": 3,
+        "score": 4
+      },
+      "sheet_names": [
+        "Operating",
+        "Planned",
+        "Retired",
+        "Canceled or Postponed",
+        "Operating_PR",
+        "Planned_PR",
+        "Retired_PR"
+      ],
+      "source": {
+        "bytes": 13932124,
+        "content_length_header": "13932124",
+        "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "etag": "\"80c74d6bb434dd1:0\"",
+        "final_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/july_generator2026.xlsx",
+        "last_modified": "Tue, 25 Aug 2026 17:08:59 GMT",
+        "requested_url": "https://www.eia.gov/electricity/data/eia860m/archive/xls/july_generator2026.xlsx",
+        "sha256": "9f348be6d6609b7e0c49a8c3cf872354a3bd2370051d0d4720246dc81bbe540d",
+        "status": 200
+      }
+    },
+    "2026-08": {
+      "operable": {
+        "duplicate_occurrences": 0,
+        "identity_nonblank": 28377,
+        "identity_valid": 28377,
+        "rows": 28377,
+        "syntax_rate": 1.0,
+        "unique_rate": 1.0
+      },
+      "operable_candidates": [
+        "Operating"
+      ],
+      "operable_header": {
+        "gen": 10,
+        "headers": [
+          "ENTITY ID",
+          "ENTITY NAME",
+          "PLANT ID",
+          "PLANT NAME",
+          "GOOGLE MAP",
+          "BING MAP",
+          "PLANT STATE",
+          "COUNTY",
+          "BALANCING AUTHORITY CODE",
+          "SECTOR",
+          "GENERATOR ID",
+          "UNIT CODE",
+          "NAMEPLATE CAPACITY MW",
+          "NET SUMMER CAPACITY MW",
+          "NET WINTER CAPACITY MW",
+          "TECHNOLOGY",
+          "ENERGY SOURCE CODE",
+          "PRIME MOVER CODE",
+          "OPERATING MONTH",
+          "OPERATING YEAR",
+          "PLANNED RETIREMENT MONTH",
+          "PLANNED RETIREMENT YEAR",
+          "STATUS",
+          "NAMEPLATE ENERGY CAPACITY MWH",
+          "DC NET CAPACITY MW",
+          "PLANNED DERATE YEAR",
+          "PLANNED DERATE MONTH",
+          "PLANNED DERATE OF SUMMER CAPACITY MW",
+          "PLANNED UPRATE YEAR",
+          "PLANNED UPRATE MONTH",
+          "PLANNED UPRATE OF SUMMER CAPACITY MW",
+          "PLANNED REPOWER YEAR",
+          "PLANNED REPOWER MONTH",
+          "OTHER MODIFICATION YEAR",
+          "OTHER MODIFICATION MONTH",
+          "LATITUDE",
+          "LONGITUDE"
+        ],
+        "plant": 2,
+        "ret_month": 20,
+        "ret_year": 21,
+        "row": 3,
+        "score": 4
+      },
+      "retired": {
+        "duplicate_occurrences": 0,
+        "identity_nonblank": 7336,
+        "identity_valid": 7324,
+        "rows": 7336,
+        "syntax_rate": 0.9983642311886587,
+        "unique_rate": 1.0
+      },
+      "retired_candidates": [
+        "Retired"
+      ],
+      "retired_header": {
+        "gen": 10,
+        "headers": [
+          "ENTITY ID",
+          "ENTITY NAME",
+          "PLANT ID",
+          "PLANT NAME",
+          "GOOGLE MAP",
+          "BING MAP",
+          "PLANT STATE",
+          "COUNTY",
+          "BALANCING AUTHORITY CODE",
+          "SECTOR",
+          "GENERATOR ID",
+          "UNIT CODE",
+          "NAMEPLATE CAPACITY MW",
+          "NET SUMMER CAPACITY MW",
+          "NET WINTER CAPACITY MW",
+          "TECHNOLOGY",
+          "ENERGY SOURCE CODE",
+          "PRIME MOVER CODE",
+          "OPERATING MONTH",
+          "OPERATING YEAR",
+          "RETIREMENT MONTH",
+          "RETIREMENT YEAR",
+          "NAMEPLATE ENERGY CAPACITY MWH",
+          "DC NET CAPACITY MW",
+          "LATITUDE",
+          "LONGITUDE"
+        ],
+        "plant": 2,
+        "ret_month": 20,
+        "ret_year": 21,
+        "row": 3,
+        "score": 4
+      },
+      "sheet_names": [
+        "Operating",
+        "Planned",
+        "Retired",
+        "Canceled or Postponed",
+        "Operating_PR",
+        "Planned_PR",
+        "Retired_PR"
+      ],
+      "source": {
+        "bytes": 13955142,
+        "content_length_header": "13955142",
+        "content_type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "etag": "\"8098ac47aa4bdd1:0\"",
+        "final_url": "https://www.eia.gov/electricity/data/eia860m/xls/august_generator2026.xlsx",
+        "last_modified": "Wed, 23 Sep 2026 22:24:21 GMT",
+        "requested_url": "https://www.eia.gov/electricity/data/eia860m/xls/august_generator2026.xlsx",
+        "sha256": "b4b70abb4c217e8e2658c3bde7608a3d530e86a81279ccc572ced82a200e9f1c",
+        "status": 200
+      }
+    }
+  },
+  "pass_count": 18,
+  "planned_proposed_row_bodies_opened": 0,
+  "post_august_2026_860m_body_opened": false,
+  "prediction_computed": false,
+  "ranking_computed": false,
+  "relationship_computed": false,
+  "research": "US-EIA-RET-F01",
+  "resolved_month_links": {
+    "2025-09": [
+      "https://www.eia.gov/electricity/data/eia860m/archive/xls/september_generator2025.xlsx"
+    ],
+    "2025-10": [
+      "https://www.eia.gov/electricity/data/eia860m/archive/xls/october_generator2025.xlsx"
+    ],
+    "2025-11": [
+      "https://www.eia.gov/electricity/data/eia860m/archive/xls/november_generator2025.xlsx"
+    ],
+    "2025-12": [
+      "https://www.eia.gov/electricity/data/eia860m/archive/xls/december_generator2025.xlsx"
+    ],
+    "2026-01": [
+      "https://www.eia.gov/electricity/data/eia860m/archive/xls/january_generator2026.xlsx"
+    ],
+    "2026-02": [
+      "https://www.eia.gov/electricity/data/eia860m/archive/xls/february_generator2026.xlsx"
+    ],
+    "2026-03": [
+      "https://www.eia.gov/electricity/data/eia860m/archive/xls/march_generator2026.xlsx"
+    ],
+    "2026-04": [
+      "https://www.eia.gov/electricity/data/eia860m/archive/xls/april_generator2026.xlsx"
+    ],
+    "2026-05": [
+      "https://www.eia.gov/electricity/data/eia860m/archive/xls/may_generator2026.xlsx"
+    ],
+    "2026-06": [
+      "https://www.eia.gov/electricity/data/eia860m/archive/xls/june_generator2026.xlsx"
+    ],
+    "2026-07": [
+      "https://www.eia.gov/electricity/data/eia860m/archive/xls/july_generator2026.xlsx"
+    ],
+    "2026-08": [
+      "https://www.eia.gov/electricity/data/eia860m/xls/august_generator2026.xlsx"
+    ]
+  },
+  "runner_sha256": "d4966ec99d82aeefa040ce31d67dd7e5a9281a9346f4e0d2360ce57b3893a245",
+  "scientific_threshold_changed": false,
+  "source_pages": {
+    "eia860": {
+      "bytes": 67547,
+      "content_type": "text/html; charset=UTF-8",
+      "etag": null,
+      "final_url": "https://www.eia.gov/electricity/data/eia860/index.php",
+      "last_modified": null,
+      "requested_url": "https://www.eia.gov/electricity/data/eia860/index.php",
+      "sha256": "bc500cb9c8a37f2427b64799c13f3fe19be53b2cfd2c98617cf7a67c9cfe5c30",
+      "status": 200
+    },
+    "eia860m": {
+      "bytes": 93617,
+      "content_type": "text/html; charset=UTF-8",
+      "etag": null,
+      "final_url": "https://www.eia.gov/electricity/data/eia860m/index.php",
+      "last_modified": null,
+      "requested_url": "https://www.eia.gov/electricity/data/eia860m/index.php",
+      "sha256": "8282bbdbd7558ee86ffaeff031f630f5fbd015631593bc4974c1aa4f64164b96",
+      "status": 200
+    },
+    "eia923": {
+      "bytes": 66717,
+      "content_type": "text/html; charset=UTF-8",
+      "etag": null,
+      "final_url": "https://www.eia.gov/electricity/data/eia923/index.php",
+      "last_modified": null,
+      "requested_url": "https://www.eia.gov/electricity/data/eia923/index.php",
+      "sha256": "8cf7c9e8f5148e60e27e28aa077e60b11810912898df7e12e8a23e573abe6c09",
+      "status": 200
+    }
+  }
+}
