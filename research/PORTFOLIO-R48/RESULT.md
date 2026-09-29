@@ -51,3 +51,7 @@ It must prove:
 R48 establishes no generator-retirement relationship, adviser-withdrawal relationship, RCRA-enforcement relationship, carrier-crash relationship, prediction, ranking, causal effect or novelty claim.
 
 Incremental monetary cost: **0 USD**.
+
+## Identifier supersession / 식별자 교정
+
+After this immutable selection was recorded, repository re-read established that `US-EIA-GEN-001 / US-EIA-GEN-F01` were already occupied by the distinct PORTFOLIO-R36 commissioning-slippage branch. Under `DEC-278`, the **R48 retirement concept alone** is canonically relabeled `US-EIA-RET-001 / US-EIA-RET-F01`. The 43/45 score, ranking, source evidence, candidate concept and outcome firewall are unchanged. The immutable scorecard itself is not rewritten.
