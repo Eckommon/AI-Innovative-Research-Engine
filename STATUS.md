@@ -1,21 +1,21 @@
 ---
-checkpoint_id: CHK-20260929-US-MSHA-MINE-F01-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20260929-US-MSHA-MINE-N01-ACTIVE
+active_issue: 178
+active_research: US-MSHA-MINE-N01
 last_completed_issue: 177
 last_completed_research: US-MSHA-MINE-F01
-last_decision: DEC-265
+last_decision: DEC-266
 updated: 2026-09-29
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `US_MSHA_MINE_F01_PASS__N01_CONTRACT_REQUIRED`
+**State / 상태:** `US_MSHA_MINE_N01_ACTIVE__PROSPECTIVE_COHORT_LOCK`
 
-US-MSHA-MINE-F01 is terminal **18/18 PASS** under its unchanged pre-Issue contract. Future serious/fatal accident membership remains unopened.
+US-MSHA-MINE-N01 is active under pre-Issue contract `1d5f60ac0fca0aa81fad325bfc12e716ef370fec`. Future serious/fatal accident membership from 2026-09-30 onward remains sealed.
 
 ## Exact next action / 정확한 다음 행동
 
-Freeze one separate outcome-blind `US-MSHA-MINE-N01` contract before Issue creation and before any future serious/fatal membership is opened. N01 must pre-register a non-tautological historical exposure, eligibility/exclusions, comparator/matching or stratification, future event hierarchy, competing status handling, minimum support/event thresholds, statistical gate and stop rule.
+Execute the immutable 18-gate pre-outcome runner using only the three F01-fingerprinted baseline source bodies. Lock eligibility, RAMP_UP/comparator assignments, deterministic matching and balance without opening any future event membership.
 
 Incremental monetary cost remains **0 USD**.
