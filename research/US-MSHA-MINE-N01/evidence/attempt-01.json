@@ -1,0 +1,381 @@
+{
+  "attempt": 1,
+  "attempt_valid": true,
+  "causal_claim_made": false,
+  "contract_sha": "1d5f60ac0fca0aa81fad325bfc12e716ef370fec",
+  "disposition": "HOLD_US_MSHA_MINE_N01_PROSPECTIVE_DESIGN_NOT_READY",
+  "exposure_support": {
+    "comparators": 3447,
+    "eligible": 6894,
+    "historical_plausibility_mines": 54,
+    "match_coverage": 0.5598141695702671,
+    "matched_pairs": 964,
+    "qualifying_strata": 6,
+    "ramp_up": 1722,
+    "smd": {
+      "x1": -0.019658093317916587,
+      "x2": 0.01739667542281701,
+      "x3": -0.1240167574812327
+    }
+  },
+  "failed_gates": [
+    6,
+    11,
+    14
+  ],
+  "future_pvalue_computed": false,
+  "future_rd_computed": false,
+  "future_relationship_computed": false,
+  "future_rows_opened": 0,
+  "future_rows_seen_sealed": 0,
+  "future_rr_computed": false,
+  "future_serious_fatal_event_membership_opened": false,
+  "gates": [
+    {
+      "gate": 1,
+      "observed": {
+        "active_issue": 178,
+        "active_research": "US-MSHA-MINE-N01",
+        "checkpoint_id": "CHK-20260929-US-MSHA-MINE-N01-ACTIVE",
+        "last_completed_issue": 177,
+        "last_completed_research": "US-MSHA-MINE-F01",
+        "last_decision": "DEC-266",
+        "updated": "2026-09-29"
+      },
+      "pass": true
+    },
+    {
+      "gate": 2,
+      "observed": {
+        "contract_sha": "1d5f60ac0fca0aa81fad325bfc12e716ef370fec",
+        "issue": 178
+      },
+      "pass": true
+    },
+    {
+      "gate": 3,
+      "observed": {
+        "actual": {
+          "accidents": "db5ac677f235e90f6214e6f26ee2b2994e32f01e18124f5165f05b5f741420b6",
+          "employment": "4fa86737661eeee1aa9eea16b39614aba961a1920abf471761424b9613b1e960",
+          "mines": "3ddec0aebbc3fd4d70feeae0e507fd0ccee4e45516768b1a932e6e185f43fcd7"
+        },
+        "expected": {
+          "accidents": "db5ac677f235e90f6214e6f26ee2b2994e32f01e18124f5165f05b5f741420b6",
+          "employment": "4fa86737661eeee1aa9eea16b39614aba961a1920abf471761424b9613b1e960",
+          "mines": "3ddec0aebbc3fd4d70feeae0e507fd0ccee4e45516768b1a932e6e185f43fcd7"
+        },
+        "http": {
+          "accidents": 200,
+          "employment": 200,
+          "mines": 200
+        }
+      },
+      "pass": true
+    },
+    {
+      "gate": 4,
+      "observed": {
+        "accidents_delimiter": "|",
+        "accidents_headers": [
+          "MINE_ID",
+          "CONTROLLER_ID",
+          "CONTROLLER_NAME",
+          "OPERATOR_ID",
+          "OPERATOR_NAME",
+          "CONTRACTOR_ID",
+          "DOCUMENT_NO",
+          "SUBUNIT_CD",
+          "SUBUNIT",
+          "ACCIDENT_DT",
+          "CAL_YR",
+          "CAL_QTR",
+          "FISCAL_YR",
+          "FISCAL_QTR",
+          "ACCIDENT_TIME",
+          "DEGREE_INJURY_CD",
+          "DEGREE_INJURY",
+          "FIPS_STATE_CD",
+          "UG_LOCATION_CD",
+          "UG_LOCATION",
+          "UG_MINING_METHOD_CD",
+          "UG_MINING_METHOD",
+          "MINING_EQUIP_CD",
+          "MINING_EQUIP",
+          "EQUIP_MFR_CD",
+          "EQUIP_MFR_NAME",
+          "EQUIP_MODEL_NO",
+          "SHIFT_BEGIN_TIME",
+          "CLASSIFICATION_CD",
+          "CLASSIFICATION",
+          "ACCIDENT_TYPE_CD",
+          "ACCIDENT_TYPE",
+          "NO_INJURIES",
+          "TOT_EXPER",
+          "MINE_EXPER",
+          "JOB_EXPER",
+          "OCCUPATION_CD",
+          "OCCUPATION",
+          "ACTIVITY_CD",
+          "ACTIVITY",
+          "INJURY_SOURCE_CD",
+          "INJURY_SOURCE",
+          "NATURE_INJURY_CD",
+          "NATURE_INJURY",
+          "INJ_BODY_PART_CD",
+          "INJ_BODY_PART",
+          "SCHEDULE_CHARGE",
+          "DAYS_RESTRICT",
+          "DAYS_LOST",
+          "TRANS_TERM",
+          "RETURN_TO_WORK_DT",
+          "IMMED_NOTIFY_CD",
+          "IMMED_NOTIFY",
+          "INVEST_BEGIN_DT",
+          "NARRATIVE",
+          "CLOSED_DOC_NO",
+          "COAL_METAL_IND"
+        ],
+        "accidents_member": "Accidents.txt",
+        "employment_delimiter": "|",
+        "employment_headers": [
+          "MINE_ID",
+          "CURR_MINE_NM",
+          "STATE",
+          "SUBUNIT_CD",
+          "SUBUNIT",
+          "CAL_YR",
+          "CAL_QTR",
+          "FISCAL_YR",
+          "FISCAL_QTR",
+          "AVG_EMPLOYEE_CNT",
+          "HOURS_WORKED",
+          "COAL_PRODUCTION",
+          "COAL_METAL_IND"
+        ],
+        "employment_member": "MinesProdQuarterly.txt",
+        "mines_delimiter": "|",
+        "mines_headers": [
+          "MINE_ID",
+          "CURRENT_MINE_NAME",
+          "COAL_METAL_IND",
+          "CURRENT_MINE_TYPE",
+          "CURRENT_MINE_STATUS",
+          "CURRENT_STATUS_DT",
+          "CURRENT_CONTROLLER_ID",
+          "CURRENT_CONTROLLER_NAME",
+          "CURRENT_OPERATOR_ID",
+          "CURRENT_OPERATOR_NAME",
+          "STATE",
+          "BOM_STATE_CD",
+          "FIPS_CNTY_CD",
+          "FIPS_CNTY_NM",
+          "CONG_DIST_CD",
+          "COMPANY_TYPE",
+          "CURRENT_CONTROLLER_BEGIN_DT",
+          "DISTRICT",
+          "OFFICE_CD",
+          "OFFICE_NAME",
+          "ASSESS_CTRL_NO",
+          "PRIMARY_SIC_CD",
+          "PRIMARY_SIC",
+          "PRIMARY_SIC_CD_1",
+          "PRIMARY_SIC_CD_SFX",
+          "SECONDARY_SIC_CD",
+          "SECONDARY_SIC",
+          "SECONDARY_SIC_CD_1",
+          "SECONDARY_SIC_CD_SFX",
+          "PRIMARY_CANVASS_CD",
+          "PRIMARY_CANVASS",
+          "SECONDARY_CANVASS_CD",
+          "SECONDARY_CANVASS",
+          "CURRENT_103I",
+          "CURRENT_103I_DT",
+          "PORTABLE_OPERATION",
+          "PORTABLE_FIPS_ST_CD",
+          "DAYS_PER_WEEK",
+          "HOURS_PER_SHIFT",
+          "PROD_SHIFTS_PER_DAY",
+          "MAINT_SHIFTS_PER_DAY",
+          "NO_EMPLOYEES",
+          "PART48_TRAINING",
+          "LONGITUDE",
+          "LATITUDE",
+          "AVG_MINE_HEIGHT",
+          "MINE_GAS_CATEGORY_CD",
+          "METHANE_LIBERATION",
+          "NO_PRODUCING_PITS",
+          "NO_NONPRODUCING_PITS",
+          "NO_TAILING_PONDS",
+          "PILLAR_RECOVERY_USED",
+          "HIGHWALL_MINER_USED",
+          "MULTIPLE_PITS",
+          "MINERS_REP_IND",
+          "SAFETY_COMMITTEE_IND",
+          "MILES_FROM_OFFICE",
+          "DIRECTIONS_TO_MINE",
+          "NEAREST_TOWN"
+        ],
+        "mines_member": "Mines.txt"
+      },
+      "pass": true
+    },
+    {
+      "gate": 5,
+      "observed": {
+        "eligible_mines": 6894,
+        "threshold": 5000
+      },
+      "pass": true
+    },
+    {
+      "gate": 6,
+      "observed": {
+        "qualifying_strata": 6,
+        "strata_sizes": {
+          "C|Facility": 172,
+          "C|Surface": 252,
+          "C|Underground": 153,
+          "M|Facility": 306,
+          "M|Surface": 5807,
+          "M|Underground": 204
+        },
+        "threshold": 8
+      },
+      "pass": false
+    },
+    {
+      "gate": 7,
+      "observed": {
+        "ramp_up_mines": 1722,
+        "threshold": 1000
+      },
+      "pass": true
+    },
+    {
+      "gate": 8,
+      "observed": {
+        "comparator_mines": 3447,
+        "threshold": 2000
+      },
+      "pass": true
+    },
+    {
+      "gate": 9,
+      "observed": {
+        "construction": "pre-cutoff frozen rows only; Degree 01/02 or Immediate 01/02",
+        "distinct_prior_severe_mines": 123,
+        "prior_window_end": "2026-09-29",
+        "prior_window_start": "2025-09-30"
+      },
+      "pass": true
+    },
+    {
+      "gate": 10,
+      "observed": {
+        "matched_pairs": 964,
+        "threshold": 800
+      },
+      "pass": true
+    },
+    {
+      "gate": 11,
+      "observed": {
+        "coverage": 0.5598141695702671,
+        "exposed": 1722,
+        "matched_pairs": 964,
+        "threshold": 0.6
+      },
+      "pass": false
+    },
+    {
+      "gate": 12,
+      "observed": {
+        "abs_smd": 0.019658093317916587,
+        "smd": -0.019658093317916587,
+        "threshold": 0.1
+      },
+      "pass": true
+    },
+    {
+      "gate": 13,
+      "observed": {
+        "abs_smd": 0.01739667542281701,
+        "smd": 0.01739667542281701,
+        "threshold": 0.1
+      },
+      "pass": true
+    },
+    {
+      "gate": 14,
+      "observed": {
+        "abs_smd": 0.1240167574812327,
+        "smd": -0.1240167574812327,
+        "threshold": 0.1
+      },
+      "pass": false
+    },
+    {
+      "gate": 15,
+      "observed": {
+        "distinct_eligible_serious_fatal_mines": 54,
+        "historical_plausibility_window": [
+          "2026-03-30",
+          "2026-09-29"
+        ],
+        "threshold": 40
+      },
+      "pass": true
+    },
+    {
+      "gate": 16,
+      "observed": {
+        "future_membership_opened": false,
+        "future_rows_seen_but_severity_not_used": 0
+      },
+      "pass": true
+    },
+    {
+      "gate": 17,
+      "observed": {
+        "causal": false,
+        "future_pvalue": false,
+        "future_rd": false,
+        "future_relationship": false,
+        "future_rr": false,
+        "identity_repair": false,
+        "ranking": false
+      },
+      "pass": true
+    },
+    {
+      "gate": 18,
+      "observed": {
+        "contract_sha": "1d5f60ac0fca0aa81fad325bfc12e716ef370fec",
+        "cost_usd": 0,
+        "runner_sha256": "269220ad63bff158daa21e07e030c55db18933ed3cd6de7db288254f382d2846",
+        "source_sha256": {
+          "accidents": "db5ac677f235e90f6214e6f26ee2b2994e32f01e18124f5165f05b5f741420b6",
+          "employment": "4fa86737661eeee1aa9eea16b39614aba961a1920abf471761424b9613b1e960",
+          "mines": "3ddec0aebbc3fd4d70feeae0e507fd0ccee4e45516768b1a932e6e185f43fcd7"
+        }
+      },
+      "pass": true
+    }
+  ],
+  "github_run_id": "36548634237",
+  "incremental_monetary_cost_usd": 0,
+  "issue": 178,
+  "locked_cohort_pairs": 964,
+  "locked_cohort_sha256": "94f7552c02222425c8da27bf7e82c3c0ace785e2e212dadcd18b6bc42a4e9c5a",
+  "operator_controller_name_address_fuzzy_geo_manual_repair_used": false,
+  "pass_count": 15,
+  "ranking_computed": false,
+  "research": "US-MSHA-MINE-N01",
+  "runner_sha256": "269220ad63bff158daa21e07e030c55db18933ed3cd6de7db288254f382d2846",
+  "source_fingerprints": {
+    "accidents": "db5ac677f235e90f6214e6f26ee2b2994e32f01e18124f5165f05b5f741420b6",
+    "employment": "4fa86737661eeee1aa9eea16b39614aba961a1920abf471761424b9613b1e960",
+    "mines": "3ddec0aebbc3fd4d70feeae0e507fd0ccee4e45516768b1a932e6e185f43fcd7"
+  }
+}
