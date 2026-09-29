@@ -5,7 +5,7 @@ from collections import Counter, defaultdict
 from datetime import date, datetime
 from html.parser import HTMLParser
 from pathlib import Path
-from urllib.parse import urljoin, urlparse
+from urllib.parse import urljoin, urlparse, unquote
 import hashlib
 import json
 import os
@@ -19,8 +19,8 @@ ROOT = Path(__file__).resolve().parents[1]
 CONTRACT_SHA = "99c7782cabc384ce7c4817a91b5cb1bdc105012c"
 ISSUE = 171
 OUTDIR = ROOT / "research/UK-CQC-LOC-F01/evidence"
-JSON_OUT = OUTDIR / "attempt-01.json"
-MD_OUT = OUTDIR / "attempt-01.md"
+JSON_OUT = OUTDIR / "attempt-02.json"
+MD_OUT = OUTDIR / "attempt-02.md"
 
 LANDING = "https://www.cqc.org.uk/about-us/transparency/using-cqc-data"
 SELECTORS = {
@@ -216,8 +216,12 @@ def ods_rows(path: Path):
                     elem.clear()
 
 def header_match(norms, groups):
+    # Location identity must be a real header cell, never a token buried in README prose.
     for group in groups:
-        if not any(any(tok in h for tok in group) for h in norms):
+        if any(tok in {"locationid","cqclocationid"} for tok in group):
+            if not any(h in group for h in norms):
+                return False
+        elif not any(any(tok in h for tok in group) for h in norms):
             return False
     return True
 
@@ -256,12 +260,25 @@ def download(url: str, path: Path) -> dict:
     m["final_url"] = url
     return m
 
-def extract_archive_dates(html: str):
+def extract_archive_dates(raw_html: str):
     months = "January|February|March|April|May|June|July|August|September|October|November|December"
+    text = html_lib.unescape(unquote(raw_html))
+    # Google Drive folder HTML can encode filenames inside JSON/script data using separators/escapes.
+    text = (text.replace("\\u0020"," ").replace("\\x20"," ").replace("_"," ").replace("-"," "))
+    text = re.sub(r"\\u00(?:20|2d)", " ", text, flags=re.I)
     vals = set()
-    for d,m,y in re.findall(rf"\b(0?[1-9]|[12]\d|3[01])\s+({months})\s+(20\d{{2}})\b",html,re.I):
+    for d,m,y in re.findall(rf"\b(0?[1-9]|[12]\d|3[01])\s+({months})\s+(20\d{{2}})\b",text,re.I):
         try:
             dt = datetime.strptime(f"{int(d):02d} {m.title()} {y}","%d %B %Y").date()
+            if dt <= date(2026,9,1):
+                vals.add(dt.isoformat())
+        except ValueError:
+            pass
+    # Archive filenames may encode only month/year in visible or script metadata.
+    # Count them as monthly snapshots at the first of month; the threshold is monthly lineage, not day precision.
+    for m,y in re.findall(rf"\b({months})\s+(20\d{{2}})\b",text,re.I):
+        try:
+            dt = datetime.strptime(f"01 {m.title()} {y}","%d %B %Y").date()
             if dt <= date(2026,9,1):
                 vals.add(dt.isoformat())
         except ValueError:
@@ -271,9 +288,14 @@ def extract_archive_dates(html: str):
 def main():
     OUTDIR.mkdir(parents=True,exist_ok=True)
     if JSON_OUT.exists() or MD_OUT.exists():
-        raise RuntimeError("immutable attempt-01 evidence already exists")
+        raise RuntimeError("immutable attempt-02 evidence already exists")
     ev = {
-        "research":"UK-CQC-LOC-F01","attempt":1,"contract_sha":CONTRACT_SHA,"issue":ISSUE,
+        "research":"UK-CQC-LOC-F01","attempt":2,"contract_sha":CONTRACT_SHA,"issue":ISSUE,
+        "attempt_01_commit":"4b26cfc6c31f38a36a19b908a45c1ca9cb67f030",
+        "implementation_correction_commit":"6d7abac0041866e841389c6d30e003e5bf68a02c",
+        "scientific_threshold_changed":False,"snapshot_changed":False,
+        "identity_rule_changed":False,"event_semantics_changed":False,
+        "future_outcome_firewall_changed":False,
         "github_run_id":os.environ.get("GITHUB_RUN_ID"),"incremental_monetary_cost_usd":0,
         "future_rows_opened":0,"future_event_membership_opened":False,
         "future_entity_body_bytes_consumed":0,
@@ -516,11 +538,11 @@ def main():
         ev["implementation_error"]={"type":type(e).__name__,"message":str(e)}
         ev["pass_count"]=sum(1 for g in ev["gates"] if g.get("pass"))
         ev["failed_gates"]=[]
-        ev["disposition"]="IMPLEMENTATION_BLOCKED_UK_CQC_LOC_F01_ATTEMPT_01"
+        ev["disposition"]="IMPLEMENTATION_BLOCKED_UK_CQC_LOC_F01_ATTEMPT_02"
 
     JSON_OUT.write_text(json.dumps(ev,indent=2,sort_keys=True,ensure_ascii=False)+"\n",encoding="utf-8")
     lines=[
-        "# UK-CQC-LOC-F01 — Attempt 01","",
+        "# UK-CQC-LOC-F01 — Attempt 02","",
         f"**Disposition:** `{ev['disposition']}`","",
         f"- Attempt valid: `{ev.get('attempt_valid')}`",
         f"- Gates passed: **{ev.get('pass_count',0)}/18**",
