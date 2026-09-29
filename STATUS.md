@@ -1,25 +1,21 @@
 ---
-checkpoint_id: CHK-20260930-PORTFOLIO-R48-TERMINAL-ID-CORRECTED
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20260930-US-EIA-RET-F01-ACTIVE
+active_issue: 184
+active_research: US-EIA-RET-F01
 last_completed_issue: 183
 last_completed_research: PORTFOLIO-R48
-last_decision: DEC-278
+last_decision: DEC-279
 updated: 2026-09-30
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `PORTFOLIO_R48_SELECTED_US_EIA_RET_001__F01_CONTRACT_REQUIRED`
+**State / 상태:** `US_EIA_RET_F01_ACTIVE__EXACT_GENERATOR_MONTHLY_LINEAGE_GATE`
 
-PORTFOLIO-R48 is terminal. Immutable scorecard `6fc8132426cf10bd54baf195c6d915884ccdf7ea` selected the EIA generator-retirement concept at **43/45**. A post-terminal repository re-read found that the scorecard label `US-EIA-GEN-001 / US-EIA-GEN-F01` was already occupied by the distinct R36 commissioning-slippage branch. `DEC-278` corrects identifiers only; science, score and rank are unchanged.
-
-Canonical retirement identifiers:
-- candidate: `US-EIA-RET-001`
-- next gate: `US-EIA-RET-F01`
+US-EIA-RET-F01 is active under pre-Issue contract `cce869991b94d8c1ef21c0b3dff401cfd57b0fe3`. The branch is distinct from the terminal R36 `US-EIA-GEN-F01` commissioning-slippage research.
 
 ## Exact next action / 정확한 다음 행동
 
-Freeze `US-EIA-RET-F01` before Issue creation. Preserve the R36 `US-EIA-GEN-F01` branch unchanged.
+Execute the immutable 18-gate structural runner over exactly the twelve official EIA-860M months September 2025 through August 2026. Read row bodies only from Operable/source-equivalent and Retired sheets; keep Planned/Proposed, EIA-923 row data and September-2026-or-later 860M files sealed.
 
 Incremental monetary cost remains **0 USD**.
