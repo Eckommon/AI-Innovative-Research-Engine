@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260929-PORTFOLIO-R46-ACTIVE",
-  "active_issue": 179,
-  "active_research": "PORTFOLIO-R46",
-  "last_completed_issue": 178,
-  "last_completed_research": "US-MSHA-MINE-N01",
-  "last_decision": "DEC-268",
+  "checkpoint_id": "CHK-20260929-PORTFOLIO-R46-TERMINAL",
+  "active_issue": "none",
+  "active_research": "NONE",
+  "last_completed_issue": 179,
+  "last_completed_research": "PORTFOLIO-R46",
+  "last_decision": "DEC-269",
   "updated": "2026-09-29"
 }
