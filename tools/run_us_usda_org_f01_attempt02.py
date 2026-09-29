@@ -439,7 +439,7 @@ def main():
         ev["implementation_error"]={"type":type(e).__name__,"message":str(e)}
         ev["pass_count"]=sum(1 for x in ev["gates"] if x.get("pass"))
         ev["failed_gates"]=[]
-        ev["disposition"]="IMPLEMENTATION_BLOCKED_US_USDA_ORG_F01_ATTEMPT_01"
+        ev["disposition"]="IMPLEMENTATION_BLOCKED_US_USDA_ORG_F01_ATTEMPT_02"
 
     JSON_OUT.write_text(json.dumps(ev,indent=2,sort_keys=True,ensure_ascii=False,default=str)+"\n",encoding="utf-8")
     lines=["# US-USDA-ORG-F01 — Attempt 02","",f"**Disposition:** `{ev['disposition']}`","",
