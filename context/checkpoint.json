@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260929-US-MSHA-MINE-F01-TERMINAL",
-  "active_issue": "none",
-  "active_research": "NONE",
+  "checkpoint_id": "CHK-20260929-US-MSHA-MINE-N01-ACTIVE",
+  "active_issue": 178,
+  "active_research": "US-MSHA-MINE-N01",
   "last_completed_issue": 177,
   "last_completed_research": "US-MSHA-MINE-F01",
-  "last_decision": "DEC-265",
+  "last_decision": "DEC-266",
   "updated": "2026-09-29"
 }
