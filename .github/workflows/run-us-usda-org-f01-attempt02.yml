@@ -1,0 +1,81 @@
+name: Run US-USDA-ORG-F01 Immutable Gate Attempt 02
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/run-us-usda-org-f01-attempt02.yml'
+  workflow_dispatch:
+  issues:
+    types: [edited]
+permissions:
+  contents: write
+  issues: read
+jobs:
+  usda-org-f01-attempt02:
+    if: github.event_name != 'issues' || github.event.issue.number == 180
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify frozen authorization and Attempt 02 slot
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git cat-file -e d1ccc1e745c0881a64f8cf7e2ab481fb69215adc^{commit}
+          git cat-file -e 3b352945fb8494cf89a0e937ae32ee5ffae48044^{commit}
+          git cat-file -e e525fa024bf755968e7d504491fdf6bfeb4c331a^{commit}
+          gh issue view 180 --repo '${{ github.repository }}' --json state --jq '.state' | grep -qx OPEN
+          test -e research/US-USDA-ORG-F01/evidence/attempt-01.json
+          test ! -e research/US-USDA-ORG-F01/evidence/attempt-02.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          cp=json.loads(Path('context/checkpoint.json').read_text())
+          assert cp['checkpoint_id']=='CHK-20260929-US-USDA-ORG-F01-ACTIVE'
+          assert cp['active_issue']==180
+          assert cp['active_research']=='US-USDA-ORG-F01'
+          assert cp['last_decision']=='DEC-270'
+          a1=json.loads(Path('research/US-USDA-ORG-F01/evidence/attempt-01.json').read_text())
+          assert a1['attempt_valid'] is False
+          assert a1['disposition']=='IMPLEMENTATION_BLOCKED_US_USDA_ORG_F01_ATTEMPT_01'
+          assert a1['implementation_error']['message']=='PUBLIC_EXPORT_NOT_RESOLVED_BY_OFFICIAL_UI'
+          assert a1['future_suspended_revoked_membership_opened'] is False
+          corr=Path('research/US-USDA-ORG-F01/IMPLEMENTATION_CORRECTION_02.md').read_text()
+          assert 'scientific_threshold_changed: false' in corr
+          assert 'identity_rule_changed: false' in corr
+          assert 'future_outcome_firewall_changed: false' in corr
+          PY
+      - name: Install deterministic browser and parsers
+        run: |
+          python -m pip install --disable-pip-version-check --no-input             'playwright==1.55.0' 'openpyxl==3.1.5' 'pypdf==6.1.1' 'requests==2.32.5'
+          python -m playwright install --with-deps chromium
+      - name: Execute frozen Attempt 02
+        env:
+          USDA_ORG_F01_BOUND: '1'
+          USDA_ORG_F01_CONTRACT_SHA: 'd1ccc1e745c0881a64f8cf7e2ab481fb69215adc'
+        run: python tools/run_us_usda_org_f01_attempt02.py
+      - name: Verify scientific and cost firewalls
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          e=json.loads(Path('research/US-USDA-ORG-F01/evidence/attempt-02.json').read_text())
+          assert e['attempt']==2
+          assert e['relationship_computed'] is False
+          assert e['prediction_computed'] is False
+          assert e['ranking_computed'] is False
+          assert e['causal_claim_made'] is False
+          assert e['identity_repair_used'] is False
+          assert e['prohibited_precursor_exposure_computed'] is False
+          assert e['incremental_monetary_cost_usd']==0
+          print(e['disposition'],e.get('pass_count'),e.get('failed_gates'))
+          PY
+      - name: Commit immutable Attempt 02 evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-USDA-ORG-F01/evidence/attempt-02.json research/US-USDA-ORG-F01/evidence/attempt-02.md
+          git commit -m 'Record US-USDA-ORG-F01 immutable attempt 02'
+          git push origin HEAD:main
