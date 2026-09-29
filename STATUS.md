@@ -1,21 +1,21 @@
 ---
-checkpoint_id: CHK-20260929-PORTFOLIO-R44-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20260929-EU-EMA-MA-F01-ACTIVE
+active_issue: 175
+active_research: EU-EMA-MA-F01
 last_completed_issue: 174
 last_completed_research: PORTFOLIO-R44
-last_decision: DEC-259
+last_decision: DEC-260
 updated: 2026-09-29
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `PORTFOLIO_R44_SELECTED_EU_EMA_MA_001__F01_CONTRACT_REQUIRED`
+**State / 상태:** `EU_EMA_MA_F01_ACTIVE__EXACT_PRODUCT_WITHDRAWAL_SUSPENSION_GATE`
 
-PORTFOLIO-R44 is terminal. Immutable scorecard `8073c1bc62cd3aff02ce0c6ef860784a1d4d37b9` selected `EU-EMA-MA-001` at **40/45** for exactly one separate outcome-blind F01. No candidate future-event membership was opened.
+EU-EMA-MA-F01 is active under pre-Issue contract `215cd9dd74a358e412a86de5d41a039c2f8186cb`. Human centrally authorised medicines are the focal population. Future withdrawal/suspension membership from 2026-09-30 onward remains sealed.
 
 ## Exact next action / 정확한 다음 행동
 
-Freeze `EU-EMA-MA-F01` before Issue creation. The F01 must test exact EMA product identity, current official medicine-data source/schema, historical withdrawal/suspension date and reason semantics, event-class separation, support/cardinality, reproducibility and a future-event firewall.
+Execute the immutable 18-gate structural runner: resolve official EMA medicine JSON/table data, validate exact EMA product identity/support, historical marketing-authorisation withdrawal date/reason semantics and event-class separation, then enforce the future-event firewall.
 
 Incremental monetary cost remains **0 USD**.
