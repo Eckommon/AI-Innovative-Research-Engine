@@ -1,21 +1,21 @@
 ---
-checkpoint_id: CHK-20260930-US-EPA-SDWIS-F01-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20260930-PORTFOLIO-R48-ACTIVE
+active_issue: 183
+active_research: PORTFOLIO-R48
 last_completed_issue: 182
 last_completed_research: US-EPA-SDWIS-F01
-last_decision: DEC-275
+last_decision: DEC-276
 updated: 2026-09-30
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `US_EPA_SDWIS_F01_HOLD__PORTFOLIO_RESELECTION_REQUIRED`
+**State / 상태:** `PORTFOLIO_R48_ACTIVE__LONGITUDINAL_FIRST_RESELECTION`
 
-US-EPA-SDWIS-F01 is terminal scientific HOLD under its unchanged pre-Issue 18-gate contract. Canonical Attempt 01 / Run `36626153762` passed **15/18** gates and failed gates 7, 9 and 13. Gate 9 is independently decisive because the official current national ZIP contains only one submission quarter, 2026Q2, below the frozen minimum of eight.
+PORTFOLIO-R48 is active under pre-Issue contract `5a7d40c57ef1b8401e9761e821306b36fc857691`. Frozen candidates are EIA generator retirement, SEC adviser full withdrawal, EPA RCRA formal enforcement and FMCSA reportable crash. Candidate future-event memberships remain unopened.
 
 ## Exact next action / 정확한 다음 행동
 
-Return to independent outcome-blind Stage-0 portfolio reselection. Do not rescue the exact SDWIS design by adding historical archives after observation, lowering identity/join thresholds, repairing PWSIDs or opening a later quarterly refresh.
+Complete current-source plus explicit historical-lineage revalidation, canonical-overlap review and bounded literature overlap review; then persist exactly one immutable /45 scorecard and select at most one outcome-blind F01.
 
 Incremental monetary cost remains **0 USD**.
