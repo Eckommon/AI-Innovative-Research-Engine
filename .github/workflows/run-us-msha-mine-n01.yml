@@ -1,0 +1,74 @@
+name: Run US-MSHA-MINE-N01 Cohort Lock
+on:
+  workflow_dispatch:
+  issues:
+    types: [edited]
+permissions:
+  contents: write
+  issues: read
+jobs:
+  msha-mine-n01:
+    if: github.event_name != 'issues' || github.event.issue.number == 178
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify prospective authorization and immutable evidence slot
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git cat-file -e 1d5f60ac0fca0aa81fad325bfc12e716ef370fec^{commit}
+          git cat-file -e 3d2756ae172845707e189e2181534a119f435d7a^{commit}
+          gh issue view 178 --repo '${{ github.repository }}' --json state --jq '.state' | grep -qx OPEN
+          test ! -e research/US-MSHA-MINE-N01/evidence/attempt-01.json
+          test ! -e research/US-MSHA-MINE-N01/evidence/locked-cohort.csv
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          cp=json.loads(Path('context/checkpoint.json').read_text())
+          assert cp['checkpoint_id']=='CHK-20260929-US-MSHA-MINE-N01-ACTIVE'
+          assert cp['active_issue']==178
+          assert cp['active_research']=='US-MSHA-MINE-N01'
+          assert cp['last_decision']=='DEC-266'
+          f01=json.loads(Path('research/US-MSHA-MINE-F01/evidence/attempt-02.json').read_text())
+          assert f01['pass_count']==18
+          assert f01['future_serious_fatal_event_membership_opened'] is False
+          assert f01['source_fingerprints']['mines']=='3ddec0aebbc3fd4d70feeae0e507fd0ccee4e45516768b1a932e6e185f43fcd7'
+          assert f01['source_fingerprints']['employment']=='4fa86737661eeee1aa9eea16b39614aba961a1920abf471761424b9613b1e960'
+          assert f01['source_fingerprints']['accidents']=='db5ac677f235e90f6214e6f26ee2b2994e32f01e18124f5165f05b5f741420b6'
+          PY
+      - name: Execute frozen pre-outcome cohort lock
+        env:
+          MSHA_N01_BOUND: '1'
+          MSHA_N01_CONTRACT_SHA: '1d5f60ac0fca0aa81fad325bfc12e716ef370fec'
+        run: python tools/run_us_msha_mine_n01.py
+      - name: Verify outcome firewall and evidence
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          e=json.loads(Path('research/US-MSHA-MINE-N01/evidence/attempt-01.json').read_text())
+          assert e['future_serious_fatal_event_membership_opened'] is False
+          assert e['future_relationship_computed'] is False
+          assert e['future_rr_computed'] is False
+          assert e['future_rd_computed'] is False
+          assert e['future_pvalue_computed'] is False
+          assert e['ranking_computed'] is False
+          assert e['causal_claim_made'] is False
+          assert e['incremental_monetary_cost_usd']==0
+          if e.get('attempt_valid'):
+              assert Path('research/US-MSHA-MINE-N01/evidence/locked-cohort.csv').exists()
+          print(e['disposition'],e.get('pass_count'),e.get('failed_gates'),e.get('locked_cohort_pairs'))
+          PY
+      - name: Commit immutable cohort-lock evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-MSHA-MINE-N01/evidence/attempt-01.json research/US-MSHA-MINE-N01/evidence/attempt-01.md
+          if test -e research/US-MSHA-MINE-N01/evidence/locked-cohort.csv; then
+            git add research/US-MSHA-MINE-N01/evidence/locked-cohort.csv
+          fi
+          git commit -m 'Record US-MSHA-MINE-N01 immutable cohort lock attempt 01'
+          git push origin HEAD:main
