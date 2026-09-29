@@ -1,21 +1,21 @@
 ---
-checkpoint_id: CHK-20260929-UK-CQC-LOC-F01-ACTIVE
-active_issue: 171
-active_research: UK-CQC-LOC-F01
-last_completed_issue: 170
-last_completed_research: PORTFOLIO-R42
-last_decision: DEC-252
+checkpoint_id: CHK-20260929-UK-CQC-LOC-F01-TERMINAL
+active_issue: none
+active_research: NONE
+last_completed_issue: 171
+last_completed_research: UK-CQC-LOC-F01
+last_decision: DEC-253
 updated: 2026-09-29
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `UK_CQC_LOC_F01_ACTIVE__EXACT_LOCATION_REGISTRATION_END_GATE`
+**State / 상태:** `UK_CQC_LOC_F01_HOLD__PORTFOLIO_RESELECTION_REQUIRED`
 
-UK-CQC-LOC-F01 is active under pre-Issue contract `99c7782cabc384ce7c4817a91b5cb1bdc105012c`. The frozen historical baseline is the official CQC 01-September-2026 care-directory-with-filters, care-directory-with-ratings and deactivated-locations files. Future inactive/deactivated membership after 2026-09-28 remains sealed.
+UK-CQC-LOC-F01 is terminal HOLD under its unchanged pre-Issue 18-gate contract. Corrected Attempt 02 establishes decisive failures in the frozen exact-Location-ID syntax/support gates while future inactive/deactivated membership remains unopened.
 
 ## Exact next action / 정확한 다음 행동
 
-Execute the immutable 18-gate structural runner. It must validate official file access, exact Location-ID support, ratings/deactivated exact links, end-date support, historical archive lineage, and source-native administrative-transition/lineage semantics. Any valid empirical gate failure is terminal HOLD.
+Return to independent outcome-blind Stage-0 portfolio reselection. Do not rescue the CQC branch by permitting punctuation after observation, lowering the frozen support thresholds, substituting Provider ID, using name/address/postcode/fuzzy/geospatial/manual repair, or equating deactivated membership with closure.
 
 Incremental monetary cost remains **0 USD**.
