@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260929-PORTFOLIO-R44-TERMINAL",
-  "active_issue": "none",
-  "active_research": "NONE",
+  "checkpoint_id": "CHK-20260929-EU-EMA-MA-F01-ACTIVE",
+  "active_issue": 175,
+  "active_research": "EU-EMA-MA-F01",
   "last_completed_issue": 174,
   "last_completed_research": "PORTFOLIO-R44",
-  "last_decision": "DEC-259",
+  "last_decision": "DEC-260",
   "updated": "2026-09-29"
 }
