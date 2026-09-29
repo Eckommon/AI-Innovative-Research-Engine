@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260930-PORTFOLIO-R47-ACTIVE",
-  "active_issue": 181,
-  "active_research": "PORTFOLIO-R47",
-  "last_completed_issue": 180,
-  "last_completed_research": "US-USDA-ORG-F01",
-  "last_decision": "DEC-272",
+  "checkpoint_id": "CHK-20260930-PORTFOLIO-R47-TERMINAL",
+  "active_issue": "none",
+  "active_research": "NONE",
+  "last_completed_issue": 181,
+  "last_completed_research": "PORTFOLIO-R47",
+  "last_decision": "DEC-273",
   "updated": "2026-09-30"
 }
