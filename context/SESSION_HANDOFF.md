@@ -1,24 +1,24 @@
 ---
-checkpoint_id: CHK-20260928-PORTFOLIO-R42-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20260929-UK-CQC-LOC-F01-ACTIVE
+active_issue: 171
+active_research: UK-CQC-LOC-F01
 last_completed_issue: 170
 last_completed_research: PORTFOLIO-R42
-last_decision: DEC-251
-updated: 2026-09-28
+last_decision: DEC-252
+updated: 2026-09-29
 ---
 
 # Session Handoff / 세션 인계
 
-`PORTFOLIO_R42_SELECTED_UK_CQC_LOC_001__F01_CONTRACT_REQUIRED`
+`UK_CQC_LOC_F01_ACTIVE__EXACT_LOCATION_REGISTRATION_END_GATE`
 
-- Issue #170 completed.
-- Frozen R42 contract: `3defb5494bee758cf671ef358599a4e50c60161c`.
-- Revalidation: `b74d267ab7c006062004e470abcb18cc7fef6c0f`.
-- Immutable scorecard: `ed09c81b9c744ad1f7038a7dc9848447fd9c1bff`.
-- CQC 40 and BSEE 40 tied; frozen deterministic-join tie-break selected CQC 5 > 3.
-- SAM 38; Ofsted/GIAS 37.
-- Candidate future-event memberships opened: 0.
-- Next: freeze `UK-CQC-LOC-F01` before Issue creation.
-- Core falsification: deactivated/archived location must not be equated with service closure unless source-native semantics separate re-registration/legal-structure/address changes.
+- Issue #171 open.
+- Pre-Issue contract: `99c7782cabc384ce7c4817a91b5cb1bdc105012c`.
+- Activation: `DEC-252`.
+- Frozen baseline: CQC 01-Sep-2026 filters / ratings / deactivated files.
+- Primary identity: exact CQC Location ID; no case repair, provider-ID substitution, name/address/postcode/fuzzy/geo/manual reconciliation.
+- Future inactive/deactivated source after 2026-09-28: sealed.
+- Historical deactivated rows authorized only for schema/cardinality/semantic support.
+- Critical semantic gate: source-native transition/lineage must separate at least one administrative re-registration/change class from cessation-like registration ending; deactivated membership alone is insufficient.
+- Next: immutable 18-gate empirical runner.
 - Cost: 0 USD.
