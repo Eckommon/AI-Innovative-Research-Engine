@@ -1,0 +1,268 @@
+{
+  "attempt": 2,
+  "attempt_valid": false,
+  "causal_claim_made": false,
+  "contract_sha": "d1ccc1e745c0881a64f8cf7e2ab481fb69215adc",
+  "disposition": "IMPLEMENTATION_BLOCKED_US_USDA_ORG_F01_ATTEMPT_02",
+  "export_discovery": {
+    "after_reset_text": " United States Department of Agriculture\nAgricultural Marketing Service\nLog In\nRegister\nHome\nSearch\nReports\nTrade Partners\nContact Us   About  \nWelcome to the Organic INTEGRITY Database!\nFind a specific certified organic farm or business, or search for an operation with specific characteristics. Listings come from USDA and Trade Partner-Accredited Certifying Agents. Only certified operations can sell, label or represent products as organic, unless exempt or excluded from certification.\n\nReset Search Filters\n \nExport to Excel\nProgram\tOperation\tCertifier\tInfo\tStatus\tCity\tState/Province\tCountry\tCertified Products\n\n\t\n\t\n\t\n\t\n Certified\n\t\n\t\n\t\n\t\nUSDA-NOP\t\n\"ARATANIA\" LLC\n\t[STC] Sertifikacijas un testesanas centrs\t\tCertified\t\t\tUkraine\tHANDLING: Other Grains, Pastas and Cereals: Organic wheat, Organic corn (maize), Organic barley, Organic oats, Organic rye, Organic sunflower seed, Organic rapeseed, Organic soybean, Organic millet\nUSDA-NOP\t\n\"BREDUN\" LP\n\t[EKOAGROS] Ekoagros\t\tCertified\t\t\tKazakhstan\tCROPS: Other: Lentils, Perennial grass., Wheat, Barley, Rapeseeds, Brown flaxseeds, Sunflower seeds, Peas.\nUSDA-NOP\t\n\"GALLARCAS\" SPR DE RL\n\t[BAC] BioAgriCert\t\tCertified\tSan Pedro Tapanatepec\tSan Pedro Tapanatepec\tMexico\tHANDLING: Other: MANGO\nUSDA-NOP\t\n\"HALILOGULLARI GRUP TEKSTIL INSAAT PETROL KIMYA GIDA OTOMOTIV NAKLIYE TARIM URUNLERI TAAHHUT SANAYI VE DIS TICARET LIMITED SIRKE\n\t[EKOAGROS] Ekoagros\t\tCertified\tSilopi\tSirnak\tTurkey\tCROPS: Other: Cotton\nUSDA-NOP\t\n\"Peresvet\" LLC\n\t[QIMA] QIMA (formerly IBD Certifications)\t\tCertified\tUssuriysk\tPrimorsky Krai\tRussian Federation\tHANDLING: Preservatives/Extracts/Flavors: Concentrates (Concentrated soybean protein), Extracts (Wheat starch), Extracts (Pea fiber), Extracts (Pea protein), Extracts (Pea starch), Extracts (Potato starch), Extracts (Rice flour), Extracts (Rice protein), Extracts (Soybean protein drawing), Extracts (Soybean protein isolate), Extracts (Soybean protein powder), Extracts (Texturedsoybean protein), Flours and Meals (Wheat flour), Flours and Meals (Corn flour), Flours and Meals (Oat flour), Flours and Meals (Brown rice flour), Flours and Meals (Buckwheat flour); Other Grains, Pastas and Cereals: Barley, Corn cobs, Millet, Oats, Oats (Oat kernel), Quinoa, Quinoa (Quinoa kernel), Rice, Rice (Paddy), Rice (Black paddy), Rice (Black rice), Rice (Brown rice), Rice (Glutinous paddy), Rice (Glutinous rice), Rice (Rice bran), Roasted corn, Sesame, Sorghum, Sticky hulled millet (also called hulled sticky millet, hulled broomcorn millet), Sticky millet (also called: broomcorn millet), Wheat, Wheat (Wheat starch), Wheat (Buckwheat), Wheat (Buckwheat kernel), Wheat (Roasted buckwheat kernel); Oils & Oleoresins: Oils (Flaxseed oil (also called raw flax oil, linseed oil )), Oils (Rapeseed oil), Oils (Raw flax oil), Oils (Rice bran oil), Oils (Sesame oil), Oils (Soybean oil(crude)), Oils (Sunflower oil); Nuts/Seeds: Pine Nuts (Pinenut kernel), Seeds (Rapeseed), Seeds (Sunflower seed), Seeds (Sunflowerseeds kernel), Seeds (Black sesame), Seeds (Borage seed), Seeds (Evening primrose seed), Seeds (Flax seed), Seeds (Perilla seeds), Seeds (Watermelon seed), Walnuts, Walnuts (Walnut kernels); Fruits/Vegetables: Beans (Adzuki bean (also called- small red bean)), Beans (Black kidney bean(also called-black turtle bean)), Beans (Black soybean with green kernels), Beans (Black soybean with yellow kernels (also called - black soybean)), Beans (Chickpea (also called - garbanzo)), Beans (Cowpea), Beans (Double green bean (also called -green soybean,edamame bean)), Beans (Green mung bean (also called mung bean)), Beans (Lentil), Beans (Mung bean hulled), Beans (Pea), Beans (Pinto bean (also called light speckled kidney bean)), Beans (Red kidney bean (also called dark red kidney bean)), Beans (Soybean), Beans (Soybean hulled), Beans (Soybean hulls), Beans (White kidney bean), Beans (Roasted soybean), Berries (Goji berries), Vegetables (Sweet potato), Vegetables (Potato); Animal Feed: Livestock Feed (Alfalfa), Livestock Feed (Corn (also called maize)), Livestock Feed (Corn chop), Livestock Feed (Cracked corn), Livestock Feed (Blended feed pellets), Livestock Feed (Corn germ cake), Livestock Feed (Corn gluten meal), Livestock Feed (Flaxseed cake (also called flaxseed meal,flaxseed expeller,flax cake, flax meal, flax expeller)), Livestock Feed (Puffed soybean), Livestock Feed (Rapeseed meal (also called rapeseed cake,rapeseed expeller)), Livestock Feed (Rice bran meal), Livestock Feed (Sesame meal (also called sesame cake,seseame expeller)), Livestock Feed (Soybean crude lecithin (alsocalled: crude soybean lecithin)), Livestock Feed (Soybean meal (also called soybean cake,soybean expeller)), Livestock Feed (Soybean powder), Livestock Feed (Soybean protein powder), Livestock Feed (Squashed corn), Livestock Feed (Sunflower meal (also called sunflower cake,sunflower expeller)), Livestock Feed (Wheat bran), Livestock Feed (Wheat gluten meal)\nUSDA-NOP\t\n\"Peresvet\" LLC (Harori 1 Farm)\n\t[QIMA] QIMA (formerly IBD Certifications)\t\tCertified\tUssuriysk\tPrimorsky Krai\tRussian Federation\tCROPS: Fruit Vegetables: Soybeans; Field/Forageable: Wheat\nUSDA-NOP\t\n\"Peresvet\" LLC (Kirov Farm)\n\t[QIMA] QIMA (formerly IBD Certifications)\t\tCertified\t\tPrimorsky Krai\tRussian Federation\tCROPS: Field/Forageable: Corn (Maize), Soybeans, Wheat\nUSDA-NOP\t\n\"Peresvet\" LLC (Oct1 Farm)\n\t[QIMA] QIMA (formerly IBD Certifications)\t\tCertified\tUssuriysk\tPrimorsky Krai\tRussian Federation\tCROPS: Field/Forageable: Corn (Maize), Soybeans\nUSDA-NOP\t\n\"Peresvet\" LLC (Oct2 Farm)\n\t[QIMA] QIMA (formerly IBD Certifications)\t\tCertified\tUssuriysk\tPrimorsky Krai\tRussian Federation\tCROPS: Fruit Vegetables: Soybeans; Field/Forageable: Wheat\nUSDA-NOP\t\n(CORPORATION) BADA MYEONGGA\n\t[BAC] BioAgriCert\t\tCertified\tWando-eup\tWando-gun\tKorea (the Republic of)\tHANDLING: Other: Roasted Laver, Roasted Seaweed, Roasted Seaweed Snack, Seasoned Laver\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n...\n 10\nitems per page\n1 - 10 of 50662 items\n Return to top\nAskUSDA\nPrivacy Policy\nUSDA.gov\nUSA.gov\nWhiteHouse.gov\nFOIA\nAccessibility Statement\nNon-­Discrimination Statement\nInformation Quality\nPlain Writing\nContact USDA",
+    "downloaded": false,
+    "initial_text": " United States Department of Agriculture\nAgricultural Marketing Service\nLog In\nRegister\nHome\nSearch\nReports\nTrade Partners\nContact Us   About  \nWelcome to the Organic INTEGRITY Database!\nFind a specific certified organic farm or business, or search for an operation with specific characteristics. Listings come from USDA and Trade Partner-Accredited Certifying Agents. Only certified operations can sell, label or represent products as organic, unless exempt or excluded from certification.\n\nReset Search Filters\n \nExport to Excel\nProgram\tOperation\tCertifier\tInfo\tStatus\tCity\tState/Province\tCountry\tCertified Products\n\n\t\n\t\n\t\n\t\n Certified\n\t\n\t\n\t\n\t\nUSDA-NOP\t\n\"ARATANIA\" LLC\n\t[STC] Sertifikacijas un testesanas centrs\t\tCertified\t\t\tUkraine\tHANDLING: Other Grains, Pastas and Cereals: Organic wheat, Organic corn (maize), Organic barley, Organic oats, Organic rye, Organic sunflower seed, Organic rapeseed, Organic soybean, Organic millet\nUSDA-NOP\t\n\"BREDUN\" LP\n\t[EKOAGROS] Ekoagros\t\tCertified\t\t\tKazakhstan\tCROPS: Other: Lentils, Perennial grass., Wheat, Barley, Rapeseeds, Brown flaxseeds, Sunflower seeds, Peas.\nUSDA-NOP\t\n\"GALLARCAS\" SPR DE RL\n\t[BAC] BioAgriCert\t\tCertified\tSan Pedro Tapanatepec\tSan Pedro Tapanatepec\tMexico\tHANDLING: Other: MANGO\nUSDA-NOP\t\n\"HALILOGULLARI GRUP TEKSTIL INSAAT PETROL KIMYA GIDA OTOMOTIV NAKLIYE TARIM URUNLERI TAAHHUT SANAYI VE DIS TICARET LIMITED SIRKE\n\t[EKOAGROS] Ekoagros\t\tCertified\tSilopi\tSirnak\tTurkey\tCROPS: Other: Cotton\nUSDA-NOP\t\n\"Peresvet\" LLC\n\t[QIMA] QIMA (formerly IBD Certifications)\t\tCertified\tUssuriysk\tPrimorsky Krai\tRussian Federation\tHANDLING: Preservatives/Extracts/Flavors: Concentrates (Concentrated soybean protein), Extracts (Wheat starch), Extracts (Pea fiber), Extracts (Pea protein), Extracts (Pea starch), Extracts (Potato starch), Extracts (Rice flour), Extracts (Rice protein), Extracts (Soybean protein drawing), Extracts (Soybean protein isolate), Extracts (Soybean protein powder), Extracts (Texturedsoybean protein), Flours and Meals (Wheat flour), Flours and Meals (Corn flour), Flours and Meals (Oat flour), Flours and Meals (Brown rice flour), Flours and Meals (Buckwheat flour); Other Grains, Pastas and Cereals: Barley, Corn cobs, Millet, Oats, Oats (Oat kernel), Quinoa, Quinoa (Quinoa kernel), Rice, Rice (Paddy), Rice (Black paddy), Rice (Black rice), Rice (Brown rice), Rice (Glutinous paddy), Rice (Glutinous rice), Rice (Rice bran), Roasted corn, Sesame, Sorghum, Sticky hulled millet (also called hulled sticky millet, hulled broomcorn millet), Sticky millet (also called: broomcorn millet), Wheat, Wheat (Wheat starch), Wheat (Buckwheat), Wheat (Buckwheat kernel), Wheat (Roasted buckwheat kernel); Oils & Oleoresins: Oils (Flaxseed oil (also called raw flax oil, linseed oil )), Oils (Rapeseed oil), Oils (Raw flax oil), Oils (Rice bran oil), Oils (Sesame oil), Oils (Soybean oil(crude)), Oils (Sunflower oil); Nuts/Seeds: Pine Nuts (Pinenut kernel), Seeds (Rapeseed), Seeds (Sunflower seed), Seeds (Sunflowerseeds kernel), Seeds (Black sesame), Seeds (Borage seed), Seeds (Evening primrose seed), Seeds (Flax seed), Seeds (Perilla seeds), Seeds (Watermelon seed), Walnuts, Walnuts (Walnut kernels); Fruits/Vegetables: Beans (Adzuki bean (also called- small red bean)), Beans (Black kidney bean(also called-black turtle bean)), Beans (Black soybean with green kernels), Beans (Black soybean with yellow kernels (also called - black soybean)), Beans (Chickpea (also called - garbanzo)), Beans (Cowpea), Beans (Double green bean (also called -green soybean,edamame bean)), Beans (Green mung bean (also called mung bean)), Beans (Lentil), Beans (Mung bean hulled), Beans (Pea), Beans (Pinto bean (also called light speckled kidney bean)), Beans (Red kidney bean (also called dark red kidney bean)), Beans (Soybean), Beans (Soybean hulled), Beans (Soybean hulls), Beans (White kidney bean), Beans (Roasted soybean), Berries (Goji berries), Vegetables (Sweet potato), Vegetables (Potato); Animal Feed: Livestock Feed (Alfalfa), Livestock Feed (Corn (also called maize)), Livestock Feed (Corn chop), Livestock Feed (Cracked corn), Livestock Feed (Blended feed pellets), Livestock Feed (Corn germ cake), Livestock Feed (Corn gluten meal), Livestock Feed (Flaxseed cake (also called flaxseed meal,flaxseed expeller,flax cake, flax meal, flax expeller)), Livestock Feed (Puffed soybean), Livestock Feed (Rapeseed meal (also called rapeseed cake,rapeseed expeller)), Livestock Feed (Rice bran meal), Livestock Feed (Sesame meal (also called sesame cake,seseame expeller)), Livestock Feed (Soybean crude lecithin (alsocalled: crude soybean lecithin)), Livestock Feed (Soybean meal (also called soybean cake,soybean expeller)), Livestock Feed (Soybean powder), Livestock Feed (Soybean protein powder), Livestock Feed (Squashed corn), Livestock Feed (Sunflower meal (also called sunflower cake,sunflower expeller)), Livestock Feed (Wheat bran), Livestock Feed (Wheat gluten meal)\nUSDA-NOP\t\n\"Peresvet\" LLC (Harori 1 Farm)\n\t[QIMA] QIMA (formerly IBD Certifications)\t\tCertified\tUssuriysk\tPrimorsky Krai\tRussian Federation\tCROPS: Fruit Vegetables: Soybeans; Field/Forageable: Wheat\nUSDA-NOP\t\n\"Peresvet\" LLC (Kirov Farm)\n\t[QIMA] QIMA (formerly IBD Certifications)\t\tCertified\t\tPrimorsky Krai\tRussian Federation\tCROPS: Field/Forageable: Corn (Maize), Soybeans, Wheat\nUSDA-NOP\t\n\"Peresvet\" LLC (Oct1 Farm)\n\t[QIMA] QIMA (formerly IBD Certifications)\t\tCertified\tUssuriysk\tPrimorsky Krai\tRussian Federation\tCROPS: Field/Forageable: Corn (Maize), Soybeans\nUSDA-NOP\t\n\"Peresvet\" LLC (Oct2 Farm)\n\t[QIMA] QIMA (formerly IBD Certifications)\t\tCertified\tUssuriysk\tPrimorsky Krai\tRussian Federation\tCROPS: Fruit Vegetables: Soybeans; Field/Forageable: Wheat\nUSDA-NOP\t\n(CORPORATION) BADA MYEONGGA\n\t[BAC] BioAgriCert\t\tCertified\tWando-eup\tWando-gun\tKorea (the Republic of)\tHANDLING: Other: Roasted Laver, Roasted Seaweed, Roasted Seaweed Snack, Seasoned Laver\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n...\n 10\nitems per page\n1 - 10 of 50662 items\n Return to top\nAskUSDA\nPrivacy Policy\nUSDA.gov\nUSA.gov\nWhiteHouse.gov\nFOIA\nAccessibility Statement\nNon-­Discrimination Statement\nInformation Quality\nPlain Writing\nContact USDA",
+    "initial_url": "https://organic.ams.usda.gov/Integrity/",
+    "matched_controls": [
+      {
+        "name": "Reset Search Filters",
+        "outer_html": "<button class=\"fsa-btn fsa-btn--primary\" type=\"button\" title=\"Reset Search Filters\">Reset Search Filters</button>",
+        "parent_html": "<div class=\"col-sm-3\"><button class=\"fsa-btn fsa-btn--primary\" type=\"button\" title=\"Reset Search Filters\">Reset Search Filters</button></div>"
+      },
+      {
+        "name": "Export to Excel",
+        "outer_html": "<span class=\"k-button-text\"><!--!--><!--!--><!--!-->\n\n<!--!-->\n                        Export to Excel</span>",
+        "parent_html": "<button class=\"telerik-blazor k-button fsa-btn fsa-btn--flat a-excel exportToExcel k-button-ThemeConstants.Button.FillMode.Link k-rounded-md k-button-md k-button-ThemeConstants.Button.FillMode.Link-base\" data-id=\"3628ce26-d797-42f1-8dec-7ac10bc74339\" dir=\"ltr\" tabindex=\"0\" title=\"Quick downloads available on Data History page\" aria-disabled=\"false\" type=\"submit\"><!--!-->\n\n    <!--!--><!--!-->\n\n            <span class=\"k-button-text\"><!--!--><!--!--><!--!-->\n\n<!--!-->\n                        Export to Excel</span><!--!-->\n</button>"
+      },
+      {
+        "name": "viewer-export:button:has-text('Export')",
+        "outer_html": "<button class=\"telerik-blazor k-button fsa-btn fsa-btn--flat a-excel exportToExcel k-button-ThemeConstants.Button.FillMode.Link k-rounded-md k-button-md k-button-ThemeConstants.Button.FillMode.Link-base\" data-id=\"3628ce26-d797-42f1-8dec-7ac10bc74339\" dir=\"ltr\" tabindex=\"0\" title=\"Quick downloads available on Data History page\" aria-disabled=\"false\" type=\"submit\"><!--!-->\n\n    <!--!--><!--!-->\n\n            <span class=\"k-button-text\"><!--!--><!--!--><!--!-->\n\n<!--!-->\n                        Export to Excel</span><!--!-->\n</button>"
+      }
+    ],
+    "page_count_after_export": 1,
+    "response_export_candidates": [],
+    "responses": [
+      {
+        "content_disposition": "",
+        "content_type": "text/javascript",
+        "method": "GET",
+        "post_data": null,
+        "status": 200,
+        "url": "https://organic.ams.usda.gov/integrity/api/reports/resources/js/telerikReportViewer"
+      },
+      {
+        "content_disposition": "",
+        "content_type": "text/javascript",
+        "method": "GET",
+        "post_data": null,
+        "status": 200,
+        "url": "https://organic.ams.usda.gov/Integrity/api/reports/resources/js/telerikReportViewer"
+      },
+      {
+        "content_disposition": "",
+        "content_type": "application/javascript",
+        "method": "GET",
+        "post_data": null,
+        "status": 200,
+        "url": "https://organic.ams.usda.gov/integrity/_content/Telerik.ReportViewer.Blazor/interop.js"
+      },
+      {
+        "content_disposition": "",
+        "content_type": "application/javascript",
+        "method": "GET",
+        "post_data": null,
+        "status": 200,
+        "url": "https://organic.ams.usda.gov/Integrity/_content/Telerik.ReportViewer.Blazor/interop.js"
+      },
+      {
+        "content_disposition": "",
+        "content_type": "image/png",
+        "method": "GET",
+        "post_data": null,
+        "status": 200,
+        "url": "https://organic.ams.usda.gov/Integrity/Images/excel16.png"
+      }
+    ],
+    "ui_errors": [
+      "exact-export-no-direct-download:TimeoutError:Timeout 35000ms exceeded while waiting for event \"download\"\n=========================== logs ===========================\nwaiting for event \"download\"\n============================================================"
+    ],
+    "ui_steps": [
+      "clicked-exact:Reset Search Filters",
+      "clicked-exact:Export to Excel"
+    ],
+    "viewer_pages": [
+      {
+        "index": 0,
+        "text": " United States Department of Agriculture\nAgricultural Marketing Service\nLog In\nRegister\nHome\nSearch\nReports\nTrade Partners\nContact Us   About  \nWelcome to the Organic INTEGRITY Database!\nTo Export to Excel, please apply a filter different from Status filter.\n\nQuick downloads of the full USDA data set are available on Data History page.\n\nFind a specific certified organic farm or business, or search for an operation with specific characteristics. Listings come from USDA and Trade Partner-Accredited Certifying Agents. Only certified operations can sell, label or represent products as organic, unless exempt or excluded from certification.\n\nReset Search Filters\n \nExport to Excel\nProgram\tOperation\tCertifier\tInfo\tStatus\tCity\tState/Province\tCountry\tCertified Products\n\n\t\n\t\n\t\n\t\n Certified\n\t\n\t\n\t\n\t\nUSDA-NOP\t\n\"ARATANIA\" LLC\n\t[STC] Sertifikacijas un testesanas centrs\t\tCertified\t\t\tUkraine\tHANDLING: Other Grains, Pastas and Cereals: Organic wheat, Organic corn (maize), Organic barley, Organic oats, Organic rye, Organic sunflower seed, Organic rapeseed, Organic soybean, Organic millet\nUSDA-NOP\t\n\"BREDUN\" LP\n\t[EKOAGROS] Ekoagros\t\tCertified\t\t\tKazakhstan\tCROPS: Other: Lentils, Perennial grass., Wheat, Barley, Rapeseeds, Brown flaxseeds, Sunflower seeds, Peas.\nUSDA-NOP\t\n\"GALLARCAS\" SPR DE RL\n\t[BAC] BioAgriCert\t\tCertified\tSan Pedro Tapanatepec\tSan Pedro Tapanatepec\tMexico\tHANDLING: Other: MANGO\nUSDA-NOP\t\n\"HALILOGULLARI GRUP TEKSTIL INSAAT PETROL KIMYA GIDA OTOMOTIV NAKLIYE TARIM URUNLERI TAAHHUT SANAYI VE DIS TICARET LIMITED SIRKE\n\t[EKOAGROS] Ekoagros\t\tCertified\tSilopi\tSirnak\tTurkey\tCROPS: Other: Cotton\nUSDA-NOP\t\n\"Peresvet\" LLC\n\t[QIMA] QIMA (formerly IBD Certifications)\t\tCertified\tUssuriysk\tPrimorsky Krai\tRussian Federation\tHANDLING: Preservatives/Extracts/Flavors: Concentrates (Concentrated soybean protein), Extracts (Wheat starch), Extracts (Pea fiber), Extracts (Pea protein), Extracts (Pea starch), Extracts (Potato starch), Extracts (Rice flour), Extracts (Rice protein), Extracts (Soybean protein drawing), Extracts (Soybean protein isolate), Extracts (Soybean protein powder), Extracts (Texturedsoybean protein), Flours and Meals (Wheat flour), Flours and Meals (Corn flour), Flours and Meals (Oat flour), Flours and Meals (Brown rice flour), Flours and Meals (Buckwheat flour); Other Grains, Pastas and Cereals: Barley, Corn cobs, Millet, Oats, Oats (Oat kernel), Quinoa, Quinoa (Quinoa kernel), Rice, Rice (Paddy), Rice (Black paddy), Rice (Black rice), Rice (Brown rice), Rice (Glutinous paddy), Rice (Glutinous rice), Rice (Rice bran), Roasted corn, Sesame, Sorghum, Sticky hulled millet (also called hulled sticky millet, hulled broomcorn millet), Sticky millet (also called: broomcorn millet), Wheat, Wheat (Wheat starch), Wheat (Buckwheat), Wheat (Buckwheat kernel), Wheat (Roasted buckwheat kernel); Oils & Oleoresins: Oils (Flaxseed oil (also called raw flax oil, linseed oil )), Oils (Rapeseed oil), Oils (Raw flax oil), Oils (Rice bran oil), Oils (Sesame oil), Oils (Soybean oil(crude)), Oils (Sunflower oil); Nuts/Seeds: Pine Nuts (Pinenut kernel), Seeds (Rapeseed), Seeds (Sunflower seed), Seeds (Sunflowerseeds kernel), Seeds (Black sesame), Seeds (Borage seed), Seeds (Evening primrose seed), Seeds (Flax seed), Seeds (Perilla seeds), Seeds (Watermelon seed), Walnuts, Walnuts (Walnut kernels); Fruits/Vegetables: Beans (Adzuki bean (also called- small red bean)), Beans (Black kidney bean(also called-black turtle bean)), Beans (Black soybean with green kernels), Beans (Black soybean with yellow kernels (also called - black soybean)), Beans (Chickpea (also called - garbanzo)), Beans (Cowpea), Beans (Double green bean (also called -green soybean,edamame bean)), Beans (Green mung bean (also called mung bean)), Beans (Lentil), Beans (Mung bean hulled), Beans (Pea), Beans (Pinto bean (also called light speckled kidney bean)), Beans (Red kidney bean (also called dark red kidney bean)), Beans (Soybean), Beans (Soybean hulled), Beans (Soybean hulls), Beans (White kidney bean), Beans (Roasted soybean), Berries (Goji berries), Vegetables (Sweet potato), Vegetables (Potato); Animal Feed: Livestock Feed (Alfalfa), Livestock Feed (Corn (also called maize)), Livestock Feed (Corn chop), Livestock Feed (Cracked corn), Livestock Feed (Blended feed pellets), Livestock Feed (Corn germ cake), Livestock Feed (Corn gluten meal), Livestock Feed (Flaxseed cake (also called flaxseed meal,flaxseed expeller,flax cake, flax meal, flax expeller)), Livestock Feed (Puffed soybean), Livestock Feed (Rapeseed meal (also called rapeseed cake,rapeseed expeller)), Livestock Feed (Rice bran meal), Livestock Feed (Sesame meal (also called sesame cake,seseame expeller)), Livestock Feed (Soybean crude lecithin (alsocalled: crude soybean lecithin)), Livestock Feed (Soybean meal (also called soybean cake,soybean expeller)), Livestock Feed (Soybean powder), Livestock Feed (Soybean protein powder), Livestock Feed (Squashed corn), Livestock Feed (Sunflower meal (also called sunflower cake,sunflower expeller)), Livestock Feed (Wheat bran), Livestock Feed (Wheat gluten meal)\nUSDA-NOP\t\n\"Peresvet\" LLC (Harori 1 Farm)\n\t[QIMA] QIMA (formerly IBD Certifications)\t\tCertified\tUssuriysk\tPrimorsky Krai\tRussian Federation\tCROPS: Fruit Vegetables: Soybeans; Field/Forageable: Wheat\nUSDA-NOP\t\n\"Peresvet\" LLC (Kirov Farm)\n\t[QIMA] QIMA (formerly IBD Certifications)\t\tCertified\t\tPrimorsky Krai\tRussian Federation\tCROPS: Field/Forageable: Corn (Maize), Soybeans, Wheat\nUSDA-NOP\t\n\"Peresvet\" LLC (Oct1 Farm)\n\t[QIMA] QIMA (formerly IBD Certifications)\t\tCertified\tUssuriysk\tPrimorsky Krai\tRussian Federation\tCROPS: Field/Forageable: Corn (Maize), Soybeans\nUSDA-NOP\t\n\"Peresvet\" LLC (Oct2 Farm)\n\t[QIMA] QIMA (formerly IBD Certifications)\t\tCertified\tUssuriysk\tPrimorsky Krai\tRussian Federation\tCROPS: Fruit Vegetables: Soybeans; Field/Forageable: Wheat\nUSDA-NOP\t\n(CORPORATION) BADA MYEONGGA\n\t[BAC] BioAgriCert\t\tCertified\tWando-eup\tWando-gun\tKorea (the Republic of)\tHANDLING: Other: Roasted Laver, Roasted Seaweed, Roasted Seaweed Snack, Seasoned Laver\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n...\n 10\nitems per page\n1 - 10 of 50662 items\n Return to top\nAskUSDA\nPrivacy Policy\nUSDA.gov\nUSA.gov\nWhiteHouse.gov\nFOIA\nAccessibility Statement\nNon-­Discrimination Statement\nInformation Quality\nPlain Writing\nContact USDA",
+        "url": "https://organic.ams.usda.gov/Integrity/"
+      }
+    ]
+  },
+  "failed_gates": [],
+  "future_entity_rows_consumed_for_membership": 0,
+  "future_suspended_revoked_membership_opened": false,
+  "gates": [
+    {
+      "gate": 1,
+      "observed": {
+        "active_issue": 180,
+        "active_research": "US-USDA-ORG-F01",
+        "checkpoint_id": "CHK-20260929-US-USDA-ORG-F01-ACTIVE",
+        "last_completed_issue": 179,
+        "last_completed_research": "PORTFOLIO-R46",
+        "last_decision": "DEC-270",
+        "updated": "2026-09-29"
+      },
+      "pass": true
+    },
+    {
+      "gate": 2,
+      "observed": {
+        "contract_sha": "d1ccc1e745c0881a64f8cf7e2ab481fb69215adc",
+        "issue": 180
+      },
+      "pass": true
+    },
+    {
+      "gate": 3,
+      "observed": {
+        "decisions": {
+          "bytes": 72514,
+          "content_type": "text/html; charset=utf-8",
+          "etag": null,
+          "final_url": "https://www.ams.usda.gov/services/enforcement/organic/ams-decisions",
+          "last_modified": null,
+          "requested_url": "https://www.ams.usda.gov/services/enforcement/organic/ams-decisions",
+          "sha256": "cba71b662712ebb9c98e6ec3749a725e5694578e7a155667ad41070da626e898",
+          "status": 200
+        },
+        "dictionary": {
+          "bytes": 158644,
+          "content_type": "application/pdf",
+          "etag": "\"26bb4-64cab3696c364\"",
+          "final_url": "https://www.ams.usda.gov/sites/default/files/media/INTEGRITY%20Data%20Dictionary.pdf",
+          "last_modified": "Tue, 10 Mar 2026 13:08:19 GMT",
+          "requested_url": "https://www.ams.usda.gov/sites/default/files/media/INTEGRITY%20Data%20Dictionary.pdf",
+          "sha256": "2700d0ae43522ed4dea941b41d4e06592c32ca04d2cb12e1cf81a3fc2d170352",
+          "status": 200
+        },
+        "enforcement": {
+          "bytes": 52691,
+          "content_type": "text/html; charset=utf-8",
+          "etag": null,
+          "final_url": "https://www.ams.usda.gov/services/enforcement/organic",
+          "last_modified": null,
+          "requested_url": "https://www.ams.usda.gov/services/enforcement/organic",
+          "sha256": "b1b83ece9b7b9e58cecf671a29e2cc8e5b2a41d35ff1982a0a519926e50a0a47",
+          "status": 200
+        },
+        "faq": {
+          "bytes": 265476,
+          "content_type": "application/pdf",
+          "etag": "\"40d04-63ecfba6002ee\"",
+          "final_url": "https://www.ams.usda.gov/sites/default/files/media/INTEGRITY%20FAQ.pdf",
+          "last_modified": "Mon, 15 Sep 2025 04:49:26 GMT",
+          "requested_url": "https://www.ams.usda.gov/sites/default/files/media/INTEGRITY%20FAQ.pdf",
+          "sha256": "b33a8f0f1bcede7edfe45f599c3b29ffd7d7bce860f4cef487b251e68ce6265b",
+          "status": 200
+        },
+        "integrity": {
+          "bytes": 9516,
+          "content_type": "text/html; charset=utf-8",
+          "final_url": "https://organic.ams.usda.gov/Integrity/",
+          "sha256": "e33faced8fe8b381dd982070a4ce887a90c867d022d1d31982087b9b806993e7",
+          "status": 200
+        }
+      },
+      "pass": true
+    },
+    {
+      "gate": 4,
+      "observed": {
+        "browser": {
+          "after_reset_text": " United States Department of Agriculture\nAgricultural Marketing Service\nLog In\nRegister\nHome\nSearch\nReports\nTrade Partners\nContact Us   About  \nWelcome to the Organic INTEGRITY Database!\nFind a specific certified organic farm or business, or search for an operation with specific characteristics. Listings come from USDA and Trade Partner-Accredited Certifying Agents. Only certified operations can sell, label or represent products as organic, unless exempt or excluded from certification.\n\nReset Search Filters\n \nExport to Excel\nProgram\tOperation\tCertifier\tInfo\tStatus\tCity\tState/Province\tCountry\tCertified Products\n\n\t\n\t\n\t\n\t\n Certified\n\t\n\t\n\t\n\t\nUSDA-NOP\t\n\"ARATANIA\" LLC\n\t[STC] Sertifikacijas un testesanas centrs\t\tCertified\t\t\tUkraine\tHANDLING: Other Grains, Pastas and Cereals: Organic wheat, Organic corn (maize), Organic barley, Organic oats, Organic rye, Organic sunflower seed, Organic rapeseed, Organic soybean, Organic millet\nUSDA-NOP\t\n\"BREDUN\" LP\n\t[EKOAGROS] Ekoagros\t\tCertified\t\t\tKazakhstan\tCROPS: Other: Lentils, Perennial grass., Wheat, Barley, Rapeseeds, Brown flaxseeds, Sunflower seeds, Peas.\nUSDA-NOP\t\n\"GALLARCAS\" SPR DE RL\n\t[BAC] BioAgriCert\t\tCertified\tSan Pedro Tapanatepec\tSan Pedro Tapanatepec\tMexico\tHANDLING: Other: MANGO\nUSDA-NOP\t\n\"HALILOGULLARI GRUP TEKSTIL INSAAT PETROL KIMYA GIDA OTOMOTIV NAKLIYE TARIM URUNLERI TAAHHUT SANAYI VE DIS TICARET LIMITED SIRKE\n\t[EKOAGROS] Ekoagros\t\tCertified\tSilopi\tSirnak\tTurkey\tCROPS: Other: Cotton\nUSDA-NOP\t\n\"Peresvet\" LLC\n\t[QIMA] QIMA (formerly IBD Certifications)\t\tCertified\tUssuriysk\tPrimorsky Krai\tRussian Federation\tHANDLING: Preservatives/Extracts/Flavors: Concentrates (Concentrated soybean protein), Extracts (Wheat starch), Extracts (Pea fiber), Extracts (Pea protein), Extracts (Pea starch), Extracts (Potato starch), Extracts (Rice flour), Extracts (Rice protein), Extracts (Soybean protein drawing), Extracts (Soybean protein isolate), Extracts (Soybean protein powder), Extracts (Texturedsoybean protein), Flours and Meals (Wheat flour), Flours and Meals (Corn flour), Flours and Meals (Oat flour), Flours and Meals (Brown rice flour), Flours and Meals (Buckwheat flour); Other Grains, Pastas and Cereals: Barley, Corn cobs, Millet, Oats, Oats (Oat kernel), Quinoa, Quinoa (Quinoa kernel), Rice, Rice (Paddy), Rice (Black paddy), Rice (Black rice), Rice (Brown rice), Rice (Glutinous paddy), Rice (Glutinous rice), Rice (Rice bran), Roasted corn, Sesame, Sorghum, Sticky hulled millet (also called hulled sticky millet, hulled broomcorn millet), Sticky millet (also called: broomcorn millet), Wheat, Wheat (Wheat starch), Wheat (Buckwheat), Wheat (Buckwheat kernel), Wheat (Roasted buckwheat kernel); Oils & Oleoresins: Oils (Flaxseed oil (also called raw flax oil, linseed oil )), Oils (Rapeseed oil), Oils (Raw flax oil), Oils (Rice bran oil), Oils (Sesame oil), Oils (Soybean oil(crude)), Oils (Sunflower oil); Nuts/Seeds: Pine Nuts (Pinenut kernel), Seeds (Rapeseed), Seeds (Sunflower seed), Seeds (Sunflowerseeds kernel), Seeds (Black sesame), Seeds (Borage seed), Seeds (Evening primrose seed), Seeds (Flax seed), Seeds (Perilla seeds), Seeds (Watermelon seed), Walnuts, Walnuts (Walnut kernels); Fruits/Vegetables: Beans (Adzuki bean (also called- small red bean)), Beans (Black kidney bean(also called-black turtle bean)), Beans (Black soybean with green kernels), Beans (Black soybean with yellow kernels (also called - black soybean)), Beans (Chickpea (also called - garbanzo)), Beans (Cowpea), Beans (Double green bean (also called -green soybean,edamame bean)), Beans (Green mung bean (also called mung bean)), Beans (Lentil), Beans (Mung bean hulled), Beans (Pea), Beans (Pinto bean (also called light speckled kidney bean)), Beans (Red kidney bean (also called dark red kidney bean)), Beans (Soybean), Beans (Soybean hulled), Beans (Soybean hulls), Beans (White kidney bean), Beans (Roasted soybean), Berries (Goji berries), Vegetables (Sweet potato), Vegetables (Potato); Animal Feed: Livestock Feed (Alfalfa), Livestock Feed (Corn (also called maize)), Livestock Feed (Corn chop), Livestock Feed (Cracked corn), Livestock Feed (Blended feed pellets), Livestock Feed (Corn germ cake), Livestock Feed (Corn gluten meal), Livestock Feed (Flaxseed cake (also called flaxseed meal,flaxseed expeller,flax cake, flax meal, flax expeller)), Livestock Feed (Puffed soybean), Livestock Feed (Rapeseed meal (also called rapeseed cake,rapeseed expeller)), Livestock Feed (Rice bran meal), Livestock Feed (Sesame meal (also called sesame cake,seseame expeller)), Livestock Feed (Soybean crude lecithin (alsocalled: crude soybean lecithin)), Livestock Feed (Soybean meal (also called soybean cake,soybean expeller)), Livestock Feed (Soybean powder), Livestock Feed (Soybean protein powder), Livestock Feed (Squashed corn), Livestock Feed (Sunflower meal (also called sunflower cake,sunflower expeller)), Livestock Feed (Wheat bran), Livestock Feed (Wheat gluten meal)\nUSDA-NOP\t\n\"Peresvet\" LLC (Harori 1 Farm)\n\t[QIMA] QIMA (formerly IBD Certifications)\t\tCertified\tUssuriysk\tPrimorsky Krai\tRussian Federation\tCROPS: Fruit Vegetables: Soybeans; Field/Forageable: Wheat\nUSDA-NOP\t\n\"Peresvet\" LLC (Kirov Farm)\n\t[QIMA] QIMA (formerly IBD Certifications)\t\tCertified\t\tPrimorsky Krai\tRussian Federation\tCROPS: Field/Forageable: Corn (Maize), Soybeans, Wheat\nUSDA-NOP\t\n\"Peresvet\" LLC (Oct1 Farm)\n\t[QIMA] QIMA (formerly IBD Certifications)\t\tCertified\tUssuriysk\tPrimorsky Krai\tRussian Federation\tCROPS: Field/Forageable: Corn (Maize), Soybeans\nUSDA-NOP\t\n\"Peresvet\" LLC (Oct2 Farm)\n\t[QIMA] QIMA (formerly IBD Certifications)\t\tCertified\tUssuriysk\tPrimorsky Krai\tRussian Federation\tCROPS: Fruit Vegetables: Soybeans; Field/Forageable: Wheat\nUSDA-NOP\t\n(CORPORATION) BADA MYEONGGA\n\t[BAC] BioAgriCert\t\tCertified\tWando-eup\tWando-gun\tKorea (the Republic of)\tHANDLING: Other: Roasted Laver, Roasted Seaweed, Roasted Seaweed Snack, Seasoned Laver\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n...\n 10\nitems per page\n1 - 10 of 50662 items\n Return to top\nAskUSDA\nPrivacy Policy\nUSDA.gov\nUSA.gov\nWhiteHouse.gov\nFOIA\nAccessibility Statement\nNon-­Discrimination Statement\nInformation Quality\nPlain Writing\nContact USDA",
+          "downloaded": false,
+          "initial_text": " United States Department of Agriculture\nAgricultural Marketing Service\nLog In\nRegister\nHome\nSearch\nReports\nTrade Partners\nContact Us   About  \nWelcome to the Organic INTEGRITY Database!\nFind a specific certified organic farm or business, or search for an operation with specific characteristics. Listings come from USDA and Trade Partner-Accredited Certifying Agents. Only certified operations can sell, label or represent products as organic, unless exempt or excluded from certification.\n\nReset Search Filters\n \nExport to Excel\nProgram\tOperation\tCertifier\tInfo\tStatus\tCity\tState/Province\tCountry\tCertified Products\n\n\t\n\t\n\t\n\t\n Certified\n\t\n\t\n\t\n\t\nUSDA-NOP\t\n\"ARATANIA\" LLC\n\t[STC] Sertifikacijas un testesanas centrs\t\tCertified\t\t\tUkraine\tHANDLING: Other Grains, Pastas and Cereals: Organic wheat, Organic corn (maize), Organic barley, Organic oats, Organic rye, Organic sunflower seed, Organic rapeseed, Organic soybean, Organic millet\nUSDA-NOP\t\n\"BREDUN\" LP\n\t[EKOAGROS] Ekoagros\t\tCertified\t\t\tKazakhstan\tCROPS: Other: Lentils, Perennial grass., Wheat, Barley, Rapeseeds, Brown flaxseeds, Sunflower seeds, Peas.\nUSDA-NOP\t\n\"GALLARCAS\" SPR DE RL\n\t[BAC] BioAgriCert\t\tCertified\tSan Pedro Tapanatepec\tSan Pedro Tapanatepec\tMexico\tHANDLING: Other: MANGO\nUSDA-NOP\t\n\"HALILOGULLARI GRUP TEKSTIL INSAAT PETROL KIMYA GIDA OTOMOTIV NAKLIYE TARIM URUNLERI TAAHHUT SANAYI VE DIS TICARET LIMITED SIRKE\n\t[EKOAGROS] Ekoagros\t\tCertified\tSilopi\tSirnak\tTurkey\tCROPS: Other: Cotton\nUSDA-NOP\t\n\"Peresvet\" LLC\n\t[QIMA] QIMA (formerly IBD Certifications)\t\tCertified\tUssuriysk\tPrimorsky Krai\tRussian Federation\tHANDLING: Preservatives/Extracts/Flavors: Concentrates (Concentrated soybean protein), Extracts (Wheat starch), Extracts (Pea fiber), Extracts (Pea protein), Extracts (Pea starch), Extracts (Potato starch), Extracts (Rice flour), Extracts (Rice protein), Extracts (Soybean protein drawing), Extracts (Soybean protein isolate), Extracts (Soybean protein powder), Extracts (Texturedsoybean protein), Flours and Meals (Wheat flour), Flours and Meals (Corn flour), Flours and Meals (Oat flour), Flours and Meals (Brown rice flour), Flours and Meals (Buckwheat flour); Other Grains, Pastas and Cereals: Barley, Corn cobs, Millet, Oats, Oats (Oat kernel), Quinoa, Quinoa (Quinoa kernel), Rice, Rice (Paddy), Rice (Black paddy), Rice (Black rice), Rice (Brown rice), Rice (Glutinous paddy), Rice (Glutinous rice), Rice (Rice bran), Roasted corn, Sesame, Sorghum, Sticky hulled millet (also called hulled sticky millet, hulled broomcorn millet), Sticky millet (also called: broomcorn millet), Wheat, Wheat (Wheat starch), Wheat (Buckwheat), Wheat (Buckwheat kernel), Wheat (Roasted buckwheat kernel); Oils & Oleoresins: Oils (Flaxseed oil (also called raw flax oil, linseed oil )), Oils (Rapeseed oil), Oils (Raw flax oil), Oils (Rice bran oil), Oils (Sesame oil), Oils (Soybean oil(crude)), Oils (Sunflower oil); Nuts/Seeds: Pine Nuts (Pinenut kernel), Seeds (Rapeseed), Seeds (Sunflower seed), Seeds (Sunflowerseeds kernel), Seeds (Black sesame), Seeds (Borage seed), Seeds (Evening primrose seed), Seeds (Flax seed), Seeds (Perilla seeds), Seeds (Watermelon seed), Walnuts, Walnuts (Walnut kernels); Fruits/Vegetables: Beans (Adzuki bean (also called- small red bean)), Beans (Black kidney bean(also called-black turtle bean)), Beans (Black soybean with green kernels), Beans (Black soybean with yellow kernels (also called - black soybean)), Beans (Chickpea (also called - garbanzo)), Beans (Cowpea), Beans (Double green bean (also called -green soybean,edamame bean)), Beans (Green mung bean (also called mung bean)), Beans (Lentil), Beans (Mung bean hulled), Beans (Pea), Beans (Pinto bean (also called light speckled kidney bean)), Beans (Red kidney bean (also called dark red kidney bean)), Beans (Soybean), Beans (Soybean hulled), Beans (Soybean hulls), Beans (White kidney bean), Beans (Roasted soybean), Berries (Goji berries), Vegetables (Sweet potato), Vegetables (Potato); Animal Feed: Livestock Feed (Alfalfa), Livestock Feed (Corn (also called maize)), Livestock Feed (Corn chop), Livestock Feed (Cracked corn), Livestock Feed (Blended feed pellets), Livestock Feed (Corn germ cake), Livestock Feed (Corn gluten meal), Livestock Feed (Flaxseed cake (also called flaxseed meal,flaxseed expeller,flax cake, flax meal, flax expeller)), Livestock Feed (Puffed soybean), Livestock Feed (Rapeseed meal (also called rapeseed cake,rapeseed expeller)), Livestock Feed (Rice bran meal), Livestock Feed (Sesame meal (also called sesame cake,seseame expeller)), Livestock Feed (Soybean crude lecithin (alsocalled: crude soybean lecithin)), Livestock Feed (Soybean meal (also called soybean cake,soybean expeller)), Livestock Feed (Soybean powder), Livestock Feed (Soybean protein powder), Livestock Feed (Squashed corn), Livestock Feed (Sunflower meal (also called sunflower cake,sunflower expeller)), Livestock Feed (Wheat bran), Livestock Feed (Wheat gluten meal)\nUSDA-NOP\t\n\"Peresvet\" LLC (Harori 1 Farm)\n\t[QIMA] QIMA (formerly IBD Certifications)\t\tCertified\tUssuriysk\tPrimorsky Krai\tRussian Federation\tCROPS: Fruit Vegetables: Soybeans; Field/Forageable: Wheat\nUSDA-NOP\t\n\"Peresvet\" LLC (Kirov Farm)\n\t[QIMA] QIMA (formerly IBD Certifications)\t\tCertified\t\tPrimorsky Krai\tRussian Federation\tCROPS: Field/Forageable: Corn (Maize), Soybeans, Wheat\nUSDA-NOP\t\n\"Peresvet\" LLC (Oct1 Farm)\n\t[QIMA] QIMA (formerly IBD Certifications)\t\tCertified\tUssuriysk\tPrimorsky Krai\tRussian Federation\tCROPS: Field/Forageable: Corn (Maize), Soybeans\nUSDA-NOP\t\n\"Peresvet\" LLC (Oct2 Farm)\n\t[QIMA] QIMA (formerly IBD Certifications)\t\tCertified\tUssuriysk\tPrimorsky Krai\tRussian Federation\tCROPS: Fruit Vegetables: Soybeans; Field/Forageable: Wheat\nUSDA-NOP\t\n(CORPORATION) BADA MYEONGGA\n\t[BAC] BioAgriCert\t\tCertified\tWando-eup\tWando-gun\tKorea (the Republic of)\tHANDLING: Other: Roasted Laver, Roasted Seaweed, Roasted Seaweed Snack, Seasoned Laver\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n...\n 10\nitems per page\n1 - 10 of 50662 items\n Return to top\nAskUSDA\nPrivacy Policy\nUSDA.gov\nUSA.gov\nWhiteHouse.gov\nFOIA\nAccessibility Statement\nNon-­Discrimination Statement\nInformation Quality\nPlain Writing\nContact USDA",
+          "initial_url": "https://organic.ams.usda.gov/Integrity/",
+          "matched_controls": [
+            {
+              "name": "Reset Search Filters",
+              "outer_html": "<button class=\"fsa-btn fsa-btn--primary\" type=\"button\" title=\"Reset Search Filters\">Reset Search Filters</button>",
+              "parent_html": "<div class=\"col-sm-3\"><button class=\"fsa-btn fsa-btn--primary\" type=\"button\" title=\"Reset Search Filters\">Reset Search Filters</button></div>"
+            },
+            {
+              "name": "Export to Excel",
+              "outer_html": "<span class=\"k-button-text\"><!--!--><!--!--><!--!-->\n\n<!--!-->\n                        Export to Excel</span>",
+              "parent_html": "<button class=\"telerik-blazor k-button fsa-btn fsa-btn--flat a-excel exportToExcel k-button-ThemeConstants.Button.FillMode.Link k-rounded-md k-button-md k-button-ThemeConstants.Button.FillMode.Link-base\" data-id=\"3628ce26-d797-42f1-8dec-7ac10bc74339\" dir=\"ltr\" tabindex=\"0\" title=\"Quick downloads available on Data History page\" aria-disabled=\"false\" type=\"submit\"><!--!-->\n\n    <!--!--><!--!-->\n\n            <span class=\"k-button-text\"><!--!--><!--!--><!--!-->\n\n<!--!-->\n                        Export to Excel</span><!--!-->\n</button>"
+            },
+            {
+              "name": "viewer-export:button:has-text('Export')",
+              "outer_html": "<button class=\"telerik-blazor k-button fsa-btn fsa-btn--flat a-excel exportToExcel k-button-ThemeConstants.Button.FillMode.Link k-rounded-md k-button-md k-button-ThemeConstants.Button.FillMode.Link-base\" data-id=\"3628ce26-d797-42f1-8dec-7ac10bc74339\" dir=\"ltr\" tabindex=\"0\" title=\"Quick downloads available on Data History page\" aria-disabled=\"false\" type=\"submit\"><!--!-->\n\n    <!--!--><!--!-->\n\n            <span class=\"k-button-text\"><!--!--><!--!--><!--!-->\n\n<!--!-->\n                        Export to Excel</span><!--!-->\n</button>"
+            }
+          ],
+          "page_count_after_export": 1,
+          "response_export_candidates": [],
+          "responses": [
+            {
+              "content_disposition": "",
+              "content_type": "text/javascript",
+              "method": "GET",
+              "post_data": null,
+              "status": 200,
+              "url": "https://organic.ams.usda.gov/integrity/api/reports/resources/js/telerikReportViewer"
+            },
+            {
+              "content_disposition": "",
+              "content_type": "text/javascript",
+              "method": "GET",
+              "post_data": null,
+              "status": 200,
+              "url": "https://organic.ams.usda.gov/Integrity/api/reports/resources/js/telerikReportViewer"
+            },
+            {
+              "content_disposition": "",
+              "content_type": "application/javascript",
+              "method": "GET",
+              "post_data": null,
+              "status": 200,
+              "url": "https://organic.ams.usda.gov/integrity/_content/Telerik.ReportViewer.Blazor/interop.js"
+            },
+            {
+              "content_disposition": "",
+              "content_type": "application/javascript",
+              "method": "GET",
+              "post_data": null,
+              "status": 200,
+              "url": "https://organic.ams.usda.gov/Integrity/_content/Telerik.ReportViewer.Blazor/interop.js"
+            },
+            {
+              "content_disposition": "",
+              "content_type": "image/png",
+              "method": "GET",
+              "post_data": null,
+              "status": 200,
+              "url": "https://organic.ams.usda.gov/Integrity/Images/excel16.png"
+            }
+          ],
+          "ui_errors": [
+            "exact-export-no-direct-download:TimeoutError:Timeout 35000ms exceeded while waiting for event \"download\"\n=========================== logs ===========================\nwaiting for event \"download\"\n============================================================"
+          ],
+          "ui_steps": [
+            "clicked-exact:Reset Search Filters",
+            "clicked-exact:Export to Excel"
+          ],
+          "viewer_pages": [
+            {
+              "index": 0,
+              "text": " United States Department of Agriculture\nAgricultural Marketing Service\nLog In\nRegister\nHome\nSearch\nReports\nTrade Partners\nContact Us   About  \nWelcome to the Organic INTEGRITY Database!\nTo Export to Excel, please apply a filter different from Status filter.\n\nQuick downloads of the full USDA data set are available on Data History page.\n\nFind a specific certified organic farm or business, or search for an operation with specific characteristics. Listings come from USDA and Trade Partner-Accredited Certifying Agents. Only certified operations can sell, label or represent products as organic, unless exempt or excluded from certification.\n\nReset Search Filters\n \nExport to Excel\nProgram\tOperation\tCertifier\tInfo\tStatus\tCity\tState/Province\tCountry\tCertified Products\n\n\t\n\t\n\t\n\t\n Certified\n\t\n\t\n\t\n\t\nUSDA-NOP\t\n\"ARATANIA\" LLC\n\t[STC] Sertifikacijas un testesanas centrs\t\tCertified\t\t\tUkraine\tHANDLING: Other Grains, Pastas and Cereals: Organic wheat, Organic corn (maize), Organic barley, Organic oats, Organic rye, Organic sunflower seed, Organic rapeseed, Organic soybean, Organic millet\nUSDA-NOP\t\n\"BREDUN\" LP\n\t[EKOAGROS] Ekoagros\t\tCertified\t\t\tKazakhstan\tCROPS: Other: Lentils, Perennial grass., Wheat, Barley, Rapeseeds, Brown flaxseeds, Sunflower seeds, Peas.\nUSDA-NOP\t\n\"GALLARCAS\" SPR DE RL\n\t[BAC] BioAgriCert\t\tCertified\tSan Pedro Tapanatepec\tSan Pedro Tapanatepec\tMexico\tHANDLING: Other: MANGO\nUSDA-NOP\t\n\"HALILOGULLARI GRUP TEKSTIL INSAAT PETROL KIMYA GIDA OTOMOTIV NAKLIYE TARIM URUNLERI TAAHHUT SANAYI VE DIS TICARET LIMITED SIRKE\n\t[EKOAGROS] Ekoagros\t\tCertified\tSilopi\tSirnak\tTurkey\tCROPS: Other: Cotton\nUSDA-NOP\t\n\"Peresvet\" LLC\n\t[QIMA] QIMA (formerly IBD Certifications)\t\tCertified\tUssuriysk\tPrimorsky Krai\tRussian Federation\tHANDLING: Preservatives/Extracts/Flavors: Concentrates (Concentrated soybean protein), Extracts (Wheat starch), Extracts (Pea fiber), Extracts (Pea protein), Extracts (Pea starch), Extracts (Potato starch), Extracts (Rice flour), Extracts (Rice protein), Extracts (Soybean protein drawing), Extracts (Soybean protein isolate), Extracts (Soybean protein powder), Extracts (Texturedsoybean protein), Flours and Meals (Wheat flour), Flours and Meals (Corn flour), Flours and Meals (Oat flour), Flours and Meals (Brown rice flour), Flours and Meals (Buckwheat flour); Other Grains, Pastas and Cereals: Barley, Corn cobs, Millet, Oats, Oats (Oat kernel), Quinoa, Quinoa (Quinoa kernel), Rice, Rice (Paddy), Rice (Black paddy), Rice (Black rice), Rice (Brown rice), Rice (Glutinous paddy), Rice (Glutinous rice), Rice (Rice bran), Roasted corn, Sesame, Sorghum, Sticky hulled millet (also called hulled sticky millet, hulled broomcorn millet), Sticky millet (also called: broomcorn millet), Wheat, Wheat (Wheat starch), Wheat (Buckwheat), Wheat (Buckwheat kernel), Wheat (Roasted buckwheat kernel); Oils & Oleoresins: Oils (Flaxseed oil (also called raw flax oil, linseed oil )), Oils (Rapeseed oil), Oils (Raw flax oil), Oils (Rice bran oil), Oils (Sesame oil), Oils (Soybean oil(crude)), Oils (Sunflower oil); Nuts/Seeds: Pine Nuts (Pinenut kernel), Seeds (Rapeseed), Seeds (Sunflower seed), Seeds (Sunflowerseeds kernel), Seeds (Black sesame), Seeds (Borage seed), Seeds (Evening primrose seed), Seeds (Flax seed), Seeds (Perilla seeds), Seeds (Watermelon seed), Walnuts, Walnuts (Walnut kernels); Fruits/Vegetables: Beans (Adzuki bean (also called- small red bean)), Beans (Black kidney bean(also called-black turtle bean)), Beans (Black soybean with green kernels), Beans (Black soybean with yellow kernels (also called - black soybean)), Beans (Chickpea (also called - garbanzo)), Beans (Cowpea), Beans (Double green bean (also called -green soybean,edamame bean)), Beans (Green mung bean (also called mung bean)), Beans (Lentil), Beans (Mung bean hulled), Beans (Pea), Beans (Pinto bean (also called light speckled kidney bean)), Beans (Red kidney bean (also called dark red kidney bean)), Beans (Soybean), Beans (Soybean hulled), Beans (Soybean hulls), Beans (White kidney bean), Beans (Roasted soybean), Berries (Goji berries), Vegetables (Sweet potato), Vegetables (Potato); Animal Feed: Livestock Feed (Alfalfa), Livestock Feed (Corn (also called maize)), Livestock Feed (Corn chop), Livestock Feed (Cracked corn), Livestock Feed (Blended feed pellets), Livestock Feed (Corn germ cake), Livestock Feed (Corn gluten meal), Livestock Feed (Flaxseed cake (also called flaxseed meal,flaxseed expeller,flax cake, flax meal, flax expeller)), Livestock Feed (Puffed soybean), Livestock Feed (Rapeseed meal (also called rapeseed cake,rapeseed expeller)), Livestock Feed (Rice bran meal), Livestock Feed (Sesame meal (also called sesame cake,seseame expeller)), Livestock Feed (Soybean crude lecithin (alsocalled: crude soybean lecithin)), Livestock Feed (Soybean meal (also called soybean cake,soybean expeller)), Livestock Feed (Soybean powder), Livestock Feed (Soybean protein powder), Livestock Feed (Squashed corn), Livestock Feed (Sunflower meal (also called sunflower cake,sunflower expeller)), Livestock Feed (Wheat bran), Livestock Feed (Wheat gluten meal)\nUSDA-NOP\t\n\"Peresvet\" LLC (Harori 1 Farm)\n\t[QIMA] QIMA (formerly IBD Certifications)\t\tCertified\tUssuriysk\tPrimorsky Krai\tRussian Federation\tCROPS: Fruit Vegetables: Soybeans; Field/Forageable: Wheat\nUSDA-NOP\t\n\"Peresvet\" LLC (Kirov Farm)\n\t[QIMA] QIMA (formerly IBD Certifications)\t\tCertified\t\tPrimorsky Krai\tRussian Federation\tCROPS: Field/Forageable: Corn (Maize), Soybeans, Wheat\nUSDA-NOP\t\n\"Peresvet\" LLC (Oct1 Farm)\n\t[QIMA] QIMA (formerly IBD Certifications)\t\tCertified\tUssuriysk\tPrimorsky Krai\tRussian Federation\tCROPS: Field/Forageable: Corn (Maize), Soybeans\nUSDA-NOP\t\n\"Peresvet\" LLC (Oct2 Farm)\n\t[QIMA] QIMA (formerly IBD Certifications)\t\tCertified\tUssuriysk\tPrimorsky Krai\tRussian Federation\tCROPS: Fruit Vegetables: Soybeans; Field/Forageable: Wheat\nUSDA-NOP\t\n(CORPORATION) BADA MYEONGGA\n\t[BAC] BioAgriCert\t\tCertified\tWando-eup\tWando-gun\tKorea (the Republic of)\tHANDLING: Other: Roasted Laver, Roasted Seaweed, Roasted Seaweed Snack, Seasoned Laver\n1\n2\n3\n4\n5\n6\n7\n8\n9\n10\n...\n 10\nitems per page\n1 - 10 of 50662 items\n Return to top\nAskUSDA\nPrivacy Policy\nUSDA.gov\nUSA.gov\nWhiteHouse.gov\nFOIA\nAccessibility Statement\nNon-­Discrimination Statement\nInformation Quality\nPlain Writing\nContact USDA",
+              "url": "https://organic.ams.usda.gov/Integrity/"
+            }
+          ]
+        },
+        "bytes": 0
+      },
+      "pass": false
+    }
+  ],
+  "github_run_id": "36624047151",
+  "identity_repair_used": false,
+  "implementation_error": {
+    "message": "PUBLIC_EXPORT_NOT_RESOLVED_BY_OFFICIAL_UI",
+    "type": "RuntimeError"
+  },
+  "incremental_monetary_cost_usd": 0,
+  "issue": 180,
+  "pass_count": 3,
+  "prediction_computed": false,
+  "prohibited_precursor_exposure_computed": false,
+  "ranking_computed": false,
+  "relationship_computed": false,
+  "research": "US-USDA-ORG-F01",
+  "runner_sha256": "7320977999375a66b9d45bdf7ccecfa0e5172821efcdd12634e7ce31ad4b1f9b"
+}
