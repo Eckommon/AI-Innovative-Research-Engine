@@ -1,0 +1,71 @@
+name: Run CA-CORP-F01 Immutable Gate
+on:
+  workflow_dispatch:
+  issues:
+    types: [edited]
+permissions:
+  contents: write
+  issues: read
+jobs:
+  ca-corp-f01:
+    if: github.event_name != 'issues' || github.event.issue.number == 173
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify frozen authorization and immutable evidence slot
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git cat-file -e b97728c4e6338386bf47ec28be0c34afdf7a4737^{commit}
+          gh issue view 173 --repo '${{ github.repository }}' --json state --jq '.state' | grep -qx OPEN
+          test ! -e research/CA-CORP-F01/evidence/attempt-01.json
+          test ! -e research/CA-CORP-F01/evidence/attempt-01.md
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          cp=json.loads(Path('context/checkpoint.json').read_text())
+          assert cp['checkpoint_id']=='CHK-20260929-CA-CORP-F01-ACTIVE'
+          assert cp['active_issue']==173
+          assert cp['active_research']=='CA-CORP-F01'
+          assert cp['last_decision']=='DEC-256'
+          contract=Path('research/CA-CORP-F01/README.md').read_text()
+          assert 'future_section212_membership_opened: false' in contract
+          assert '18/18 PASS' in contract
+          PY
+      - name: Execute frozen 18-gate structural attempt
+        env:
+          CA_CORP_F01_ISSUE_BOUND: '1'
+          CA_CORP_F01_CONTRACT_SHA: 'b97728c4e6338386bf47ec28be0c34afdf7a4737'
+        run: python tools/run_ca_corp_f01.py
+      - name: Verify future-event and anti-tautology firewall
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          e=json.loads(Path('research/CA-CORP-F01/evidence/attempt-01.json').read_text())
+          assert e['future_rows_opened']==0
+          assert e['future_section212_membership_opened'] is False
+          assert e['future_entity_body_bytes_consumed']==0
+          assert e['prohibited_exposure_fields_computed'] is False
+          assert e['relationship_computed'] is False
+          assert e['prediction_computed'] is False
+          assert e['ranking_computed'] is False
+          assert e['causal_claim_made'] is False
+          assert e['incremental_monetary_cost_usd']==0
+          print(e['disposition'],e.get('pass_count'),e.get('failed_gates'))
+          PY
+      - name: Commit immutable Attempt 01 evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/CA-CORP-F01/evidence/attempt-01.json research/CA-CORP-F01/evidence/attempt-01.md
+          git commit -m 'Record CA-CORP-F01 immutable attempt 01'
+          git push origin HEAD:main
+      - name: Report boundary
+        run: |
+          echo 'Only baseline/open-data and historical transaction information through 2026-08-31 was authorized.'
+          echo 'No post-2026-09-29 transaction entity row was opened.'
+          echo 'No paid API or non-standard runner was used.'
