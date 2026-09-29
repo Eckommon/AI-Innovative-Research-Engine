@@ -1,21 +1,21 @@
 ---
-checkpoint_id: CHK-20260928-PORTFOLIO-R42-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20260929-UK-CQC-LOC-F01-ACTIVE
+active_issue: 171
+active_research: UK-CQC-LOC-F01
 last_completed_issue: 170
 last_completed_research: PORTFOLIO-R42
-last_decision: DEC-251
-updated: 2026-09-28
+last_decision: DEC-252
+updated: 2026-09-29
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `PORTFOLIO_R42_SELECTED_UK_CQC_LOC_001__F01_CONTRACT_REQUIRED`
+**State / 상태:** `UK_CQC_LOC_F01_ACTIVE__EXACT_LOCATION_REGISTRATION_END_GATE`
 
-PORTFOLIO-R42 is terminal. Immutable scorecard `ed09c81b9c744ad1f7038a7dc9848447fd9c1bff` selected `UK-CQC-LOC-001` at 40/45 via frozen tie-break #1 over BSEE. No candidate future-event membership was opened.
+UK-CQC-LOC-F01 is active under pre-Issue contract `99c7782cabc384ce7c4817a91b5cb1bdc105012c`. The frozen historical baseline is the official CQC 01-September-2026 care-directory-with-filters, care-directory-with-ratings and deactivated-locations files. Future inactive/deactivated membership after 2026-09-28 remains sealed.
 
 ## Exact next action / 정확한 다음 행동
 
-Freeze `UK-CQC-LOC-F01` before creating its Issue. The F01 must validate exact CQC Location ID continuity, current zero-cost official directory/rating/deactivated source access, snapshot lineage, active/inactive registration semantics, and whether closure-like cessation can be separated from administrative re-registration/legal-structure/address changes. Future inactive/deactivated membership must remain sealed.
+Execute the immutable 18-gate structural runner. It must validate official file access, exact Location-ID support, ratings/deactivated exact links, end-date support, historical archive lineage, and source-native administrative-transition/lineage semantics. Any valid empirical gate failure is terminal HOLD.
 
 Incremental monetary cost remains **0 USD**.
