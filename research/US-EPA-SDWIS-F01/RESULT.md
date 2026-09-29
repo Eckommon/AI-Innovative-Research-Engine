@@ -5,7 +5,7 @@ created: 2026-09-30
 issue: 182
 research: US-EPA-SDWIS-F01
 disposition: HOLD
-attempt_01_commit: canonical-attempt-01
+attempt_01_commit: 38060d28850304abbe186c4739eed8eb88970c45
 attempt_01_run: 36626153762
 contract_commit: 5546edebea1c09f68eb98075b286b3f20bd69b46
 gate: HOLD_US_EPA_SDWIS_F01_EXACT_PWSID_FUTURE_HEALTH_VIOLATION_DESIGN_NOT_READY
