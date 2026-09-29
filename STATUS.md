@@ -1,21 +1,21 @@
 ---
-checkpoint_id: CHK-20260929-EU-EMA-MA-F01-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20260929-PORTFOLIO-R45-ACTIVE
+active_issue: 176
+active_research: PORTFOLIO-R45
 last_completed_issue: 175
 last_completed_research: EU-EMA-MA-F01
-last_decision: DEC-261
+last_decision: DEC-262
 updated: 2026-09-29
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `EU_EMA_MA_F01_HOLD__PORTFOLIO_RESELECTION_REQUIRED`
+**State / 상태:** `PORTFOLIO_R45_ACTIVE__OUTCOME_BLIND_RESELECTION`
 
-EU-EMA-MA-F01 is terminal scientific HOLD under its unchanged pre-Issue 18-gate contract. Immutable Attempt 02 passed **15/18** gates; failed gates are 9, 12 and 14. Gate 9 is independently decisive because decision/authorisation-date support was **92.0459379%**, below the frozen **99.00%** threshold.
+PORTFOLIO-R45 is active under pre-Issue contract `01f4518bd72f5db542e437bd5669b9c0489efdc9`. Candidate future-event memberships and relationship values remain unopened.
 
 ## Exact next action / 정확한 다음 행동
 
-Return to an independent outcome-blind Stage-0 portfolio reselection. Do not rescue the EMA branch by narrowing the focal population, lowering date-support thresholds, substituting another date field, collapsing event classes, or opening future withdrawal/suspension membership.
+Perform bounded official-source/current-access, canonical-overlap and external-framework revalidation, then persist exactly one immutable /45 scorecard and select at most one separate outcome-blind F01.
 
 Incremental monetary cost remains **0 USD**.
