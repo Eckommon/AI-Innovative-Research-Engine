@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260929-CA-CORP-F01-ACTIVE",
-  "active_issue": 173,
-  "active_research": "CA-CORP-F01",
-  "last_completed_issue": 172,
-  "last_completed_research": "PORTFOLIO-R43",
-  "last_decision": "DEC-256",
+  "checkpoint_id": "CHK-20260929-CA-CORP-F01-TERMINAL",
+  "active_issue": "none",
+  "active_research": "NONE",
+  "last_completed_issue": 173,
+  "last_completed_research": "CA-CORP-F01",
+  "last_decision": "DEC-257",
   "updated": "2026-09-29"
 }
