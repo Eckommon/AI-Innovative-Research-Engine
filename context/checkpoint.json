@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260930-US-EPA-SDWIS-F01-ACTIVE",
-  "active_issue": 182,
-  "active_research": "US-EPA-SDWIS-F01",
-  "last_completed_issue": 181,
-  "last_completed_research": "PORTFOLIO-R47",
-  "last_decision": "DEC-274",
+  "checkpoint_id": "CHK-20260930-US-EPA-SDWIS-F01-TERMINAL",
+  "active_issue": "none",
+  "active_research": "NONE",
+  "last_completed_issue": 182,
+  "last_completed_research": "US-EPA-SDWIS-F01",
+  "last_decision": "DEC-275",
   "updated": "2026-09-30"
 }
