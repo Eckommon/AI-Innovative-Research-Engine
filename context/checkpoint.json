@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260930-US-USDA-ORG-F01-TERMINAL",
-  "active_issue": "none",
-  "active_research": "NONE",
+  "checkpoint_id": "CHK-20260930-PORTFOLIO-R47-ACTIVE",
+  "active_issue": 181,
+  "active_research": "PORTFOLIO-R47",
   "last_completed_issue": 180,
   "last_completed_research": "US-USDA-ORG-F01",
-  "last_decision": "DEC-271",
+  "last_decision": "DEC-272",
   "updated": "2026-09-30"
 }
