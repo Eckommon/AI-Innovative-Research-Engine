@@ -1,25 +1,21 @@
 ---
-checkpoint_id: CHK-20260930-US-USDA-ORG-F01-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20260930-PORTFOLIO-R47-ACTIVE
+active_issue: 181
+active_research: PORTFOLIO-R47
 last_completed_issue: 180
 last_completed_research: US-USDA-ORG-F01
-last_decision: DEC-271
+last_decision: DEC-272
 updated: 2026-09-30
 ---
 
 # Session Handoff / 세션 인계
 
-`US_USDA_ORG_F01_BLOCKED_TRANSPORT__PORTFOLIO_RESELECTION_REQUIRED`
+`PORTFOLIO_R47_ACTIVE__OUTCOME_BLIND_RESELECTION`
 
-- Issue #180 completed.
-- Pre-Issue contract: `d1ccc1e745c0881a64f8cf7e2ab481fb69215adc`.
-- Attempt 01: Run `36592128366`, implementation-blocked.
-- Attempt 02: Run `36624047151`, implementation-blocked.
-- Attempt 02 located exact USDA controls and official UI guidance: full USDA quick downloads are available on the **Data History** page.
-- Scientific gates were not validly executed; this is not a scientific HOLD.
-- Future Suspended/Revoked membership opened: false.
-- N01/E01 not authorized.
-- Mandatory branch-stop applied after two transport descendants without new scientific evidence.
-- Next: independent Stage-0 portfolio reselection.
+- Issue #181 open.
+- Pre-Issue contract: `c3bfe8cd3f85516e7adf4e700103992ab9a29193`.
+- Candidates: `US-EPA-SDWIS-001`, `US-ED-POSTSEC-001`, `AU-ASIC-COMP-001`, `EU-EMAS-ORG-001`.
+- Parent USDA branch is terminal transport evidence only; no third transport rescue.
+- Candidate future-event memberships/effects opened: 0.
+- Next: bounded revalidation and one immutable /45 scorecard.
 - Cost: 0 USD.
