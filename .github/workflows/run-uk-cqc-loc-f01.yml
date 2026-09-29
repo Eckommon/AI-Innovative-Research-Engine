@@ -1,0 +1,70 @@
+name: Run UK-CQC-LOC-F01 Immutable Gate
+on:
+  workflow_dispatch:
+  issues:
+    types: [edited]
+permissions:
+  contents: write
+  issues: read
+jobs:
+  cqc-loc-f01:
+    if: github.event_name != 'issues' || github.event.issue.number == 171
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify frozen authorization and immutable evidence slot
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git cat-file -e 99c7782cabc384ce7c4817a91b5cb1bdc105012c^{commit}
+          gh issue view 171 --repo '${{ github.repository }}' --json state --jq '.state' | grep -qx OPEN
+          test ! -e research/UK-CQC-LOC-F01/evidence/attempt-01.json
+          test ! -e research/UK-CQC-LOC-F01/evidence/attempt-01.md
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          cp=json.loads(Path('context/checkpoint.json').read_text())
+          assert cp['checkpoint_id']=='CHK-20260929-UK-CQC-LOC-F01-ACTIVE'
+          assert cp['active_issue']==171
+          assert cp['active_research']=='UK-CQC-LOC-F01'
+          assert cp['last_decision']=='DEC-252'
+          contract=Path('research/UK-CQC-LOC-F01/README.md').read_text()
+          assert 'future_inactive_deactivated_membership_opened: false' in contract
+          assert '18/18 PASS' in contract
+          PY
+      - name: Execute frozen 18-gate structural attempt
+        env:
+          CQC_F01_ISSUE_BOUND: '1'
+          CQC_F01_CONTRACT_SHA: '99c7782cabc384ce7c4817a91b5cb1bdc105012c'
+        run: python tools/run_uk_cqc_loc_f01.py
+      - name: Verify future-outcome and cost firewall
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          e=json.loads(Path('research/UK-CQC-LOC-F01/evidence/attempt-01.json').read_text())
+          assert e['future_rows_opened']==0
+          assert e['future_event_membership_opened'] is False
+          assert e['future_entity_body_bytes_consumed']==0
+          assert e['relationship_computed'] is False
+          assert e['prediction_computed'] is False
+          assert e['ranking_computed'] is False
+          assert e['causal_claim_made'] is False
+          assert e['incremental_monetary_cost_usd']==0
+          print(e['disposition'],e.get('pass_count'),e.get('failed_gates'))
+          PY
+      - name: Commit immutable Attempt 01 evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/UK-CQC-LOC-F01/evidence/attempt-01.json research/UK-CQC-LOC-F01/evidence/attempt-01.md
+          git commit -m 'Record UK-CQC-LOC-F01 immutable attempt 01'
+          git push origin HEAD:main
+      - name: Report boundary
+        run: |
+          echo 'Only frozen 01-Sep-2026 CQC entity files were authorized.'
+          echo 'No post-2026-09-28 inactive/deactivated entity body was opened.'
+          echo 'No paid API or non-standard runner was used.'
