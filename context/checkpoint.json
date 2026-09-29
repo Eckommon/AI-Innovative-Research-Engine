@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260929-PORTFOLIO-R43-ACTIVE",
-  "active_issue": 172,
-  "active_research": "PORTFOLIO-R43",
-  "last_completed_issue": 171,
-  "last_completed_research": "UK-CQC-LOC-F01",
-  "last_decision": "DEC-254",
+  "checkpoint_id": "CHK-20260929-PORTFOLIO-R43-TERMINAL",
+  "active_issue": "none",
+  "active_research": "NONE",
+  "last_completed_issue": 172,
+  "last_completed_research": "PORTFOLIO-R43",
+  "last_decision": "DEC-255",
   "updated": "2026-09-29"
 }
