@@ -1,26 +1,22 @@
 ---
-checkpoint_id: CHK-20260929-EU-EMA-MA-F01-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20260929-PORTFOLIO-R45-ACTIVE
+active_issue: 176
+active_research: PORTFOLIO-R45
 last_completed_issue: 175
 last_completed_research: EU-EMA-MA-F01
-last_decision: DEC-261
+last_decision: DEC-262
 updated: 2026-09-29
 ---
 
 # Session Handoff / 세션 인계
 
-`EU_EMA_MA_F01_HOLD__PORTFOLIO_RESELECTION_REQUIRED`
+`PORTFOLIO_R45_ACTIVE__OUTCOME_BLIND_RESELECTION`
 
-- Issue #175 completed.
-- Pre-Issue contract: `215cd9dd74a358e412a86de5d41a039c2f8186cb`.
-- Attempt 01 / Run `36529679263`: implementation block; immutable commit `56c557a334ee82401217e99d4700825889f248a9`.
-- Attempt 02 / Run `36545759009`: valid empirical result; immutable commit `fe07b9ef39db42758c16612d202f29235be88b6c`.
-- Terminal result: **15/18 PASS**; failed gates **9, 12, 14**.
-- Decisive failure: decision/authorisation-date support **92.0459379% < 99.00%**.
-- Exact human EMA IDs: **2,351**; authorised/current IDs **1,573**.
-- Historical withdrawn-authorisation support: **93**; reason support **100%**.
-- Future event membership opened: **false**; future entity pages consumed: **0**.
-- N01/E01 not authorized.
-- Next: independent Stage-0 portfolio reselection.
+- Issue #176 open.
+- Pre-Issue contract: `01f4518bd72f5db542e437bd5669b9c0489efdc9`.
+- Activation: `DEC-262`.
+- Candidates: MSHA mine safety, NCUA credit-union liquidation, CMS nursing-home termination, FDA PMA withdrawal/suspension.
+- Candidate future-event memberships/effects remain unopened.
+- Parent EMA F01 is terminal negative evidence only.
+- Next: bounded revalidation and one immutable /45 scorecard.
 - Cost: 0 USD.
