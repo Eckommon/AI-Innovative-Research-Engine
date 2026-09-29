@@ -1,21 +1,21 @@
 ---
-checkpoint_id: CHK-20260929-PORTFOLIO-R43-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20260929-CA-CORP-F01-ACTIVE
+active_issue: 173
+active_research: CA-CORP-F01
 last_completed_issue: 172
 last_completed_research: PORTFOLIO-R43
-last_decision: DEC-255
+last_decision: DEC-256
 updated: 2026-09-29
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `PORTFOLIO_R43_SELECTED_CA_CORP_001__F01_CONTRACT_REQUIRED`
+**State / 상태:** `CA_CORP_F01_ACTIVE__EXACT_ID_SECTION212_GATE`
 
-PORTFOLIO-R43 is terminal. Immutable scorecard `45bcf7d6778d1e066497f4354b942b2508b7dbcc` selected `CA-CORP-001` at **41/45** for exactly one separate outcome-blind F01. No candidate future-event membership was opened.
+CA-CORP-F01 is active under pre-Issue contract `b97728c4e6338386bf47ec28be0c34afdf7a4737`. The focal population is CBCA corporations. Historical transaction rows are restricted to effective dates through 2026-08-31; future section-212 membership from 2026-09-30 onward remains sealed.
 
 ## Exact next action / 정확한 다음 행동
 
-Freeze `CA-CORP-F01` **before** Issue creation. It must test anonymous official source access, exact Corporation Number/corporationId identity, historical baseline support, section-212 non-compliance dissolution semantics, historical transaction lineage and an anti-tautology firewall excluding overdue-filing / intent-to-dissolve / dissolution-pending information.
+Execute the immutable 18-gate structural runner: resolve the official federal-corporation dataset, validate exact corporation identity and support, historical monthly section-212 lineage/event separation, pre-fixed API concordance and the anti-tautology/future-outcome firewall.
 
 Incremental monetary cost remains **0 USD**.
