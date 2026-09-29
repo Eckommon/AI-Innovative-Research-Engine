@@ -1,21 +1,21 @@
 ---
-checkpoint_id: CHK-20260929-EU-EMA-MA-F01-ACTIVE
-active_issue: 175
-active_research: EU-EMA-MA-F01
-last_completed_issue: 174
-last_completed_research: PORTFOLIO-R44
-last_decision: DEC-260
+checkpoint_id: CHK-20260929-EU-EMA-MA-F01-TERMINAL
+active_issue: none
+active_research: NONE
+last_completed_issue: 175
+last_completed_research: EU-EMA-MA-F01
+last_decision: DEC-261
 updated: 2026-09-29
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `EU_EMA_MA_F01_ACTIVE__EXACT_PRODUCT_WITHDRAWAL_SUSPENSION_GATE`
+**State / 상태:** `EU_EMA_MA_F01_HOLD__PORTFOLIO_RESELECTION_REQUIRED`
 
-EU-EMA-MA-F01 is active under pre-Issue contract `215cd9dd74a358e412a86de5d41a039c2f8186cb`. Human centrally authorised medicines are the focal population. Future withdrawal/suspension membership from 2026-09-30 onward remains sealed.
+EU-EMA-MA-F01 is terminal scientific HOLD under its unchanged pre-Issue 18-gate contract. Immutable Attempt 02 passed **15/18** gates; failed gates are 9, 12 and 14. Gate 9 is independently decisive because decision/authorisation-date support was **92.0459379%**, below the frozen **99.00%** threshold.
 
 ## Exact next action / 정확한 다음 행동
 
-Execute the immutable 18-gate structural runner: resolve official EMA medicine JSON/table data, validate exact EMA product identity/support, historical marketing-authorisation withdrawal date/reason semantics and event-class separation, then enforce the future-event firewall.
+Return to an independent outcome-blind Stage-0 portfolio reselection. Do not rescue the EMA branch by narrowing the focal population, lowering date-support thresholds, substituting another date field, collapsing event classes, or opening future withdrawal/suspension membership.
 
 Incremental monetary cost remains **0 USD**.
