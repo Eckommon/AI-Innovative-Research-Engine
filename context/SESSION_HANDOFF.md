@@ -1,23 +1,25 @@
 ---
-checkpoint_id: CHK-20260929-PORTFOLIO-R45-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20260929-US-MSHA-MINE-F01-ACTIVE
+active_issue: 177
+active_research: US-MSHA-MINE-F01
 last_completed_issue: 176
 last_completed_research: PORTFOLIO-R45
-last_decision: DEC-263
+last_decision: DEC-264
 updated: 2026-09-29
 ---
 
 # Session Handoff / 세션 인계
 
-`PORTFOLIO_R45_SELECTED_US_MSHA_MINE_001__F01_CONTRACT_REQUIRED`
+`US_MSHA_MINE_F01_ACTIVE__EXACT_ID_SERIOUS_FATAL_GATE`
 
-- Issue #176 completed.
-- Frozen candidate contract: `01f4518bd72f5db542e437bd5669b9c0489efdc9`.
-- Revalidation: `0f86e1a1fb4998fb56a6027ed0c6f1b55248e6f1`.
-- Immutable scorecard: `e4fb9246ae9af2a102a2fae5ce2c672a5d5beda7`.
-- Selection: `US-MSHA-MINE-001` **42/45**.
-- NCUA 40, CMS 39, FDA PMA 38 remain held.
-- Candidate future-event memberships opened: 0.
-- Next: freeze `US-MSHA-MINE-F01` before Issue creation.
+- Issue #177 open.
+- Pre-Issue contract: `18a90079c3566641bc3856f7d802acdc75b53388`.
+- Parent selection: `US-MSHA-MINE-001` 42/45 / `DEC-263`.
+- Official entity sources: `Mines.zip`, `MinesProdQuarterly.zip`, `Accidents.zip`.
+- Exact Mine ID: seven decimal digits only; no padding or repair.
+- Frozen operating statuses: Active, Intermittent, NonProducing, Temporarily Idled.
+- Frozen employment baseline: 2026 Q1/Q2.
+- Serious/fatal codes: Degree Injury 01/02 or Immediate Notification 01/02.
+- Future event membership from 2026-09-30: sealed.
+- Next: immutable 18-gate empirical runner.
 - Cost: 0 USD.
