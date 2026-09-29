@@ -1,0 +1,35 @@
+# US-MSHA-MINE-F01 — Attempt 01
+
+**Disposition:** `HOLD_US_MSHA_MINE_F01_EXACT_ID_SERIOUS_FATAL_FUTURE_EVENT_DESIGN_NOT_READY`
+
+- Attempt valid: `True`
+- Gates passed: **17/18**
+- Failed gates: `[3]`
+- Future rows seen but sealed: **0**
+- Future serious/fatal membership opened: **False**
+- Cost: **0 USD**
+
+## Gate ledger
+
+| Gate | PASS | Observed |
+|---:|:---:|---|
+| 1 | PASS | `{"active_issue": 177, "active_research": "US-MSHA-MINE-F01", "checkpoint_id": "CHK-20260929-US-MSHA-MINE-F01-ACTIVE", "last_completed_issue": 176, "last_completed_research": "PORTFOLIO-R45", "last_decision": "DEC-264", "updated": "2026-09-29"}` |
+| 2 | PASS | `{"contract_sha": "18a90079c3566641bc3856f7d802acdc75b53388", "issue": 177}` |
+| 3 | FAIL | `{"accidents_def": {"bytes": 10214, "content_type": "text/plain", "etag": "\"f48041e30f2cf1:0\"", "last_modified": "Mon, 27 Oct 2014 21:51:09 GMT", "sha256": "c7681808dd372b6c5bd95fdf70b01e856e0d2501b7e5d7cc9185f4c4e1f876e5", "status": 200, "url": "https://arlweb.msha.gov/OpenGovernmentData/DataSets/Accidents_Definition_File.txt"}, "employment_def": {"bytes": 2055, "content_type": "text/plain", "etag": "\"80d9a17b22d5cb1:0\"", "last_modified": "Fri, 25 Feb 2011 19:30:39 GMT", "sha256": "9177770776652a8f3c3a120ab973799a69d333c5f0aa7b5eb51b5150d08e19f3", "status": 200, "url": "https://arlweb.msha.gov/OpenGovernmentData/DataSets/MineSProdQuarterly_Definition_File.txt"}, "mdrs": {"bytes": 0, "content_type": "text/html; charset=UTF-8", "etag": null, "last_modified": null, "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "status": 202, "url": "https://www.msha.gov/mine-data-retrieval-system"}, "mines_def": {"bytes": 10285, "content_type": "text/plain", "etag": "\"79a7f3fafc87d91:0\"", "last_modified": "Tue, 16 May 2023 13:47:39 GMT", "sha256": "efd2bc2c493207a464be7c4e4795ffd08a221588b76b716ee334a75dfc14f1f9", "status": 200, "url": "https://arlweb.msha.gov/...` |
+| 4 | PASS | `{"accidents": {"bytes": 52240903, "content_type": "application/x-zip-compressed", "etag": "\"71cb65ee04cdd1:0\"", "last_modified": "Fri, 25 Sep 2026 11:24:03 GMT", "sha256": "db5ac677f235e90f6214e6f26ee2b2994e32f01e18124f5165f05b5f741420b6", "status": 200, "url": "https://arlweb.msha.gov/OpenGovernmentData/DataSets/Accidents.zip"}, "employment": {"bytes": 53902363, "content_type": "application/x-zip-compressed", "etag": "\"a76af260e04cdd1:0\"", "last_modified": "Fri, 25 Sep 2026 11:24:07 GMT", "sha256": "4fa86737661eeee1aa9eea16b39614aba961a1920abf471761424b9613b1e960", "status": 200, "url": "https://arlweb.msha.gov/OpenGovernmentData/DataSets/MinesProdQuarterly.zip"}, "mines": {"bytes": 7304825, "content_type": "application/x-zip-compressed", "etag": "\"d8bba960e04cdd1:0\"", "last_modified": "Fri, 25 Sep 2026 11:24:06 GMT", "sha256": "3ddec0aebbc3fd4d70feeae0e507fd0ccee4e45516768b1a932e6e185f43fcd7", "status": 200, "url": "https://arlweb.msha.gov/OpenGovernmentData/DataSets/Mines.zip"}}` |
+| 5 | PASS | `{"delimiter": "|", "headers": ["MINE_ID", "CURRENT_MINE_NAME", "COAL_METAL_IND", "CURRENT_MINE_TYPE", "CURRENT_MINE_STATUS", "CURRENT_STATUS_DT", "CURRENT_CONTROLLER_ID", "CURRENT_CONTROLLER_NAME", "CURRENT_OPERATOR_ID", "CURRENT_OPERATOR_NAME", "STATE", "BOM_STATE_CD", "FIPS_CNTY_CD", "FIPS_CNTY_NM", "CONG_DIST_CD", "COMPANY_TYPE", "CURRENT_CONTROLLER_BEGIN_DT", "DISTRICT", "OFFICE_CD", "OFFICE_NAME", "ASSESS_CTRL_NO", "PRIMARY_SIC_CD", "PRIMARY_SIC", "PRIMARY_SIC_CD_1", "PRIMARY_SIC_CD_SFX", "SECONDARY_SIC_CD", "SECONDARY_SIC", "SECONDARY_SIC_CD_1", "SECONDARY_SIC_CD_SFX", "PRIMARY_CANVASS_CD", "PRIMARY_CANVASS", "SECONDARY_CANVASS_CD", "SECONDARY_CANVASS", "CURRENT_103I", "CURRENT_103I_DT", "PORTABLE_OPERATION", "PORTABLE_FIPS_ST_CD", "DAYS_PER_WEEK", "HOURS_PER_SHIFT", "PROD_SHIFTS_PER_DAY", "MAINT_SHIFTS_PER_DAY", "NO_EMPLOYEES", "PART48_TRAINING", "LONGITUDE", "LATITUDE", "AVG_MINE_HEIGHT", "MINE_GAS_CATEGORY_CD", "METHANE_LIBERATION", "NO_PRODUCING_PITS", "NO_NONPRODUCING_PITS", "NO_TAILING_PONDS", "PILLAR_RECOVERY_USED", "HIGHWALL_MINER_USED", "MULTIPLE_PITS", "MINERS_REP_IND", "SAFETY_COMMITTEE_IND", "MILES_FROM_OFFICE", "DIRECTIONS_TO_MINE", "NEAREST_TOWN"], "member": ...` |
+| 6 | PASS | `{"nonblank": 92028, "rate": 1.0, "threshold": 0.999, "valid": 92028}` |
+| 7 | PASS | `{"distinct_mine_ids": 92028, "threshold": 50000}` |
+| 8 | PASS | `{"operating_ids": 13351, "threshold": 10000}` |
+| 9 | PASS | `{"delimiter": "|", "frozen_rows": 46099, "headers": ["MINE_ID", "CURR_MINE_NM", "STATE", "SUBUNIT_CD", "SUBUNIT", "CAL_YR", "CAL_QTR", "FISCAL_YR", "FISCAL_QTR", "AVG_EMPLOYEE_CNT", "HOURS_WORKED", "COAL_PRODUCTION", "COAL_METAL_IND"], "member": "MinesProdQuarterly.txt"}` |
+| 10 | PASS | `{"distinct_q1q2_ids": 12857, "threshold": 8000}` |
+| 11 | PASS | `{"employment_ids": 12857, "exact_matches": 12857, "rate": 1.0, "threshold": 0.99}` |
+| 12 | PASS | `{"delimiter": "|", "headers": ["MINE_ID", "CONTROLLER_ID", "CONTROLLER_NAME", "OPERATOR_ID", "OPERATOR_NAME", "CONTRACTOR_ID", "DOCUMENT_NO", "SUBUNIT_CD", "SUBUNIT", "ACCIDENT_DT", "CAL_YR", "CAL_QTR", "FISCAL_YR", "FISCAL_QTR", "ACCIDENT_TIME", "DEGREE_INJURY_CD", "DEGREE_INJURY", "FIPS_STATE_CD", "UG_LOCATION_CD", "UG_LOCATION", "UG_MINING_METHOD_CD", "UG_MINING_METHOD", "MINING_EQUIP_CD", "MINING_EQUIP", "EQUIP_MFR_CD", "EQUIP_MFR_NAME", "EQUIP_MODEL_NO", "SHIFT_BEGIN_TIME", "CLASSIFICATION_CD", "CLASSIFICATION", "ACCIDENT_TYPE_CD", "ACCIDENT_TYPE", "NO_INJURIES", "TOT_EXPER", "MINE_EXPER", "JOB_EXPER", "OCCUPATION_CD", "OCCUPATION", "ACTIVITY_CD", "ACTIVITY", "INJURY_SOURCE_CD", "INJURY_SOURCE", "NATURE_INJURY_CD", "NATURE_INJURY", "INJ_BODY_PART_CD", "INJ_BODY_PART", "SCHEDULE_CHARGE", "DAYS_RESTRICT", "DAYS_LOST", "TRANS_TERM", "RETURN_TO_WORK_DT", "IMMED_NOTIFY_CD", "IMMED_NOTIFY", "INVEST_BEGIN_DT", "NARRATIVE", "CLOSED_DOC_NO", "COAL_METAL_IND"], "historical_rows": 275067, "member": "Accidents.txt"}` |
+| 13 | PASS | `{"exact_matches": 13538, "historical_accident_mine_ids": 13538, "rate": 1.0, "threshold": 0.99}` |
+| 14 | PASS | `{"distinct_mines": 4396, "distinct_serious_fatal_documents": 11934, "threshold_documents": 1000, "threshold_mines": 500}` |
+| 15 | PASS | `{"integrity_rows": 11934, "rate": 1.0, "severe_rows": 11934, "threshold": 0.99}` |
+| 16 | PASS | `{"degree_fatal": true, "degree_permanent": true, "immediate_death": true, "immediate_serious": true}` |
+| 17 | PASS | `{"causal": false, "future_membership_opened": false, "future_rows_seen_sealed": 0, "identity_repair": false, "prediction": false, "ranking": false, "relationship": false}` |
+| 18 | PASS | `{"contract_sha": "18a90079c3566641bc3856f7d802acdc75b53388", "cost_usd": 0, "runner_sha256": "cf6018bb5a4c2e03caa87c1e7c977ef2e5c7583b0c0de1b955df20ff07996b06", "source_sha256": {"accidents": "db5ac677f235e90f6214e6f26ee2b2994e32f01e18124f5165f05b5f741420b6", "employment": "4fa86737661eeee1aa9eea16b39614aba961a1920abf471761424b9613b1e960", "mines": "3ddec0aebbc3fd4d70feeae0e507fd0ccee4e45516768b1a932e6e185f43fcd7"}}` |
+
+No post-2026-09-29 serious/fatal event membership was opened.
