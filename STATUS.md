@@ -1,21 +1,21 @@
 ---
-checkpoint_id: CHK-20260930-PORTFOLIO-R48-ACTIVE
-active_issue: 183
-active_research: PORTFOLIO-R48
-last_completed_issue: 182
-last_completed_research: US-EPA-SDWIS-F01
-last_decision: DEC-276
+checkpoint_id: CHK-20260930-PORTFOLIO-R48-TERMINAL
+active_issue: none
+active_research: NONE
+last_completed_issue: 183
+last_completed_research: PORTFOLIO-R48
+last_decision: DEC-277
 updated: 2026-09-30
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `PORTFOLIO_R48_ACTIVE__LONGITUDINAL_FIRST_RESELECTION`
+**State / 상태:** `PORTFOLIO_R48_SELECTED_US_EIA_GEN_001__F01_CONTRACT_REQUIRED`
 
-PORTFOLIO-R48 is active under pre-Issue contract `5a7d40c57ef1b8401e9761e821306b36fc857691`. Frozen candidates are EIA generator retirement, SEC adviser full withdrawal, EPA RCRA formal enforcement and FMCSA reportable crash. Candidate future-event memberships remain unopened.
+PORTFOLIO-R48 is terminal. Immutable scorecard `6fc8132426cf10bd54baf195c6d915884ccdf7ea` selected `US-EIA-GEN-001` at **43/45** for exactly one separate outcome-blind F01. No candidate future-event membership was opened.
 
 ## Exact next action / 정확한 다음 행동
 
-Complete current-source plus explicit historical-lineage revalidation, canonical-overlap review and bounded literature overlap review; then persist exactly one immutable /45 scorecard and select at most one outcome-blind F01.
+Freeze `US-EIA-GEN-F01` before Issue creation. It must test exact Plant ID + Generator ID identity, ≥12 historical monthly 860M files, operable/retired lifecycle semantics, historical retirement support, revision/future-file sealing and non-tautological linkage to operating-performance context without using planned-retirement signals.
 
 Incremental monetary cost remains **0 USD**.
