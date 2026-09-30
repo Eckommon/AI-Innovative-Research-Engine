@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260930-US-EIA-RET-N01-TERMINAL",
-  "active_issue": "none",
-  "active_research": "NONE",
+  "checkpoint_id": "CHK-20260930-PORTFOLIO-R49-ACTIVE",
+  "active_issue": 186,
+  "active_research": "PORTFOLIO-R49",
   "last_completed_issue": 185,
   "last_completed_research": "US-EIA-RET-N01",
-  "last_decision": "DEC-282",
+  "last_decision": "DEC-283",
   "updated": "2026-09-30"
 }
