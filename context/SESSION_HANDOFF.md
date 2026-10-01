@@ -1,23 +1,25 @@
 ---
-checkpoint_id: CHK-20261001-PORTFOLIO-R50-TERMINAL
+checkpoint_id: CHK-20261002-PORTFOLIO-R50-CORRECTED
 active_issue: none
 active_research: NONE
 last_completed_issue: 188
 last_completed_research: PORTFOLIO-R50
-last_decision: DEC-288
-updated: 2026-10-01
+last_decision: DEC-289
+updated: 2026-10-02
 ---
 
 # Session Handoff / 세션 인계
 
-`PORTFOLIO_R50_SELECTED_US_FCC_ULS_001__F01_CONTRACT_REQUIRED`
+`PORTFOLIO_R50_SELECTION_INVALIDATED__PORTFOLIO_R51_REQUIRED`
 
-- Issue #188 completed.
-- Frozen contract: `4bee3df90e8b174b1851f921eff097f6f5dda00d`.
-- Revalidation: `8515e7c5469112a9175e49f19601b1f7b0134669`.
-- Immutable scorecard: `6b4824ee06c776f47c05fb15884c341ce58172d8`.
-- Selection: `US-FCC-ULS-001` **41/45**.
-- FAA aircraft 39, CMS revocation 39, FDA DECRS 32 remain held.
-- Candidate future-event memberships opened: 0.
-- Next: freeze `US-FCC-ULS-F01` before Issue creation.
+- R50 original Issue #188 remains completed.
+- Original immutable scorecard: `6b4824ee06c776f47c05fb15884c341ce58172d8`.
+- Original R50 FCC selection is **not authorized for a new F01**.
+- Canonical conflict: R40 already executed the same `US-FCC-ULS-F01` Microwave route.
+- Prior terminal result: **9/18 HOLD**, evidence `e78d0f64ebf37acc7c481628a415e68b0f69f7b3`, Run `35555505050`.
+- Correction: `research/PORTFOLIO-R50/SELECTION_CORRECTION_01.md`.
+- Decision: `DEC-289`.
+- FAA/CMS runner-ups are not post-hoc promoted.
+- Future event membership opened by this correction: 0.
+- Next: fresh `PORTFOLIO-R51` with strengthened prior-terminal-equivalence eligibility screen.
 - Cost: 0 USD.
