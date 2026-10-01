@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20260930-US-SEC-IA-F01-ACTIVE",
-  "active_issue": 187,
-  "active_research": "US-SEC-IA-F01",
-  "last_completed_issue": 186,
-  "last_completed_research": "PORTFOLIO-R49",
-  "last_decision": "DEC-285",
-  "updated": "2026-09-30"
+  "checkpoint_id": "CHK-20261001-US-SEC-IA-F01-TERMINAL",
+  "active_issue": "none",
+  "active_research": "NONE",
+  "last_completed_issue": 187,
+  "last_completed_research": "US-SEC-IA-F01",
+  "last_decision": "DEC-286",
+  "updated": "2026-10-01"
 }
