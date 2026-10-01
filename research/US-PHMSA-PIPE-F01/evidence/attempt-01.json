@@ -1,0 +1,80 @@
+{
+  "attempt": 1,
+  "attempt_valid": false,
+  "causal_claim_made": false,
+  "contract_sha": "42e8195cf0749a48f73039729a991352c201efc7",
+  "disposition": "IMPLEMENTATION_BLOCKED_US_PHMSA_PIPE_F01_ATTEMPT_01",
+  "failed_gates": [],
+  "future_entity_rows_consumed": 0,
+  "future_incident_membership_opened": false,
+  "gates": [
+    {
+      "gate": 1,
+      "observed": {
+        "active_issue": 190,
+        "active_research": "US-PHMSA-PIPE-F01",
+        "checkpoint_id": "CHK-20261002-US-PHMSA-PIPE-F01-ACTIVE",
+        "last_completed_issue": 189,
+        "last_completed_research": "PORTFOLIO-R51",
+        "last_decision": "DEC-292",
+        "updated": "2026-10-02"
+      },
+      "pass": true
+    },
+    {
+      "gate": 2,
+      "observed": {
+        "contract_sha": "42e8195cf0749a48f73039729a991352c201efc7",
+        "issue": 190
+      },
+      "pass": true
+    },
+    {
+      "gate": 3,
+      "observed": {
+        "annual": {
+          "error": "HTTPError:403 Client Error: Forbidden for url: https://www.phmsa.dot.gov/data-and-statistics/pipeline/gas-distribution-gas-gathering-gas-transmission-hazardous-liquids",
+          "requested_url": "https://www.phmsa.dot.gov/data-and-statistics/pipeline/gas-distribution-gas-gathering-gas-transmission-hazardous-liquids"
+        },
+        "annual_instr": {
+          "error": "HTTPError:403 Client Error: Forbidden for url: https://www.phmsa.dot.gov/forms/gas-transmission-and-gathering-annual-report-instructions-f-71002-1",
+          "requested_url": "https://www.phmsa.dot.gov/forms/gas-transmission-and-gathering-annual-report-instructions-f-71002-1"
+        },
+        "incident": {
+          "error": "HTTPError:403 Client Error: Forbidden for url: https://www.phmsa.dot.gov/data-and-statistics/pipeline/distribution-transmission-gathering-lng-and-liquid-accident-and-incident-data",
+          "requested_url": "https://www.phmsa.dot.gov/data-and-statistics/pipeline/distribution-transmission-gathering-lng-and-liquid-accident-and-incident-data"
+        },
+        "incident_instr": {
+          "error": "HTTPError:403 Client Error: Forbidden for url: https://www.phmsa.dot.gov/forms/gas-transmission-gathering-and-ungs-incident-report-instructions-f-71002-1",
+          "requested_url": "https://www.phmsa.dot.gov/forms/gas-transmission-gathering-and-ungs-incident-report-instructions-f-71002-1"
+        },
+        "opid": {
+          "error": "HTTPError:403 Client Error: Forbidden for url: https://www.phmsa.dot.gov/data-and-statistics/pipeline/pipeline-operators-opids",
+          "requested_url": "https://www.phmsa.dot.gov/data-and-statistics/pipeline/pipeline-operators-opids"
+        },
+        "source": {
+          "error": "HTTPError:403 Client Error: Forbidden for url: https://www.phmsa.dot.gov/data-and-statistics/pipeline/source-data",
+          "requested_url": "https://www.phmsa.dot.gov/data-and-statistics/pipeline/source-data"
+        }
+      },
+      "pass": false
+    }
+  ],
+  "github_run_id": "36886491100",
+  "identity_repair_used": false,
+  "implementation_error": {
+    "message": "403 Client Error: Forbidden for url: https://www.phmsa.dot.gov/sites/phmsa.dot.gov/files/data_statistics/pipeline/annual_gas_transmission_gathering_2010_present.zip",
+    "type": "HTTPError"
+  },
+  "incremental_monetary_cost_usd": 0,
+  "issue": 190,
+  "later_incident_refresh_opened": false,
+  "pass_count": 2,
+  "prediction_computed": false,
+  "prohibited_incident_enforcement_exposure_computed": false,
+  "ranking_computed": false,
+  "relationship_computed": false,
+  "research": "US-PHMSA-PIPE-F01",
+  "runner_sha256": "bd0f296bc2c13d442616706fcc2ba4e7e3b86a03a29e122f0b8a68586756054e",
+  "runner_start_utc": "2026-10-01T15:43:39.484211+00:00"
+}
