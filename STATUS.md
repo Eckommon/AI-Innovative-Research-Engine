@@ -1,21 +1,21 @@
 ---
-checkpoint_id: CHK-20261002-PORTFOLIO-R51-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20261002-US-PHMSA-PIPE-F01-ACTIVE
+active_issue: 190
+active_research: US-PHMSA-PIPE-F01
 last_completed_issue: 189
 last_completed_research: PORTFOLIO-R51
-last_decision: DEC-291
+last_decision: DEC-292
 updated: 2026-10-02
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `PORTFOLIO_R51_SELECTED_US_PHMSA_PIPE_001__F01_CONTRACT_REQUIRED`
+**State / 상태:** `US_PHMSA_PIPE_F01_ACTIVE__GAS_TRANSMISSION_EXACT_OPID_GATE`
 
-PORTFOLIO-R51 is terminal. Immutable scorecard `a18a4b8a4972cbc20b076969140ef7c65c50e0bf` selected `US-PHMSA-PIPE-001` at **42/45** for exactly one separate outcome-blind F01. No future incident membership was opened.
+US-PHMSA-PIPE-F01 is active under pre-Issue contract `42e8195cf0749a48f73039729a991352c201efc7`. The only authorized family is Gas Transmission; annual-report years are 2018–2025 inclusive and the current official Gas Transmission/Gathering incident file is historical support only.
 
 ## Exact next action / 정확한 다음 행동
 
-Freeze `US-PHMSA-PIPE-F01` before Issue creation. It must choose exactly one pipeline facility family and prove exact Operator ID continuity, multi-year annual-report lineage, incident-source access, annual↔incident joinability, historical event support, source-native severity/date semantics, common-support prospect and future-incident sealing.
+Resolve the official PHMSA annual-report and incident ZIP links from the frozen source pages, then execute the immutable 18-gate runner. Later incident-source membership remains sealed.
 
 Incremental monetary cost remains **0 USD**.
