@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20261001-PORTFOLIO-R50-ACTIVE",
-  "active_issue": 188,
-  "active_research": "PORTFOLIO-R50",
-  "last_completed_issue": 187,
-  "last_completed_research": "US-SEC-IA-F01",
-  "last_decision": "DEC-287",
+  "checkpoint_id": "CHK-20261001-PORTFOLIO-R50-TERMINAL",
+  "active_issue": "none",
+  "active_research": "NONE",
+  "last_completed_issue": 188,
+  "last_completed_research": "PORTFOLIO-R50",
+  "last_decision": "DEC-288",
   "updated": "2026-10-01"
 }
