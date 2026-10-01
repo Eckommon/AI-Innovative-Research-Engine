@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20261001-PORTFOLIO-R50-TERMINAL",
+  "checkpoint_id": "CHK-20261002-PORTFOLIO-R50-CORRECTED",
   "active_issue": "none",
   "active_research": "NONE",
   "last_completed_issue": 188,
   "last_completed_research": "PORTFOLIO-R50",
-  "last_decision": "DEC-288",
-  "updated": "2026-10-01"
+  "last_decision": "DEC-289",
+  "updated": "2026-10-02"
 }
