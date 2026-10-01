@@ -1,21 +1,21 @@
 ---
-checkpoint_id: CHK-20261001-US-SEC-IA-F01-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20261001-PORTFOLIO-R50-ACTIVE
+active_issue: 188
+active_research: PORTFOLIO-R50
 last_completed_issue: 187
 last_completed_research: US-SEC-IA-F01
-last_decision: DEC-286
+last_decision: DEC-287
 updated: 2026-10-01
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `US_SEC_IA_F01_HOLD__PORTFOLIO_RESELECTION_REQUIRED`
+**State / 상태:** `PORTFOLIO_R50_ACTIVE__LINEAGE_COMMON_SUPPORT_RESELECTION`
 
-US-SEC-IA-F01 is terminal scientific HOLD under its unchanged pre-Issue contract. Canonical Attempt 01 / Run `36652883210` passed **5/18** gates. Gate 4 is decisive because the official SEC 2025-09..2026-08 Registered Investment Adviser report lineage is not twelve machine-readable ZIPs: 2025-09 is XLSX and 2025-10/11 are explicit no-data PDFs.
+PORTFOLIO-R50 is active under pre-Issue contract `4bee3df90e8b174b1851f921eff097f6f5dda00d`. The frozen candidates are FCC ULS license cancellation/termination, FAA aircraft deregistration, CMS Medicare enrollment revocation and FDA drug-establishment registration end-state. Candidate future-event memberships remain unopened.
 
 ## Exact next action / 정확한 다음 행동
 
-Return to independent outcome-blind Stage-0 portfolio reselection. Do not rescue this exact SEC design by shifting the window, deleting no-data months, treating no-data PDFs as row-bearing reports, or substituting another source family after observation.
+Complete current official-source and explicit historical-lineage revalidation, canonical overlap review and bounded external-framework review, then persist exactly one immutable /45 scorecard and select at most one outcome-blind F01.
 
 Incremental monetary cost remains **0 USD**.
