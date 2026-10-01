@@ -1,21 +1,23 @@
 ---
-checkpoint_id: CHK-20261001-PORTFOLIO-R50-ACTIVE
-active_issue: 188
-active_research: PORTFOLIO-R50
-last_completed_issue: 187
-last_completed_research: US-SEC-IA-F01
-last_decision: DEC-287
+checkpoint_id: CHK-20261001-PORTFOLIO-R50-TERMINAL
+active_issue: none
+active_research: NONE
+last_completed_issue: 188
+last_completed_research: PORTFOLIO-R50
+last_decision: DEC-288
 updated: 2026-10-01
 ---
 
 # Session Handoff / 세션 인계
 
-`PORTFOLIO_R50_ACTIVE__LINEAGE_COMMON_SUPPORT_RESELECTION`
+`PORTFOLIO_R50_SELECTED_US_FCC_ULS_001__F01_CONTRACT_REQUIRED`
 
-- Issue #188 open.
-- Pre-Issue contract: `4bee3df90e8b174b1851f921eff097f6f5dda00d`.
-- Candidates: `US-FCC-ULS-001`, `US-FAA-AIR-001`, `US-CMS-REV-001`, `US-FDA-DECRS-001`.
-- R50 strengthens Stage 0 for true historical-body/transaction lineage and prospective common support.
-- Candidate future-event memberships/effects opened: 0.
-- Next: bounded revalidation and one immutable /45 scorecard.
+- Issue #188 completed.
+- Frozen contract: `4bee3df90e8b174b1851f921eff097f6f5dda00d`.
+- Revalidation: `8515e7c5469112a9175e49f19601b1f7b0134669`.
+- Immutable scorecard: `6b4824ee06c776f47c05fb15884c341ce58172d8`.
+- Selection: `US-FCC-ULS-001` **41/45**.
+- FAA aircraft 39, CMS revocation 39, FDA DECRS 32 remain held.
+- Candidate future-event memberships opened: 0.
+- Next: freeze `US-FCC-ULS-F01` before Issue creation.
 - Cost: 0 USD.
