@@ -1,21 +1,21 @@
 ---
-checkpoint_id: CHK-20261002-PORTFOLIO-R52-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20261002-CA-CRA-CHARITY-F01-ACTIVE
+active_issue: 192
+active_research: CA-CRA-CHARITY-F01
 last_completed_issue: 191
 last_completed_research: PORTFOLIO-R52
-last_decision: DEC-295
+last_decision: DEC-296
 updated: 2026-10-02
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `PORTFOLIO_R52_SELECTED_CA_CRA_CHARITY_001__F01_CONTRACT_REQUIRED`
+**State / 상태:** `CA_CRA_CHARITY_F01_ACTIVE__EXACT_REGISTRATION_REVOCATION_GATE`
 
-PORTFOLIO-R52 is terminal. Immutable scorecard `35a490599bcec9216d4acdb2c5bf98c1d077016c` selected `CA-CRA-CHARITY-001` at **43/45** for exactly one separate outcome-blind F01. No candidate future-event membership was opened.
+CA-CRA-CHARITY-F01 is active under pre-Issue contract `25ec9b9c9031e6ee48ea1e4e47ddb27826506331`. Frozen annual lineage is 2018–2024 inclusive. Primary identity is the full CRA registered-charity program account number. Historical revocation/public-status evidence is support-only; later status refresh membership remains sealed.
 
 ## Exact next action / 정확한 다음 행동
 
-Freeze `CA-CRA-CHARITY-F01` before Issue creation. It must prove exact registration identity, annual T3010 lineage, historical revocation semantics/support, reinstatement handling, anti-tautology and a future-status firewall.
+Resolve the official Government of Canada annual List-of-Charities CSV resources for 2018–2024 and the current official CRA revocation/public-status source, then execute the immutable 18-gate Attempt 01 without opening any later status refresh.
 
 Incremental monetary cost remains **0 USD**.
