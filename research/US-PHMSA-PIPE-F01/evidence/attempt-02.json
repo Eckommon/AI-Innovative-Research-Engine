@@ -1,0 +1,80 @@
+{
+  "attempt": 2,
+  "attempt_valid": false,
+  "causal_claim_made": false,
+  "contract_sha": "42e8195cf0749a48f73039729a991352c201efc7",
+  "disposition": "IMPLEMENTATION_BLOCKED_US_PHMSA_PIPE_F01_ATTEMPT_02",
+  "failed_gates": [],
+  "future_entity_rows_consumed": 0,
+  "future_incident_membership_opened": false,
+  "gates": [
+    {
+      "gate": 1,
+      "observed": {
+        "active_issue": 190,
+        "active_research": "US-PHMSA-PIPE-F01",
+        "checkpoint_id": "CHK-20261002-US-PHMSA-PIPE-F01-ACTIVE",
+        "last_completed_issue": 189,
+        "last_completed_research": "PORTFOLIO-R51",
+        "last_decision": "DEC-292",
+        "updated": "2026-10-02"
+      },
+      "pass": true
+    },
+    {
+      "gate": 2,
+      "observed": {
+        "contract_sha": "42e8195cf0749a48f73039729a991352c201efc7",
+        "issue": 190
+      },
+      "pass": true
+    },
+    {
+      "gate": 3,
+      "observed": {
+        "annual": {
+          "error": "RuntimeError:CURL_FAILED[22]:https://www.phmsa.dot.gov/data-and-statistics/pipeline/gas-distribution-gas-gathering-gas-transmission-hazardous-liquids:curl: (22) The requested URL returned error: 403",
+          "requested_url": "https://www.phmsa.dot.gov/data-and-statistics/pipeline/gas-distribution-gas-gathering-gas-transmission-hazardous-liquids"
+        },
+        "annual_instr": {
+          "error": "RuntimeError:CURL_FAILED[22]:https://www.phmsa.dot.gov/forms/gas-transmission-and-gathering-annual-report-instructions-f-71002-1:curl: (22) The requested URL returned error: 403",
+          "requested_url": "https://www.phmsa.dot.gov/forms/gas-transmission-and-gathering-annual-report-instructions-f-71002-1"
+        },
+        "incident": {
+          "error": "RuntimeError:CURL_FAILED[22]:https://www.phmsa.dot.gov/data-and-statistics/pipeline/distribution-transmission-gathering-lng-and-liquid-accident-and-incident-data:curl: (22) The requested URL returned error: 403",
+          "requested_url": "https://www.phmsa.dot.gov/data-and-statistics/pipeline/distribution-transmission-gathering-lng-and-liquid-accident-and-incident-data"
+        },
+        "incident_instr": {
+          "error": "RuntimeError:CURL_FAILED[22]:https://www.phmsa.dot.gov/forms/gas-transmission-gathering-and-ungs-incident-report-instructions-f-71002-1:curl: (22) The requested URL returned error: 403",
+          "requested_url": "https://www.phmsa.dot.gov/forms/gas-transmission-gathering-and-ungs-incident-report-instructions-f-71002-1"
+        },
+        "opid": {
+          "error": "RuntimeError:CURL_FAILED[22]:https://www.phmsa.dot.gov/data-and-statistics/pipeline/pipeline-operators-opids:curl: (22) The requested URL returned error: 403",
+          "requested_url": "https://www.phmsa.dot.gov/data-and-statistics/pipeline/pipeline-operators-opids"
+        },
+        "source": {
+          "error": "RuntimeError:CURL_FAILED[22]:https://www.phmsa.dot.gov/data-and-statistics/pipeline/source-data:curl: (22) The requested URL returned error: 403",
+          "requested_url": "https://www.phmsa.dot.gov/data-and-statistics/pipeline/source-data"
+        }
+      },
+      "pass": false
+    }
+  ],
+  "github_run_id": "36956064912",
+  "identity_repair_used": false,
+  "implementation_error": {
+    "message": "CURL_FAILED[22]:https://www.phmsa.dot.gov/sites/phmsa.dot.gov/files/data_statistics/pipeline/annual_gas_transmission_gathering_2010_present.zip:curl: (22) The requested URL returned error: 403",
+    "type": "RuntimeError"
+  },
+  "incremental_monetary_cost_usd": 0,
+  "issue": 190,
+  "later_incident_refresh_opened": false,
+  "pass_count": 2,
+  "prediction_computed": false,
+  "prohibited_incident_enforcement_exposure_computed": false,
+  "ranking_computed": false,
+  "relationship_computed": false,
+  "research": "US-PHMSA-PIPE-F01",
+  "runner_sha256": "67f5fbef596d7b6d07023f2636da4435aebc786d1901c0b55022d6b9f3704279",
+  "runner_start_utc": "2026-10-02T02:32:02.891672+00:00"
+}
