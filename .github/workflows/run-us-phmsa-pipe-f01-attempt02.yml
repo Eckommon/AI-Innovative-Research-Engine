@@ -1,0 +1,82 @@
+name: Run US-PHMSA-PIPE-F01 Immutable Gate Attempt 02
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/run-us-phmsa-pipe-f01-attempt02.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: read
+jobs:
+  phmsa-pipe-f01-attempt02:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify frozen authorization and correction boundary
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git cat-file -e 42e8195cf0749a48f73039729a991352c201efc7^{commit}
+          git cat-file -e bbcc006dcd70912be3ac107851b9f2ac54ba6984^{commit}
+          git cat-file -e e2f21274b59dc7dca016e8bdc40bc022dd45a765^{commit}
+          gh issue view 190 --repo '${{ github.repository }}' --json state --jq '.state' | grep -qx OPEN
+          test -e research/US-PHMSA-PIPE-F01/evidence/attempt-01.json
+          test ! -e research/US-PHMSA-PIPE-F01/evidence/attempt-02.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          cp=json.loads(Path('context/checkpoint.json').read_text())
+          assert cp['checkpoint_id']=='CHK-20261002-US-PHMSA-PIPE-F01-ACTIVE'
+          assert cp['active_issue']==190
+          assert cp['active_research']=='US-PHMSA-PIPE-F01'
+          assert cp['last_decision']=='DEC-292'
+          a1=json.loads(Path('research/US-PHMSA-PIPE-F01/evidence/attempt-01.json').read_text())
+          assert a1['attempt_valid'] is False
+          assert a1['disposition']=='IMPLEMENTATION_BLOCKED_US_PHMSA_PIPE_F01_ATTEMPT_01'
+          assert a1['future_incident_membership_opened'] is False
+          corr=Path('research/US-PHMSA-PIPE-F01/IMPLEMENTATION_CORRECTION_02.md').read_text()
+          for s in [
+            'scientific_threshold_changed: false',
+            'facility_family_changed: false',
+            'annual_years_changed: false',
+            'identity_rule_changed: false',
+            'event_rule_changed: false',
+            'future_source_firewall_changed: false',
+          ]:
+              assert s in corr
+          PY
+      - name: Execute frozen Attempt 02 with curl transport only
+        env:
+          PHMSA_PIPE_F01_BOUND: '1'
+          PHMSA_PIPE_F01_CONTRACT_SHA: '42e8195cf0749a48f73039729a991352c201efc7'
+        run: python tools/run_us_phmsa_pipe_f01_attempt02.py
+      - name: Verify immutable scientific and cost firewalls
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          e=json.loads(Path('research/US-PHMSA-PIPE-F01/evidence/attempt-02.json').read_text())
+          assert e['attempt']==2
+          assert e['later_incident_refresh_opened'] is False
+          assert e['future_incident_membership_opened'] is False
+          assert e['future_entity_rows_consumed']==0
+          assert e['relationship_computed'] is False
+          assert e['prediction_computed'] is False
+          assert e['ranking_computed'] is False
+          assert e['causal_claim_made'] is False
+          assert e['prohibited_incident_enforcement_exposure_computed'] is False
+          assert e['identity_repair_used'] is False
+          assert e['incremental_monetary_cost_usd']==0
+          print(e['disposition'],e.get('pass_count'),e.get('failed_gates'))
+          PY
+      - name: Commit immutable Attempt 02 evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-PHMSA-PIPE-F01/evidence/attempt-02.json research/US-PHMSA-PIPE-F01/evidence/attempt-02.md
+          git commit -m 'Record US-PHMSA-PIPE-F01 immutable attempt 02'
+          git push origin HEAD:main
