@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20261002-US-PHMSA-PIPE-F01-TERMINAL",
-  "active_issue": "none",
-  "active_research": "NONE",
+  "checkpoint_id": "CHK-20261002-PORTFOLIO-R52-ACTIVE",
+  "active_issue": 191,
+  "active_research": "PORTFOLIO-R52",
   "last_completed_issue": 190,
   "last_completed_research": "US-PHMSA-PIPE-F01",
-  "last_decision": "DEC-293",
+  "last_decision": "DEC-294",
   "updated": "2026-10-02"
 }
