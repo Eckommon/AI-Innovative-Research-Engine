@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20261006-US-CMS-NH-F01-ACTIVE",
-  "active_issue": 194,
-  "active_research": "US-CMS-NH-F01",
-  "last_completed_issue": 193,
-  "last_completed_research": "PORTFOLIO-R53",
-  "last_decision": "DEC-300",
+  "checkpoint_id": "CHK-20261006-US-CMS-NH-F01-TERMINAL",
+  "active_issue": "none",
+  "active_research": "NONE",
+  "last_completed_issue": 194,
+  "last_completed_research": "US-CMS-NH-F01",
+  "last_decision": "DEC-301",
   "updated": "2026-10-06"
 }
