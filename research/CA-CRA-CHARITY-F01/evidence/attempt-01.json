@@ -1,0 +1,1183 @@
+{
+  "annual": {
+    "2018": {
+      "bn_field": "BN",
+      "discovery": {
+        "all_csv_count": 6,
+        "financial": "https://open.canada.ca/data/dataset/206f5517-12c3-40e0-9494-c75d2e410c64/resource/e879ebc7-738a-4132-9823-264603649420/download/financial_d_and_schedule_6_2018_updated.csv",
+        "general": "https://open.canada.ca/data/dataset/206f5517-12c3-40e0-9494-c75d2e410c64/resource/f7583527-8a69-4288-ae01-92168c2f416f/download/financial_section_a_b_and_c_2018_updated.csv",
+        "identification": "https://open.canada.ca/data/dataset/206f5517-12c3-40e0-9494-c75d2e410c64/resource/1d8845d2-9a88-4b9f-a25d-81a9cbec028f/download/ident_2018_updated.csv",
+        "page_meta": {
+          "bytes": 90048,
+          "content_type": "text/html; charset=utf-8",
+          "etag": null,
+          "final_url": "https://open.canada.ca/data/en/dataset/206f5517-12c3-40e0-9494-c75d2e410c64",
+          "last_modified": null,
+          "requested_url": "https://open.canada.ca/data/en/dataset/206f5517-12c3-40e0-9494-c75d2e410c64",
+          "sha256": "b935e1baec530c95ce7b57429d56728ba23946ae953657ebb3b3144a9538534c",
+          "status": 200
+        }
+      },
+      "distinct_exact": 84883,
+      "headers": [
+        "BN",
+        "Category",
+        "Sub Category",
+        "Designation",
+        "Legal Name",
+        "Account Name",
+        "Address Line 1",
+        "Address Line 2",
+        "City",
+        "Province",
+        "Postal Code",
+        "Country"
+      ],
+      "identification_meta": {
+        "bytes": 12395536,
+        "content_type": "text/csv",
+        "etag": "\"0x8DE05C85DAD0842\"",
+        "final_url": "https://opencanada.blob.core.windows.net/opengovprod/resources/1d8845d2-9a88-4b9f-a25d-81a9cbec028f/ident_2018_updated.csv?se=2026-10-05T16%3A50%3A22Z&sp=r&sv=2024-08-04&sr=b&sig=BJ6deELfkmG8tqZioub5iUssYF4A4JjuY9NDewg7gNA%3D",
+        "last_modified": "Tue, 07 Oct 2025 17:38:45 GMT",
+        "requested_url": "https://open.canada.ca/data/dataset/206f5517-12c3-40e0-9494-c75d2e410c64/resource/1d8845d2-9a88-4b9f-a25d-81a9cbec028f/download/ident_2018_updated.csv",
+        "sha256": "5507bf19133eed79cd551f26a6da2c7d6c17cb9be9844a9adc4e83a4d58ede10",
+        "status": 200
+      },
+      "row_count": 84883,
+      "syntax_rate": 1.0
+    },
+    "2019": {
+      "bn_field": "BN",
+      "discovery": {
+        "all_csv_count": 6,
+        "financial": "https://open.canada.ca/data/dataset/21118663-1847-48ce-81ce-1ac7cff674c0/resource/a160b5a6-74e8-4ca9-b3dc-e4e5c147e011/download/financial_d_and_schedule_6_2019_updated.csv",
+        "general": "https://open.canada.ca/data/dataset/21118663-1847-48ce-81ce-1ac7cff674c0/resource/5270f0f4-9594-4948-b3bb-0b5a03e3d914/download/financial_section_a_b_and_c_2019_updated.csv",
+        "identification": "https://open.canada.ca/data/dataset/21118663-1847-48ce-81ce-1ac7cff674c0/resource/639deb12-0b4c-4166-a9e5-d6bf58c94e69/download/ident_2019_updated.csv",
+        "page_meta": {
+          "bytes": 90316,
+          "content_type": "text/html; charset=utf-8",
+          "etag": null,
+          "final_url": "https://open.canada.ca/data/en/dataset/21118663-1847-48ce-81ce-1ac7cff674c0",
+          "last_modified": null,
+          "requested_url": "https://open.canada.ca/data/en/dataset/21118663-1847-48ce-81ce-1ac7cff674c0",
+          "sha256": "9b39d8b54c02ba9b01b2497093140fad5566edf926b05faa047fd9ec51ce60cf",
+          "status": 200
+        }
+      },
+      "distinct_exact": 84871,
+      "headers": [
+        "BN",
+        "Category",
+        "Sub Category",
+        "Designation",
+        "Legal Name",
+        "Account Name",
+        "Address Line 1",
+        "Address Line 2",
+        "City",
+        "Province",
+        "Postal Code",
+        "Country"
+      ],
+      "identification_meta": {
+        "bytes": 13462697,
+        "content_type": "text/csv",
+        "etag": "\"0x8DEBC1738B0B6FF\"",
+        "final_url": "https://opencanada.blob.core.windows.net/opengovprod/resources/639deb12-0b4c-4166-a9e5-d6bf58c94e69/ident_2019_updated.csv?se=2026-10-05T16%3A50%3A24Z&sp=r&sv=2024-08-04&sr=b&sig=a5kMRAWV5ojIg1THS6MxnIkYjaDSLvbIDHo3SZFMCzE%3D",
+        "last_modified": "Wed, 27 May 2026 17:41:45 GMT",
+        "requested_url": "https://open.canada.ca/data/dataset/21118663-1847-48ce-81ce-1ac7cff674c0/resource/639deb12-0b4c-4166-a9e5-d6bf58c94e69/download/ident_2019_updated.csv",
+        "sha256": "82497307e6f9b6163de44f9d06ff9419037a9dffd1c3a098ef0eba9c07e1be95",
+        "status": 200
+      },
+      "row_count": 84871,
+      "syntax_rate": 1.0
+    },
+    "2020": {
+      "bn_field": "BN",
+      "discovery": {
+        "all_csv_count": 6,
+        "financial": "https://open.canada.ca/data/dataset/5577f7aa-7a96-4c59-bc01-47ad54203930/resource/9dfd020a-e5e5-49c7-a4ed-c9c8b54c8188/download/financial_d_and_schedule_6_2020_updated.csv",
+        "general": "https://open.canada.ca/data/dataset/5577f7aa-7a96-4c59-bc01-47ad54203930/resource/e62ec7b2-b40e-4d8d-954f-d2e71a71b69b/download/financial_section_a_b_and_c_2020_updated.csv",
+        "identification": "https://open.canada.ca/data/dataset/5577f7aa-7a96-4c59-bc01-47ad54203930/resource/2b9adf8a-1cf5-4019-8e75-9fe6ed50892b/download/ident_2020_updated.csv",
+        "page_meta": {
+          "bytes": 90350,
+          "content_type": "text/html; charset=utf-8",
+          "etag": null,
+          "final_url": "https://open.canada.ca/data/en/dataset/5577f7aa-7a96-4c59-bc01-47ad54203930",
+          "last_modified": null,
+          "requested_url": "https://open.canada.ca/data/en/dataset/5577f7aa-7a96-4c59-bc01-47ad54203930",
+          "sha256": "9275458458d19593feb34032e5caf3ba55b0defc5de4dd88862e465f85b87cca",
+          "status": 200
+        }
+      },
+      "distinct_exact": 84809,
+      "headers": [
+        "BN",
+        "Category",
+        "Sub Category",
+        "Designation",
+        "Legal Name",
+        "Account Name",
+        "Address Line 1",
+        "Address Line 2",
+        "City",
+        "Province",
+        "Postal Code",
+        "Country"
+      ],
+      "identification_meta": {
+        "bytes": 13440696,
+        "content_type": "text/csv",
+        "etag": "\"0x8DEBCB9A56BDA41\"",
+        "final_url": "https://opencanada.blob.core.windows.net/opengovprod/resources/2b9adf8a-1cf5-4019-8e75-9fe6ed50892b/ident_2020_updated.csv?se=2026-10-05T16%3A50%3A26Z&sp=r&sv=2024-08-04&sr=b&sig=R4ef7D8cWamgv4VzJ4BPWf1T6JO3oKfaItGVejyRfDA%3D",
+        "last_modified": "Thu, 28 May 2026 13:04:26 GMT",
+        "requested_url": "https://open.canada.ca/data/dataset/5577f7aa-7a96-4c59-bc01-47ad54203930/resource/2b9adf8a-1cf5-4019-8e75-9fe6ed50892b/download/ident_2020_updated.csv",
+        "sha256": "d0fc046587cd82e5aafb365fc0074308f638d40b7e75e372670eb21eaa746400",
+        "status": 200
+      },
+      "row_count": 84809,
+      "syntax_rate": 1.0
+    },
+    "2021": {
+      "bn_field": "BN",
+      "discovery": {
+        "all_csv_count": 6,
+        "financial": "https://open.canada.ca/data/dataset/3e8a4d9f-9a12-4498-9a0b-a5c81d3281b4/resource/93544c86-0458-448a-adac-fff195c4f42c/download/financial_d_and_schedule_6_2021_updated.csv",
+        "general": "https://open.canada.ca/data/dataset/3e8a4d9f-9a12-4498-9a0b-a5c81d3281b4/resource/be944ec3-c8c7-42ed-a9f7-8c9b7c023276/download/financial_section_a_b_and_c_2021_updated.csv",
+        "identification": "https://open.canada.ca/data/dataset/3e8a4d9f-9a12-4498-9a0b-a5c81d3281b4/resource/40043933-3e30-4c9a-813d-ccfdacdaf5db/download/ident_2021_updated.csv",
+        "page_meta": {
+          "bytes": 90373,
+          "content_type": "text/html; charset=utf-8",
+          "etag": null,
+          "final_url": "https://open.canada.ca/data/en/dataset/3e8a4d9f-9a12-4498-9a0b-a5c81d3281b4",
+          "last_modified": null,
+          "requested_url": "https://open.canada.ca/data/en/dataset/3e8a4d9f-9a12-4498-9a0b-a5c81d3281b4",
+          "sha256": "13d0fb5a76858690c7362a90a556bf7be99e6bd37370480f45898bf7c6771ded",
+          "status": 200
+        }
+      },
+      "distinct_exact": 84870,
+      "headers": [
+        "BN",
+        "Category",
+        "Sub Category",
+        "Designation",
+        "Legal Name",
+        "Account Name",
+        "Address Line 1",
+        "Address Line 2",
+        "City",
+        "Province",
+        "Postal Code",
+        "Country"
+      ],
+      "identification_meta": {
+        "bytes": 13431844,
+        "content_type": "text/csv",
+        "etag": "\"0x8DEBD861E54F2E3\"",
+        "final_url": "https://opencanada.blob.core.windows.net/opengovprod/resources/40043933-3e30-4c9a-813d-ccfdacdaf5db/ident_2021_updated.csv?se=2026-10-05T16%3A50%3A28Z&sp=r&sv=2024-08-04&sr=b&sig=nZe0cAgXkEfPdPTnmQRQkyxFwJIg3/c3WXHAMGh1Lbo%3D",
+        "last_modified": "Fri, 29 May 2026 13:28:06 GMT",
+        "requested_url": "https://open.canada.ca/data/dataset/3e8a4d9f-9a12-4498-9a0b-a5c81d3281b4/resource/40043933-3e30-4c9a-813d-ccfdacdaf5db/download/ident_2021_updated.csv",
+        "sha256": "075c61135413bc6bef49c2c6970d3e198c202850f6f73c82c3fae8d4d48fdaf1",
+        "status": 200
+      },
+      "row_count": 84870,
+      "syntax_rate": 1.0
+    },
+    "2022": {
+      "bn_field": "BN",
+      "discovery": {
+        "all_csv_count": 6,
+        "financial": "https://open.canada.ca/data/dataset/b2acb3be-c720-4329-a8c0-d4d36c8db61e/resource/2436c7a6-7ad4-45d2-abea-62de613e6ef0/download/financial_d_and_schedule_6_2022_updated.csv",
+        "general": "https://open.canada.ca/data/dataset/b2acb3be-c720-4329-a8c0-d4d36c8db61e/resource/2ca3e064-2971-44a2-8c7a-e2dd2bb0858c/download/financial_section_a_b_and_c_2022_updated.csv",
+        "identification": "https://open.canada.ca/data/dataset/b2acb3be-c720-4329-a8c0-d4d36c8db61e/resource/4284197f-73f9-4c28-8e4f-56aeaf9414cf/download/ident_2022_updated.csv",
+        "page_meta": {
+          "bytes": 90386,
+          "content_type": "text/html; charset=utf-8",
+          "etag": null,
+          "final_url": "https://open.canada.ca/data/en/dataset/b2acb3be-c720-4329-a8c0-d4d36c8db61e",
+          "last_modified": null,
+          "requested_url": "https://open.canada.ca/data/en/dataset/b2acb3be-c720-4329-a8c0-d4d36c8db61e",
+          "sha256": "6046e5c90724df252f5fd2975137d0d30d68275dc3bc9eb0a0d8c2cc86c437c2",
+          "status": 200
+        }
+      },
+      "distinct_exact": 84805,
+      "headers": [
+        "BN",
+        "Category",
+        "Sub Category",
+        "Designation",
+        "Legal Name",
+        "Account Name",
+        "Address Line 1",
+        "Address Line 2",
+        "City",
+        "Province",
+        "Postal Code",
+        "Country"
+      ],
+      "identification_meta": {
+        "bytes": 13405632,
+        "content_type": "text/csv",
+        "etag": "\"0x8DEBCF537AF133F\"",
+        "final_url": "https://opencanada.blob.core.windows.net/opengovprod/resources/4284197f-73f9-4c28-8e4f-56aeaf9414cf/ident_2022_updated.csv?se=2026-10-05T16%3A50%3A30Z&sp=r&sv=2024-08-04&sr=b&sig=5ghWLuaps6d8ZV9q9tnlaQaQvrdnzEGCh2yNheJR4yc%3D",
+        "last_modified": "Thu, 28 May 2026 20:10:52 GMT",
+        "requested_url": "https://open.canada.ca/data/dataset/b2acb3be-c720-4329-a8c0-d4d36c8db61e/resource/4284197f-73f9-4c28-8e4f-56aeaf9414cf/download/ident_2022_updated.csv",
+        "sha256": "131bb669847e8d965746cd6de29adae7eb3346f7eb719b009e97dd4d186eabdd",
+        "status": 200
+      },
+      "row_count": 84805,
+      "syntax_rate": 1.0
+    },
+    "2023": {
+      "bn_field": "BN",
+      "discovery": {
+        "all_csv_count": 6,
+        "financial": "https://open.canada.ca/data/dataset/05b3abd0-e70f-4b3b-a9c5-acc436bd15b6/resource/0b9b4b01-5cb6-4981-b007-ae88f48cc799/download/financial_d_and_schedule_6_2023_updated.csv",
+        "general": "https://open.canada.ca/data/dataset/05b3abd0-e70f-4b3b-a9c5-acc436bd15b6/resource/4cf7d8fa-221a-4934-a423-82dbeac7462b/download/financial_section_a_b_and_c_2023_updated.csv",
+        "identification": "https://open.canada.ca/data/dataset/05b3abd0-e70f-4b3b-a9c5-acc436bd15b6/resource/31a52caf-fa79-4ab3-bded-1ccc7b61c17f/download/ident_2023_updated.csv",
+        "page_meta": {
+          "bytes": 90361,
+          "content_type": "text/html; charset=utf-8",
+          "etag": null,
+          "final_url": "https://open.canada.ca/data/en/dataset/05b3abd0-e70f-4b3b-a9c5-acc436bd15b6",
+          "last_modified": null,
+          "requested_url": "https://open.canada.ca/data/en/dataset/05b3abd0-e70f-4b3b-a9c5-acc436bd15b6",
+          "sha256": "073211ba3914c82d4af991a3918a06f77d0c7474386b57784c7afd4167f50313",
+          "status": 200
+        }
+      },
+      "distinct_exact": 84519,
+      "headers": [
+        "BN",
+        "Category",
+        "Sub Category",
+        "Designation",
+        "Legal Name",
+        "Account Name",
+        "Address Line 1",
+        "Address Line 2",
+        "City",
+        "Province",
+        "Postal Code",
+        "Country"
+      ],
+      "identification_meta": {
+        "bytes": 13339737,
+        "content_type": "text/csv",
+        "etag": "\"0x8DEBCE9964330FE\"",
+        "final_url": "https://opencanada.blob.core.windows.net/opengovprod/resources/31a52caf-fa79-4ab3-bded-1ccc7b61c17f/ident_2023_updated.csv?se=2026-10-05T16%3A50%3A32Z&sp=r&sv=2024-08-04&sr=b&sig=x4tJNDZOC7Ao2YSJ%2BZM1lSTNpyQMwQ4S9UrniCqBhUA%3D",
+        "last_modified": "Thu, 28 May 2026 18:47:36 GMT",
+        "requested_url": "https://open.canada.ca/data/dataset/05b3abd0-e70f-4b3b-a9c5-acc436bd15b6/resource/31a52caf-fa79-4ab3-bded-1ccc7b61c17f/download/ident_2023_updated.csv",
+        "sha256": "416c98d1ff52303f9f042c4e7ef5ac36bc1c16b146cd11eb64627ba8ceabee11",
+        "status": 200
+      },
+      "row_count": 84519,
+      "syntax_rate": 1.0
+    },
+    "2024": {
+      "bn_field": "BN",
+      "discovery": {
+        "all_csv_count": 6,
+        "financial": "https://open.canada.ca/data/dataset/80c00cdb-1358-415c-bb8b-0de7f12675b8/resource/e545170c-3689-4833-b2a8-e9e83100ab59/download/financial_d_and_schedule_6_2024_updated.csv",
+        "general": "https://open.canada.ca/data/dataset/80c00cdb-1358-415c-bb8b-0de7f12675b8/resource/fd7c8679-8032-4613-b2b7-44fb8bc9c7c9/download/financial_section_a_b_and_c_2024_updated.csv",
+        "identification": "https://open.canada.ca/data/dataset/80c00cdb-1358-415c-bb8b-0de7f12675b8/resource/694fdc72-eae4-4ee0-83eb-832ab7b230e3/download/ident_2024_updated.csv",
+        "page_meta": {
+          "bytes": 90363,
+          "content_type": "text/html; charset=utf-8",
+          "etag": null,
+          "final_url": "https://open.canada.ca/data/en/dataset/80c00cdb-1358-415c-bb8b-0de7f12675b8",
+          "last_modified": null,
+          "requested_url": "https://open.canada.ca/data/en/dataset/80c00cdb-1358-415c-bb8b-0de7f12675b8",
+          "sha256": "6f2d51048ef8b49ac0aa51b4fd8cb6af3084dbed838478802d705c6e1f96c17b",
+          "status": 200
+        }
+      },
+      "distinct_exact": 83761,
+      "headers": [
+        "BN",
+        "Category",
+        "Sub Category",
+        "Designation",
+        "Legal Name",
+        "Account Name",
+        "Address Line 1",
+        "Address Line 2",
+        "City",
+        "Province",
+        "Postal Code",
+        "Country"
+      ],
+      "identification_meta": {
+        "bytes": 13203780,
+        "content_type": "text/csv",
+        "etag": "\"0x8DEBCCADCB5C92E\"",
+        "final_url": "https://opencanada.blob.core.windows.net/opengovprod/resources/694fdc72-eae4-4ee0-83eb-832ab7b230e3/ident_2024_updated.csv?se=2026-10-05T16%3A50%3A34Z&sp=r&sv=2024-08-04&sr=b&sig=Dub2QJLFDWXcWSek0PnyFljWGaaQRHyaOXM7LkIXYTY%3D",
+        "last_modified": "Thu, 28 May 2026 15:07:40 GMT",
+        "requested_url": "https://open.canada.ca/data/dataset/80c00cdb-1358-415c-bb8b-0de7f12675b8/resource/694fdc72-eae4-4ee0-83eb-832ab7b230e3/download/ident_2024_updated.csv",
+        "sha256": "4f214ff2a9e659185b20f50431fd98f1d89e2d08fff8c2a9583b82b24fc4cd8e",
+        "status": 200
+      },
+      "row_count": 83761,
+      "syntax_rate": 1.0
+    }
+  },
+  "attempt": 1,
+  "attempt_valid": true,
+  "causal_claim_made": false,
+  "contract_sha": "25ec9b9c9031e6ee48ea1e4e47ddb27826506331",
+  "disposition": "HOLD_CA_CRA_CHARITY_F01_EXACT_REGISTRATION_FUTURE_REVOCATION_DESIGN_NOT_READY",
+  "failed_gates": [
+    13,
+    14
+  ],
+  "future_revocation_membership_opened": false,
+  "gates": [
+    {
+      "gate": 1,
+      "observed": {
+        "active_issue": 192,
+        "active_research": "CA-CRA-CHARITY-F01",
+        "checkpoint_id": "CHK-20261002-CA-CRA-CHARITY-F01-ACTIVE",
+        "last_completed_issue": 191,
+        "last_completed_research": "PORTFOLIO-R52",
+        "last_decision": "DEC-296",
+        "updated": "2026-10-02"
+      },
+      "pass": true
+    },
+    {
+      "gate": 2,
+      "observed": {
+        "contract_sha": "25ec9b9c9031e6ee48ea1e4e47ddb27826506331",
+        "issue": 192
+      },
+      "pass": true
+    },
+    {
+      "gate": 3,
+      "observed": {
+        "annual_pages_ok": true,
+        "cra_docs": {
+          "annulment": {
+            "bytes": 24188,
+            "content_type": "text/html;charset=utf-8",
+            "etag": null,
+            "final_url": "https://www.canada.ca/en/revenue-agency/services/charities-giving/charities/revoking-registered-status/annulment-charitable-registration.html",
+            "last_modified": "Mon, 05 Oct 2026 15:08:17 GMT",
+            "requested_url": "https://www.canada.ca/en/revenue-agency/services/charities-giving/charities/revoking-registered-status/annulment-charitable-registration.html",
+            "sha256": "3592ec425183f7e9a50ae5d54c1b098978103ca03723278a02451f7a6d7073af",
+            "status": 200
+          },
+          "revocation_types": {
+            "bytes": 34228,
+            "content_type": "text/html;charset=utf-8",
+            "etag": null,
+            "final_url": "https://www.canada.ca/en/revenue-agency/services/charities-giving/charities/revoking-registered-status/types-revocation.html",
+            "last_modified": "Mon, 05 Oct 2026 13:41:50 GMT",
+            "requested_url": "https://www.canada.ca/en/revenue-agency/services/charities-giving/charities/revoking-registered-status/types-revocation.html",
+            "sha256": "684c0224fc048f2298f23d3f9379880fc6fe6fcd824d28ccacd5416862c29307",
+            "status": 200
+          },
+          "revocations": {
+            "bytes": 493044,
+            "content_type": "text/html;charset=utf-8",
+            "etag": null,
+            "final_url": "https://www.canada.ca/en/revenue-agency/services/charities-giving/charities/revoking-registered-status/list-published-revocations-charities-oqd.html",
+            "last_modified": "Mon, 05 Oct 2026 12:02:43 GMT",
+            "requested_url": "https://www.canada.ca/en/revenue-agency/services/charities-giving/charities/revoking-registered-status/list-published-revocations-charities-oqd.html",
+            "sha256": "b41acc485f5bbc2c981323f12485a419a200d898f9818581a72e2d8581de5b4a",
+            "status": 200
+          },
+          "search_tips": {
+            "bytes": 26225,
+            "content_type": "text/html;charset=utf-8",
+            "etag": null,
+            "final_url": "https://www.canada.ca/en/revenue-agency/services/charities-giving/list-charities/search-tips-charities-listings.html",
+            "last_modified": "Mon, 05 Oct 2026 13:40:18 GMT",
+            "requested_url": "https://www.canada.ca/en/revenue-agency/services/charities-giving/list-charities/search-tips-charities-listings.html",
+            "sha256": "c8d2a905fd29fb1ee828563374e3d5fc7733c30f57fb64386ad5352a68782406",
+            "status": 200
+          }
+        }
+      },
+      "pass": true
+    },
+    {
+      "gate": 4,
+      "observed": {
+        "years": {
+          "2018": {
+            "rows": 84883,
+            "sha256": "5507bf19133eed79cd551f26a6da2c7d6c17cb9be9844a9adc4e83a4d58ede10",
+            "url": "https://open.canada.ca/data/dataset/206f5517-12c3-40e0-9494-c75d2e410c64/resource/1d8845d2-9a88-4b9f-a25d-81a9cbec028f/download/ident_2018_updated.csv"
+          },
+          "2019": {
+            "rows": 84871,
+            "sha256": "82497307e6f9b6163de44f9d06ff9419037a9dffd1c3a098ef0eba9c07e1be95",
+            "url": "https://open.canada.ca/data/dataset/21118663-1847-48ce-81ce-1ac7cff674c0/resource/639deb12-0b4c-4166-a9e5-d6bf58c94e69/download/ident_2019_updated.csv"
+          },
+          "2020": {
+            "rows": 84809,
+            "sha256": "d0fc046587cd82e5aafb365fc0074308f638d40b7e75e372670eb21eaa746400",
+            "url": "https://open.canada.ca/data/dataset/5577f7aa-7a96-4c59-bc01-47ad54203930/resource/2b9adf8a-1cf5-4019-8e75-9fe6ed50892b/download/ident_2020_updated.csv"
+          },
+          "2021": {
+            "rows": 84870,
+            "sha256": "075c61135413bc6bef49c2c6970d3e198c202850f6f73c82c3fae8d4d48fdaf1",
+            "url": "https://open.canada.ca/data/dataset/3e8a4d9f-9a12-4498-9a0b-a5c81d3281b4/resource/40043933-3e30-4c9a-813d-ccfdacdaf5db/download/ident_2021_updated.csv"
+          },
+          "2022": {
+            "rows": 84805,
+            "sha256": "131bb669847e8d965746cd6de29adae7eb3346f7eb719b009e97dd4d186eabdd",
+            "url": "https://open.canada.ca/data/dataset/b2acb3be-c720-4329-a8c0-d4d36c8db61e/resource/4284197f-73f9-4c28-8e4f-56aeaf9414cf/download/ident_2022_updated.csv"
+          },
+          "2023": {
+            "rows": 84519,
+            "sha256": "416c98d1ff52303f9f042c4e7ef5ac36bc1c16b146cd11eb64627ba8ceabee11",
+            "url": "https://open.canada.ca/data/dataset/05b3abd0-e70f-4b3b-a9c5-acc436bd15b6/resource/31a52caf-fa79-4ab3-bded-1ccc7b61c17f/download/ident_2023_updated.csv"
+          },
+          "2024": {
+            "rows": 83761,
+            "sha256": "4f214ff2a9e659185b20f50431fd98f1d89e2d08fff8c2a9583b82b24fc4cd8e",
+            "url": "https://open.canada.ca/data/dataset/80c00cdb-1358-415c-bb8b-0de7f12675b8/resource/694fdc72-eae4-4ee0-83eb-832ab7b230e3/download/ident_2024_updated.csv"
+          }
+        }
+      },
+      "pass": true
+    },
+    {
+      "gate": 5,
+      "observed": {
+        "years": {
+          "2018": {
+            "bn_field": "BN",
+            "headers": [
+              "BN",
+              "Category",
+              "Sub Category",
+              "Designation",
+              "Legal Name",
+              "Account Name",
+              "Address Line 1",
+              "Address Line 2",
+              "City",
+              "Province",
+              "Postal Code",
+              "Country"
+            ]
+          },
+          "2019": {
+            "bn_field": "BN",
+            "headers": [
+              "BN",
+              "Category",
+              "Sub Category",
+              "Designation",
+              "Legal Name",
+              "Account Name",
+              "Address Line 1",
+              "Address Line 2",
+              "City",
+              "Province",
+              "Postal Code",
+              "Country"
+            ]
+          },
+          "2020": {
+            "bn_field": "BN",
+            "headers": [
+              "BN",
+              "Category",
+              "Sub Category",
+              "Designation",
+              "Legal Name",
+              "Account Name",
+              "Address Line 1",
+              "Address Line 2",
+              "City",
+              "Province",
+              "Postal Code",
+              "Country"
+            ]
+          },
+          "2021": {
+            "bn_field": "BN",
+            "headers": [
+              "BN",
+              "Category",
+              "Sub Category",
+              "Designation",
+              "Legal Name",
+              "Account Name",
+              "Address Line 1",
+              "Address Line 2",
+              "City",
+              "Province",
+              "Postal Code",
+              "Country"
+            ]
+          },
+          "2022": {
+            "bn_field": "BN",
+            "headers": [
+              "BN",
+              "Category",
+              "Sub Category",
+              "Designation",
+              "Legal Name",
+              "Account Name",
+              "Address Line 1",
+              "Address Line 2",
+              "City",
+              "Province",
+              "Postal Code",
+              "Country"
+            ]
+          },
+          "2023": {
+            "bn_field": "BN",
+            "headers": [
+              "BN",
+              "Category",
+              "Sub Category",
+              "Designation",
+              "Legal Name",
+              "Account Name",
+              "Address Line 1",
+              "Address Line 2",
+              "City",
+              "Province",
+              "Postal Code",
+              "Country"
+            ]
+          },
+          "2024": {
+            "bn_field": "BN",
+            "headers": [
+              "BN",
+              "Category",
+              "Sub Category",
+              "Designation",
+              "Legal Name",
+              "Account Name",
+              "Address Line 1",
+              "Address Line 2",
+              "City",
+              "Province",
+              "Postal Code",
+              "Country"
+            ]
+          }
+        }
+      },
+      "pass": true
+    },
+    {
+      "gate": 6,
+      "observed": {
+        "threshold": 0.999,
+        "years": {
+          "2018": {
+            "nonblank": 84883,
+            "rate": 1.0,
+            "rows": 84883,
+            "valid": 84883
+          },
+          "2019": {
+            "nonblank": 84871,
+            "rate": 1.0,
+            "rows": 84871,
+            "valid": 84871
+          },
+          "2020": {
+            "nonblank": 84809,
+            "rate": 1.0,
+            "rows": 84809,
+            "valid": 84809
+          },
+          "2021": {
+            "nonblank": 84870,
+            "rate": 1.0,
+            "rows": 84870,
+            "valid": 84870
+          },
+          "2022": {
+            "nonblank": 84805,
+            "rate": 1.0,
+            "rows": 84805,
+            "valid": 84805
+          },
+          "2023": {
+            "nonblank": 84519,
+            "rate": 1.0,
+            "rows": 84519,
+            "valid": 84519
+          },
+          "2024": {
+            "nonblank": 83761,
+            "rate": 1.0,
+            "rows": 83761,
+            "valid": 83761
+          }
+        }
+      },
+      "pass": true
+    },
+    {
+      "gate": 7,
+      "observed": {
+        "threshold": 50000,
+        "years": {
+          "2018": {
+            "distinct_exact": 84883
+          },
+          "2019": {
+            "distinct_exact": 84871
+          },
+          "2020": {
+            "distinct_exact": 84809
+          },
+          "2021": {
+            "distinct_exact": 84870
+          },
+          "2022": {
+            "distinct_exact": 84805
+          },
+          "2023": {
+            "distinct_exact": 84519
+          },
+          "2024": {
+            "distinct_exact": 83761
+          }
+        }
+      },
+      "pass": true
+    },
+    {
+      "gate": 8,
+      "observed": {
+        "in_at_least_5_of_7": 77781,
+        "qualified_2024": 83761,
+        "rate": 0.9286063919962751,
+        "threshold": 0.7
+      },
+      "pass": true
+    },
+    {
+      "gate": 9,
+      "observed": {
+        "financial": {
+          "headers": [
+            "BN",
+            "FPE",
+            "Form ID",
+            "Section Used",
+            "4020",
+            "4050",
+            "4100",
+            "4110",
+            "4120",
+            "4130",
+            "4140",
+            "4150",
+            "4155",
+            "4160",
+            "4165",
+            "4166",
+            "4170",
+            "4180",
+            "4200",
+            "4250",
+            "4300",
+            "4310",
+            "4320",
+            "4330",
+            "4350",
+            "4400",
+            "4490",
+            "4500",
+            "5610",
+            "4505",
+            "4510",
+            "4530",
+            "4540",
+            "4550",
+            "4560",
+            "4565",
+            "4570",
+            "4571",
+            "4575",
+            "4580",
+            "4590",
+            "4600",
+            "4610",
+            "4620",
+            "4630",
+            "4640",
+            "4650",
+            "4655",
+            "4700",
+            "4800",
+            "4810",
+            "4820",
+            "4830",
+            "4840",
+            "4850",
+            "4860",
+            "4870",
+            "4880",
+            "4890",
+            "4891",
+            "4900",
+            "4910",
+            "4920",
+            "4930",
+            "4950",
+            "5000",
+            "5010",
+            "5020",
+            "5030",
+            "5040",
+            "5050",
+            "5100",
+            "5500",
+            "5510",
+            "5750",
+            "5900",
+            "5910",
+            "5045",
+            "4101",
+            "4102",
+            "4157",
+            "4158",
+            "4190",
+            "4576",
+            "4577"
+          ],
+          "rows": 83578,
+          "sha256": "221ab68ea499a51bb9ecf84ae189cd48fe7919f1d7cc21abe4ad5f13aa891165",
+          "top_support": [
+            [
+              "FPE",
+              1.0
+            ],
+            [
+              "Section Used",
+              1.0
+            ],
+            [
+              "4700",
+              0.9551795927157865
+            ],
+            [
+              "4950",
+              0.954665103256838
+            ],
+            [
+              "5100",
+              0.953923281246261
+            ],
+            [
+              "4200",
+              0.9267749886333724
+            ],
+            [
+              "4020",
+              0.919643925434923
+            ],
+            [
+              "4920",
+              0.8095072866065233
+            ],
+            [
+              "4500",
+              0.7563593290100266
+            ],
+            [
+              "5000",
+              0.7457943477948743
+            ],
+            [
+              "5010",
+              0.7101868912871808
+            ],
+            [
+              "4350",
+              0.6941419990906698
+            ]
+          ],
+          "url": "https://open.canada.ca/data/dataset/80c00cdb-1358-415c-bb8b-0de7f12675b8/resource/e545170c-3689-4833-b2a8-e9e83100ab59/download/financial_d_and_schedule_6_2024_updated.csv"
+        },
+        "general": {
+          "headers": [
+            "BN",
+            "FPE",
+            "Form ID",
+            "Program #1 Code",
+            "Program #1 %",
+            "Program #1 Desc",
+            "Program #2 Code",
+            "Program #2 %",
+            "Program #2 Desc",
+            "Program #3 Code",
+            "Program #3 %",
+            "Program #3 Desc",
+            "1510",
+            "1510-BN",
+            "1510-Name",
+            "1570",
+            "1600",
+            "1800",
+            "2000",
+            "2100",
+            "2400",
+            "5030",
+            "5031",
+            "5032",
+            "2500",
+            "2510",
+            "2530",
+            "2540",
+            "2550",
+            "2560",
+            "2570",
+            "2575",
+            "2580",
+            "2590",
+            "2600",
+            "2610",
+            "2620",
+            "2630",
+            "2640",
+            "2650",
+            "2660",
+            "2700",
+            "5450",
+            "5460",
+            "2730",
+            "2740",
+            "2750",
+            "2760",
+            "2770",
+            "2780",
+            "2790",
+            "2800",
+            "3200",
+            "3400",
+            "3900",
+            "4000",
+            "5800",
+            "5810",
+            "5820",
+            "5830",
+            "5840",
+            "5841",
+            "5842",
+            "5843",
+            "5850",
+            "5860",
+            "5861",
+            "5862",
+            "5863",
+            "5864"
+          ],
+          "rows": 83925,
+          "sha256": "a5b49d988c928deb161446e3953c706da8f7dae425d30904dbb10d991054f6f4",
+          "top_support": [
+            [
+              "FPE",
+              1.0
+            ],
+            [
+              "3400",
+              0.9956985403634198
+            ],
+            [
+              "1570",
+              0.9953172475424487
+            ],
+            [
+              "2000",
+              0.9950312779267203
+            ],
+            [
+              "4000",
+              0.9946261543044385
+            ],
+            [
+              "5800",
+              0.9944474232946083
+            ],
+            [
+              "3900",
+              0.9942091152815014
+            ],
+            [
+              "5810",
+              0.9941018766756032
+            ],
+            [
+              "5820",
+              0.9940303842716711
+            ],
+            [
+              "5830",
+              0.993613345248734
+            ],
+            [
+              "2100",
+              0.9934703604408698
+            ],
+            [
+              "1600",
+              0.9927911826035151
+            ]
+          ],
+          "url": "https://open.canada.ca/data/dataset/80c00cdb-1358-415c-bb8b-0de7f12675b8/resource/fd7c8679-8032-4613-b2b7-44fb8bc9c7c9/download/financial_section_a_b_and_c_2024_updated.csv"
+        },
+        "ident_category_rate": 1.0,
+        "ident_designation_rate": 1.0,
+        "qualified_concepts": [
+          [
+            "general",
+            "FPE",
+            1.0
+          ],
+          [
+            "financial",
+            "FPE",
+            1.0
+          ],
+          [
+            "financial",
+            "Section Used",
+            1.0
+          ],
+          [
+            "general",
+            "3400",
+            0.9956985403634198
+          ],
+          [
+            "general",
+            "1570",
+            0.9953172475424487
+          ],
+          [
+            "general",
+            "2000",
+            0.9950312779267203
+          ],
+          [
+            "general",
+            "4000",
+            0.9946261543044385
+          ],
+          [
+            "general",
+            "5800",
+            0.9944474232946083
+          ],
+          [
+            "general",
+            "3900",
+            0.9942091152815014
+          ],
+          [
+            "general",
+            "5810",
+            0.9941018766756032
+          ],
+          [
+            "general",
+            "5820",
+            0.9940303842716711
+          ],
+          [
+            "general",
+            "5830",
+            0.993613345248734
+          ],
+          [
+            "general",
+            "2100",
+            0.9934703604408698
+          ],
+          [
+            "general",
+            "1600",
+            0.9927911826035151
+          ],
+          [
+            "general",
+            "3200",
+            0.9919213583556747
+          ],
+          [
+            "general",
+            "2700",
+            0.9889544235924933
+          ],
+          [
+            "general",
+            "1800",
+            0.9850938337801609
+          ],
+          [
+            "general",
+            "1510",
+            0.9842478403336312
+          ],
+          [
+            "general",
+            "5850",
+            0.9813285671730712
+          ],
+          [
+            "financial",
+            "4700",
+            0.9551795927157865
+          ]
+        ]
+      },
+      "pass": true
+    },
+    {
+      "gate": 10,
+      "observed": {
+        "bytes": 493044,
+        "content_type": "text/html;charset=utf-8",
+        "etag": null,
+        "final_url": "https://www.canada.ca/en/revenue-agency/services/charities-giving/charities/revoking-registered-status/list-published-revocations-charities-oqd.html",
+        "last_modified": "Mon, 05 Oct 2026 12:02:43 GMT",
+        "requested_url": "https://www.canada.ca/en/revenue-agency/services/charities-giving/charities/revoking-registered-status/list-published-revocations-charities-oqd.html",
+        "sha256": "b41acc485f5bbc2c981323f12485a419a200d898f9818581a72e2d8581de5b4a",
+        "status": 200
+      },
+      "pass": true
+    },
+    {
+      "gate": 11,
+      "observed": {
+        "annulled": true,
+        "canada_gazette": true,
+        "effective": true,
+        "publication": true,
+        "registered": true,
+        "revoked": true
+      },
+      "pass": true
+    },
+    {
+      "gate": 12,
+      "observed": {
+        "exact_valid": 832,
+        "rate": 1.0,
+        "rows": 832,
+        "threshold": 0.99
+      },
+      "pass": true
+    },
+    {
+      "gate": 13,
+      "observed": {
+        "distinct_revoked_exact": 832,
+        "matched_2018_2024": 784,
+        "rate": 0.9423076923076923,
+        "threshold": 0.95
+      },
+      "pass": false
+    },
+    {
+      "gate": 14,
+      "observed": {
+        "distinct_historical_revoked_exact": 832,
+        "threshold": 1000
+      },
+      "pass": false
+    },
+    {
+      "gate": 15,
+      "observed": {
+        "events": 832,
+        "parseable_dates": 832,
+        "rate": 1.0,
+        "threshold": 0.95
+      },
+      "pass": true
+    },
+    {
+      "gate": 16,
+      "observed": {
+        "reapplication_documented": true,
+        "reinstatement_documented": true
+      },
+      "pass": true
+    },
+    {
+      "gate": 17,
+      "observed": {
+        "causal": false,
+        "future_membership_opened": false,
+        "identity_repair": false,
+        "later_refresh_opened": false,
+        "prediction": false,
+        "prohibited_exposure": false,
+        "ranking": false,
+        "relationship": false
+      },
+      "pass": true
+    },
+    {
+      "gate": 18,
+      "observed": {
+        "annual_identification_sha256": {
+          "2018": "5507bf19133eed79cd551f26a6da2c7d6c17cb9be9844a9adc4e83a4d58ede10",
+          "2019": "82497307e6f9b6163de44f9d06ff9419037a9dffd1c3a098ef0eba9c07e1be95",
+          "2020": "d0fc046587cd82e5aafb365fc0074308f638d40b7e75e372670eb21eaa746400",
+          "2021": "075c61135413bc6bef49c2c6970d3e198c202850f6f73c82c3fae8d4d48fdaf1",
+          "2022": "131bb669847e8d965746cd6de29adae7eb3346f7eb719b009e97dd4d186eabdd",
+          "2023": "416c98d1ff52303f9f042c4e7ef5ac36bc1c16b146cd11eb64627ba8ceabee11",
+          "2024": "4f214ff2a9e659185b20f50431fd98f1d89e2d08fff8c2a9583b82b24fc4cd8e"
+        },
+        "contract_sha": "25ec9b9c9031e6ee48ea1e4e47ddb27826506331",
+        "cost_usd": 0,
+        "revocation_sha256": "b41acc485f5bbc2c981323f12485a419a200d898f9818581a72e2d8581de5b4a",
+        "runner_sha256": "853cbf0d8837e270e8e5a295a317f037a1dc9e67856ac425b1e056f48f85be25"
+      },
+      "pass": true
+    }
+  ],
+  "github_run_id": "37336010279",
+  "identity_repair_used": false,
+  "incremental_monetary_cost_usd": 0,
+  "issue": 192,
+  "later_status_refresh_opened": false,
+  "pass_count": 16,
+  "prediction_computed": false,
+  "prohibited_compliance_exposure_computed": false,
+  "ranking_computed": false,
+  "relationship_computed": false,
+  "research": "CA-CRA-CHARITY-F01",
+  "revocation_event_type_counts": {
+    "Revoked -\r\nFailure to file": 365,
+    "Revoked -\r\nVoluntary": 4,
+    "Revoked - \r\nAudited": 6,
+    "Revoked - \r\nFailure to file": 141,
+    "Revoked - Audited": 1,
+    "Revoked - Voluntary": 315
+  },
+  "revocation_source": {
+    "bytes": 493044,
+    "content_type": "text/html;charset=utf-8",
+    "etag": null,
+    "final_url": "https://www.canada.ca/en/revenue-agency/services/charities-giving/charities/revoking-registered-status/list-published-revocations-charities-oqd.html",
+    "last_modified": "Mon, 05 Oct 2026 12:02:43 GMT",
+    "requested_url": "https://www.canada.ca/en/revenue-agency/services/charities-giving/charities/revoking-registered-status/list-published-revocations-charities-oqd.html",
+    "sha256": "b41acc485f5bbc2c981323f12485a419a200d898f9818581a72e2d8581de5b4a",
+    "status": 200
+  },
+  "runner_sha256": "853cbf0d8837e270e8e5a295a317f037a1dc9e67856ac425b1e056f48f85be25"
+}
