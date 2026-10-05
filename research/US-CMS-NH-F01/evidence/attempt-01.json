@@ -1,0 +1,273 @@
+{
+  "archive_ui": {
+    "dates": [],
+    "links": [],
+    "text": ""
+  },
+  "attempt": 1,
+  "attempt_valid": true,
+  "causal_claim_made": false,
+  "contract_sha": "fed9f05c7271c712881fc9b7936ca1a5f7912347",
+  "disposition": "HOLD_US_CMS_NH_F01_EXACT_CCN_FUTURE_STANDARD_SURVEY_SERIOUS_DEFICIENCY_DESIGN_NOT_READY",
+  "failed_gates": [
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ],
+  "future_serious_deficiency_membership_opened": false,
+  "future_standard_survey_membership_opened": false,
+  "gates": [
+    {
+      "gate": 1,
+      "observed": {
+        "active_issue": 194,
+        "active_research": "US-CMS-NH-F01",
+        "checkpoint_id": "CHK-20261006-US-CMS-NH-F01-ACTIVE",
+        "last_completed_issue": 193,
+        "last_completed_research": "PORTFOLIO-R53",
+        "last_decision": "DEC-300",
+        "updated": "2026-10-06"
+      },
+      "pass": true
+    },
+    {
+      "gate": 2,
+      "observed": {
+        "contract_sha": "fed9f05c7271c712881fc9b7936ca1a5f7912347",
+        "issue": 194
+      },
+      "pass": true
+    },
+    {
+      "gate": 3,
+      "observed": {
+        "archive": {
+          "bytes": 2196,
+          "content_type": "text/html; charset=UTF-8",
+          "etag": null,
+          "final_url": "https://data.cms.gov/provider-data/archived-data/nursing-homes",
+          "last_modified": null,
+          "requested_url": "https://data.cms.gov/provider-data/archived-data/nursing-homes",
+          "sha256": "11612c367d9de8eaa47ad3b9cda178477e7fc9e12a30113d0e52b3eb029a7ab2",
+          "status": 200
+        },
+        "deficiency": {
+          "bytes": 2196,
+          "content_type": "text/html; charset=UTF-8",
+          "etag": null,
+          "final_url": "https://data.cms.gov/provider-data/dataset/r5ix-sfxw",
+          "last_modified": null,
+          "requested_url": "https://data.cms.gov/provider-data/dataset/r5ix-sfxw",
+          "sha256": "11612c367d9de8eaa47ad3b9cda178477e7fc9e12a30113d0e52b3eb029a7ab2",
+          "status": 200
+        },
+        "dictionary": {
+          "bytes": 644126,
+          "content_type": "application/pdf",
+          "etag": null,
+          "final_url": "https://data.cms.gov/provider-data/sites/default/files/data_dictionaries/nursing_home/NH_Data_Dictionary.pdf",
+          "last_modified": "Wed, 26 Aug 2026 06:11:36 GMT",
+          "requested_url": "https://data.cms.gov/provider-data/sites/default/files/data_dictionaries/nursing_home/NH_Data_Dictionary.pdf",
+          "sha256": "2b55b0f65532e36fe7c49967993a37ddcb8c92e38234c94a2652c9a77feeb313",
+          "status": 200
+        },
+        "provider": {
+          "bytes": 2196,
+          "content_type": "text/html; charset=UTF-8",
+          "etag": null,
+          "final_url": "https://data.cms.gov/provider-data/dataset/4pq5-n9py",
+          "last_modified": null,
+          "requested_url": "https://data.cms.gov/provider-data/dataset/4pq5-n9py",
+          "sha256": "11612c367d9de8eaa47ad3b9cda178477e7fc9e12a30113d0e52b3eb029a7ab2",
+          "status": 200
+        }
+      },
+      "pass": true
+    },
+    {
+      "gate": 4,
+      "observed": {
+        "archive_dates_seen": [],
+        "missing_months": [
+          "2025-09",
+          "2025-10",
+          "2025-11",
+          "2025-12",
+          "2026-01",
+          "2026-02",
+          "2026-03",
+          "2026-04",
+          "2026-05",
+          "2026-06",
+          "2026-07",
+          "2026-08"
+        ],
+        "official_archive_release_days_by_month": {
+          "2025-09": [],
+          "2025-10": [],
+          "2025-11": [],
+          "2025-12": [],
+          "2026-01": [],
+          "2026-02": [],
+          "2026-03": [],
+          "2026-04": [],
+          "2026-05": [],
+          "2026-06": [],
+          "2026-07": [],
+          "2026-08": []
+        },
+        "required_months": [
+          "2025-09",
+          "2025-10",
+          "2025-11",
+          "2025-12",
+          "2026-01",
+          "2026-02",
+          "2026-03",
+          "2026-04",
+          "2026-05",
+          "2026-06",
+          "2026-07",
+          "2026-08"
+        ]
+      },
+      "pass": false
+    },
+    {
+      "gate": 5,
+      "observed": {
+        "not_evaluated_after_decisive_gate4": true,
+        "reason": "FROZEN_MONTHLY_ARCHIVE_LINEAGE_MISSING"
+      },
+      "pass": false
+    },
+    {
+      "gate": 6,
+      "observed": {
+        "not_evaluated_after_decisive_gate4": true,
+        "reason": "FROZEN_MONTHLY_ARCHIVE_LINEAGE_MISSING"
+      },
+      "pass": false
+    },
+    {
+      "gate": 7,
+      "observed": {
+        "not_evaluated_after_decisive_gate4": true,
+        "reason": "FROZEN_MONTHLY_ARCHIVE_LINEAGE_MISSING"
+      },
+      "pass": false
+    },
+    {
+      "gate": 8,
+      "observed": {
+        "not_evaluated_after_decisive_gate4": true,
+        "reason": "FROZEN_MONTHLY_ARCHIVE_LINEAGE_MISSING"
+      },
+      "pass": false
+    },
+    {
+      "gate": 9,
+      "observed": {
+        "not_evaluated_after_decisive_gate4": true,
+        "reason": "FROZEN_MONTHLY_ARCHIVE_LINEAGE_MISSING"
+      },
+      "pass": false
+    },
+    {
+      "gate": 10,
+      "observed": {
+        "not_evaluated_after_decisive_gate4": true,
+        "reason": "FROZEN_MONTHLY_ARCHIVE_LINEAGE_MISSING"
+      },
+      "pass": false
+    },
+    {
+      "gate": 11,
+      "observed": {
+        "not_evaluated_after_decisive_gate4": true,
+        "reason": "FROZEN_MONTHLY_ARCHIVE_LINEAGE_MISSING"
+      },
+      "pass": false
+    },
+    {
+      "gate": 12,
+      "observed": {
+        "not_evaluated_after_decisive_gate4": true,
+        "reason": "FROZEN_MONTHLY_ARCHIVE_LINEAGE_MISSING"
+      },
+      "pass": false
+    },
+    {
+      "gate": 13,
+      "observed": {
+        "not_evaluated_after_decisive_gate4": true,
+        "reason": "FROZEN_MONTHLY_ARCHIVE_LINEAGE_MISSING"
+      },
+      "pass": false
+    },
+    {
+      "gate": 14,
+      "observed": {
+        "not_evaluated_after_decisive_gate4": true,
+        "reason": "FROZEN_MONTHLY_ARCHIVE_LINEAGE_MISSING"
+      },
+      "pass": false
+    },
+    {
+      "gate": 15,
+      "observed": {
+        "not_evaluated_after_decisive_gate4": true,
+        "reason": "FROZEN_MONTHLY_ARCHIVE_LINEAGE_MISSING"
+      },
+      "pass": false
+    },
+    {
+      "gate": 16,
+      "observed": {
+        "not_evaluated_after_decisive_gate4": true,
+        "reason": "FROZEN_MONTHLY_ARCHIVE_LINEAGE_MISSING"
+      },
+      "pass": false
+    },
+    {
+      "gate": 17,
+      "observed": {
+        "not_evaluated_after_decisive_gate4": true,
+        "reason": "FROZEN_MONTHLY_ARCHIVE_LINEAGE_MISSING"
+      },
+      "pass": false
+    },
+    {
+      "gate": 18,
+      "observed": {
+        "not_evaluated_after_decisive_gate4": true,
+        "reason": "FROZEN_MONTHLY_ARCHIVE_LINEAGE_MISSING"
+      },
+      "pass": false
+    }
+  ],
+  "github_run_id": "37338329443",
+  "identity_repair_used": false,
+  "incremental_monetary_cost_usd": 0,
+  "issue": 194,
+  "pass_count": 3,
+  "prediction_computed": false,
+  "prohibited_outcome_exposure_computed": false,
+  "ranking_computed": false,
+  "relationship_computed": false,
+  "research": "US-CMS-NH-F01",
+  "runner_sha256": "3ccb9470f2ef913162b51a80439d9434ba3d588ad85ba607e6f64ec9c4c77caa",
+  "sep2026_or_later_row_bodies_opened": 0
+}
