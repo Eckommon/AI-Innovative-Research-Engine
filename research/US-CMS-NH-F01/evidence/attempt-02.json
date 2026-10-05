@@ -1,0 +1,312 @@
+{
+  "archive_discovery": {
+    "console": [],
+    "dom_text": "",
+    "performance_urls": [
+      "https://data.cms.gov/provider-data/js/index.js",
+      "https://data.cms.gov/provider-data/css/index.css"
+    ],
+    "response_dates": [
+      {
+        "day": 17,
+        "month": 9,
+        "year": 2025
+      }
+    ],
+    "responses": [
+      {
+        "content_type": "text/html; charset=utf-8",
+        "status": 200,
+        "url": "https://data.cms.gov/provider-data/archived-data/nursing-homes"
+      },
+      {
+        "body_excerpt": "@charset \"UTF-8\";.dkan-c-cms-topnav--tagline{color:var(--tag-line--color)}.dkan-c-header--mobile .dkan-c-cms-topnav--tagline{display:none}.dkan-c-header--desktop .dkan-c-cms-topnav--tagline{border-left:1px solid var(--tag-line--border-color);align-items:center;display:inline-flex}:root{--header-nav-icon-link--desktop-width: 240px;--header-nav-icon-link--mobile-width: 90px}.dkan-c-header-nav-icon-link{border-right:none;align-items:center;display:inline-flex}.dkan-c-header-nav-icon-link a{border-bottom:none;text-decoration:none;display:inline-block}.dkan-c-header-nav-icon-link a:focus,.dkan-c-header-nav-icon-link a:hover{background-color:#0000}.dkan-c-header-nav-icon-link.show-back-arrow a:before{content:\"\";color:#323a45;text-align:center;vertical-align:middle;width:18px;height:18px;margin-left:10px;padding-right:10px;font-family:\"Font Awesome 6 Pro\";font-size:18px;font-weight:lighter;line-height:18px;display:inline-block}.dkan-c-header-nav-icon-link img{vertical-align:middle;height:auto;display:inline-block}.dkan-c-header--mobile .dkan-c-header-nav-icon-link img{width:var(--header-nav-icon-link--mobile-width)}.dkan-c-header--desktop .dkan-c-header-nav-icon-link img{width:var(--header-nav-icon-link--desktop-width)}.dkan-c-cms-topnav{height:3.188rem}.dkan-c-cms-topnav>div{height:100%}.dkan-c-cms-topnav .dkan-c-cms-topnav-menu a{margin:3px 7px;display:inline-block}.dkan-c-cms-topnav--menu ul{margin:0;padding:0;list-style:none}.dkan-c-cms-topnav .dkan-c-cms-topnav--tagline{height:100%;margin-left:16px}@media screen and (max-width:544px){.dkan-c-cms-topnav{display:none}}@media screen and (min-width:1024px){.dkan-c-cms-topnav{height:5.313rem}}.dkan-c-site-menu--sub-menu{list-style:none;display:none;box-shadow:0 4px 8px #0003}.dkan-c-header--desktop .dkan-c-site-menu--sub-menu{background:var(--header-submenu--bg-color);width:var(--header-submenu--width);margin:0;padding:16px;position:absolute;top:48px;left:0}.dkan-c-header--desktop .dkan-c-site-menu--sub-menu a{text-align:left;padding:16px;display:flex}.dkan-c-header--desktop .dkan-c-site-menu--sub-menu a span{border-bottom:2px solid #0000;margin-left:8px}.dkan-c-header--desktop .dkan-c-site-menu--sub-menu{z-index:999}.dkan-c-main-navigation--search .dkan-c-header-search--modal-button span{border-bottom:2px solid #0000}.dkan-c-header--mobile .dkan-c-nav-menu--mobile{display:none}.dkan-c-header--mobile .dkan-c-nav-menu--mobile .dkan-c-header-search--modal-button{color:var(--header-nav-link--mobile-color);text-decoration:none}.dkan-c-header--mobile .dkan-c-nav-menu--mobile .dkan-c-header-search--modal-button:hover,.dkan-c-header--mobile .dkan-c-nav-menu--mobile .dkan-c-header-search--modal-button:focus{color:var(--header-nav-link--mobile-color)}.dkan-c-header--mobile .dkan-c-nav-menu--mobile .dkan-c-header-search--modal-button:hover span,.dkan-c-header--mobile .dkan-c-nav-menu--mobile .dkan-c-header-search--modal-button:focus span{border-bottom-color:var(--header-nav-link--mobile-color)}.dkan-c-header-search--modal-button:before{content:\"\";text-align:center;vertical-align:middle;box-sizing:content-box;width:18px;height:18px;margin-left:10px;padding-right:10px;font-family:\"Font Awesome 6 Pro\";font-size:18px;font-weight:lighter;line-height:18px;display:inline-block}.dkan-c-main-navigation--search .dkan-c-header-search--modal-button{color:var(--header-nav-search--color);text-decoration:none}.dkan-c-main-navigation--search .dkan-c-header-search--modal-button:focus,.dkan-c-main-navigation--search .dkan-c-header-search--modal-button:hover{color:var(--header-nav-search--color)}.dkan-c-main-navigation--search .dkan-c-header-search--modal-button:focus span,.dkan-c-main-navigation--search .dkan-c-header-search--modal-button:hover span{border-bottom-color:var(--header-nav-search--color)}.dkan-c-header--desktop .dkan-c-main-navigation--search{border-left:2px solid var(--header-nav-search--color)}.dkan-c-header--desktop .dkan-c-nav-menu--desktop .dkan-c-main-navigation--search{display:none}.dkan-c-header--mobile .dkan-c-header--link-list .dkan-c-header--link,.dkan-c-header--mobile .dkan-c-header--link-list .dkan-c-header--link+ul a{color:var(--header-nav-link--mobile-color);text-decoration:none}.dkan-c-header--mobile .dkan-c-header--link-list .dkan-c-header--link:hover,.dkan-c-header--mobile .dkan-c-header--link-list .dkan-c-header--link:focus,.dkan-c-header--mobile .dkan-c-header--link-list .dkan-c-header--link+ul a:hover,.dkan-c-header--mobile .dkan-c-header--link-list .dkan-c-header--link+ul a:focus{color:var(--header-nav-link--mobile-color)}.dkan-c-header--mobile .dkan-c-header--link-list .dkan-c-header--link:hover span,.dkan-c-header--mobile .dkan-c-header--link-list .dkan-c-header--link:focus span,.dkan-c-header--mobile .dkan-c-header--link-list .dkan-c-header--link+ul a:hover span,.dkan-c-header--mobile .dkan-c-header--link-list .dkan-c-header--link+ul a:focus span{border-bottom-color:var(--header-nav-link--mobile-color)}.dkan-c-header--mobile .dkan-c-nav-menu--open{background-color:var(--header-mobile-bg-color);z-index:500;width:100%;max-width:100%;height:100%;transition-property:left;transition-duration:var(--mobile-nav-animation-time);flex:none;padding:50px 0;display:block;position:fixed;top:0;bottom:0;left:0}.dkan-c-header--mobile .dkan-c-nav-menu .dkan-c-top-nav{display:inherit;padding-top:8px}.dkan-c-header--mobile .dkan-c-nav-menu .dkan-c-top-nav ul{padding-top:16px}.dkan-c-header--desktop .dkan-c-header--link-list{margin-block:0}.dkan-c-header--desktop .dkan-c-nav-menu--mobile-close-button{display:none}.dkan-c-header--desktop .dkan-c-header--link-list{flex-direction:row;display:flex}.dkan-c-header--desktop .dkan-c-nav-menu .dkan-c-top-nav{display:none}:root{--mobile-menu-button--color: var(--color-white);--mobile-menu-button--hover-color: var(--color-white)}button.dkan-c-mobile-menu-button:before{color:var(--mobile-menu-button--color);text-align:center;vertical-align:middle;box-sizing:content-box;width:18px;height:18px;margin-left:10px;padding",
+        "content_type": "text/css",
+        "status": 200,
+        "url": "https://data.cms.gov/provider-data/css/index.css"
+      },
+      {
+        "body_excerpt": "function lC(e,t){for(var n=0;n<t.length;n++){const r=t[n];if(typeof r!=\"string\"&&!Array.isArray(r)){for(const i in r)if(i!==\"default\"&&!(i in e)){const s=Object.getOwnPropertyDescriptor(r,i);s&&Object.defineProperty(e,i,s.get?s:{enumerable:!0,get:()=>r[i]})}}}return Object.freeze(Object.defineProperty(e,Symbol.toStringTag,{value:\"Module\"}))}(function(){const t=document.createElement(\"link\").relList;if(t&&t.supports&&t.supports(\"modulepreload\"))return;for(const i of document.querySelectorAll('link[rel=\"modulepreload\"]'))r(i);new MutationObserver(i=>{for(const s of i)if(s.type===\"childList\")for(const o of s.addedNodes)o.tagName===\"LINK\"&&o.rel===\"modulepreload\"&&r(o)}).observe(document,{childList:!0,subtree:!0});function n(i){const s={};return i.integrity&&(s.integrity=i.integrity),i.referrerPolicy&&(s.referrerPolicy=i.referrerPolicy),i.crossOrigin===\"use-credentials\"?s.credentials=\"include\":i.crossOrigin===\"anonymous\"?s.credentials=\"omit\":s.credentials=\"same-origin\",s}function r(i){if(i.ep)return;i.ep=!0;const s=n(i);fetch(i.href,s)}})();var Wc=typeof globalThis<\"u\"?globalThis:typeof window<\"u\"?window:typeof global<\"u\"?global:typeof self<\"u\"?self:{};function Qa(e){return e&&e.__esModule&&Object.prototype.hasOwnProperty.call(e,\"default\")?e.default:e}function ix(e){if(Object.prototype.hasOwnProperty.call(e,\"__esModule\"))return e;var t=e.default;if(typeof t==\"function\"){var n=function r(){var i=!1;try{i=this instanceof r}catch{}return i?Reflect.construct(t,arguments,this.constructor):t.apply(this,arguments)};n.prototype=t.prototype}else n={};return Object.defineProperty(n,\"__esModule\",{value:!0}),Object.keys(e).forEach(function(r){var i=Object.getOwnPropertyDescriptor(e,r);Object.defineProperty(n,r,i.get?i:{enumerable:!0,get:function(){return e[r]}})}),n}var Yq={exports:{}},rM={};var Fye;function Tyt(){if(Fye)return rM;Fye=1;var e=Symbol.for(\"react.transitional.element\"),t=Symbol.for(\"react.fragment\");function n(r,i,s){var o=null;if(s!==void 0&&(o=\"\"+s),i.key!==void 0&&(o=\"\"+i.key),\"key\"in i){s={};for(var a in i)a!==\"key\"&&(s[a]=i[a])}else s=i;return i=s.ref,{$$typeof:e,type:r,key:o,ref:i!==void 0?i:null,props:s}}return rM.Fragment=t,rM.jsx=n,rM.jsxs=n,rM}var jye;function Myt(){return jye||(jye=1,Yq.exports=Tyt()),Yq.exports}var $=Myt(),Bye={},$ye;function Ayt(){return $ye||($ye=1,(function(){if(typeof window!=\"object\")return;if(\"IntersectionObserver\"in window&&\"IntersectionObserverEntry\"in window&&\"intersectionRatio\"in window.IntersectionObserverEntry.prototype){\"isIntersecting\"in window.IntersectionObserverEntry.prototype||Object.defineProperty(window.IntersectionObserverEntry.prototype,\"isIntersecting\",{get:function(){return this.intersectionRatio>0}});return}function e(R){try{return R.defaultView&&R.defaultView.frameElement||null}catch{return null}}var t=(function(R){for(var D=R,k=e(D);k;)D=k.ownerDocument,k=e(D);return D})(window.document),n=[],r=null,i=null;function s(R){this.time=R.time,this.target=R.target,this.rootBounds=_(R.rootBounds),this.boundingClientRect=_(R.boundingClientRect),this.intersectionRect=_(R.intersectionRect||b()),this.isIntersecting=!!R.intersectionRect;var D=this.boundingClientRect,k=D.width*D.height,H=this.intersectionRect,F=H.width*H.height;k?this.intersectionRatio=Number((F/k).toFixed(4)):this.intersectionRatio=this.isIntersecting?1:0}function o(R,D){var k=D||{};if(typeof R!=\"function\")throw new Error(\"callback must be a function\");if(k.root&&k.root.nodeType!=1&&k.root.nodeType!=9)throw new Error(\"root must be a Document or Element\");this._checkForIntersections=l(this._checkForIntersections.bind(this),this.THROTTLE_TIMEOUT),this._callback=R,this._observationTargets=[],this._queuedEntries=[],this._rootMarginValues=this._parseRootMargin(k.rootMargin),this.thresholds=this._initThresholds(k.threshold),this.root=k.root||null,this.rootMargin=this._rootMarginValues.map(function(H){return H.value+H.unit}).join(\" \"),this._monitoringDocuments=[],this._monitoringUnsubscribes=[]}o.prototype.THROTTLE_TIMEOUT=100,o.prototype.POLL_INTERVAL=null,o.prototype.USE_MUTATION_OBSERVER=!0,o._setupCrossOriginUpdater=function(){return r||(r=function(R,D){!R||!D?i=b():i=S(R,D),n.forEach(function(k){k._checkForIntersections()})}),r},o._resetCrossOriginUpdater=function(){r=null,i=null},o.prototype.observe=function(R){var D=this._observationTargets.some(function(k){return k.element==R});if(!D){if(!(R&&R.nodeType==1))throw new Error(\"target must be an Element\");this._registerInstance(),this._observationTargets.push({element:R,entry:null}),this._monitorIntersections(R.ownerDocument),this._checkForIntersections()}},o.prototype.unobserve=function(R){this._observationTargets=this._observationTargets.filter(function(D){return D.element!=R}),this._unmonitorIntersections(R.ownerDocument),this._observationTargets.length==0&&this._unregisterInstance()},o.prototype.disconnect=function(){this._observationTargets=[],this._unmonitorAllIntersections(),this._unregisterInstance()},o.prototype.takeRecords=function(){var R=this._queuedEntries.slice();return this._queuedEntries=[],R},o.prototype._initThresholds=function(R){var D=R||[0];return Array.isArray(D)||(D=[D]),D.sort().filter(function(k,H,F){if(typeof k!=\"number\"||isNaN(k)||k<0||k>1)throw new Error(\"threshold must be a number between 0 and 1 inclusively\");return k!==F[H-1]})},o.prototype._parseRootMargin=function(R){var D=R||\"0px\",k=D.split(/\\s+/).map(function(H){var F=/^(-?\\d*\\.?\\d+)(px|%)$/.exec(H);if(!F)throw new Error(\"rootMargin must be specified in pixels or percent\");return{value:parseFloat(F[1]),unit:F[2]}});return k[1]=k[1]||k[0],k[2]=k[2]||k[0],k[3]=k[3]||k[1],k},o.prototype._monitorIntersections=function(R){var D=R.defaultView;if(D&&this._monitoringDocuments.indexOf(R)==-1){var k=this._checkForIntersections,H=null,F=null;this.POLL_INTERVAL?H=D.setInterval(k,this.POLL_INTERVAL):(u(D,\"resize\",k,!0),u(R,\"scroll\",k,!0),this.USE_MUTATION_OBSERVER&&\"MutationObserver\"in D&&(F=new D.MutationObserver(k),F.observe(R,{attributes:!0,childList:!0,chara",
+        "content_type": "text/javascript",
+        "dates": [
+          "2025-09-17"
+        ],
+        "status": 200,
+        "url": "https://data.cms.gov/provider-data/js/index.js"
+      }
+    ]
+  },
+  "attempt": 2,
+  "attempt_valid": true,
+  "causal_claim_made": false,
+  "contract_sha": "fed9f05c7271c712881fc9b7936ca1a5f7912347",
+  "disposition": "HOLD_US_CMS_NH_F01_EXACT_CCN_FUTURE_STANDARD_SURVEY_SERIOUS_DEFICIENCY_DESIGN_NOT_READY",
+  "failed_gates": [
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ],
+  "future_serious_deficiency_membership_opened": false,
+  "future_standard_survey_membership_opened": false,
+  "gates": [
+    {
+      "gate": 1,
+      "observed": {
+        "active_issue": 194,
+        "active_research": "US-CMS-NH-F01",
+        "checkpoint_id": "CHK-20261006-US-CMS-NH-F01-ACTIVE",
+        "last_completed_issue": 193,
+        "last_completed_research": "PORTFOLIO-R53",
+        "last_decision": "DEC-300",
+        "updated": "2026-10-06"
+      },
+      "pass": true
+    },
+    {
+      "gate": 2,
+      "observed": {
+        "contract_sha": "fed9f05c7271c712881fc9b7936ca1a5f7912347",
+        "issue": 194
+      },
+      "pass": true
+    },
+    {
+      "gate": 3,
+      "observed": {
+        "archive": {
+          "bytes": 2196,
+          "content_type": "text/html; charset=UTF-8",
+          "etag": null,
+          "final_url": "https://data.cms.gov/provider-data/archived-data/nursing-homes",
+          "last_modified": null,
+          "requested_url": "https://data.cms.gov/provider-data/archived-data/nursing-homes",
+          "sha256": "11612c367d9de8eaa47ad3b9cda178477e7fc9e12a30113d0e52b3eb029a7ab2",
+          "status": 200
+        },
+        "deficiency": {
+          "bytes": 2196,
+          "content_type": "text/html; charset=UTF-8",
+          "etag": null,
+          "final_url": "https://data.cms.gov/provider-data/dataset/r5ix-sfxw",
+          "last_modified": null,
+          "requested_url": "https://data.cms.gov/provider-data/dataset/r5ix-sfxw",
+          "sha256": "11612c367d9de8eaa47ad3b9cda178477e7fc9e12a30113d0e52b3eb029a7ab2",
+          "status": 200
+        },
+        "dictionary": {
+          "bytes": 644126,
+          "content_type": "application/pdf",
+          "etag": null,
+          "final_url": "https://data.cms.gov/provider-data/sites/default/files/data_dictionaries/nursing_home/NH_Data_Dictionary.pdf",
+          "last_modified": "Wed, 26 Aug 2026 06:11:36 GMT",
+          "requested_url": "https://data.cms.gov/provider-data/sites/default/files/data_dictionaries/nursing_home/NH_Data_Dictionary.pdf",
+          "sha256": "2b55b0f65532e36fe7c49967993a37ddcb8c92e38234c94a2652c9a77feeb313",
+          "status": 200
+        },
+        "provider": {
+          "bytes": 2196,
+          "content_type": "text/html; charset=UTF-8",
+          "etag": null,
+          "final_url": "https://data.cms.gov/provider-data/dataset/4pq5-n9py",
+          "last_modified": null,
+          "requested_url": "https://data.cms.gov/provider-data/dataset/4pq5-n9py",
+          "sha256": "11612c367d9de8eaa47ad3b9cda178477e7fc9e12a30113d0e52b3eb029a7ab2",
+          "status": 200
+        }
+      },
+      "pass": true
+    },
+    {
+      "gate": 4,
+      "observed": {
+        "missing_months": [
+          "2025-10",
+          "2025-11",
+          "2025-12",
+          "2026-01",
+          "2026-02",
+          "2026-03",
+          "2026-04",
+          "2026-05",
+          "2026-06",
+          "2026-07",
+          "2026-08"
+        ],
+        "official_archive_release_days_by_month": {
+          "2025-09": [
+            17
+          ],
+          "2025-10": [],
+          "2025-11": [],
+          "2025-12": [],
+          "2026-01": [],
+          "2026-02": [],
+          "2026-03": [],
+          "2026-04": [],
+          "2026-05": [],
+          "2026-06": [],
+          "2026-07": [],
+          "2026-08": []
+        },
+        "required_months": [
+          "2025-09",
+          "2025-10",
+          "2025-11",
+          "2025-12",
+          "2026-01",
+          "2026-02",
+          "2026-03",
+          "2026-04",
+          "2026-05",
+          "2026-06",
+          "2026-07",
+          "2026-08"
+        ],
+        "source_native_dates_seen": [
+          {
+            "day": 17,
+            "month": 9,
+            "year": 2025
+          }
+        ]
+      },
+      "pass": false
+    },
+    {
+      "gate": 5,
+      "observed": {
+        "not_evaluated_after_decisive_gate4": true,
+        "reason": "FROZEN_MONTHLY_ARCHIVE_LINEAGE_MISSING"
+      },
+      "pass": false
+    },
+    {
+      "gate": 6,
+      "observed": {
+        "not_evaluated_after_decisive_gate4": true,
+        "reason": "FROZEN_MONTHLY_ARCHIVE_LINEAGE_MISSING"
+      },
+      "pass": false
+    },
+    {
+      "gate": 7,
+      "observed": {
+        "not_evaluated_after_decisive_gate4": true,
+        "reason": "FROZEN_MONTHLY_ARCHIVE_LINEAGE_MISSING"
+      },
+      "pass": false
+    },
+    {
+      "gate": 8,
+      "observed": {
+        "not_evaluated_after_decisive_gate4": true,
+        "reason": "FROZEN_MONTHLY_ARCHIVE_LINEAGE_MISSING"
+      },
+      "pass": false
+    },
+    {
+      "gate": 9,
+      "observed": {
+        "not_evaluated_after_decisive_gate4": true,
+        "reason": "FROZEN_MONTHLY_ARCHIVE_LINEAGE_MISSING"
+      },
+      "pass": false
+    },
+    {
+      "gate": 10,
+      "observed": {
+        "not_evaluated_after_decisive_gate4": true,
+        "reason": "FROZEN_MONTHLY_ARCHIVE_LINEAGE_MISSING"
+      },
+      "pass": false
+    },
+    {
+      "gate": 11,
+      "observed": {
+        "not_evaluated_after_decisive_gate4": true,
+        "reason": "FROZEN_MONTHLY_ARCHIVE_LINEAGE_MISSING"
+      },
+      "pass": false
+    },
+    {
+      "gate": 12,
+      "observed": {
+        "not_evaluated_after_decisive_gate4": true,
+        "reason": "FROZEN_MONTHLY_ARCHIVE_LINEAGE_MISSING"
+      },
+      "pass": false
+    },
+    {
+      "gate": 13,
+      "observed": {
+        "not_evaluated_after_decisive_gate4": true,
+        "reason": "FROZEN_MONTHLY_ARCHIVE_LINEAGE_MISSING"
+      },
+      "pass": false
+    },
+    {
+      "gate": 14,
+      "observed": {
+        "not_evaluated_after_decisive_gate4": true,
+        "reason": "FROZEN_MONTHLY_ARCHIVE_LINEAGE_MISSING"
+      },
+      "pass": false
+    },
+    {
+      "gate": 15,
+      "observed": {
+        "not_evaluated_after_decisive_gate4": true,
+        "reason": "FROZEN_MONTHLY_ARCHIVE_LINEAGE_MISSING"
+      },
+      "pass": false
+    },
+    {
+      "gate": 16,
+      "observed": {
+        "not_evaluated_after_decisive_gate4": true,
+        "reason": "FROZEN_MONTHLY_ARCHIVE_LINEAGE_MISSING"
+      },
+      "pass": false
+    },
+    {
+      "gate": 17,
+      "observed": {
+        "not_evaluated_after_decisive_gate4": true,
+        "reason": "FROZEN_MONTHLY_ARCHIVE_LINEAGE_MISSING"
+      },
+      "pass": false
+    },
+    {
+      "gate": 18,
+      "observed": {
+        "not_evaluated_after_decisive_gate4": true,
+        "reason": "FROZEN_MONTHLY_ARCHIVE_LINEAGE_MISSING"
+      },
+      "pass": false
+    }
+  ],
+  "github_run_id": "37338851974",
+  "identity_repair_used": false,
+  "incremental_monetary_cost_usd": 0,
+  "issue": 194,
+  "pass_count": 3,
+  "prediction_computed": false,
+  "prohibited_outcome_exposure_computed": false,
+  "ranking_computed": false,
+  "relationship_computed": false,
+  "research": "US-CMS-NH-F01",
+  "runner_sha256": "9f5593ec90a7bd8758f17224a9818d3b313d98080b22aa9a7a10784f4dd2581a",
+  "sep2026_or_later_row_bodies_opened": 0
+}
