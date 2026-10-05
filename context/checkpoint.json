@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20261006-CA-CRA-CHARITY-F01-TERMINAL",
-  "active_issue": "none",
-  "active_research": "NONE",
+  "checkpoint_id": "CHK-20261006-PORTFOLIO-R53-ACTIVE",
+  "active_issue": 193,
+  "active_research": "PORTFOLIO-R53",
   "last_completed_issue": 192,
   "last_completed_research": "CA-CRA-CHARITY-F01",
-  "last_decision": "DEC-297",
+  "last_decision": "DEC-298",
   "updated": "2026-10-06"
 }
