@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20261008-US-EPA-RCRA-F01-TERMINAL",
-  "active_issue": "none",
-  "active_research": "NONE",
+  "checkpoint_id": "CHK-20261008-US-EPA-RCRA-N01-ACTIVE",
+  "active_issue": 199,
+  "active_research": "US-EPA-RCRA-N01",
   "last_completed_issue": 198,
   "last_completed_research": "US-EPA-RCRA-F01",
-  "last_decision": "DEC-309",
+  "last_decision": "DEC-310",
   "updated": "2026-10-08"
 }
