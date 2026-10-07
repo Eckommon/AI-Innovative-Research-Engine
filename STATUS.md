@@ -1,21 +1,21 @@
 ---
-checkpoint_id: CHK-20261008-US-FRA-RR-F01-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20261008-PORTFOLIO-R55-ACTIVE
+active_issue: 197
+active_research: PORTFOLIO-R55
 last_completed_issue: 196
 last_completed_research: US-FRA-RR-F01
-last_decision: DEC-305
+last_decision: DEC-306
 updated: 2026-10-08
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `US_FRA_RR_F01_BLOCKED_IMPLEMENTATION__PORTFOLIO_RESELECTION_REQUIRED`
+**State / 상태:** `PORTFOLIO_R55_ACTIVE__DIRECT_ROW_BODY_SURVIVOR_RESELECTION`
 
-US-FRA-RR-F01 is terminal operationally under `DEC-305`. The scientific 18-gate F01 was not validly executed. Official WSDL, railroad reference and Form54/Form55 schemas were resolved, but authorized historical data operations returned HTTP 500 before row-level evidence.
+PORTFOLIO-R55 is active under pre-Issue contract `ecbbe4cb6689f71095065e2d857d8e4d538deefe`. The frozen pool is EPA RCRA, CMS NPI, FAA Aircraft Registry and FDIC Bank. Candidate future-event memberships remain unopened.
 
 ## Exact next action / 정확한 다음 행동
 
-Return to independent outcome-blind Stage-0 portfolio reselection. Do not open a third FRA transport/service workaround solely to complete this branch. A future FRA re-entry requires a separately frozen contract around a reproducibly working official row-bearing route.
+Complete bounded official-source/direct-body and canonical-overlap revalidation, persist exactly one immutable /45 scorecard and select at most one outcome-blind F01.
 
 Incremental monetary cost remains **0 USD**.
