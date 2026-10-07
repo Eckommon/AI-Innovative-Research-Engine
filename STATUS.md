@@ -1,23 +1,21 @@
 ---
-checkpoint_id: CHK-20261006-US-CMS-NH-F01-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20261008-PORTFOLIO-R54-ACTIVE
+active_issue: 195
+active_research: PORTFOLIO-R54
 last_completed_issue: 194
 last_completed_research: US-CMS-NH-F01
-last_decision: DEC-301
-updated: 2026-10-06
+last_decision: DEC-302
+updated: 2026-10-08
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `US_CMS_NH_F01_BLOCKED_IMPLEMENTATION__PORTFOLIO_RESELECTION_REQUIRED`
+**State / 상태:** `PORTFOLIO_R54_ACTIVE__STATIC_API_SURVIVOR_RESELECTION`
 
-US-CMS-NH-F01 is terminal operationally under `DEC-301`. The frozen scientific F01 was **not validly executed**: Attempt 01 produced an empty CMS archive DOM, and Attempt 02 failed to resolve source-native archive metadata and misclassified an unrelated date embedded in generic CMS JavaScript as an archive date.
-
-The immutable attempt-level HOLD labels are non-adjudicative implementation artifacts and do not constitute a scientific HOLD.
+PORTFOLIO-R54 is active under pre-Issue contract `bc9b5b49481ea2b44a2aac842f0a255e1d0de619`. The frozen candidate pool is FRA railroad, EPA RCRA handler, FAA/NTSB aircraft and NHTSA recall. Direct static/API transport is the first survivor criterion after the CMS implementation block.
 
 ## Exact next action / 정확한 다음 행동
 
-Return to independent outcome-blind Stage-0 portfolio reselection. Do not open a third CMS archive-resolution workaround solely to reverse-engineer the SPA. A future CMS re-entry requires a separately frozen contract around a reproducibly resolvable official archive/download interface.
+Complete bounded official-source/direct-body, canonical-overlap and external-framework revalidation, then persist exactly one immutable /45 scorecard and select at most one outcome-blind F01.
 
 Incremental monetary cost remains **0 USD**.
