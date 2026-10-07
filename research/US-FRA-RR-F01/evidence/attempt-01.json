@@ -1,0 +1,139 @@
+{
+  "attempt": 1,
+  "attempt_valid": false,
+  "causal_claim_made": false,
+  "contract_sha": "492e2a29261e786fe115fa9eaf2f89a8862fa5a6",
+  "disposition": "IMPLEMENTATION_BLOCKED_US_FRA_RR_F01_ATTEMPT_01",
+  "failed_gates": [],
+  "future_2026plus_accident_membership_opened": false,
+  "future_rows_consumed": 0,
+  "gates": [
+    {
+      "gate": 1,
+      "observed": {
+        "active_issue": 196,
+        "active_research": "US-FRA-RR-F01",
+        "checkpoint_id": "CHK-20261008-US-FRA-RR-F01-ACTIVE",
+        "last_completed_issue": 195,
+        "last_completed_research": "PORTFOLIO-R54",
+        "last_decision": "DEC-304",
+        "updated": "2026-10-08"
+      },
+      "pass": true
+    },
+    {
+      "gate": 2,
+      "observed": {
+        "contract_sha": "492e2a29261e786fe115fa9eaf2f89a8862fa5a6",
+        "issue": 196
+      },
+      "pass": true
+    },
+    {
+      "gate": 3,
+      "observed": {
+        "landing_status": 200,
+        "operations_present": [
+          "GetAccident54DataByRailroad",
+          "GetAccident55DataByRailroad",
+          "GetF54Schema",
+          "GetF55Schema",
+          "GetRailroadData"
+        ],
+        "signatures": {
+          "GetAccident54DataByRailroad": [
+            "year"
+          ],
+          "GetAccident55DataByRailroad": [
+            "year"
+          ],
+          "GetF54Schema": [],
+          "GetF55Schema": [],
+          "GetRailroadData": []
+        },
+        "wsdl_status": 200
+      },
+      "pass": false
+    }
+  ],
+  "github_run_id": "37667552043",
+  "identity_repair_used": false,
+  "implementation_error": {
+    "message": "DIRECT_SERVICE_OR_WSDL_NOT_RESOLVED",
+    "type": "RuntimeError"
+  },
+  "incremental_monetary_cost_usd": 0,
+  "issue": 196,
+  "pass_count": 2,
+  "prediction_computed": false,
+  "prior_accident_predictor_computed": false,
+  "ranking_computed": false,
+  "relationship_computed": false,
+  "research": "US-FRA-RR-F01",
+  "runner_sha256": "2718e2eab23c825c61c067e7c5c3d5d380b30a447095a6aeb2c424b249288031",
+  "service": {
+    "endpoint": "https://safetydata.fra.dot.gov/MASTERWEBSERVICE/DatadownloadService.asmx",
+    "landing": {
+      "bytes": 14920,
+      "content_type": "text/html; charset=utf-8",
+      "etag": null,
+      "last_modified": null,
+      "sha256": "d601150b0b1a92181042ca47eff0b38755703c4575fc5a009d10c25032dd623a",
+      "status": 200,
+      "url": "https://safetydata.fra.dot.gov/MASTERWEBSERVICE/DatadownloadService.asmx"
+    },
+    "operations": [
+      "GetAccident54DataByRailroad",
+      "GetAccident54DataByState",
+      "GetAccident55DataByRailroad",
+      "GetAccident55DataByState",
+      "GetAccident55aDataByRailroad",
+      "GetAccident55aDataByState",
+      "GetAccident57DataByRailroad",
+      "GetAccident57DataByState",
+      "GetActivityData",
+      "GetCrossingData",
+      "GetCrossingDataByRailroad",
+      "GetCrossingDataByState",
+      "GetDefectData",
+      "GetDefectDataDownload",
+      "GetDefectDataDownloadWithSubUnits",
+      "GetDefectDataWithSubUnits",
+      "GetDeletedDefectData",
+      "GetF54Schema",
+      "GetF55Schema",
+      "GetF55aSchema",
+      "GetF57Schema",
+      "GetF71Schema",
+      "GetF96DataDownloadSchema",
+      "GetF96DataDownloadSchemaWithSubUnits",
+      "GetF96DeletedSchema",
+      "GetF96Schema",
+      "GetF96SchemaWithSubUnits",
+      "GetHazmatShipperData",
+      "GetPHMSADefectData",
+      "GetRailroadData"
+    ],
+    "parameter_signatures": {
+      "GetAccident54DataByRailroad": [
+        "year"
+      ],
+      "GetAccident55DataByRailroad": [
+        "year"
+      ],
+      "GetF54Schema": [],
+      "GetF55Schema": [],
+      "GetRailroadData": []
+    },
+    "target_namespace": "https://safetydata.fra.dot.gov/MasterWebService/DataDownloadService",
+    "wsdl": {
+      "bytes": 75909,
+      "content_type": "text/xml; charset=utf-8",
+      "etag": null,
+      "last_modified": null,
+      "sha256": "cfc97199d042c6e82f0c5ad44a8bdbf3140fc18e77877f7c7db761ab5d1d00da",
+      "status": 200,
+      "url": "https://safetydata.fra.dot.gov/MASTERWEBSERVICE/DatadownloadService.asmx?WSDL"
+    }
+  }
+}

@@ -1,0 +1,23 @@
+# US-FRA-RR-F01 — Attempt 01
+
+**Disposition:** `IMPLEMENTATION_BLOCKED_US_FRA_RR_F01_ATTEMPT_01`
+
+- Attempt valid: `False`
+- Gates passed: **2/18**
+- Failed gates: `[]`
+- Future 2026+ accident membership opened: **False**
+- Incremental monetary cost: **0 USD**
+
+## Gate ledger
+
+| Gate | PASS | Observed |
+|---:|:---:|---|
+| 1 | PASS | `{"active_issue": 196, "active_research": "US-FRA-RR-F01", "checkpoint_id": "CHK-20261008-US-FRA-RR-F01-ACTIVE", "last_completed_issue": 195, "last_completed_research": "PORTFOLIO-R54", "last_decision": "DEC-304", "updated": "2026-10-08"}` |
+| 2 | PASS | `{"contract_sha": "492e2a29261e786fe115fa9eaf2f89a8862fa5a6", "issue": 196}` |
+| 3 | FAIL | `{"landing_status": 200, "operations_present": ["GetAccident54DataByRailroad", "GetAccident55DataByRailroad", "GetF54Schema", "GetF55Schema", "GetRailroadData"], "signatures": {"GetAccident54DataByRailroad": ["year"], "GetAccident55DataByRailroad": ["year"], "GetF54Schema": [], "GetF55Schema": [], "GetRailroadData": []}, "wsdl_status": 200}` |
+
+## Implementation error
+
+`{'type': 'RuntimeError', 'message': 'DIRECT_SERVICE_OR_WSDL_NOT_RESOLVED'}`
+
+Only 2020–2025 historical service calls were authorized. No 2026+ Form54 accident membership was opened.
