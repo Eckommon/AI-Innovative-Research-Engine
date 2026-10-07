@@ -1,27 +1,21 @@
 ---
-checkpoint_id: CHK-20261006-US-CMS-NH-F01-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20261008-PORTFOLIO-R54-ACTIVE
+active_issue: 195
+active_research: PORTFOLIO-R54
 last_completed_issue: 194
 last_completed_research: US-CMS-NH-F01
-last_decision: DEC-301
-updated: 2026-10-06
+last_decision: DEC-302
+updated: 2026-10-08
 ---
 
 # Session Handoff / 세션 인계
 
-`US_CMS_NH_F01_BLOCKED_IMPLEMENTATION__PORTFOLIO_RESELECTION_REQUIRED`
+`PORTFOLIO_R54_ACTIVE__STATIC_API_SURVIVOR_RESELECTION`
 
-- Issue #194 completed.
-- Pre-Issue contract: `fed9f05c7271c712881fc9b7936ca1a5f7912347`.
-- Attempt 01: evidence `0fe1e47cd59b1907ef77f3e741ac9e5eda9af2cf`, Run `37338329443`; CMS archive DOM was empty.
-- Attempt 02: evidence `3af995b4c6c79865bb94510f6f2191a75ef9257c`, Run `37338851974`; no source-native archive manifest/API was resolved; `2025-09-17` came from generic `js/index.js` and is not valid archive metadata.
-- Scientific gate: **NOT EXECUTED**.
-- Sep-2026-or-later row bodies opened: 0.
-- Future standard-survey membership opened: false.
-- Future serious-deficiency membership opened: false.
-- Relationship/prediction/ranking/causal metric: false.
-- Two implementation-only descendants trigger mandatory branch-stop.
-- N01/E01 not authorized.
-- Next: independent Stage-0 portfolio reselection.
+- Issue #195 open.
+- Pre-Issue contract: `bc9b5b49481ea2b44a2aac842f0a255e1d0de619`.
+- Candidates: `US-FRA-RR-001`, `US-EPA-RCRA-001`, `US-FAA-NTSB-AIR-001`, `US-NHTSA-REC-001`.
+- Parent CMS route is terminal implementation-block; no third archive workaround.
+- Candidate future-event memberships opened: 0.
+- Next: bounded revalidation and one immutable /45 scorecard.
 - Cost: 0 USD.
