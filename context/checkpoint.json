@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20261008-PORTFOLIO-R54-ACTIVE",
-  "active_issue": 195,
-  "active_research": "PORTFOLIO-R54",
-  "last_completed_issue": 194,
-  "last_completed_research": "US-CMS-NH-F01",
-  "last_decision": "DEC-302",
+  "checkpoint_id": "CHK-20261008-PORTFOLIO-R54-TERMINAL",
+  "active_issue": "none",
+  "active_research": "NONE",
+  "last_completed_issue": 195,
+  "last_completed_research": "PORTFOLIO-R54",
+  "last_decision": "DEC-303",
   "updated": "2026-10-08"
 }
