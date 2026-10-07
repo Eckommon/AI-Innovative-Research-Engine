@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20261008-PORTFOLIO-R55-TERMINAL",
-  "active_issue": "none",
-  "active_research": "NONE",
+  "checkpoint_id": "CHK-20261008-US-EPA-RCRA-F01-ACTIVE",
+  "active_issue": 198,
+  "active_research": "US-EPA-RCRA-F01",
   "last_completed_issue": 197,
   "last_completed_research": "PORTFOLIO-R55",
-  "last_decision": "DEC-307",
+  "last_decision": "DEC-308",
   "updated": "2026-10-08"
 }
