@@ -1,22 +1,22 @@
 ---
-checkpoint_id: CHK-20261008-PORTFOLIO-R54-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20261008-US-FRA-RR-F01-ACTIVE
+active_issue: 196
+active_research: US-FRA-RR-F01
 last_completed_issue: 195
 last_completed_research: PORTFOLIO-R54
-last_decision: DEC-303
+last_decision: DEC-304
 updated: 2026-10-08
 ---
 
 # Session Handoff / 세션 인계
 
-`PORTFOLIO_R54_SELECTED_US_FRA_RR_001__F01_CONTRACT_REQUIRED`
+`US_FRA_RR_F01_ACTIVE__EXACT_RAILROAD_FORM55_FORM54_GATE`
 
-- Issue #195 completed.
-- Contract: `bc9b5b49481ea2b44a2aac842f0a255e1d0de619`.
-- Revalidation: `5cba7c100bf5c8e5508653c32e7db5756a035d2f`.
-- Scorecard: `82573765a5919686b9e6ffa1b3751ba7f6a47535`.
-- Selection: FRA **43/45** > RCRA 42 > FAA/NTSB 35 > NHTSA 34.
-- Future-event memberships opened: 0.
-- Next: freeze `US-FRA-RR-F01` pre-Issue contract.
+- Issue #196 open.
+- Pre-Issue contract: `492e2a29261e786fe115fa9eaf2f89a8862fa5a6`.
+- Parent R54 selection: FRA 43/45 / `DEC-303`.
+- Historical window: 2020–2025 Form55 + Form54 only.
+- Exact identity: source-native FRA reporting railroad code; no name/geography/manual repair.
+- Future 2026+ accident membership opened: false.
+- Next: immutable 18-gate Attempt 01 with WSDL-resolved operation signatures.
 - Cost: 0 USD.
