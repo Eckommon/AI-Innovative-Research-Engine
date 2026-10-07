@@ -1,22 +1,24 @@
 ---
-checkpoint_id: CHK-20261008-US-FRA-RR-F01-ACTIVE
-active_issue: 196
-active_research: US-FRA-RR-F01
-last_completed_issue: 195
-last_completed_research: PORTFOLIO-R54
-last_decision: DEC-304
+checkpoint_id: CHK-20261008-US-FRA-RR-F01-TERMINAL
+active_issue: none
+active_research: NONE
+last_completed_issue: 196
+last_completed_research: US-FRA-RR-F01
+last_decision: DEC-305
 updated: 2026-10-08
 ---
 
 # Session Handoff / 세션 인계
 
-`US_FRA_RR_F01_ACTIVE__EXACT_RAILROAD_FORM55_FORM54_GATE`
+`US_FRA_RR_F01_BLOCKED_IMPLEMENTATION__PORTFOLIO_RESELECTION_REQUIRED`
 
-- Issue #196 open.
-- Pre-Issue contract: `492e2a29261e786fe115fa9eaf2f89a8862fa5a6`.
-- Parent R54 selection: FRA 43/45 / `DEC-303`.
-- Historical window: 2020–2025 Form55 + Form54 only.
-- Exact identity: source-native FRA reporting railroad code; no name/geography/manual repair.
+- Issue #196 completed.
+- Attempt 01: `107e433bbd1ab3b3aecf68e99a8de9afa5178dad` — parser representation block.
+- Attempt 02: `1cbcde5014639646dc4eb3653322d780d35e9786` — WSDL/reference/schema PASS, historical data operation HTTP 500.
+- Railroad reference: 2,981 row candidates.
+- Scientific row-level gate: NOT EXECUTED.
 - Future 2026+ accident membership opened: false.
-- Next: immutable 18-gate Attempt 01 with WSDL-resolved operation signatures.
+- Relationship/prediction/ranking/causal metric: false.
+- N01/E01 not authorized.
+- Next: independent Stage-0 portfolio reselection.
 - Cost: 0 USD.
