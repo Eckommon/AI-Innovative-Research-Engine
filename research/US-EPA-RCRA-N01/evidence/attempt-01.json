@@ -1,0 +1,243 @@
+{
+  "attempt": 1,
+  "attempt_valid": true,
+  "baseline_download": {
+    "bytes": 119521531,
+    "content_length_header": "119521531",
+    "content_type": "application/zip",
+    "etag": "\"71fc0fb-65d03f8fc7a43\"",
+    "final_url": "https://echo.epa.gov/files/echodownloads/rcra_downloads.zip",
+    "last_modified": "Sun, 04 Oct 2026 13:45:03 GMT",
+    "sha256": "ef5f4e067c54647074cc11488f3c0c72519139c692cbf359b6b3b601af7a41e5",
+    "status": 200
+  },
+  "baseline_sha256": "ef5f4e067c54647074cc11488f3c0c72519139c692cbf359b6b3b601af7a41e5",
+  "causal_claim_made": false,
+  "contract_sha": "14b9509808bcfd9a6affc694ec97531105d8ca41",
+  "disposition": "HOLD_US_EPA_RCRA_N01_MULTI_NAICS_MATCHED_COHORT_NOT_READY",
+  "evaluation_found_column_present": true,
+  "f01_evidence_commit": "4994dd3e0614d0c91e04b757d8e3dbe1fca6c335",
+  "failed_gates": [
+    6,
+    7,
+    8,
+    11,
+    15
+  ],
+  "forbidden_outcome_tables_opened": 0,
+  "found_violation_values_consumed": 0,
+  "future_found_violation_membership_opened": false,
+  "gates": [
+    {
+      "gate": 1,
+      "observed": {
+        "active_issue": 199,
+        "active_research": "US-EPA-RCRA-N01",
+        "checkpoint_id": "CHK-20261008-US-EPA-RCRA-N01-ACTIVE",
+        "last_completed_issue": 198,
+        "last_completed_research": "US-EPA-RCRA-F01",
+        "last_decision": "DEC-310",
+        "updated": "2026-10-08"
+      },
+      "pass": true
+    },
+    {
+      "gate": 2,
+      "observed": {
+        "contract_sha": "14b9509808bcfd9a6affc694ec97531105d8ca41",
+        "issue": 199
+      },
+      "pass": true
+    },
+    {
+      "gate": 3,
+      "observed": {
+        "bytes": 119521531,
+        "expected_sha256": "ef5f4e067c54647074cc11488f3c0c72519139c692cbf359b6b3b601af7a41e5",
+        "last_modified": "Sun, 04 Oct 2026 13:45:03 GMT",
+        "observed_sha256": "ef5f4e067c54647074cc11488f3c0c72519139c692cbf359b6b3b601af7a41e5"
+      },
+      "pass": true
+    },
+    {
+      "gate": 4,
+      "observed": {
+        "evaluation_headers": [
+          "ID_NUMBER",
+          "ACTIVITY_LOCATION",
+          "EVALUATION_IDENTIFIER",
+          "EVALUATION_TYPE",
+          "EVALUATION_DESC",
+          "EVALUATION_AGENCY",
+          "EVALUATION_START_DATE",
+          "FOUND_VIOLATION"
+        ],
+        "evaluation_missing": [],
+        "facility_missing": [],
+        "naics_missing": []
+      },
+      "pass": true
+    },
+    {
+      "gate": 5,
+      "observed": {
+        "evaluation_rows_scanned": 1169946,
+        "forbidden_outcome_tables_opened": 0,
+        "found_column_present": true,
+        "found_values_consumed": 0
+      },
+      "pass": true
+    },
+    {
+      "gate": 6,
+      "observed": {
+        "eligible": 23599,
+        "threshold": 100000
+      },
+      "pass": false
+    },
+    {
+      "gate": 7,
+      "observed": {
+        "multi_naics_exposed": 2418,
+        "threshold": 20000
+      },
+      "pass": false
+    },
+    {
+      "gate": 8,
+      "observed": {
+        "single_naics_controls": 21181,
+        "threshold": 40000
+      },
+      "pass": false
+    },
+    {
+      "gate": 9,
+      "observed": {
+        "common_exact_strata": 691,
+        "threshold": 200
+      },
+      "pass": true
+    },
+    {
+      "gate": 10,
+      "observed": {
+        "caliper_fail": 0,
+        "duplicate_controls": 0,
+        "exact_mismatch": 0,
+        "pairs": 1728
+      },
+      "pass": true
+    },
+    {
+      "gate": 11,
+      "observed": {
+        "matched_pairs": 1728,
+        "threshold": 20000
+      },
+      "pass": false
+    },
+    {
+      "gate": 12,
+      "observed": {
+        "coverage": 0.7146401985111662,
+        "eligible_exposed": 2418,
+        "matched_pairs": 1728,
+        "threshold": 0.4
+      },
+      "pass": true
+    },
+    {
+      "gate": 13,
+      "observed": {
+        "abs_smd_x1": 0.003119556556205712,
+        "threshold": 0.1
+      },
+      "pass": true
+    },
+    {
+      "gate": 14,
+      "observed": {
+        "abs_smd_x2": 0.0019589799985277223,
+        "threshold": 0.1
+      },
+      "pass": true
+    },
+    {
+      "gate": 15,
+      "observed": {
+        "control": 355,
+        "exposed": 348,
+        "recent_opportunity_handlers_total": 703,
+        "threshold_each": 1500,
+        "threshold_total": 5000
+      },
+      "pass": false
+    },
+    {
+      "gate": 16,
+      "observed": {
+        "future_membership_opened": false,
+        "future_window": "2026-10-05..2027-04-04",
+        "later_refresh_opened": false
+      },
+      "pass": true
+    },
+    {
+      "gate": 17,
+      "observed": {
+        "causal": false,
+        "found_values_consumed": 0,
+        "identity_repair": false,
+        "prediction": false,
+        "prohibited_exposure": false,
+        "ranking": false,
+        "relationship": false
+      },
+      "pass": true
+    },
+    {
+      "gate": 18,
+      "observed": {
+        "baseline_sha256": "ef5f4e067c54647074cc11488f3c0c72519139c692cbf359b6b3b601af7a41e5",
+        "contract_sha": "14b9509808bcfd9a6affc694ec97531105d8ca41",
+        "cost_usd": 0,
+        "matched_manifest_sha256": "3d71d52d9e3ba05c630f24b0b3f590dd428e4be4968e2afd4b2430553e7fe5a3",
+        "runner_sha256": "314a39bb45f07580aee9b2f5fea907a7aeac51075596b90e62aa5ec1a6a1b2a8"
+      },
+      "pass": true
+    }
+  ],
+  "github_run_id": "37670426503",
+  "identity_repair_used": false,
+  "incremental_monetary_cost_usd": 0,
+  "issue": 199,
+  "later_refresh_opened": false,
+  "matched_manifest_sha256": "3d71d52d9e3ba05c630f24b0b3f590dd428e4be4968e2afd4b2430553e7fe5a3",
+  "matching_summary": {
+    "abs_smd_x1": 0.003119556556205712,
+    "abs_smd_x2": 0.0019589799985277223,
+    "common_strata": 691,
+    "control": 21181,
+    "eligible": 23599,
+    "exposed": 2418,
+    "exposed_coverage": 0.7146401985111662,
+    "matched_pairs": 1728,
+    "recent_control": 355,
+    "recent_exposed": 348,
+    "standardization": {
+      "x1_mean": 0.9619472112703661,
+      "x1_sd": 0.4739484487165455,
+      "x2_mean": 6.4002953568624275,
+      "x2_sd": 0.9745086346291182
+    }
+  },
+  "pass_count": 13,
+  "prediction_computed": false,
+  "prohibited_compliance_enforcement_exposure_computed": false,
+  "ranking_computed": false,
+  "relationship_computed": false,
+  "research": "US-EPA-RCRA-N01",
+  "runner_sha256": "314a39bb45f07580aee9b2f5fea907a7aeac51075596b90e62aa5ec1a6a1b2a8"
+}
