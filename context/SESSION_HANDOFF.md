@@ -10,20 +10,23 @@ updated: 2026-10-13
 
 # Session Handoff / 세션 인계
 
-`US_CMS_NPI_E01_ACTIVE__WAIT_FIRST_QUALIFYING_WEEKLY_UPDATE`
+`US_CMS_NPI_E01_ACTIVE__WAIT_SOURCE_PREREGISTERED_RUNNER_READY`
 
 - Issue #203 open.
 - E01 contract: `48843c9979336dcd10fdff984f458277062d6f20`.
-- Parent N01: 18/18 PASS, 346,859 matched pairs.
-- Baseline monthly full SHA: `45b17c5fbfb919c4fa4878c0bbbeca979c4fa3bc87a6d733682b61a3e63c662e`.
-- Baseline deactivation SHA: `fcceb74b2cc99e5e64582edefbb2f891128dc7d1ee7268eb52a961b1b1b998a1`.
-- Exposure: multi-taxonomy Type-2 organization.
-- Control: matched single-taxonomy Type-2 organization.
-- Latest visible weekly at preregistration: `100526_101126` (2026-10-05..2026-10-11), pre-baseline metadata only.
-- Future qualifying body opened: false.
-- Primary test: exact two-sided McNemar on frozen matched pairs.
+- Parent N01: 18/18 PASS; 346,859 matched pairs.
+- Source Preflight 01: `0e81620e9cbea5dcddb558791e786d1565dfaf0f`.
+- Preflight disposition: `WAIT_SOURCE_US_CMS_NPI_E01`.
+- CMS NPI Files page fingerprint: SHA-256 `f00a6c37989e58ad6f227a89a102ae9c176cdebe5ea15e71eb07bdc356b15bdc`.
+- Observed weekly: `100526_101126` = 2026-10-05..2026-10-11.
+- Qualifying weekly listings: **0**.
+- Future weekly ZIP body opened: false.
+- Future deactivation membership opened: false.
+- E01 runner: `edaeb7c405f53a341753e0c5989706992ae301a5`.
+- Guarded workflow: `409f825cf0563f01d8c3ef98ff0fccec8113cf01`.
+- Workflow requires explicit execution marker or manual dispatch; it does not auto-open future data.
+- Frozen primary test: exact two-sided McNemar, matched discordant OR + exact 95% CI.
 - Minimum support: >=30 deactivated matched NPIs and >=20 discordant pairs.
-- Material MOR band: <=0.80 or >=1.25.
-- No monthly substitution or later-week cherry-picking.
-- Next: metadata-only source preflight; remain WAIT_SOURCE if no qualifying weekly exists.
+- Material association band: MOR <=0.80 or >=1.25.
+- Next: metadata-only recheck; execute only when the first qualifying weekly exists.
 - Cost: 0 USD.
