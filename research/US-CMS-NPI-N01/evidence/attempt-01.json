@@ -1,0 +1,232 @@
+{
+  "arm_specific_deactivation_lookup": false,
+  "attempt": 1,
+  "attempt_valid": true,
+  "causal_claim_made": false,
+  "contract_sha": "29ab6cd8368801137eff94463a5b405c1fdf10ac",
+  "deactivation_zip": {
+    "bytes": 2679243,
+    "content_length_header": "2679243",
+    "content_type": "application/zip",
+    "etag": "\"1d9e99cc49dfeebcb4a67b9b8a9f9d2c:1791788469.859903\"",
+    "final_url": "https://download.cms.gov/nppes/NPPES_Deactivated_NPI_Report_101226_V2.zip",
+    "last_modified": "Mon, 12 Oct 2026 07:01:10 GMT",
+    "sha256": "fcceb74b2cc99e5e64582edefbb2f891128dc7d1ee7268eb52a961b1b1b998a1",
+    "status": 200
+  },
+  "disposition": "PASS_US_CMS_NPI_N01_MULTI_TAXONOMY_MATCHED_COHORT_READY",
+  "failed_gates": [],
+  "full_zip": {
+    "bytes": 1159720219,
+    "content_length_header": "1159720219",
+    "content_type": "application/zip",
+    "etag": "\"dffc19807a2ffc7300b104b66732e994:1791790182.261161\"",
+    "final_url": "https://download.cms.gov/nppes/NPPES_Data_Dissemination_October_2026_V2.zip",
+    "last_modified": "Mon, 12 Oct 2026 07:31:11 GMT",
+    "sha256": "45b17c5fbfb919c4fa4878c0bbbeca979c4fa3bc87a6d733682b61a3e63c662e",
+    "status": 200
+  },
+  "future_deactivation_membership_opened": false,
+  "gates": [
+    {
+      "gate": 1,
+      "observed": {
+        "active_issue": 202,
+        "active_research": "US-CMS-NPI-N01",
+        "checkpoint_id": "CHK-20261013-US-CMS-NPI-N01-ACTIVE",
+        "last_completed_issue": 201,
+        "last_completed_research": "US-CMS-NPI-F01",
+        "last_decision": "DEC-316",
+        "updated": "2026-10-13"
+      },
+      "pass": true
+    },
+    {
+      "gate": 2,
+      "observed": {
+        "contract_sha": "29ab6cd8368801137eff94463a5b405c1fdf10ac",
+        "issue": 202
+      },
+      "pass": true
+    },
+    {
+      "gate": 3,
+      "observed": {
+        "deactivation_sha256": "fcceb74b2cc99e5e64582edefbb2f891128dc7d1ee7268eb52a961b1b1b998a1",
+        "expected_deactivation": "fcceb74b2cc99e5e64582edefbb2f891128dc7d1ee7268eb52a961b1b1b998a1",
+        "expected_full": "45b17c5fbfb919c4fa4878c0bbbeca979c4fa3bc87a6d733682b61a3e63c662e",
+        "full_sha256": "45b17c5fbfb919c4fa4878c0bbbeca979c4fa3bc87a6d733682b61a3e63c662e"
+      },
+      "pass": true
+    },
+    {
+      "gate": 4,
+      "observed": {
+        "main_member": "npidata_pfile_20050523-20261011.csv",
+        "practice_member": "pl_pfile_20050523-20261011.csv",
+        "resolved": {
+          "deactivation": "NPI Deactivation Date",
+          "entity": "Entity Type Code",
+          "enumeration": "Provider Enumeration Date",
+          "npi": "NPI",
+          "primary_switch_columns": 15,
+          "reactivation": "NPI Reactivation Date",
+          "state": "Provider Business Practice Location Address State Name",
+          "subpart": "Is Organization Subpart",
+          "taxonomy_columns": 15
+        }
+      },
+      "pass": true
+    },
+    {
+      "gate": 5,
+      "observed": {
+        "bad_enumeration": 0,
+        "bad_primary": 0,
+        "bad_state": 1278,
+        "eligible": 1978439,
+        "excluded_reactivated": 0,
+        "threshold": 1000000
+      },
+      "pass": true
+    },
+    {
+      "gate": 6,
+      "observed": {
+        "exposed_multi_taxonomy": 409936,
+        "threshold": 250000
+      },
+      "pass": true
+    },
+    {
+      "gate": 7,
+      "observed": {
+        "control_single_taxonomy": 1568503,
+        "threshold": 700000
+      },
+      "pass": true
+    },
+    {
+      "gate": 8,
+      "observed": {
+        "all_strata": 68801,
+        "common_strata": 31791,
+        "threshold": 1000
+      },
+      "pass": true
+    },
+    {
+      "gate": 9,
+      "observed": {
+        "all_total_locations_ge_1": true,
+        "eligible": 1978439,
+        "practice_secondary_rows": 1274332,
+        "secondary_rows_joined_to_eligible": 135144
+      },
+      "pass": true
+    },
+    {
+      "gate": 10,
+      "observed": {
+        "coverage": 0.9707417743257484,
+        "exposed": 409936,
+        "exposed_in_common_strata": 397942,
+        "threshold": 0.6
+      },
+      "pass": true
+    },
+    {
+      "gate": 11,
+      "observed": {
+        "matched_pairs": 346859,
+        "threshold": 200000
+      },
+      "pass": true
+    },
+    {
+      "gate": 12,
+      "observed": {
+        "comparator_reuse": 0,
+        "cross_stratum_pairs": 0,
+        "pairs": 346859,
+        "unique_controls": 346859,
+        "unique_exposed": 346859
+      },
+      "pass": true
+    },
+    {
+      "gate": 13,
+      "observed": {
+        "abs": 0.008089949330951387,
+        "age_days_smd": 0.008089949330951387,
+        "threshold": 0.1
+      },
+      "pass": true
+    },
+    {
+      "gate": 14,
+      "observed": {
+        "abs": 0.01358494151547246,
+        "practice_location_count_smd": 0.01358494151547246,
+        "threshold": 0.1
+      },
+      "pass": true
+    },
+    {
+      "gate": 15,
+      "observed": {
+        "arm_join_performed": false,
+        "recent_global_deactivated_npis": 69550,
+        "threshold": 20000,
+        "window": "2024-10-13..2026-10-12"
+      },
+      "pass": true
+    },
+    {
+      "gate": 16,
+      "observed": {
+        "excluded_reactivated": 0,
+        "included_with_nonblank_reactivation": 0
+      },
+      "pass": true
+    },
+    {
+      "gate": 17,
+      "observed": {
+        "arm_specific_deactivation_lookup": false,
+        "causal": false,
+        "future_membership_opened": false,
+        "identity_repair": false,
+        "later_monthly_body_opened": false,
+        "prediction": false,
+        "ranking": false,
+        "relationship": false,
+        "weekly_body_opened": false
+      },
+      "pass": true
+    },
+    {
+      "gate": 18,
+      "observed": {
+        "contract_sha": "29ab6cd8368801137eff94463a5b405c1fdf10ac",
+        "cost_usd": 0,
+        "deactivation_sha256": "fcceb74b2cc99e5e64582edefbb2f891128dc7d1ee7268eb52a961b1b1b998a1",
+        "full_sha256": "45b17c5fbfb919c4fa4878c0bbbeca979c4fa3bc87a6d733682b61a3e63c662e",
+        "runner_sha256": "56d744745dc7309b5f7b3fa45c96692eb8c25a58fba31b3dee35d6228c792bbe"
+      },
+      "pass": true
+    }
+  ],
+  "github_run_id": "38356022445",
+  "identity_repair_used": false,
+  "incremental_monetary_cost_usd": 0,
+  "issue": 202,
+  "later_monthly_body_opened": false,
+  "pass_count": 18,
+  "prediction_computed": false,
+  "ranking_computed": false,
+  "relationship_computed": false,
+  "research": "US-CMS-NPI-N01",
+  "runner_sha256": "56d744745dc7309b5f7b3fa45c96692eb8c25a58fba31b3dee35d6228c792bbe",
+  "weekly_body_opened": false
+}
