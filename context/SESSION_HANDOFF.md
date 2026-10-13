@@ -1,26 +1,29 @@
 ---
-checkpoint_id: CHK-20261013-US-CMS-NPI-N01-ACTIVE
-active_issue: 202
-active_research: US-CMS-NPI-N01
-last_completed_issue: 201
-last_completed_research: US-CMS-NPI-F01
-last_decision: DEC-316
+checkpoint_id: CHK-20261013-US-CMS-NPI-N01-TERMINAL
+active_issue: none
+active_research: NONE
+last_completed_issue: 202
+last_completed_research: US-CMS-NPI-N01
+last_decision: DEC-317
 updated: 2026-10-13
 ---
 
 # Session Handoff / 세션 인계
 
-`US_CMS_NPI_N01_ACTIVE__MULTI_TAXONOMY_MATCHED_COHORT_GATE`
+`US_CMS_NPI_N01_PASS__E01_PREREGISTRATION_REQUIRED`
 
-- Issue #202 open.
-- Pre-Issue contract: `29ab6cd8368801137eff94463a5b405c1fdf10ac`.
-- Parent F01: 18/18 PASS under `DEC-315`.
-- Baseline full SHA: `45b17c5fbfb919c4fa4878c0bbbeca979c4fa3bc87a6d733682b61a3e63c662e`.
-- Baseline deactivation SHA: `fcceb74b2cc99e5e64582edefbb2f891128dc7d1ee7268eb52a961b1b1b998a1`.
-- Exposure: active Type-2 multi-taxonomy (>=2).
-- Control: active Type-2 single taxonomy (=1).
-- Exact strata: state + primary taxonomy prefix4 + 5-year enumeration-age band + subpart + practice-location bin.
-- Weekly/later monthly row bodies opened: false.
-- Arm-specific deactivation membership opened: false.
-- Next: immutable 18-gate N01 Attempt 01.
+- Issue #202 completed.
+- Contract: `29ab6cd8368801137eff94463a5b405c1fdf10ac`.
+- Evidence: `da46a24114452a1d63a16adf731aa3b51761c88b`, Run `38356022445`.
+- Result: **18/18 PASS**.
+- Eligible active Type-2 NPIs: **1,978,439**.
+- Exposed multi-taxonomy: **409,936**.
+- Control single-taxonomy: **1,568,503**.
+- Common strata: **31,791**.
+- Exposed common-support coverage: **97.0742%**.
+- Matched pairs: **346,859**.
+- Age |SMD|: **0.00809**; location-count |SMD|: **0.01358**.
+- Recent global deactivation support: **69,550**.
+- Future update membership opened: false.
+- E01 authorized but not yet preregistered.
 - Cost: 0 USD.
