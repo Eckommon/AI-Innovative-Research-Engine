@@ -1,0 +1,16 @@
+{
+  "checked_at_utc": "2026-10-13T23:39:40.912391+00:00",
+  "disposition": "WAIT_SOURCE_US_CMS_NPI_E01",
+  "e01_attempt_executed": false,
+  "future_membership_opened": false,
+  "github_run_id": "38485574392",
+  "incremental_monetary_cost_usd": 0,
+  "metadata_only": true,
+  "official_source": "https://download.cms.gov/nppes/NPI_Files.html",
+  "offline_source_watch_regression_tests": "SUCCESS_BEFORE_WATCH_STEP",
+  "record_type": "INITIAL_SCHEDULED_SOURCE_WATCH_BOOTSTRAP",
+  "research": "US-CMS-NPI-E01",
+  "same_sha_as_immutable_preflight03": true,
+  "source_page_sha256": "f00a6c37989e58ad6f227a89a102ae9c176cdebe5ea15e71eb07bdc356b15bdc",
+  "zip_body_opened": false
+}
