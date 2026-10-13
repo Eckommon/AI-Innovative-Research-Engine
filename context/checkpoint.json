@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20261013-PORTFOLIO-R56-ACTIVE",
-  "active_issue": 200,
-  "active_research": "PORTFOLIO-R56",
-  "last_completed_issue": 199,
-  "last_completed_research": "US-EPA-RCRA-N01",
-  "last_decision": "DEC-312",
+  "checkpoint_id": "CHK-20261013-PORTFOLIO-R56-TERMINAL",
+  "active_issue": "none",
+  "active_research": "NONE",
+  "last_completed_issue": 200,
+  "last_completed_research": "PORTFOLIO-R56",
+  "last_decision": "DEC-313",
   "updated": "2026-10-13"
 }
