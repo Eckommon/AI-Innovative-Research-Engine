@@ -23,6 +23,7 @@ updated: 2026-10-14
 - Future deactivation membership opened: false.
 - E01 runner: `edaeb7c405f53a341753e0c5989706992ae301a5`.
 - Guarded workflow: `409f825cf0563f01d8c3ef98ff0fccec8113cf01`.
+- Operational guard hardening merged: PR #204 / `161bc80db844215965b4d6dd044558d12e241ae5`; exact standalone Issue #203 execution marker for both manual/issue routes, serialized Attempt-01, CMS listing metadata-only early check. Frozen scientific runner unchanged; marker absent.
 - Frozen primary test: exact two-sided McNemar, matched discordant OR + exact 95% CI.
 - Minimum support: >=30 deactivated matched NPIs and >=20 discordant pairs.
 - Material association band: MOR <=0.80 or >=1.25.
