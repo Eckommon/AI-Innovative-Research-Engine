@@ -1,0 +1,38 @@
+{
+  "anchor_present": true,
+  "anchor_token": "100526_101126",
+  "checked_at_utc": "2026-10-13T23:27:50.044186+00:00",
+  "contract_sha": "48843c9979336dcd10fdff984f458277062d6f20",
+  "disposition": "WAIT_SOURCE_US_CMS_NPI_E01",
+  "earliest_qualifying": null,
+  "future_membership_opened": false,
+  "incremental_monetary_cost_usd": 0,
+  "metadata_only": true,
+  "preflight": 3,
+  "qualifying_count": 0,
+  "qualifying_rule": {
+    "end_must_be_after": "2026-10-12",
+    "min_start": "2026-10-12"
+  },
+  "research": "US-CMS-NPI-E01",
+  "source_page": {
+    "bytes": 6817,
+    "content_type": "text/html",
+    "etag": "\"45b0a6068ddf0dbbec0a6ed149bcff5e:1791790168.032442\"",
+    "final_url": "https://download.cms.gov/nppes/NPI_Files.html",
+    "last_modified": "Mon, 12 Oct 2026 07:29:28 GMT",
+    "requested_url": "https://download.cms.gov/nppes/NPI_Files.html",
+    "sha256": "f00a6c37989e58ad6f227a89a102ae9c176cdebe5ea15e71eb07bdc356b15bdc",
+    "status": 200
+  },
+  "weekly_listings": [
+    {
+      "end": "2026-10-11",
+      "href": "https://download.cms.gov/nppes/NPPES_Data_Dissemination_100526_101126_Weekly_V2.zip",
+      "label": "NPPES Data Dissemination V.2 - Weekly Update - 100526_101126",
+      "start": "2026-10-05",
+      "token": "100526_101126"
+    }
+  ],
+  "zip_body_opened": false
+}
