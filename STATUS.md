@@ -24,7 +24,7 @@ Live official CMS listing observed on 2026-10-14:
 - ZIP body opened = **false**;
 - future deactivation membership opened = **false**.
 
-The preregistered E01 runner remains frozen at `edaeb7c405f53a341753e0c5989706992ae301a5` and guarded workflow at `409f825cf0563f01d8c3ef98ff0fccec8113cf01`.
+The preregistered E01 runner remains frozen at `edaeb7c405f53a341753e0c5989706992ae301a5`. The initial guarded workflow at `409f825cf0563f01d8c3ef98ff0fccec8113cf01` was operationally hardened by merged PR #204 / `161bc80db844215965b4d6dd044558d12e241ae5`: an exact standalone Issue #203 execution marker is now required for both triggers, Attempt-01 runs are serialized, and metadata-only source eligibility is checked before downloading the baseline. The scientific contract and runner are unchanged; the execution marker is **not present**.
 
 ## Exact next action / 정확한 다음 행동
 
