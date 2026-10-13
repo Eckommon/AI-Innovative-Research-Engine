@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20261013-PORTFOLIO-R56-TERMINAL",
-  "active_issue": "none",
-  "active_research": "NONE",
+  "checkpoint_id": "CHK-20261013-US-CMS-NPI-F01-ACTIVE",
+  "active_issue": 201,
+  "active_research": "US-CMS-NPI-F01",
   "last_completed_issue": 200,
   "last_completed_research": "PORTFOLIO-R56",
-  "last_decision": "DEC-313",
+  "last_decision": "DEC-314",
   "updated": "2026-10-13"
 }
