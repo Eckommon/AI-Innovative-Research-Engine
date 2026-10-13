@@ -18,6 +18,8 @@ Metadata-only Source Preflight 02 is immutable at `a479ce80c25ef13db37d46940aa7d
 
 **Independent Source Preflight 03 / 세 번째 공식 소스 재점검:** [PR #205](https://github.com/Eckommon/AI-Innovative-Research-Engine/pull/205) was merged at `a29708eaaa5794eccac9d11aff82e809635b287b`; GitHub Actions committed immutable `research/US-CMS-NPI-E01/evidence/source-preflight-03.json` and `.md` at **`c071f0fd4161ca5b3bb7a69062d06611582ee36a`** (observed 2026-10-13T23:27:50Z). Result: **`WAIT_SOURCE_US_CMS_NPI_E01`**, HTTP 200, CMS listing content SHA-256 `f00a6c37989e58ad6f227a89a102ae9c176cdebe5ea15e71eb07bdc356b15bdc`, earliest qualifying **null**, qualifying count **0**; metadata-only **true**, ZIP opened **false**, future membership opened **false**, incremental monetary cost **0 USD**. Frozen scientific runner and contract unchanged. / 공식 목록 메타데이터만 재조회했으며 실험 본문은 열지 않았습니다.
 
+**Scheduled first-source monitor / 첫 적격 소스 예약 점검:** [PR #206](https://github.com/Eckommon/AI-Innovative-Research-Engine/pull/206) merged at `b4fa7a49fdf5958e069ba5a7318bb555c4a3afc8` on 2026-10-14. `.github/workflows/watch-us-cms-npi-e01-source.yml` checks only official CMS HTML metadata once daily at 00:37 UTC (09:37 KST) on standard GitHub-hosted Ubuntu for this **public** repository, with seven offline boundary-regression fixtures. On unchanged/no qualifying source it makes **no commit**. If the first eligible weekly is observed it preserves `source-candidate-01.json/.md` exactly once, without adding the E01 execution marker or opening the ZIP/its NPI outcomes. This is candidate capture, **not** first-publication scientific gate approval or E01 execution. / 유료 인프라 없이 메타데이터만 정기 점검하며, 첫 후보 확인 시 증거만 고정합니다. **Workflow file merged; initial Actions runtime conclusion not yet independently confirmed.**
+
 Live official CMS listing rechecked on 2026-10-14:
 - `100526_101126` = 2026-10-05..2026-10-11;
 - qualifying post-baseline weekly count = **0**;
@@ -28,7 +30,7 @@ The preregistered E01 runner remains frozen at `edaeb7c405f53a341753e0c598970699
 
 ## Exact next action / 정확한 다음 행동
 
-Do not execute E01 yet. Re-run metadata-only source discovery after CMS publishes a new weekly listing. Once the first official V2 weekly listing with covered start >= 2026-10-12 and covered end > 2026-10-12 exists, add the explicit Issue #203 execution marker and run the already-frozen E01 exactly once.
+Do not execute E01 yet. Rely on the guarded scheduled metadata-only source watch for candidate discovery; independently verify its official evidence when a first qualifying listing appears. Once the first official V2 weekly listing with covered start >= 2026-10-12 and covered end > 2026-10-12 exists, add the explicit Issue #203 execution marker and run the already-frozen E01 exactly once.
 
 No monthly substitution or later-week selection is permitted.
 
