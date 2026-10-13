@@ -1,0 +1,67 @@
+name: Run US-CMS-NPI-N01 Immutable Gate
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/run-us-cms-npi-n01.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: read
+jobs:
+  cms-npi-n01:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify frozen authorization and evidence slot
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git cat-file -e 29ab6cd8368801137eff94463a5b405c1fdf10ac^{commit}
+          git cat-file -e 6b17006ecb98a395f169e1f1653ba3ddebee5081^{commit}
+          gh issue view 202 --repo '${{ github.repository }}' --json state --jq '.state' | grep -qx OPEN
+          test ! -e research/US-CMS-NPI-N01/evidence/attempt-01.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          cp=json.loads(Path('context/checkpoint.json').read_text())
+          assert cp['checkpoint_id']=='CHK-20261013-US-CMS-NPI-N01-ACTIVE'
+          assert cp['active_issue']==202
+          assert cp['active_research']=='US-CMS-NPI-N01'
+          assert cp['last_decision']=='DEC-316'
+          PY
+      - name: Install deterministic parser dependencies
+        run: python -m pip install --disable-pip-version-check --no-input 'requests==2.32.5' 'openpyxl==3.1.5'
+      - name: Execute frozen 18-gate N01
+        env:
+          CMS_NPI_N01_BOUND: '1'
+          CMS_NPI_N01_CONTRACT_SHA: '29ab6cd8368801137eff94463a5b405c1fdf10ac'
+        run: python tools/run_us_cms_npi_n01.py
+      - name: Verify outcome and cost firewall
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          e=json.loads(Path('research/US-CMS-NPI-N01/evidence/attempt-01.json').read_text())
+          assert e['weekly_body_opened'] is False
+          assert e['later_monthly_body_opened'] is False
+          assert e['future_deactivation_membership_opened'] is False
+          assert e['arm_specific_deactivation_lookup'] is False
+          assert e['relationship_computed'] is False
+          assert e['prediction_computed'] is False
+          assert e['ranking_computed'] is False
+          assert e['causal_claim_made'] is False
+          assert e['identity_repair_used'] is False
+          assert e['incremental_monetary_cost_usd']==0
+          print(e['disposition'],e.get('pass_count'),e.get('failed_gates'))
+          PY
+      - name: Commit immutable N01 Attempt 01 evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-CMS-NPI-N01/evidence/attempt-01.json research/US-CMS-NPI-N01/evidence/attempt-01.md
+          git commit -m 'Record US-CMS-NPI-N01 immutable attempt 01'
+          git push origin HEAD:main
