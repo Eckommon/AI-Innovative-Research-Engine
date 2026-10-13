@@ -1,26 +1,22 @@
 ---
-checkpoint_id: CHK-20261008-US-EPA-RCRA-N01-TERMINAL
-active_issue: none
-active_research: NONE
+checkpoint_id: CHK-20261013-PORTFOLIO-R56-ACTIVE
+active_issue: 200
+active_research: PORTFOLIO-R56
 last_completed_issue: 199
 last_completed_research: US-EPA-RCRA-N01
-last_decision: DEC-311
-updated: 2026-10-08
+last_decision: DEC-312
+updated: 2026-10-13
 ---
 
 # Session Handoff / 세션 인계
 
-`US_EPA_RCRA_N01_HOLD__PORTFOLIO_RESELECTION_REQUIRED`
+`PORTFOLIO_R56_ACTIVE__N01_SURVIVOR_FIRST_RESELECTION`
 
-- Issue #199 completed.
-- Contract: `14b9509808bcfd9a6affc694ec97531105d8ca41`.
-- Evidence: `3cb5290fdce4a373a74b228059f4c913f0d1589b`, Run `37670426503`.
-- Result: **13/18 HOLD**.
-- Failed gates: 6, 7, 8, 11, 15.
-- Eligible: 23,599; exposed: 2,418; control: 21,181.
-- Matched pairs: 1,728; exposed coverage: 71.46%.
-- Balance: |SMD| 0.00312 / 0.00196.
-- Recent analog evaluation support: 703 total.
-- Future refresh/outcome opened: false; result values consumed: 0.
-- Next: independent Stage-0 portfolio reselection.
+- Issue #200 open.
+- Pre-Issue contract: `0144ed638e671029eeea288eb91402591b2c5a30`.
+- Candidates: `US-CMS-NPI-002`, `US-FAA-AIR-002`, `US-PHMSA-PIPE-002`, `US-FCC-ULS-002`.
+- Parent RCRA N01 failed on support, not matching quality.
+- R56 therefore scores arm scale/common support/recent event opportunity explicitly.
+- Candidate future-event memberships opened: 0.
+- Next: bounded revalidation + one immutable /45 scorecard.
 - Cost: 0 USD.
