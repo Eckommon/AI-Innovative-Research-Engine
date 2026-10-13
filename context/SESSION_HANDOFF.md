@@ -17,6 +17,7 @@ updated: 2026-10-14
 - Parent N01: 18/18 PASS; 346,859 matched pairs.
 - Source Preflight 01: `0e81620e9cbea5dcddb558791e786d1565dfaf0f` — WAIT_SOURCE.
 - Source Preflight 02: `a479ce80c25ef13db37d46940aa7d4e14fe8f9c9` — WAIT_SOURCE.
+- **Source Preflight 03:** PR #205 merged `a29708eaaa5794eccac9d11aff82e809635b287b`; immutable GitHub Actions evidence commit **`c071f0fd4161ca5b3bb7a69062d06611582ee36a`**, verified 2026-10-13T23:27:50Z; `WAIT_SOURCE_US_CMS_NPI_E01`, HTTP 200, official listing SHA-256 `f00a6c37989e58ad6f227a89a102ae9c176cdebe5ea15bdc356b15bdc`, qualifying count 0, earliest null, metadata-only true, future ZIP/member opened false. / 세 번째 공식 목록 검증 완료; 결과 데이터 미열람.
 - Live weekly listing remains `100526_101126` = 2026-10-05..2026-10-11.
 - Qualifying weekly listings: **0**.
 - Future weekly ZIP body opened: false.
