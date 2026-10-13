@@ -28,5 +28,6 @@ updated: 2026-10-14
 - Frozen primary test: exact two-sided McNemar, matched discordant OR + exact 95% CI.
 - Minimum support: >=30 deactivated matched NPIs and >=20 discordant pairs.
 - Material association band: MOR <=0.80 or >=1.25.
-- Next: metadata-only recheck after CMS listing changes; execute only the first qualifying weekly.
+- **Persistent source watch / 지속 소스 감시:** PR #206 merged `b4fa7a49fdf5958e069ba5a7318bb555c4a3afc8`; `.github/workflows/watch-us-cms-npi-e01-source.yml` scheduled daily at 00:37 UTC/09:37 KST (public-repo standard runner; zero monetary cost). Offline regression fixtures added (7). Rechecks only the official HTML listing, does not commit repeated WAITs, writes immutable `source-candidate-01.json/.md` only for first observed eligible weekly, does **not** open future ZIP or authorize E01. Initial workflow runtime conclusion remains not independently confirmed. / 예약 소스 점검은 최초 후보의 메타데이터 근거만 고정하며 E01은 자동 실행하지 않음.
+- Next: inspect the first source-watch Actions run and/or immutable first-candidate evidence, independently adjudicate the first qualifying publication rule, then append exact Issue #203 execution marker and run frozen E01 once; otherwise continue WAIT_SOURCE.
 - Cost: 0 USD.
