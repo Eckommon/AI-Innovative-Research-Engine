@@ -1,0 +1,86 @@
+name: Watch first qualifying US-CMS-NPI-E01 official weekly source
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/watch-us-cms-npi-e01-source.yml'
+  schedule:
+    # 00:37 UTC = 09:37 Asia/Seoul; off top-of-hour traffic.
+    - cron: '37 0 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+  issues: read
+concurrency:
+  group: us-cms-npi-e01-first-weekly-watch
+  cancel-in-progress: false
+jobs:
+  metadata-only-watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Offline parser, contract and boundary tests
+        run: |
+          python -m py_compile tools/watch_us_cms_npi_e01_first_weekly.py
+          python -m unittest discover -s tests -p 'test_us_cms_npi_e01_first_weekly_watch.py' -v
+      - name: Confirm authorized issue and frozen active state
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          test ! -e research/US-CMS-NPI-E01/evidence/attempt-01.json
+          gh issue view 203 --repo '${{ github.repository }}' --json state --jq '.state' | grep -qx OPEN
+          if gh issue view 203 --repo '${{ github.repository }}' --json body --jq '.body' | grep -Fxq 'EXECUTE_US_CMS_NPI_E01_ATTEMPT_01'; then
+            echo 'Experiment already authorized, disable source-only watch.'
+            exit 1
+          fi
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          cp=json.loads(Path('context/checkpoint.json').read_text())
+          assert cp['checkpoint_id']=='CHK-20261013-US-CMS-NPI-E01-ACTIVE'
+          assert cp['active_issue']==203 and cp['active_research']=='US-CMS-NPI-E01'
+          assert cp['last_decision']=='DEC-318'
+          pf=json.loads(Path('research/US-CMS-NPI-E01/evidence/source-preflight-03.json').read_text())
+          assert pf['contract_sha']=='48843c9979336dcd10fdff984f458277062d6f20'
+          assert pf['zip_body_opened'] is False and pf['future_membership_opened'] is False
+          assert pf['disposition']=='WAIT_SOURCE_US_CMS_NPI_E01'
+          PY
+      - name: Recheck official CMS HTML listing only
+        run: python tools/watch_us_cms_npi_e01_first_weekly.py
+      - name: Validate candidate evidence if first seen
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          root=Path('research/US-CMS-NPI-E01/evidence')
+          p=root/'source-candidate-01.json'
+          if not p.exists():
+              print('WAIT_SOURCE — no qualifying future weekly, no new repository evidence')
+          else:
+              x=json.loads(p.read_text())
+              assert x['contract_sha']=='48843c9979336dcd10fdff984f458277062d6f20'
+              assert x['type']=='FIRST_OBSERVED_SOURCE_CANDIDATE_METADATA_ONLY'
+              assert x['earliest_observed_qualifying'] is not None
+              assert x['scientific_first_published_weekly_adjudicated'] is False
+              assert x['requires_explicit_issue_marker_before_experiment'] is True
+              assert x['zip_body_opened'] is False and x['future_membership_opened'] is False
+              assert x['incremental_monetary_cost_usd']==0
+              assert (root/'source-candidate-01.md').exists()
+              print('SOURCE_CANDIDATE — save immutable listing evidence only, not E01 result')
+          PY
+      - name: Commit the first source candidate exactly once
+        run: |
+          if test -e research/US-CMS-NPI-E01/evidence/source-candidate-01.json && \
+             ! git ls-files --error-unmatch research/US-CMS-NPI-E01/evidence/source-candidate-01.json >/dev/null 2>&1; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add research/US-CMS-NPI-E01/evidence/source-candidate-01.json \
+                    research/US-CMS-NPI-E01/evidence/source-candidate-01.md
+            git commit -m 'Record first observed US-CMS-NPI-E01 future weekly source candidate'
+            git push origin HEAD:main
+          else
+            echo 'No new immutable candidate to commit.'
+          fi
