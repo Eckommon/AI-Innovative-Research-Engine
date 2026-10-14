@@ -11,6 +11,14 @@
 
 **EN:** This is an additional *operational authorization barrier*, not a new scientific criterion. The recorded first observed eligible CMS V2 weekly and the source selected at execution must be identical, and the first-publication lineage must be independently adjudicated before the experiment. The pre-Issue study and frozen experiment runner are unchanged.
 
+## First-source surveillance operation / 최초 적격 주간 파일 감시 운영
+
+The public-repository standard GitHub Actions source watcher checks the official CMS **HTML listing metadata only** at four scheduled UTC slots (`00:37`, `06:37`, `12:37`, `18:37`; corresponding to `09:37`, `15:37`, `21:37`, `03:37` Asia/Seoul). GitHub cron execution may be delayed; these are *scheduled* times, never a guaranteed actual publication-observation time. This is a risk-reduction measure after a verified 2026-10-14 cron dispatch was delayed by several hours. / 첫 적격 자료의 누락 위험을 줄이기 위한 6시간 간격의 감시이며, GitHub 예약 실행 시각 자체는 보장되지 않습니다.
+
+If there is no qualifying weekly listing, no additional `WAIT_SOURCE` commit or alert is generated. On the **first** observed qualifying V2 weekly, the watcher immutably commits `source-candidate-01.json/.md` and may post a **candidate-only review notice** to Issue #203; this notification is neither the scientific source-release authorization nor permission to run E01. After the first candidate is recorded, after an attempt exists, after the Issue closes, or after an explicit experimental execution marker is present, the listing-only watch stays dormant and does not download any ZIP. / 첫 후보 발견 이후에도 운영 알림만 허용하며, 최초 공개 검증과 실험 실행 결정은 독립 절차에 둡니다.
+
+No paid GitHub runners, external paid APIs or periodic artifact uploads are used; incremental monetary cost must remain **0 USD**. / 유료 서비스 승인 없이 사용 불가.
+
 ## Required chronological sequence / 필수 순서
 
 1. **Source detection / 소스 탐지:** \`.github/workflows/watch-us-cms-npi-e01-source.yml\` preserves \`research/US-CMS-NPI-E01/evidence/source-candidate-01.json\` + \`.md\` on its first observation. Before this occurs, E01 stays \`WAIT_SOURCE\`. The source ZIP must remain unopened.
