@@ -1,0 +1,99 @@
+name: Verify E01 frozen source release and transport guard offline
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-us-cms-npi-e01-transport-guard.yml'
+permissions:
+  contents: write
+concurrency:
+  group: e01-transport-guard-first-selftest
+  cancel-in-progress: false
+jobs:
+  offline-guard-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Run 31 network-free synthetic contract, source and transport regressions
+        run: |
+          python - <<'PY'
+          import json, os, sys, unittest
+          from datetime import datetime, timezone
+          from pathlib import Path
+          for p in (
+              'tools/watch_us_cms_npi_e01_first_weekly.py',
+              'tools/verify_us_cms_npi_e01_source_release.py',
+              'tools/run_us_cms_npi_e01_transport_locked.py',
+          ):
+              import py_compile
+              py_compile.compile(p, doraise=True)
+          groups = {
+              'source_listing': ('test_us_cms_npi_e01_first_weekly_watch.py', 7),
+              'independent_release': ('test_us_cms_npi_e01_source_release.py', 11),
+              'locked_zip_transport': ('test_us_cms_npi_e01_transport_locked.py', 13),
+          }
+          suite = unittest.TestSuite()
+          summary = {}
+          for label, (pattern, required) in groups.items():
+              cases = unittest.TestLoader().discover('tests', pattern=pattern)
+              n = cases.countTestCases()
+              assert n == required, f'{label}: {n} tests != {required}'
+              summary[label] = n
+              suite.addTests(cases)
+          assert suite.countTestCases() == 31
+          results = unittest.TextTestRunner(verbosity=2).run(suite)
+          if not results.wasSuccessful() or results.testsRun != 31:
+              sys.exit('OFFLINE_GUARD_REGRESSION_FAILED')
+          root = Path('research/US-CMS-NPI-E01/evidence')
+          j = root/'source-release-transport-selftest-01.json'
+          m = root/'source-release-transport-selftest-01.md'
+          if j.exists() or m.exists():
+              print('Immutable first guard selftest already exists; do not overwrite.')
+              sys.exit(0)
+          root.mkdir(parents=True,exist_ok=True)
+          ev = {
+              'research':'US-CMS-NPI-E01',
+              'evidence_type':'OPERATIONAL_SOURCE_RELEASE_TRANSPORT_OFFLINE_SELFTEST',
+              'disposition':'PASS_31_OF_31_SYNTHETIC_OFFLINE_GUARDS',
+              'checked_at_utc':datetime.now(timezone.utc).isoformat(),
+              'github_run_id':os.environ.get('GITHUB_RUN_ID'),
+              'groups':summary,
+              'total_tests_passed':31,
+              'source_listing_network_requested':False,
+              'cms_zip_body_opened':False,
+              'future_membership_opened':False,
+              'e01_scientific_experiment_executed':False,
+              'e01_scientific_success_claimed':False,
+              'scientific_runner_modified':False,
+              'incremental_monetary_cost_usd':0,
+          }
+          j.write_text(json.dumps(ev,sort_keys=True,indent=2)+'\n',encoding='utf-8')
+          m.write_text(
+              '# US-CMS-NPI-E01 — first offline release/transport guard proof\n\n'
+              '**Disposition:** PASS_31_OF_31_SYNTHETIC_OFFLINE_GUARDS\n\n'
+              f'- GitHub Actions Run ID: {ev["github_run_id"]}\n'
+              '- Fixture tests: listing 7/7; independent source release 11/11; strict ZIP transport 13/13\n'
+              '- Network/ZIP/outcomes touched: **no**\n'
+              '- Original preregistered scientific runner modified: **no**\n'
+              '- Scientific E01 outcome: **not executed, not concluded**\n'
+              '- Incremental cost: **0 USD**\n',
+              encoding='utf-8',
+          )
+          PY
+      - name: Commit one-time immutable synthetic verification evidence
+        run: |
+          if git ls-files --error-unmatch research/US-CMS-NPI-E01/evidence/source-release-transport-selftest-01.json >/dev/null 2>&1; then
+            echo 'Immutable synthetic guard evidence already committed; no repeat.'
+          else
+            test -s research/US-CMS-NPI-E01/evidence/source-release-transport-selftest-01.json
+            test -s research/US-CMS-NPI-E01/evidence/source-release-transport-selftest-01.md
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add research/US-CMS-NPI-E01/evidence/source-release-transport-selftest-01.json \
+                    research/US-CMS-NPI-E01/evidence/source-release-transport-selftest-01.md
+            git commit -m 'Record E01 31/31 offline release and transport guard selftest'
+            git push origin HEAD:main
+          fi

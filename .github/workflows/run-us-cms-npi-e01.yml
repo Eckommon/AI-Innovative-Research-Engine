@@ -53,18 +53,22 @@ jobs:
       - name: Confirm qualifying CMS weekly listing (metadata only)
         run: |
           python - <<'PY'
+          import json
           from tools.run_us_cms_npi_e01 import discover_weeklies
+          from tools.verify_us_cms_npi_e01_source_release import CANDIDATE, RELEASE
+          from tools.run_us_cms_npi_e01_transport_locked import release_weekly_url
+          approved = release_weekly_url(CANDIDATE.read_bytes(), json.loads(RELEASE.read_text()))
           src = discover_weeklies()  # CMS listing only; no ZIP requested or provider row opened.
           assert src['qualifying'], 'WAIT_SOURCE_US_CMS_NPI_E01: no qualifying CMS weekly listing'
           chosen = src['qualifying'][0]
-          assert chosen['href'].startswith('https://download.cms.gov/nppes/'), 'Non-CMS ZIP URL rejected'
-          print('First qualifying listing:', chosen['token'], chosen['start'], chosen['end'])
+          assert chosen['href'] == approved, 'SOURCE_RELEASE_LOCK: frozen runner would pick a different ZIP'
+          print('Approved first qualifying listing:', chosen['token'], chosen['start'], chosen['end'])
           PY
-      - name: Execute frozen E01
+      - name: Execute unchanged frozen E01 with exact ZIP transport lock
         env:
           CMS_NPI_E01_BOUND: '1'
           CMS_NPI_E01_CONTRACT_SHA: '48843c9979336dcd10fdff984f458277062d6f20'
-        run: python tools/run_us_cms_npi_e01.py
+        run: python -m tools.run_us_cms_npi_e01_transport_locked
       - name: Reject source-wait as an empirical commit
         run: |
           python - <<'PY'
