@@ -1,0 +1,20 @@
+{
+  "checked_at_utc": "2026-10-14T00:30:39.436937+00:00",
+  "cms_zip_body_opened": false,
+  "disposition": "PASS_31_OF_31_SYNTHETIC_OFFLINE_GUARDS",
+  "e01_scientific_experiment_executed": false,
+  "e01_scientific_success_claimed": false,
+  "evidence_type": "OPERATIONAL_SOURCE_RELEASE_TRANSPORT_OFFLINE_SELFTEST",
+  "future_membership_opened": false,
+  "github_run_id": "38490578778",
+  "groups": {
+    "independent_release": 11,
+    "locked_zip_transport": 13,
+    "source_listing": 7
+  },
+  "incremental_monetary_cost_usd": 0,
+  "research": "US-CMS-NPI-E01",
+  "scientific_runner_modified": false,
+  "source_listing_network_requested": false,
+  "total_tests_passed": 31
+}
