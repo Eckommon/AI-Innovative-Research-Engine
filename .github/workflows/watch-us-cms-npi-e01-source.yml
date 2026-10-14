@@ -5,12 +5,13 @@ on:
     paths:
       - '.github/workflows/watch-us-cms-npi-e01-source.yml'
   schedule:
-    # 00:37 UTC = 09:37 Asia/Seoul; off top-of-hour traffic.
-    - cron: '37 0 * * *'
+    # Four checks per day at 03:37, 09:37, 15:37, 21:37 Asia/Seoul.
+    # GitHub scheduled runs may be delayed; never infer on-time execution.
+    - cron: '37 0,6,12,18 * * *'
   workflow_dispatch:
 permissions:
   contents: write
-  issues: read
+  issues: write
 concurrency:
   group: us-cms-npi-e01-first-weekly-watch
   cancel-in-progress: false
@@ -30,15 +31,33 @@ jobs:
           python -m unittest discover -s tests -p 'test_us_cms_npi_e01_source_release.py' -v
           python -m py_compile tools/run_us_cms_npi_e01_transport_locked.py
           python -m unittest discover -s tests -p 'test_us_cms_npi_e01_transport_locked.py' -v
-      - name: Confirm authorized issue and frozen active state
+          python -m unittest discover -s tests -p 'test_us_cms_npi_e01_watch_lifecycle.py' -v
+      - name: Verify E01 is actively awaiting source (dormant after candidate or execution)
+        id: gate
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          test ! -e research/US-CMS-NPI-E01/evidence/attempt-01.json
-          gh issue view 203 --repo '${{ github.repository }}' --json state --jq '.state' | grep -qx OPEN
+          set -euo pipefail
+          if test -e research/US-CMS-NPI-E01/evidence/attempt-01.json; then
+            echo 'monitor=false' >> "$GITHUB_OUTPUT"
+            echo 'E01 attempt exists; no source watch needed.'
+            exit 0
+          fi
+          if test -e research/US-CMS-NPI-E01/evidence/source-candidate-01.json; then
+            echo 'monitor=false' >> "$GITHUB_OUTPUT"
+            echo 'Immutable source candidate already captured; human lineage review required.'
+            exit 0
+          fi
+          issue_state=$(gh issue view 203 --repo '${{ github.repository }}' --json state --jq '.state')
+          if test "$issue_state" != OPEN; then
+            echo 'monitor=false' >> "$GITHUB_OUTPUT"
+            echo 'E01 issue is no longer open; stop source-only monitoring.'
+            exit 0
+          fi
           if gh issue view 203 --repo '${{ github.repository }}' --json body --jq '.body' | grep -Fxq 'EXECUTE_US_CMS_NPI_E01_ATTEMPT_01'; then
-            echo 'Experiment already authorized, disable source-only watch.'
-            exit 1
+            echo 'monitor=false' >> "$GITHUB_OUTPUT"
+            echo 'E01 execution is separately authorized; source watcher stays dormant.'
+            exit 0
           fi
           python - <<'PY'
           import json
@@ -52,9 +71,12 @@ jobs:
           assert pf['zip_body_opened'] is False and pf['future_membership_opened'] is False
           assert pf['disposition']=='WAIT_SOURCE_US_CMS_NPI_E01'
           PY
+          echo 'monitor=true' >> "$GITHUB_OUTPUT"
       - name: Recheck official CMS HTML listing only
+        if: steps.gate.outputs.monitor == 'true'
         run: python tools/watch_us_cms_npi_e01_first_weekly.py | tee /tmp/cms-e01-watch-output.txt
       - name: Save one-time monitored WAIT bootstrap receipt (no repeats)
+        if: steps.gate.outputs.monitor == 'true'
         run: |
           python - <<'PY'
           import json,re
@@ -104,6 +126,7 @@ jobs:
               )
           PY
       - name: Validate candidate evidence if first seen
+        if: steps.gate.outputs.monitor == 'true'
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -125,6 +148,8 @@ jobs:
               print('SOURCE_CANDIDATE — save immutable listing evidence only, not E01 result')
           PY
       - name: Commit the first source candidate exactly once
+        if: steps.gate.outputs.monitor == 'true'
+        id: persist
         run: |
           if test -e research/US-CMS-NPI-E01/evidence/source-candidate-01.json && \
              ! git ls-files --error-unmatch research/US-CMS-NPI-E01/evidence/source-candidate-01.json >/dev/null 2>&1; then
@@ -134,6 +159,7 @@ jobs:
                     research/US-CMS-NPI-E01/evidence/source-candidate-01.md
             git commit -m 'Record first observed US-CMS-NPI-E01 future weekly source candidate'
             git push origin HEAD:main
+            echo 'candidate_committed=true' >> "$GITHUB_OUTPUT"
           elif test -e research/US-CMS-NPI-E01/evidence/source-watch-bootstrap-01.json && \
                ! git ls-files --error-unmatch research/US-CMS-NPI-E01/evidence/source-watch-bootstrap-01.json >/dev/null 2>&1; then
             git config user.name 'github-actions[bot]'
@@ -145,3 +171,24 @@ jobs:
           else
             echo 'No new immutable candidate or bootstrap receipt to commit.'
           fi
+      - name: Notify review required for first source candidate (no experiment authorization)
+        if: steps.persist.outputs.candidate_committed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY' > /tmp/e01-source-candidate-notice.md
+          import json
+          from pathlib import Path
+          x=json.loads(Path('research/US-CMS-NPI-E01/evidence/source-candidate-01.json').read_text(encoding='utf-8'))
+          a=x['earliest_observed_qualifying']
+          print('## US-CMS-NPI-E01: FIRST OFFICIAL V2 WEEKLY SOURCE CANDIDATE OBSERVED / 최초 미래 소스 후보 관측')
+          print()
+          print(f"- Candidate: {a['token']} ({a['start']}..{a['end']})")
+          print(f"- Source metadata: {a['href']}")
+          print(f"- Official listing SHA-256: {x['source_page']['sha256']}")
+          print("- Next: independent first-publication lineage review and source-release authorization required.")
+          print("- This is NOT an E01 statistical result. No future ZIP/provider rows opened.")
+          print("- Do not add the experimental Issue execution marker based on this alert alone.")
+          print("- Incremental monetary cost: 0 USD.")
+          PY
+          gh issue comment 203 --repo '${{ github.repository }}' --body-file /tmp/e01-source-candidate-notice.md
