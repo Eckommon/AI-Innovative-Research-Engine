@@ -1,0 +1,17 @@
+name: Manual CMS NPI E01 first-week URL HEAD advisory only
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  metadata-only-head:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Offline HEAD-only boundary checks
+        run: |
+          python -m py_compile tools/probe_us_cms_npi_e01_weekly_head.py
+          python -m unittest discover -s tests -p 'test_us_cms_npi_e01_head_advisory.py' -v
+      - name: Optional public HEAD-only hint after 2026-10-18 (no ZIP body)
+        run: python -m tools.probe_us_cms_npi_e01_weekly_head
