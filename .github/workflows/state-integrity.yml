@@ -147,10 +147,38 @@ jobs:
                   active_number = int(status['active_issue'].lstrip('#'))
               except ValueError as exc:
                   raise SystemExit(f'Invalid active_issue: {status["active_issue"]!r}') from exc
-              if open_numbers != {active_number}:
+              # A separately authorized auxiliary track is allowed ONLY by an
+              # explicit, narrow GitHub-committed manifest. Never generalize to
+              # "any number of open issues"; primary active state is unchanged.
+              permitted = {active_number}
+              secondary_path = Path('context/SECONDARY_TRACKS.json')
+              if secondary_path.exists():
+                  secondary = json.loads(secondary_path.read_text(encoding='utf-8'))
+                  if (secondary.get('mode') != 'EXPLICIT_TWO_TRACK_PARALLEL'
+                          or secondary.get('canonical_active_issue') != 203
+                          or active_number != 203
+                          or status.get('active_research') != 'US-CMS-NPI-E01'
+                          or secondary.get('parallel_issue') != 220
+                          or secondary.get('parallel_research') != 'US-FAA-AIR-F01'
+                          or secondary.get('frozen_contract_commit') != 'a4c775127eeafce152595759897590f553e237c5'
+                          or secondary.get('cost_usd') != 0
+                          or secondary.get('stage0_issue_closed') != 214
+                          or not Path('research/US-FAA-AIR-F01/README.md').is_file()):
+                      raise SystemExit('STATE_DRIFT_DETECTED: invalid tightly scoped secondary-track manifest')
+                  stage0 = api('/issues/214')
+                  if stage0.get('state') != 'closed':
+                      raise SystemExit('STATE_DRIFT_DETECTED: R57 Stage-0 Issue 214 must be closed')
+                  auxiliary = api('/issues/220')
+                  if (auxiliary.get('state') != 'open'
+                          or not auxiliary.get('title', '').startswith('US-FAA-AIR-F01')
+                          or 'a4c775127eeafce152595759897590f553e237c5'
+                          not in auxiliary.get('body', '')):
+                      raise SystemExit('STATE_DRIFT_DETECTED: FAA secondary Issue 220 differs from frozen contract')
+                  permitted.add(220)
+              if open_numbers != permitted:
                   raise SystemExit(
-                      f'STATE_DRIFT_DETECTED: declared active Issue #{active_number} is not open; '
-                      f'open Issues={sorted(open_numbers)}'
+                      f'STATE_DRIFT_DETECTED: open Issue set {sorted(open_numbers)} '
+                      f'not equal to authorized primary+secondary {sorted(permitted)}'
                   )
 
           try:
