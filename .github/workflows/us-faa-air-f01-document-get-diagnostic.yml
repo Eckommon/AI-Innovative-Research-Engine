@@ -54,8 +54,8 @@ jobs:
               rec['transport_error_type']=type(e).__name__
           rec['disposition']='DOC_HTML_GET_REACHABLE_ONLY_NOT_ZIP_VERIFIED' if rec['http_status']==200 and rec['html_bytes_read']>0 else 'BLOCKED_BOUNDED_OFFICIAL_DOCUMENT_GET__SCIENCE_NOT_EXECUTED'
           p=Path('research/US-FAA-AIR-F01/evidence/document-get-diagnostic-01.json');p.parent.mkdir(parents=True,exist_ok=True)
-          p.write_text(json.dumps(rec,sort_keys=True,indent=2)+'\\n',encoding='utf-8')
-          p.with_suffix('.md').write_text('# FAA F01 — bounded official HTML GET / 공문서 단일 GET 진단\\n\\n- Source: '+url+'\\n- Observed: '+rec['checked_at_utc']+'\\n- HTTP: '+str(rec['http_status'])+'\\n- Decision: `'+rec['disposition']+'`\\n- ZIP, Deregistered rows, PII, FAA 18 science gates: **NOT OPENED**\\n- Cost: **0 USD**\\n',encoding='utf-8')
+          p.write_text(json.dumps(rec,sort_keys=True,indent=2)+'\n',encoding='utf-8')
+          p.with_suffix('.md').write_text('# FAA F01 — bounded official HTML GET / 공문서 단일 GET 진단\n\n- Source: '+url+'\n- Observed: '+rec['checked_at_utc']+'\n- HTTP: '+str(rec['http_status'])+'\n- Decision: `'+rec['disposition']+'`\n- ZIP, Deregistered rows, PII, FAA 18 science gates: **NOT OPENED**\n- Cost: **0 USD**\n',encoding='utf-8')
           print('FAA_DOC_GET_DIAGNOSTIC',rec['disposition'],'status=',rec['http_status'],'html_bytes=',rec['html_bytes_read'])
           PY
       - name: Commit immutable one-time transport discriminator
