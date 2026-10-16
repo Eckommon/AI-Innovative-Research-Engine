@@ -1,0 +1,46 @@
+{
+  "archive_checks": {
+    "2020": {
+      "body_bytes_read": 0,
+      "byte_prefix_hex": null,
+      "content_type": "text/html; charset=UTF-8",
+      "http_status": 302,
+      "method": "GET",
+      "range_header": "bytes=0-3",
+      "redirect_location": "https://www.faa.gov/about/office_org/headquarters_offices/avs/offices/afx/afb/afb700",
+      "url": "https://registry.faa.gov/database/yearly/ReleasableAircraft.2020.zip",
+      "zip_signature_candidate": false
+    },
+    "2021": {
+      "body_bytes_read": 0,
+      "byte_prefix_hex": null,
+      "content_type": "text/html; charset=UTF-8",
+      "http_status": 302,
+      "method": "GET",
+      "range_header": "bytes=0-3",
+      "redirect_location": "https://www.faa.gov/about/office_org/headquarters_offices/avs/offices/afx/afb/afb700",
+      "url": "https://registry.faa.gov/database/yearly/ReleasableAircraft.2021.zip",
+      "zip_signature_candidate": false
+    },
+    "current": {
+      "body_bytes_read": 0,
+      "byte_prefix_hex": null,
+      "content_type": "text/html",
+      "http_status": 406,
+      "method": "GET",
+      "range_header": "bytes=0-3",
+      "redirect_location": null,
+      "url": "https://registry.faa.gov/database/ReleasableAircraft.zip",
+      "zip_signature_candidate": false
+    }
+  },
+  "checked_at_utc": "2026-10-16T09:37:02.028625+00:00",
+  "deregistered_records_opened": false,
+  "disposition": "HOLD_FAA_F01_EXACT_OFFICIAL_ARCHIVE_ACCESS_NOT_READY",
+  "f01_18_gate_result": null,
+  "incremental_monetary_cost_usd": 0,
+  "issue": 220,
+  "owner_data_opened": false,
+  "research": "US-FAA-AIR-F01",
+  "zip_members_opened": false
+}
