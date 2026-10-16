@@ -1,0 +1,67 @@
+name: FAA F01 bounded official documentation GET discriminator
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/us-faa-air-f01-document-get-diagnostic.yml'
+permissions:
+  contents: write
+concurrency:
+  group: us-faa-air-f01-doc-get-one-shot
+  cancel-in-progress: false
+jobs:
+  html-only-get:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify immutable HEAD preflight and exact E01/FAA governance
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          a=json.loads(Path('research/US-FAA-AIR-F01/evidence/source-access-preflight-01.json').read_text())
+          s=json.loads(Path('context/SECONDARY_TRACKS.json').read_text())
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          assert a['disposition']=='HOLD_FAA_F01_SOURCE_TRANSPORT_OR_LINEAGE_NOT_VERIFIED'
+          assert all(r['http_status']==403 for r in a['source_reports'].values())
+          assert s['parallel_issue']==220 and c['active_issue']==203 and c['last_decision']=='DEC-318'
+          assert not Path('research/US-FAA-AIR-F01/evidence/document-get-diagnostic-01.json').exists()
+          PY
+      - name: One official HTML-only GET, max 128KiB, no redirects
+        run: |
+          python - <<'PY'
+          import urllib.request,urllib.error,datetime,json,hashlib
+          from pathlib import Path
+          url='https://www.faa.gov/licenses_certificates/aircraft_certification/aircraft_registry/releasable_aircraft_download'
+          class NoRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self,req,fp,code,msg,headers,newurl):return None
+          req=urllib.request.Request(url, method='GET',headers={'User-Agent':'Mozilla/5.0 (compatible; research preflight; no owner/N-number reads)','Accept':'text/html'})
+          rec={'research':'US-FAA-AIR-F01','issue':220,'checked_at_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(), 'url':url,'method':'GET','max_bytes':131072,'http_status':None,'redirect_location':None,'content_type':None,'html_bytes_read':0,'html_sha256':None,'f01_18_gate_result':None,'zip_body_opened':False,'deregistered_rows_opened':False,'owner_data_opened':False,'incremental_monetary_cost_usd':0}
+          try:
+              with urllib.request.build_opener(NoRedirect()).open(req,timeout=18) as r:
+                  rec['http_status']=r.status;rec['content_type']=r.headers.get('Content-Type');rec['redirect_location']=r.headers.get('Location')
+                  if r.geturl()!=url: raise RuntimeError('Unexpected redirect')
+                  if 'text/html' in (rec['content_type'] or '').lower():
+                      data=r.read(131073)
+                      if len(data)<=131072:
+                          rec['html_bytes_read']=len(data);rec['html_sha256']=hashlib.sha256(data).hexdigest()
+          except urllib.error.HTTPError as e:
+              rec['http_status']=e.code;rec['redirect_location']=e.headers.get('Location');rec['content_type']=e.headers.get('Content-Type')
+          except (urllib.error.URLError, TimeoutError, OSError) as e:
+              rec['transport_error_type']=type(e).__name__
+          rec['disposition']='DOC_HTML_GET_REACHABLE_ONLY_NOT_ZIP_VERIFIED' if rec['http_status']==200 and rec['html_bytes_read']>0 else 'BLOCKED_BOUNDED_OFFICIAL_DOCUMENT_GET__SCIENCE_NOT_EXECUTED'
+          p=Path('research/US-FAA-AIR-F01/evidence/document-get-diagnostic-01.json');p.parent.mkdir(parents=True,exist_ok=True)
+          p.write_text(json.dumps(rec,sort_keys=True,indent=2)+'\\n',encoding='utf-8')
+          p.with_suffix('.md').write_text('# FAA F01 — bounded official HTML GET / 공문서 단일 GET 진단\\n\\n- Source: '+url+'\\n- Observed: '+rec['checked_at_utc']+'\\n- HTTP: '+str(rec['http_status'])+'\\n- Decision: `'+rec['disposition']+'`\\n- ZIP, Deregistered rows, PII, FAA 18 science gates: **NOT OPENED**\\n- Cost: **0 USD**\\n',encoding='utf-8')
+          print('FAA_DOC_GET_DIAGNOSTIC',rec['disposition'],'status=',rec['http_status'],'html_bytes=',rec['html_bytes_read'])
+          PY
+      - name: Commit immutable one-time transport discriminator
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-FAA-AIR-F01/evidence/document-get-diagnostic-01.json research/US-FAA-AIR-F01/evidence/document-get-diagnostic-01.md
+          git commit -m 'Record one-time bounded FAA HTML GET transport diagnostic'
+          git push origin HEAD:main
