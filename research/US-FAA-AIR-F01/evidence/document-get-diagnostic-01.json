@@ -1,0 +1,19 @@
+{
+  "checked_at_utc": "2026-10-16T09:33:52.955169+00:00",
+  "content_type": "text/html; charset=UTF-8",
+  "deregistered_rows_opened": false,
+  "disposition": "DOC_HTML_GET_REACHABLE_ONLY_NOT_ZIP_VERIFIED",
+  "f01_18_gate_result": null,
+  "html_bytes_read": 114000,
+  "html_sha256": "2227d2f2ec0477f94b9e148199dcb48651c52c22b4efc5a7de0ab1d95f633918",
+  "http_status": 200,
+  "incremental_monetary_cost_usd": 0,
+  "issue": 220,
+  "max_bytes": 131072,
+  "method": "GET",
+  "owner_data_opened": false,
+  "redirect_location": null,
+  "research": "US-FAA-AIR-F01",
+  "url": "https://www.faa.gov/licenses_certificates/aircraft_certification/aircraft_registry/releasable_aircraft_download",
+  "zip_body_opened": false
+}
