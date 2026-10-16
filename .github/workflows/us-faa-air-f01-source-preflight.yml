@@ -1,0 +1,47 @@
+name: FAA AIR F01 official-source HEAD-only preflight
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/us-faa-air-f01-source-preflight.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: us-faa-air-f01-source-preflight-01
+  cancel-in-progress: false
+jobs:
+  source-head-preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify exact secondary FAA authorization and no prior evidence
+        run: |
+          test ! -e research/US-FAA-AIR-F01/evidence/source-access-preflight-01.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          cp=json.loads(Path('context/checkpoint.json').read_text())
+          secondary=json.loads(Path('context/SECONDARY_TRACKS.json').read_text())
+          assert cp['active_issue']==203 and cp['last_decision']=='DEC-318'
+          assert secondary['parallel_issue']==220 and secondary['parallel_research']=='US-FAA-AIR-F01'
+          assert secondary['frozen_contract_commit']=='a4c775127eeafce152595759897590f553e237c5'
+          assert secondary['cost_usd']==0
+          PY
+          git cat-file -e a4c775127eeafce152595759897590f553e237c5^{commit}
+      - name: Eight no-network HEAD-only safety regressions
+        run: |
+          python -m py_compile tools/inspect_us_faa_air_f01_source_head.py
+          python -m unittest discover -s tests -p 'test_us_faa_air_f01_source_head.py' -v
+      - name: Inspect five explicitly approved first-party FAA URLs with HEAD only
+        run: python -m tools.inspect_us_faa_air_f01_source_head
+      - name: Persist one-time source-access evidence only
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-FAA-AIR-F01/evidence/source-access-preflight-01.json research/US-FAA-AIR-F01/evidence/source-access-preflight-01.md
+          git commit -m 'Record immutable FAA F01 official HEAD-only source preflight'
+          git push origin HEAD:main
