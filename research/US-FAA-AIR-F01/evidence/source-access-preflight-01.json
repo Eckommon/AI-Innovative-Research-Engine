@@ -1,0 +1,85 @@
+{
+  "checked_at_utc": "2026-10-16T09:29:33.816064+00:00",
+  "current_baseline_zip_opened": false,
+  "deregistered_file_rows_opened": false,
+  "disposition": "HOLD_FAA_F01_SOURCE_TRANSPORT_OR_LINEAGE_NOT_VERIFIED",
+  "f01_18_gate_result": null,
+  "future_deregistration_membership_opened": false,
+  "historical_archives_body_validated": false,
+  "historical_zip_bodies_opened": false,
+  "incremental_monetary_cost_usd": 0,
+  "issue": 220,
+  "personal_owner_data_opened": false,
+  "purpose": "SOURCE_HEAD_METADATA_ONLY_NO_F01_SCIENTIFIC_GATES_EXECUTED",
+  "research": "US-FAA-AIR-F01",
+  "source_contract_commit": "a4c775127eeafce152595759897590f553e237c5",
+  "source_reports": {
+    "current_aircraft_zip": {
+      "body_read_bytes": 0,
+      "content_length_header": "409",
+      "content_type": "text/html",
+      "error_type": null,
+      "http_status": 403,
+      "last_modified_header": null,
+      "method": "HEAD",
+      "redirect_location": null,
+      "result": "HEAD_NOT_VERIFIED_NO_FINAL_ABSENCE_INFERENCE",
+      "url": "https://registry.faa.gov/database/ReleasableAircraft.zip"
+    },
+    "historical_2020_zip": {
+      "body_read_bytes": 0,
+      "content_length_header": "429",
+      "content_type": "text/html",
+      "error_type": null,
+      "http_status": 403,
+      "last_modified_header": null,
+      "method": "HEAD",
+      "redirect_location": null,
+      "result": "HEAD_NOT_VERIFIED_NO_FINAL_ABSENCE_INFERENCE",
+      "url": "https://registry.faa.gov/database/yearly/ReleasableAircraft.2020.zip"
+    },
+    "historical_2021_zip": {
+      "body_read_bytes": 0,
+      "content_length_header": "429",
+      "content_type": "text/html",
+      "error_type": null,
+      "http_status": 403,
+      "last_modified_header": null,
+      "method": "HEAD",
+      "redirect_location": null,
+      "result": "HEAD_NOT_VERIFIED_NO_FINAL_ABSENCE_INFERENCE",
+      "url": "https://registry.faa.gov/database/yearly/ReleasableAircraft.2021.zip"
+    },
+    "official_dictionary": {
+      "body_read_bytes": 0,
+      "content_length_header": "397",
+      "content_type": "text/html",
+      "error_type": null,
+      "http_status": 403,
+      "last_modified_header": null,
+      "method": "HEAD",
+      "redirect_location": null,
+      "result": "HEAD_NOT_VERIFIED_NO_FINAL_ABSENCE_INFERENCE",
+      "url": "https://registry.faa.gov/database/ardata.pdf"
+    },
+    "official_landing": {
+      "body_read_bytes": 0,
+      "content_length_header": "488",
+      "content_type": "text/html",
+      "error_type": null,
+      "http_status": 403,
+      "last_modified_header": null,
+      "method": "HEAD",
+      "redirect_location": null,
+      "result": "HEAD_NOT_VERIFIED_NO_FINAL_ABSENCE_INFERENCE",
+      "url": "https://www.faa.gov/licenses_certificates/aircraft_certification/aircraft_registry/releasable_aircraft_download"
+    }
+  },
+  "source_urls": {
+    "current_aircraft_zip": "https://registry.faa.gov/database/ReleasableAircraft.zip",
+    "historical_2020_zip": "https://registry.faa.gov/database/yearly/ReleasableAircraft.2020.zip",
+    "historical_2021_zip": "https://registry.faa.gov/database/yearly/ReleasableAircraft.2021.zip",
+    "official_dictionary": "https://registry.faa.gov/database/ardata.pdf",
+    "official_landing": "https://www.faa.gov/licenses_certificates/aircraft_certification/aircraft_registry/releasable_aircraft_download"
+  }
+}
