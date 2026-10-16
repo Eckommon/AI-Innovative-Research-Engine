@@ -158,23 +158,26 @@ jobs:
                           or secondary.get('canonical_active_issue') != 203
                           or active_number != 203
                           or status.get('active_research') != 'US-CMS-NPI-E01'
-                          or secondary.get('parallel_issue') != 220
-                          or secondary.get('parallel_research') != 'US-FAA-AIR-F01'
-                          or secondary.get('frozen_contract_commit') != 'a4c775127eeafce152595759897590f553e237c5'
+                          or secondary.get('parallel_issue') != 226
+                          or secondary.get('parallel_research') != 'PORTFOLIO-R58'
+                          or secondary.get('frozen_contract_commit') != '86f2bf09b4fd2c38dbd89608eb80a368a428c7e5'
+                          or secondary.get('frozen_contract_path') != 'research/PORTFOLIO-R58/README.md'
+                          or secondary.get('terminal_predecessor_issue') != 220
                           or secondary.get('cost_usd') != 0
-                          or secondary.get('stage0_issue_closed') != 214
-                          or not Path('research/US-FAA-AIR-F01/README.md').is_file()):
-                      raise SystemExit('STATE_DRIFT_DETECTED: invalid tightly scoped secondary-track manifest')
-                  stage0 = api('/issues/214')
-                  if stage0.get('state') != 'closed':
-                      raise SystemExit('STATE_DRIFT_DETECTED: R57 Stage-0 Issue 214 must be closed')
-                  auxiliary = api('/issues/220')
-                  if (auxiliary.get('state') != 'open'
-                          or not auxiliary.get('title', '').startswith('US-FAA-AIR-F01')
-                          or 'a4c775127eeafce152595759897590f553e237c5'
-                          not in auxiliary.get('body', '')):
-                      raise SystemExit('STATE_DRIFT_DETECTED: FAA secondary Issue 220 differs from frozen contract')
-                  permitted.add(220)
+                          or secondary.get('max_parallel_open_issues') != 1
+                          or not Path('research/PORTFOLIO-R58/README.md').is_file()
+                          or not Path('research/US-FAA-AIR-F01/RESULT.md').is_file()):
+                      raise SystemExit('STATE_DRIFT_DETECTED: unexpected secondary R58 preregistration')
+                  closed_faa = api('/issues/220')
+                  if closed_faa.get('state') != 'closed':
+                      raise SystemExit('STATE_DRIFT_DETECTED: FAA Issue #220 not terminal closed')
+                  secondary_issue = api('/issues/226')
+                  if (secondary_issue.get('state') != 'open'
+                          or not secondary_issue.get('title','').startswith('PORTFOLIO-R58')
+                          or '86f2bf09b4fd2c38dbd89608eb80a368a428c7e5'
+                          not in secondary_issue.get('body','')):
+                      raise SystemExit('STATE_DRIFT_DETECTED: R58 Issue 226 contract mismatch')
+                  permitted.add(226)
               if open_numbers != permitted:
                   raise SystemExit(
                       f'STATE_DRIFT_DETECTED: open Issue set {sorted(open_numbers)} '
