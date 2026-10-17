@@ -1,0 +1,47 @@
+name: NOAA QCEW F01 frozen 18-gate structural attempt 01
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/us-noaa-qcew-f01-attempt01.yml']
+permissions:
+  contents: write
+concurrency:
+  group: us-noaa-qcew-f01-attempt01-once
+  cancel-in-progress: false
+jobs:
+  frozen-source-gates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Confirm primary E01 frozen, exact secondary F01 binding and no prior attempt
+        run: |
+          test ! -e research/US-NOAA-QCEW-F01/evidence/attempt-01.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          cp=json.loads(Path('context/checkpoint.json').read_text())
+          s=json.loads(Path('context/SECONDARY_TRACKS.json').read_text())
+          assert cp['active_issue']==203 and cp['active_research']=='US-CMS-NPI-E01'
+          assert cp['last_decision']=='DEC-318'
+          assert s['parallel_issue']==233 and s['parallel_research']=='US-NOAA-QCEW-F01'
+          assert s['frozen_contract_commit']=='49ddd7987737bac51442db91c7082666c79e56b2'
+          assert s['cost_usd']==0
+          assert Path('research/US-NOAA-QCEW-F01/README.md').is_file()
+          PY
+          git cat-file -e 49ddd7987737bac51442db91c7082666c79e56b2^{commit}
+      - name: Offline regression for exact FIPS, zone rejection, future firewall
+        run: |
+          python -m py_compile tools/run_us_noaa_qcew_f01.py
+          python -m unittest discover -s tests -p 'test_us_noaa_qcew_f01.py' -v
+      - name: Execute one frozen F01 with NOAA 2023 and BLS 2024 Q1 sources only
+        run: python -m tools.run_us_noaa_qcew_f01
+      - name: Store immutable first attempt (no future outcome data)
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-NOAA-QCEW-F01/evidence/attempt-01.json research/US-NOAA-QCEW-F01/evidence/attempt-01.md
+          git commit -m 'Record immutable NOAA QCEW F01 outcome-blind structural attempt 01'
+          git push origin HEAD:main
