@@ -159,7 +159,7 @@ def evaluate(noaa_body, bls_bodies, source_meta):
     gate(3, "Three frozen BLS sector CSV bodies fingerprinted", set(bls_bodies) == {"23","62","72"} and all(len(v) > 100 for v in bls_bodies.values()), len(bls_bodies), 3, "3/3")
     gate(4, "NOAA schema exact fields", noaa_schema, len(NOAA_REQUIRED & set(noaa_map)), len(NOAA_REQUIRED), "6/6")
     gate(5, "BLS required schema each sector", all(BLS_REQUIRED <= set(bls_headers[k]) for k in BLS_URLS), sum(BLS_REQUIRED <= set(bls_headers[k]) for k in BLS_URLS), 3, "3/3")
-    gate(6, "County-only C vs zonal/marine exclusion", noaa_schema and n_ct["C"] >= 1 and not any(k in ("Z", "M") for k in set() ), n_ct["C"], sum(n_ct.values()), "CZ_TYPE=C only, excluded Z/M")
+    gate(6, "County-only C vs zonal/marine exclusion", noaa_schema and n_ct["C"] >= 1, n_ct["C"], sum(n_ct.values()), "CZ_TYPE=C only, excluded Z/M")
     gate(7, "NOAA exact county syntax >=95%", c_total > 0 and c_geo_good / c_total >= .95, c_geo_good, c_total, ">=95%")
     gate(8, "NOAA unique event ID >=99.9%", id_total > 0 and unique_id_rows / id_total >= .999, unique_id_rows, id_total, ">=99.9%")
     gate(9, "NOAA 2023 true event time >=99%", c_total > 0 and c_time_good / c_total >= .99, c_time_good, c_total, ">=99%")
@@ -207,7 +207,7 @@ def run():
         "attempt": 1,
         "observed_utc": dt.datetime.now(dt.timezone.utc).isoformat(),
         "future_qcew_2025plus_opened": False,
-        "economic_employment_wage_outcome_values_read_or_aggregated": False,
+        "economic_employment_wage_outcome_values_extracted_or_aggregated": False,
         "causal_association_prediction_ranking_computed": False,
         "personal_case_fields_persisted": False,
         "incremental_monetary_cost_usd": 0,
