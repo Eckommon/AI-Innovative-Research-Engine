@@ -1,0 +1,46 @@
+name: R58 official seven-source metadata/schema preflight (no outcomes)
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/portfolio-r58-source-preflight.yml']
+permissions:
+  contents: write
+concurrency:
+  group: portfolio-r58-pre-score-source-preflight-01
+  cancel-in-progress: false
+jobs:
+  source-first:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify exact frozen secondary selection and source firewall
+        run: |
+          test ! -e research/PORTFOLIO-R58/evidence/source-endpoint-preflight-01.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          s=json.loads(Path('context/SECONDARY_TRACKS.json').read_text())
+          assert c['active_issue']==203 and c['last_decision']=='DEC-318'
+          assert s['parallel_issue']==226 and s['parallel_research']=='PORTFOLIO-R58'
+          assert s['frozen_contract_commit']=='86f2bf09b4fd2c38dbd89608eb80a368a428c7e5'
+          assert s['cost_usd']==0
+          assert Path('research/PORTFOLIO-R58/README.md').is_file()
+          PY
+          git cat-file -e 86f2bf09b4fd2c38dbd89608eb80a368a428c7e5^{commit}
+      - name: Offline ten-case exact-URL and never-open-outcomes regression
+        run: |
+          python -m py_compile tools/inspect_portfolio_r58_official_sources.py
+          python -m unittest discover -s tests -p 'test_portfolio_r58_source_preflight.py' -v
+      - name: One-time public official binary magic/dictionary/header only
+        run: python -m tools.inspect_portfolio_r58_official_sources
+      - name: Persist immutable source access evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/PORTFOLIO-R58/evidence/source-endpoint-preflight-01.json research/PORTFOLIO-R58/evidence/source-endpoint-preflight-01.md
+          git commit -m 'Record immutable R58 official seven-source pre-score metadata access'
+          git push origin HEAD:main
