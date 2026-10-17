@@ -1,0 +1,169 @@
+{
+  "candidate_conditions": {
+    "CBP_QCEW": "METADATA_ACCESS_ONLY_NO_JOIN_PROOF",
+    "NHTSA": "METADATA_PREFIX_READY_NO_JOIN_PROOF",
+    "NOAA_QCEW": "METADATA_ACCESS_ONLY_NO_JOIN_PROOF"
+  },
+  "candidate_event_rows_opened": false,
+  "checked_urls": {
+    "BLS_QCEW_2024_county_csv_header": [
+      "https://data.bls.gov/cew/data/api/2024/1/area/01001.csv",
+      "csv_header"
+    ],
+    "Census_CBP_2023_county_zip": [
+      "https://www2.census.gov/programs-surveys/cbp/datasets/2023/cbp23co.zip",
+      "zip"
+    ],
+    "NHTSA_campaign_dictionary": [
+      "https://static.nhtsa.gov/odi/ffdd/rcl/RCL.txt",
+      "text_dictionary"
+    ],
+    "NHTSA_campaign_zip": [
+      "https://static.nhtsa.gov/odi/ffdd/rcl/FLAT_RCL_POST_2010.zip",
+      "zip"
+    ],
+    "NHTSA_quarterly_dictionary": [
+      "https://static.nhtsa.gov/odi/ffdd/rcl/RCL_Qtrly_Rpts.txt",
+      "text_dictionary"
+    ],
+    "NHTSA_quarterly_zip": [
+      "https://static.nhtsa.gov/odi/ffdd/rcl/FLAT_RCL_Qrtly_Rpts.zip",
+      "zip"
+    ],
+    "NOAA_StormEvents_2023_gzip": [
+      "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/StormEvents_details-ftp_v1.0_d2023_c20260323.csv.gz",
+      "gzip"
+    ]
+  },
+  "frozen_contract_commit": "86f2bf09b4fd2c38dbd89608eb80a368a428c7e5",
+  "future_outcomes_opened": false,
+  "incremental_monetary_cost_usd": 0,
+  "issue": 226,
+  "no_f01_authorization": true,
+  "observed_utc": "2026-10-17T10:01:05.955756+00:00",
+  "reports": {
+    "BLS_QCEW_2024_county_csv_header": {
+      "bytes_read": 896,
+      "content_length_header": "143274",
+      "content_prefix_hex": null,
+      "content_type": "text/csv",
+      "csv_header": "\"area_fips\",\"own_code\",\"industry_code\",\"agglvl_code\",\"size_code\",\"year\",\"qtr\",\"disclosure_code\",\"qtrly_estabs\",\"month1_emplvl\",\"month2_emplvl\",\"month3_emplvl\",\"total_qtrly_wages\",\"taxable_qtrly_wages\",\"qtrly_contributions\",\"avg_wkly_wage\",\"lq_disclosure_code\",\"lq_qtrly_estabs\",\"lq_month1_emplvl\",\"lq_month2_emplvl\",\"lq_month3_emplvl\",\"lq_total_qtrly_wages\",\"lq_taxable_qtrly_wages\",\"lq_qtrly_contributions\",\"lq_avg_wkly_wage\",\"oty_disclosure_code\",\"oty_qtrly_estabs_chg\",\"oty_qtrly_estabs_pct_chg\",\"oty_month1_emplvl_chg\",\"oty_month1_emplvl_pct_chg\",\"oty_month2_emplvl_chg\",\"oty_month2_emplvl_pct_chg\",\"oty_month3_emplvl_chg\",\"oty_month3_emplvl_pct_chg\",\"oty_total_qtrly_wages_chg\",\"oty_total_qtrly_wages_pct_chg\",\"oty_taxable_qtrly_wages_chg\",\"oty_taxable_qtrly_wages_pct_chg\",\"oty_qtrly_contributions_chg\",\"oty_qtrly_contributions_pct_chg\",\"oty_avg_wkly_wage_chg\",\"oty_avg_wkly_wage_pct_chg\"",
+      "dictionary_prefix_sha256": null,
+      "http_status": 200,
+      "kind": "csv_header",
+      "last_modified_header": "Tue, 02 Sep 2025 11:09:33 GMT",
+      "method": "GET",
+      "outcome_or_case_rows_parsed": false,
+      "prefix_format_verified": false,
+      "redirect_location": null,
+      "status": "CSV_HEADER_ONLY_ACCESSED",
+      "url": "https://data.bls.gov/cew/data/api/2024/1/area/01001.csv"
+    },
+    "Census_CBP_2023_county_zip": {
+      "bytes_read": 4,
+      "content_length_header": "12919520",
+      "content_prefix_hex": "504b0304",
+      "content_type": "application/zip",
+      "csv_header": null,
+      "dictionary_prefix_sha256": null,
+      "http_status": 200,
+      "kind": "zip",
+      "last_modified_header": "Thu, 26 Jun 2025 12:00:28 GMT",
+      "method": "GET",
+      "outcome_or_case_rows_parsed": false,
+      "prefix_format_verified": true,
+      "redirect_location": null,
+      "status": "PREFIX_MATCH_BODY_UNINSPECTED",
+      "url": "https://www2.census.gov/programs-surveys/cbp/datasets/2023/cbp23co.zip"
+    },
+    "NHTSA_campaign_dictionary": {
+      "bytes_read": 3053,
+      "content_length_header": "3053",
+      "content_prefix_hex": null,
+      "content_type": "application/octet-stream",
+      "csv_header": null,
+      "dictionary_prefix_sha256": "3438cc7e4131efa401dfe6437dbe035607e092c129155dfb411d459d58802203",
+      "http_status": 200,
+      "kind": "text_dictionary",
+      "last_modified_header": "Sat, 17 Oct 2026 07:04:57 GMT",
+      "method": "GET",
+      "outcome_or_case_rows_parsed": false,
+      "prefix_format_verified": false,
+      "redirect_location": null,
+      "status": "DICTIONARY_PREFIX_ACCESSED_ONLY",
+      "url": "https://static.nhtsa.gov/odi/ffdd/rcl/RCL.txt"
+    },
+    "NHTSA_campaign_zip": {
+      "bytes_read": 4,
+      "content_length_header": null,
+      "content_prefix_hex": "504b0304",
+      "content_type": "application/octet-stream",
+      "csv_header": null,
+      "dictionary_prefix_sha256": null,
+      "http_status": 200,
+      "kind": "zip",
+      "last_modified_header": "Sat, 17 Oct 2026 07:04:57 GMT",
+      "method": "GET",
+      "outcome_or_case_rows_parsed": false,
+      "prefix_format_verified": true,
+      "redirect_location": null,
+      "status": "PREFIX_MATCH_BODY_UNINSPECTED",
+      "url": "https://static.nhtsa.gov/odi/ffdd/rcl/FLAT_RCL_POST_2010.zip"
+    },
+    "NHTSA_quarterly_dictionary": {
+      "bytes_read": 1244,
+      "content_length_header": "1244",
+      "content_prefix_hex": null,
+      "content_type": "application/octet-stream",
+      "csv_header": null,
+      "dictionary_prefix_sha256": "b76ab35073e3585a56912f058aa0a53dc865de68c8ea12b687faa32f3952c8bf",
+      "http_status": 200,
+      "kind": "text_dictionary",
+      "last_modified_header": "Sat, 17 Oct 2026 07:04:57 GMT",
+      "method": "GET",
+      "outcome_or_case_rows_parsed": false,
+      "prefix_format_verified": false,
+      "redirect_location": null,
+      "status": "DICTIONARY_PREFIX_ACCESSED_ONLY",
+      "url": "https://static.nhtsa.gov/odi/ffdd/rcl/RCL_Qtrly_Rpts.txt"
+    },
+    "NHTSA_quarterly_zip": {
+      "bytes_read": 4,
+      "content_length_header": null,
+      "content_prefix_hex": "504b0304",
+      "content_type": "application/octet-stream",
+      "csv_header": null,
+      "dictionary_prefix_sha256": null,
+      "http_status": 200,
+      "kind": "zip",
+      "last_modified_header": "Sat, 17 Oct 2026 07:04:57 GMT",
+      "method": "GET",
+      "outcome_or_case_rows_parsed": false,
+      "prefix_format_verified": true,
+      "redirect_location": null,
+      "status": "PREFIX_MATCH_BODY_UNINSPECTED",
+      "url": "https://static.nhtsa.gov/odi/ffdd/rcl/FLAT_RCL_Qrtly_Rpts.zip"
+    },
+    "NOAA_StormEvents_2023_gzip": {
+      "bytes_read": 2,
+      "content_length_header": "12888092",
+      "content_prefix_hex": "1f8b",
+      "content_type": "application/gzip",
+      "csv_header": null,
+      "dictionary_prefix_sha256": null,
+      "http_status": 200,
+      "kind": "gzip",
+      "last_modified_header": "Mon, 23 Mar 2026 17:10:49 GMT",
+      "method": "GET",
+      "outcome_or_case_rows_parsed": false,
+      "prefix_format_verified": true,
+      "redirect_location": null,
+      "status": "PREFIX_MATCH_BODY_UNINSPECTED",
+      "url": "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/StormEvents_details-ftp_v1.0_d2023_c20260323.csv.gz"
+    }
+  },
+  "research": "PORTFOLIO-R58",
+  "row_level_joins_computed": false,
+  "scientific_stage": "PRE_SCORE_TRANSPORT_AND_DICTIONARY_ONLY",
+  "scores_assigned": false
+}
