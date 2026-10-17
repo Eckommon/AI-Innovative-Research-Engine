@@ -68,7 +68,7 @@ def inspect(url, kind, opener=None):
                 r["bytes_read"] = len(buf)
                 r["dictionary_prefix_sha256"] = hashlib.sha256(buf).hexdigest()
                 # Text is a source field dictionary, NEVER candidate event records.
-                r["status"] = "DICTIONARY_PREFIX_ACCESSED_ONLY"
+                r["status"] = ("DICTIONARY_PREFIX_ACCESSED_ONLY" if buf and b"<html" not in buf[:128].lower() and "html" not in (r["content_type"] or "").lower() else "DICTIONARY_FORMAT_NOT_VERIFIED")
             elif kind == "csv_header":
                 # Consume only the first CSV header line. Do not touch an outcome record.
                 chars = bytearray()
@@ -79,7 +79,7 @@ def inspect(url, kind, opener=None):
                     chars.extend(c)
                 r["bytes_read"] = len(chars) + (1 if c == b"\n" else 0)
                 r["csv_header"] = chars.decode("utf-8-sig", errors="replace").strip("\r")
-                r["status"] = "CSV_HEADER_ONLY_ACCESSED"
+                r["status"] = ("CSV_HEADER_ONLY_ACCESSED" if all(field in r["csv_header"] for field in ("area_fips", "industry_code", "year")) else "CSV_HEADER_FORMAT_NOT_VERIFIED")
     except urllib.error.HTTPError as ex:
         r["http_status"] = ex.code
         r["content_type"] = ex.headers.get("Content-Type")
