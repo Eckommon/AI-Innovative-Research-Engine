@@ -1,0 +1,46 @@
+name: R59 first-party frontdoor metadata-only preflight
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/portfolio-r59-source-frontdoors.yml']
+permissions:
+  contents: write
+concurrency:
+  group: portfolio-r59-frontdoor-first-check
+  cancel-in-progress: false
+jobs:
+  frozen-source-entry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Confirm locked R59 separate from frozen E01 and no old result
+        run: |
+          test ! -e research/PORTFOLIO-R59/evidence/source-frontdoor-01.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          a=json.loads(Path('context/checkpoint.json').read_text())
+          b=json.loads(Path('context/SECONDARY_TRACKS.json').read_text())
+          assert a['active_issue']==203 and a['last_decision']=='DEC-318'
+          assert b['parallel_issue']==237 and b['parallel_research']=='PORTFOLIO-R59'
+          assert b['frozen_contract_commit']=='22f68ed247c7e6468c60b477fadd17e30d199076'
+          assert b['cost_usd']==0
+          assert Path('research/PORTFOLIO-R59/README.md').is_file()
+          PY
+          git cat-file -e 22f68ed247c7e6468c60b477fadd17e30d199076^{commit}
+      - name: Eight synthetic source-access and never-open-outcome guards
+        run: |
+          python -m py_compile tools/inspect_portfolio_r59_source_frontdoors.py
+          python -m unittest discover -s tests -p 'test_portfolio_r59_source_frontdoors.py' -v
+      - name: Probe six exact institution/company/patent *metadata-only* source frontdoors
+        run: python -m tools.inspect_portfolio_r59_source_frontdoors
+      - name: Commit original immutable first evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/PORTFOLIO-R59/evidence/source-frontdoor-01.json research/PORTFOLIO-R59/evidence/source-frontdoor-01.md
+          git commit -m 'Record immutable R59 source-only metadata access preflight'
+          git push origin HEAD:main
