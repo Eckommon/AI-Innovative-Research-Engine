@@ -1,0 +1,46 @@
+name: FEMA-EPA-Q01 independent D2 paired-source qualification
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/source-qual-fema-epa-q01.yml'
+permissions:
+  contents: write
+concurrency:
+  group: source-qual-fema-epa-q01-once
+  cancel-in-progress: false
+jobs:
+  exact-first-party-body:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check preregistration, two-track authority and absence of prior Q01
+        run: |
+          test ! -e research/SOURCE-REGISTRY-S01/qualifications/FEMA-EPA-Q01/evidence/source-qualification-01.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          cp=json.loads(Path('context/checkpoint.json').read_text())
+          side=json.loads(Path('context/SECONDARY_TRACKS.json').read_text())
+          assert cp['active_issue']==203 and cp['last_decision']=='DEC-318'
+          assert side['parallel_issue']==244 and side['parallel_research']=='SOURCE-REGISTRY-S01'
+          assert side['cost_usd']==0
+          assert Path('research/SOURCE-REGISTRY-S01/qualifications/FEMA-EPA-Q01/CONTRACT.md').is_file()
+          PY
+          git cat-file -e 73adb0a35e143d7871b243a64a94aea8132c40ed^{commit}
+      - name: Run 12 synthetic no-outcome full-byte guard cases
+        run: |
+          python -m py_compile tools/qualify_source_fema_epa_q01.py
+          python -m unittest discover -s tests -p 'test_source_qual_fema_epa_q01.py' -v
+      - name: Acquire only two frozen official government source bytes and CSV headers
+        run: python -m tools.qualify_source_fema_epa_q01
+      - name: Commit original source hashes and qualifications (no raw bytes)
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/SOURCE-REGISTRY-S01/qualifications/FEMA-EPA-Q01/evidence/source-qualification-01.json research/SOURCE-REGISTRY-S01/qualifications/FEMA-EPA-Q01/evidence/source-qualification-01.md
+          git commit -m 'Record immutable FEMA EPA Q01 bounded original-source qualification'
+          git push origin HEAD:main
