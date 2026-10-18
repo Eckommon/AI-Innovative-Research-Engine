@@ -1,0 +1,45 @@
+name: SOURCE-REGISTRY-S01 twelve-gate source evidence registry
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/source-registry-s01.yml']
+permissions:
+  contents: write
+concurrency:
+  group: source-registry-s01-once
+  cancel-in-progress: false
+jobs:
+  evidence-only-registry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify original S01 contract and independent CMS checkpoint
+        run: |
+          test ! -e research/SOURCE-REGISTRY-S01/evidence/attempt-01.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          a=json.loads(Path('context/SECONDARY_TRACKS.json').read_text())
+          assert c['active_issue']==203 and c['last_decision']=='DEC-318'
+          assert a['parallel_issue']==244 and a['parallel_research']=='SOURCE-REGISTRY-S01'
+          assert a['frozen_contract_commit']=='6370bbd5a8f3bdedba3e84ec2e296b9a05eb04d5'
+          assert a['cost_usd']==0
+          PY
+          git cat-file -e 6370bbd5a8f3bdedba3e84ec2e296b9a05eb04d5^{commit}
+      - name: Twelve safe-registry offline tests
+        run: |
+          python -m py_compile tools/build_source_registry_s01.py
+          python -m unittest discover -s tests -p 'test_source_registry_s01.py' -v
+      - name: Build frozen S01 12-gate summary-only immutable result
+        run: python -m tools.build_source_registry_s01
+      - name: Persist one complete S01 registry evidence commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/SOURCE-REGISTRY-S01/REGISTRY.json research/SOURCE-REGISTRY-S01/REGISTRY.md research/SOURCE-REGISTRY-S01/evidence/attempt-01.json research/SOURCE-REGISTRY-S01/evidence/attempt-01.md
+          git commit -m 'Record immutable S01 12-gate source-grade evidence registry'
+          git push origin HEAD:main
