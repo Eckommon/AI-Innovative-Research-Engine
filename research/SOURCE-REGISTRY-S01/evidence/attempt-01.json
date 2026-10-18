@@ -1,0 +1,464 @@
+{
+  "contract_commit": "6370bbd5a8f3bdedba3e84ec2e296b9a05eb04d5",
+  "cost_usd": 0,
+  "future_outcomes_opened": false,
+  "gate_count": 12,
+  "gates": [
+    {
+      "detail": [],
+      "gate": 1,
+      "name": "all exact frozen evidence paths exist",
+      "passed": true
+    },
+    {
+      "detail": 8,
+      "gate": 2,
+      "name": "stable non-PII names, first party URLs, citations",
+      "passed": true
+    },
+    {
+      "detail": [
+        [
+          "CMS-NPI",
+          "D4",
+          {
+            "18/18": true,
+            "346,859": true
+          }
+        ],
+        [
+          "NOAA-QCEW",
+          "D2",
+          {
+            "12,888,092": true,
+            "17/18": true
+          }
+        ],
+        [
+          "EPA-RCRA",
+          "D3",
+          {
+            "119,521,531": true,
+            "13/18": true,
+            "18/18": true
+          }
+        ],
+        [
+          "FDIC-BRANCH",
+          "D3",
+          {
+            "15 of 18": true,
+            "18/18": true,
+            "UNINUMBR": true
+          }
+        ],
+        [
+          "NHTSA-RCL",
+          "D1",
+          {
+            "FLAT_RCL_POST_2010.zip": true,
+            "PREFIX_MATCH_BODY_UNINSPECTED": true
+          }
+        ],
+        [
+          "NCES-IPEDS",
+          "D1",
+          {
+            "IPEDS_2023_24_final_zip": true,
+            "zip_magic_verified": true
+          }
+        ],
+        [
+          "SEC-BULK",
+          "D0",
+          {
+            "403": true,
+            "SEC_submissions_bulk_zip": true
+          }
+        ],
+        [
+          "USPTO-FEES",
+          "D0",
+          {
+            "403": true,
+            "USPTO": true
+          }
+        ]
+      ],
+      "gate": 3,
+      "name": "bounded conservative grade and evidence tokens",
+      "passed": true
+    },
+    {
+      "detail": "D1 prefix-only; D2 full source",
+      "gate": 4,
+      "name": "magic distinguished from full SHA and row authority",
+      "passed": true
+    },
+    {
+      "detail": 8,
+      "gate": 5,
+      "name": "publication vs observed timestamps separated",
+      "passed": true
+    },
+    {
+      "detail": 8,
+      "gate": 6,
+      "name": "key state qualified separately",
+      "passed": true
+    },
+    {
+      "detail": 8,
+      "gate": 7,
+      "name": "terminal science retained independent of grade",
+      "passed": true
+    },
+    {
+      "detail": true,
+      "gate": 8,
+      "name": "primary CMS cohort remains reserved",
+      "passed": true
+    },
+    {
+      "detail": true,
+      "gate": 9,
+      "name": "negative transport preserved",
+      "passed": true
+    },
+    {
+      "detail": true,
+      "gate": 10,
+      "name": "no source files/outcomes fetched or emitted",
+      "passed": true
+    },
+    {
+      "detail": 8,
+      "gate": 11,
+      "name": "bilingual deterministic JSON/MD registry",
+      "passed": true
+    },
+    {
+      "detail": "HOLD_NEED_DUAL_D2_SOURCE",
+      "gate": 12,
+      "name": "one conservative subsequent decision",
+      "passed": true
+    }
+  ],
+  "individual_or_company_rows_emitted": false,
+  "issue": 244,
+  "next_source_decision": "HOLD_NEED_DUAL_D2_SOURCE",
+  "no_raw_public_source_zip_opened": true,
+  "passed": 12,
+  "research": "SOURCE-REGISTRY-S01",
+  "sources": [
+    {
+      "evidence": [
+        "research/US-CMS-NPI-N01/RESULT.md"
+      ],
+      "experimental_authorization": false,
+      "grade": "D4",
+      "id": "CMS-NPI",
+      "key": "NPI",
+      "key_state": "VERIFIED_N01",
+      "name_ko": "CMS NPI 코호트",
+      "observed_time": "SEE_IMMUTABLE_REFERENCED_EVIDENCE",
+      "original_science_disposition": "PASS_N01_E01_WAIT_SOURCE",
+      "publication_time": "UNVERIFIED_SEPARATE_FROM_OBSERVED_TIME",
+      "required": [
+        "346,859",
+        "18/18"
+      ],
+      "required_tokens_present": {
+        "18/18": true,
+        "346,859": true
+      },
+      "reserved": true,
+      "reusable": false,
+      "source_body": "N01 baseline evidence; D4 design; future weekly UNOBSERVED",
+      "source_evidence": [
+        {
+          "bytes": 2483,
+          "path": "research/US-CMS-NPI-N01/RESULT.md",
+          "sha256": "aaddaa63bd808f1bea820c353835564eafc24d4c8c760a3915c0b9d8f66a1371"
+        }
+      ],
+      "status": "PASS_N01_E01_WAIT_SOURCE",
+      "url": "https://download.cms.gov/nppes/NPI_Files.html",
+      "vintage": "2026-10-12 baseline"
+    },
+    {
+      "evidence": [
+        "research/US-NOAA-QCEW-F01/RESULT.md",
+        "research/US-NOAA-QCEW-F01/evidence/attempt-01.json"
+      ],
+      "experimental_authorization": false,
+      "grade": "D2",
+      "id": "NOAA-QCEW",
+      "key": "County FIPS; frozen F01 exact route failed",
+      "key_state": "UNQUALIFIED_F01",
+      "name_ko": "NOAA×BLS 기상·고용",
+      "observed_time": "SEE_IMMUTABLE_REFERENCED_EVIDENCE",
+      "original_science_disposition": "TERMINAL_F01_HOLD_GATE12",
+      "publication_time": "UNVERIFIED_SEPARATE_FROM_OBSERVED_TIME",
+      "required": [
+        "17/18",
+        "12,888,092"
+      ],
+      "required_tokens_present": {
+        "12,888,092": true,
+        "17/18": true
+      },
+      "reserved": false,
+      "reusable": false,
+      "source_body": "Full official NOAA + BLS SHA/byte evidence",
+      "source_evidence": [
+        {
+          "bytes": 6111,
+          "path": "research/US-NOAA-QCEW-F01/RESULT.md",
+          "sha256": "0a55daadcf9026da7e7b27ff81a2945d4bfa7428b140f488a86504b124736294"
+        },
+        {
+          "bytes": 11744,
+          "path": "research/US-NOAA-QCEW-F01/evidence/attempt-01.json",
+          "sha256": "a2d3e5299999384ddc399951ae1dc559a9852746296786141e2bc7e166b35d15"
+        }
+      ],
+      "status": "TERMINAL_F01_HOLD_GATE12",
+      "url": "https://www.ncei.noaa.gov/pub/data/swdi/stormevents/csvfiles/",
+      "vintage": "NOAA 2023, QCEW 2024 Q1"
+    },
+    {
+      "evidence": [
+        "research/US-EPA-RCRA-F01/RESULT.md",
+        "research/US-EPA-RCRA-N01/RESULT.md"
+      ],
+      "experimental_authorization": false,
+      "grade": "D3",
+      "id": "EPA-RCRA",
+      "key": "HANDLER_ID",
+      "key_state": "VERIFIED_F01",
+      "name_ko": "EPA RCRA 시설",
+      "observed_time": "SEE_IMMUTABLE_REFERENCED_EVIDENCE",
+      "original_science_disposition": "PASS_F01_TERMINAL_N01_HOLD",
+      "publication_time": "UNVERIFIED_SEPARATE_FROM_OBSERVED_TIME",
+      "required": [
+        "119,521,531",
+        "18/18",
+        "13/18"
+      ],
+      "required_tokens_present": {
+        "119,521,531": true,
+        "13/18": true,
+        "18/18": true
+      },
+      "reserved": false,
+      "reusable": false,
+      "source_body": "Full RCRA official ZIP SHA/bytes",
+      "source_evidence": [
+        {
+          "bytes": 2682,
+          "path": "research/US-EPA-RCRA-F01/RESULT.md",
+          "sha256": "93ac8b485cc1990f6154e91f30b44d024a077dc3d805e359ce13ca137f9cc823"
+        },
+        {
+          "bytes": 2801,
+          "path": "research/US-EPA-RCRA-N01/RESULT.md",
+          "sha256": "b146cc140c3360cb3e3f14beba39ad202f77f2292dad4c40e07f96017b28900d"
+        }
+      ],
+      "status": "PASS_F01_TERMINAL_N01_HOLD",
+      "url": "https://rcrapublic.epa.gov/rcrainfoweb/action/modules/main/home",
+      "vintage": "2026-10 baseline"
+    },
+    {
+      "evidence": [
+        "research/US-FDIC-BRANCH-F01/RESULT.md",
+        "research/US-FDIC-BRANCH-N01/RESULT.md"
+      ],
+      "experimental_authorization": false,
+      "grade": "D3",
+      "id": "FDIC-BRANCH",
+      "key": "UNINUMBR",
+      "key_state": "VERIFIED_F01",
+      "name_ko": "FDIC 은행 지점",
+      "observed_time": "SEE_IMMUTABLE_REFERENCED_EVIDENCE",
+      "original_science_disposition": "PASS_F01_TERMINAL_N01_HOLD",
+      "publication_time": "UNVERIFIED_SEPARATE_FROM_OBSERVED_TIME",
+      "required": [
+        "18/18",
+        "15 of 18",
+        "UNINUMBR"
+      ],
+      "required_tokens_present": {
+        "15 of 18": true,
+        "18/18": true,
+        "UNINUMBR": true
+      },
+      "reserved": false,
+      "reusable": false,
+      "source_body": "Official annual source asserted by original immutable F01",
+      "source_evidence": [
+        {
+          "bytes": 2976,
+          "path": "research/US-FDIC-BRANCH-F01/RESULT.md",
+          "sha256": "f583ae028d5c610555a334a2f7eb1ce9148f5490a06f4f86acc0c945873634f8"
+        },
+        {
+          "bytes": 2807,
+          "path": "research/US-FDIC-BRANCH-N01/RESULT.md",
+          "sha256": "0f601dc102927eb84ee2ae572c9de2f56833305066d625c35201494761dc2df8"
+        }
+      ],
+      "status": "PASS_F01_TERMINAL_N01_HOLD",
+      "url": "https://www.fdic.gov/resources/bankers/",
+      "vintage": "2022-2024 structural"
+    },
+    {
+      "evidence": [
+        "research/PORTFOLIO-R58/evidence/source-endpoint-preflight-01.json"
+      ],
+      "experimental_authorization": false,
+      "grade": "D1",
+      "id": "NHTSA-RCL",
+      "key": "Campaign ID",
+      "key_state": "UNVERIFIED",
+      "name_ko": "NHTSA 리콜 자료",
+      "observed_time": "SEE_IMMUTABLE_REFERENCED_EVIDENCE",
+      "original_science_disposition": "PREFIX_ONLY_EXACT_JOIN_UNVERIFIED",
+      "publication_time": "UNVERIFIED_SEPARATE_FROM_OBSERVED_TIME",
+      "required": [
+        "PREFIX_MATCH_BODY_UNINSPECTED",
+        "FLAT_RCL_POST_2010.zip"
+      ],
+      "required_tokens_present": {
+        "FLAT_RCL_POST_2010.zip": true,
+        "PREFIX_MATCH_BODY_UNINSPECTED": true
+      },
+      "reserved": false,
+      "reusable": false,
+      "source_body": "ZIP magic only",
+      "source_evidence": [
+        {
+          "bytes": 7181,
+          "path": "research/PORTFOLIO-R58/evidence/source-endpoint-preflight-01.json",
+          "sha256": "5a34de1807a584482bf03bf63d4a1610a10d3a73cbd9038057091f8c6fcbe2e3"
+        }
+      ],
+      "status": "PREFIX_ONLY_EXACT_JOIN_UNVERIFIED",
+      "url": "https://static.nhtsa.gov/odi/ffdd/rcl/FLAT_RCL_POST_2010.zip",
+      "vintage": "2026-10 observed first-byte"
+    },
+    {
+      "evidence": [
+        "research/PORTFOLIO-R59/evidence/source-frontdoor-01.json"
+      ],
+      "experimental_authorization": false,
+      "grade": "D1",
+      "id": "NCES-IPEDS",
+      "key": "UNITID to OPEID6",
+      "key_state": "UNVERIFIED",
+      "name_ko": "NCES IPEDS",
+      "observed_time": "SEE_IMMUTABLE_REFERENCED_EVIDENCE",
+      "original_science_disposition": "IPEDS_MAGIC_SCORECARD_403",
+      "publication_time": "UNVERIFIED_SEPARATE_FROM_OBSERVED_TIME",
+      "required": [
+        "IPEDS_2023_24_final_zip",
+        "zip_magic_verified"
+      ],
+      "required_tokens_present": {
+        "IPEDS_2023_24_final_zip": true,
+        "zip_magic_verified": true
+      },
+      "reserved": false,
+      "reusable": false,
+      "source_body": "ZIP magic only; other source 403",
+      "source_evidence": [
+        {
+          "bytes": 3319,
+          "path": "research/PORTFOLIO-R59/evidence/source-frontdoor-01.json",
+          "sha256": "c0d4886a884a87627e36f3bb4b21840ebfd89345540edd2291eb046a342deecc"
+        }
+      ],
+      "status": "IPEDS_MAGIC_SCORECARD_403",
+      "url": "https://nces.ed.gov/ipeds/tablefiles/zipfiles/IPEDS_2023-24_Final.zip",
+      "vintage": "2023-24 final"
+    },
+    {
+      "evidence": [
+        "research/PORTFOLIO-R59/evidence/source-frontdoor-01.json",
+        "research/PORTFOLIO-R59/evidence/sec-zip-fourbyte-02.json"
+      ],
+      "experimental_authorization": false,
+      "grade": "D0",
+      "id": "SEC-BULK",
+      "key": "CIK",
+      "key_state": "DOCUMENTED_ONLY",
+      "name_ko": "SEC 공시 대량 파일",
+      "observed_time": "SEE_IMMUTABLE_REFERENCED_EVIDENCE",
+      "original_science_disposition": "TRANSPORT_403_HEAD_AND_GET",
+      "publication_time": "UNVERIFIED_SEPARATE_FROM_OBSERVED_TIME",
+      "required": [
+        "SEC_submissions_bulk_zip",
+        "403"
+      ],
+      "required_tokens_present": {
+        "403": true,
+        "SEC_submissions_bulk_zip": true
+      },
+      "reserved": false,
+      "reusable": false,
+      "source_body": "NO BODY; HTTP 403, not file absence",
+      "source_evidence": [
+        {
+          "bytes": 3319,
+          "path": "research/PORTFOLIO-R59/evidence/source-frontdoor-01.json",
+          "sha256": "c0d4886a884a87627e36f3bb4b21840ebfd89345540edd2291eb046a342deecc"
+        },
+        {
+          "bytes": 1099,
+          "path": "research/PORTFOLIO-R59/evidence/sec-zip-fourbyte-02.json",
+          "sha256": "b2470481351eb483b78bcc8fc24e6cae4d87b25fc656c5c9e6870ffe9d29809a"
+        }
+      ],
+      "status": "TRANSPORT_403_HEAD_AND_GET",
+      "url": "https://www.sec.gov/Archives/edgar/daily-index/bulkdata/submissions.zip",
+      "vintage": "2026-10 probe"
+    },
+    {
+      "evidence": [
+        "research/PORTFOLIO-R59/evidence/source-frontdoor-01.json"
+      ],
+      "experimental_authorization": false,
+      "grade": "D0",
+      "id": "USPTO-FEES",
+      "key": "Patent ID",
+      "key_state": "DOCUMENTED_ONLY",
+      "name_ko": "USPTO 특허·수수료",
+      "observed_time": "SEE_IMMUTABLE_REFERENCED_EVIDENCE",
+      "original_science_disposition": "PORTAL_METADATA_API_ACCESS_RESTRICTED",
+      "publication_time": "UNVERIFIED_SEPARATE_FROM_OBSERVED_TIME",
+      "required": [
+        "USPTO",
+        "403"
+      ],
+      "required_tokens_present": {
+        "403": true,
+        "USPTO": true
+      },
+      "reserved": false,
+      "reusable": false,
+      "source_body": "Metadata/portal only, login/key barrier",
+      "source_evidence": [
+        {
+          "bytes": 3319,
+          "path": "research/PORTFOLIO-R59/evidence/source-frontdoor-01.json",
+          "sha256": "c0d4886a884a87627e36f3bb4b21840ebfd89345540edd2291eb046a342deecc"
+        }
+      ],
+      "status": "PORTAL_METADATA_API_ACCESS_RESTRICTED",
+      "url": "https://data.uspto.gov/",
+      "vintage": "2026-10 portal inspection"
+    }
+  ],
+  "status": "PASS_SOURCE_REGISTRY_S01_OPERATIONAL_ONLY"
+}
