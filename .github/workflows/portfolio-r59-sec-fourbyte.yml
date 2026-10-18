@@ -1,0 +1,87 @@
+name: R59 SEC two exact bulk ZIP four-byte discriminator
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/portfolio-r59-sec-fourbyte.yml']
+permissions:
+  contents: write
+concurrency:
+  group: portfolio-r59-sec-exact-zip-fourbyte-once
+  cancel-in-progress: false
+jobs:
+  exact-sec-zip-discriminator:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify prior original evidence and strict canonical two tracks
+        run: |
+          test ! -e research/PORTFOLIO-R59/evidence/sec-zip-fourbyte-02.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          c=json.loads(Path('context/checkpoint.json').read_text())
+          m=json.loads(Path('context/SECONDARY_TRACKS.json').read_text())
+          a=json.loads(Path('research/PORTFOLIO-R59/evidence/source-frontdoor-01.json').read_text())
+          assert c['active_issue']==203 and c['last_decision']=='DEC-318'
+          assert m['parallel_issue']==237 and m['frozen_contract_commit']=='22f68ed247c7e6468c60b477fadd17e30d199076'
+          assert m['cost_usd']==0
+          assert a['results']['SEC_companyfacts_bulk_zip']['status']==403
+          assert a['results']['SEC_submissions_bulk_zip']['status']==403
+          assert a['future_events_exposed'] is False
+          PY
+      - name: Exact SEC data-published ZIP first four bytes only, no redirects or filings
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from urllib.request import Request, build_opener, HTTPRedirectHandler
+          from urllib.error import HTTPError,URLError
+          import json,datetime
+          urls={
+           'SEC_submissions_bulk_zip':'https://www.sec.gov/Archives/edgar/daily-index/bulkdata/submissions.zip',
+           'SEC_companyfacts_bulk_zip':'https://www.sec.gov/Archives/edgar/daily-index/xbrl/companyfacts.zip'
+          }
+          class NoRedirect(HTTPRedirectHandler):
+              def redirect_request(self,req,fp,code,msg,headers,newurl):return None
+          opener=build_opener(NoRedirect())
+          result={}
+          for name,url in urls.items():
+              v={'url':url,'method':'GET','range':'bytes=0-3','status':None,'bytes_read':0,'zip_magic':False,'content_type':None,'location':None}
+              req=Request(url,method='GET',headers={
+                  'Range':'bytes=0-3',
+                  'User-Agent':'AI-Innovative-Research-Engine (https://github.com/Eckommon/AI-Innovative-Research-Engine; public metadata only)',
+                  'Accept':'application/zip,application/octet-stream'})
+              try:
+                  with opener.open(req,timeout=22) as r:
+                      v['status']=r.status
+                      v['content_type']=r.headers.get('Content-Type')
+                      v['location']=r.headers.get('Location')
+                      if r.geturl()!=url:raise RuntimeError('source redirect')
+                      data=r.read(4)
+                      v['bytes_read']=len(data)
+                      v['zip_magic']=data in (bytes.fromhex('504b0304'),bytes.fromhex('504b0506'),bytes.fromhex('504b0708'))
+              except HTTPError as e:
+                  v['status']=e.code
+                  v['location']=e.headers.get('Location')
+                  v['content_type']=e.headers.get('Content-Type')
+              except (URLError,OSError,TimeoutError) as e:
+                  v['transport_error_type']=type(e).__name__
+              result[name]=v
+          obj={'research':'PORTFOLIO-R59','issue':237,'at_utc':datetime.datetime.now(datetime.timezone.utc).isoformat(),'frozen_contract_commit':'22f68ed247c7e6468c60b477fadd17e30d199076','attempt':'bounded_sec_only_followup_after_HEAD_403','results':result,'source_zip_members_opened':False,'filer_or_company_numeric_rows_opened':False,'future_sec_amendment_events_opened':False,'scorecard_scoring_done':False,'cost_usd':0,'disposition':'SEC_BULK_ZIP_PREFIX_OBSERVED_ONLY' if all(x['zip_magic'] for x in result.values()) else 'SEC_BULK_ZIP_ACCESS_NOT_VERIFIED'}
+          p=Path('research/PORTFOLIO-R59/evidence/sec-zip-fourbyte-02.json')
+          p.parent.mkdir(parents=True,exist_ok=True)
+          p.write_text(json.dumps(obj,indent=2,sort_keys=True)+'\n')
+          lines=['# R59 SEC first four bytes / SEC 압축 원본 4바이트 확인','','- Recorded: '+obj['at_utc'],'- Disposition: '+obj['disposition'],'','| File | HTTP | Bytes | ZIP prefix |','|---|---:|---:|---|']
+          for k,v in result.items():lines.append('| '+k+' | '+str(v['status'])+' | '+str(v['bytes_read'])+' | '+str(v['zip_magic'])+' |')
+          p.with_suffix('.md').write_text('\n'.join(lines)+'\n\nNo ZIP members, filer facts, 10-K/A outcomes or private records opened. HEAD/GET blocking not file nonexistence. Cost 0 USD.\n')
+          print('R59_SEC_EXACT_FOURBYTE',obj['disposition'],{k:x['status'] for k,x in result.items()})
+          PY
+      - name: Persist one immutable diagnostic
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/PORTFOLIO-R59/evidence/sec-zip-fourbyte-02.json research/PORTFOLIO-R59/evidence/sec-zip-fourbyte-02.md
+          git commit -m 'Record bounded SEC R59 bulk ZIP four-byte source discriminator'
+          git push origin HEAD:main
