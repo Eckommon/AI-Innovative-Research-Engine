@@ -158,26 +158,25 @@ jobs:
                           or secondary.get('canonical_active_issue') != 203
                           or active_number != 203
                           or status.get('active_research') != 'US-CMS-NPI-E01'
-                          or secondary.get('parallel_issue') != 237
-                          or secondary.get('parallel_research') != 'PORTFOLIO-R59'
-                          or secondary.get('frozen_contract_commit') != '22f68ed247c7e6468c60b477fadd17e30d199076'
-                          or secondary.get('frozen_contract_path') != 'research/PORTFOLIO-R59/README.md'
-                          or secondary.get('terminal_predecessor_issue') != 233
+                          or secondary.get('parallel_issue') != 244
+                          or secondary.get('parallel_research') != 'SOURCE-REGISTRY-S01'
+                          or secondary.get('frozen_contract_commit') != '6370bbd5a8f3bdedba3e84ec2e296b9a05eb04d5'
+                          or secondary.get('frozen_contract_path') != 'research/SOURCE-REGISTRY-S01/README.md'
+                          or secondary.get('terminal_predecessor_issue') != 237
                           or secondary.get('cost_usd') != 0
                           or secondary.get('max_parallel_open_issues') != 1
-                          or not Path('research/PORTFOLIO-R59/README.md').is_file()
-                          or not Path('research/US-NOAA-QCEW-F01/RESULT.md').is_file()):
-                      raise SystemExit('STATE_DRIFT_DETECTED: R59 secondary not fully preregistered')
-                  closed_f01 = api('/issues/233')
-                  if closed_f01.get('state') != 'closed':
-                      raise SystemExit('STATE_DRIFT_DETECTED: scientific NOAA F01 #233 must be closed')
-                  secondary_issue = api('/issues/237')
-                  if (secondary_issue.get('state') != 'open'
-                          or not secondary_issue.get('title','').startswith('PORTFOLIO-R59')
-                          or '22f68ed247c7e6468c60b477fadd17e30d199076'
-                          not in secondary_issue.get('body','')):
-                      raise SystemExit('STATE_DRIFT_DETECTED: R59 secondary Issue #237 contract differs')
-                  permitted.add(237)
+                          or not Path('research/SOURCE-REGISTRY-S01/README.md').is_file()
+                          or not Path('research/PORTFOLIO-R59/RESULT.md').is_file()):
+                      raise SystemExit('STATE_DRIFT_DETECTED: S01 secondary preregistration invalid')
+                  prior=api('/issues/237')
+                  if prior.get('state')!='closed':
+                      raise SystemExit('STATE_DRIFT_DETECTED: R59 #237 must be closed')
+                  auxiliary=api('/issues/244')
+                  if (auxiliary.get('state')!='open'
+                          or not auxiliary.get('title','').startswith('SOURCE-REGISTRY-S01')
+                          or '6370bbd5a8f3bdedba3e84ec2e296b9a05eb04d5' not in auxiliary.get('body','')):
+                      raise SystemExit('STATE_DRIFT_DETECTED: S01 Issue #244 does not match frozen contract')
+                  permitted.add(244)
               if open_numbers != permitted:
                   raise SystemExit(
                       f'STATE_DRIFT_DETECTED: open Issue set {sorted(open_numbers)} '
