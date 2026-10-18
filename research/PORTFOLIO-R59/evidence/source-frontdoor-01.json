@@ -1,0 +1,92 @@
+{
+  "checked_at_utc": "2026-10-18T06:13:24.970937+00:00",
+  "contract_commit": "22f68ed247c7e6468c60b477fadd17e30d199076",
+  "exact_unit_joins_evaluated": false,
+  "full_zip_downloads": false,
+  "future_events_exposed": false,
+  "incremental_monetary_cost_usd": 0,
+  "issue": 237,
+  "outcome_rows_opened": false,
+  "research": "PORTFOLIO-R59",
+  "results": {
+    "IPEDS_2023_24_final_zip": {
+      "content_type": "application/x-zip-compressed",
+      "length_header": "94499516",
+      "location": null,
+      "method": "GET",
+      "outcome_rows_opened": false,
+      "read_bytes": 4,
+      "result": "ZIP_SIGNATURE_ONLY_NOT_ARCHIVE_PROVEN",
+      "status": 200,
+      "url": "https://nces.ed.gov/ipeds/tablefiles/zipfiles/IPEDS_2023-24_Final.zip",
+      "zip_magic_verified": true
+    },
+    "SCORECARD_2025_institution_zip": {
+      "content_type": "text/html",
+      "length_header": "919",
+      "location": null,
+      "method": "GET",
+      "outcome_rows_opened": false,
+      "read_bytes": 0,
+      "result": "HTTP_UNVERIFIED_NO_ABSENCE_CLAIM",
+      "status": 403,
+      "url": "https://ed-public-download.scorecard.network/downloads/Most-Recent-Cohorts-Institution_05192025.zip",
+      "zip_magic_verified": false
+    },
+    "SEC_companyfacts_bulk_zip": {
+      "content_type": "text/html",
+      "length_header": "4819",
+      "location": null,
+      "method": "HEAD",
+      "outcome_rows_opened": false,
+      "read_bytes": 0,
+      "result": "HTTP_UNVERIFIED_NO_ABSENCE_CLAIM",
+      "status": 403,
+      "url": "https://www.sec.gov/Archives/edgar/daily-index/xbrl/companyfacts.zip",
+      "zip_magic_verified": false
+    },
+    "SEC_submissions_bulk_zip": {
+      "content_type": "text/html",
+      "length_header": "4819",
+      "location": null,
+      "method": "HEAD",
+      "outcome_rows_opened": false,
+      "read_bytes": 0,
+      "result": "HTTP_UNVERIFIED_NO_ABSENCE_CLAIM",
+      "status": 403,
+      "url": "https://www.sec.gov/Archives/edgar/daily-index/bulkdata/submissions.zip",
+      "zip_magic_verified": false
+    },
+    "USPTO_fee_catalog": {
+      "content_type": "text/html",
+      "length_header": "20666",
+      "location": null,
+      "method": "HEAD",
+      "outcome_rows_opened": false,
+      "read_bytes": 0,
+      "result": "HEAD_METADATA_ONLY_NOT_SOURCE_BODY_PROVEN",
+      "status": 200,
+      "url": "https://data.uspto.gov/bulkdata/datasets/ptmnfee2",
+      "zip_magic_verified": false
+    },
+    "USPTO_product_api_documented_key": {
+      "content_type": "application/json",
+      "length_header": "0",
+      "location": null,
+      "method": "HEAD",
+      "outcome_rows_opened": false,
+      "read_bytes": 0,
+      "result": "HTTP_UNVERIFIED_NO_ABSENCE_CLAIM",
+      "status": 403,
+      "url": "https://api.uspto.gov/api/v1/datasets/products/search",
+      "zip_magic_verified": false
+    }
+  },
+  "scores_assigned": false,
+  "source_semantics": {
+    "College_Scorecard": "ED catalog-linked nongov distribution; UNITID/OPEID6 join untested; 2025 file vintage, not proven latest",
+    "IPEDS": "NCES 2023-24 final archive, published link; UNITID untested",
+    "SEC": "SEC bulk ZIP HEAD only; EDGAR CIK and filings future event rows unopened",
+    "USPTO": "USPTO portal/API officially declares 2026 sign-in and API key requirements; HEAD cannot authorize bypass"
+  }
+}
