@@ -1,4 +1,5 @@
 name: SOURCE-REGISTRY-S01 twelve-gate source evidence registry
+# Evidence-only mapping correction: FDIC original wording is '15 of 18', no science gates altered
 on:
   push:
     branches: [main]
