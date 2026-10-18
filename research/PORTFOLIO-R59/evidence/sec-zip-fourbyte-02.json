@@ -1,0 +1,35 @@
+{
+  "at_utc": "2026-10-18T06:16:07.750694+00:00",
+  "attempt": "bounded_sec_only_followup_after_HEAD_403",
+  "cost_usd": 0,
+  "disposition": "SEC_BULK_ZIP_ACCESS_NOT_VERIFIED",
+  "filer_or_company_numeric_rows_opened": false,
+  "frozen_contract_commit": "22f68ed247c7e6468c60b477fadd17e30d199076",
+  "future_sec_amendment_events_opened": false,
+  "issue": 237,
+  "research": "PORTFOLIO-R59",
+  "results": {
+    "SEC_companyfacts_bulk_zip": {
+      "bytes_read": 0,
+      "content_type": "text/html",
+      "location": null,
+      "method": "GET",
+      "range": "bytes=0-3",
+      "status": 403,
+      "url": "https://www.sec.gov/Archives/edgar/daily-index/xbrl/companyfacts.zip",
+      "zip_magic": false
+    },
+    "SEC_submissions_bulk_zip": {
+      "bytes_read": 0,
+      "content_type": "text/html",
+      "location": null,
+      "method": "GET",
+      "range": "bytes=0-3",
+      "status": 403,
+      "url": "https://www.sec.gov/Archives/edgar/daily-index/bulkdata/submissions.zip",
+      "zip_magic": false
+    }
+  },
+  "scorecard_scoring_done": false,
+  "source_zip_members_opened": false
+}
