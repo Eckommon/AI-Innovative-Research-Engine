@@ -1,0 +1,49 @@
+{
+  "checked_at_utc": "2026-10-19T13:51:21.430533+00:00",
+  "contract_sha": "48843c9979336dcd10fdff984f458277062d6f20",
+  "disposition": "SOURCE_CANDIDATE_OBSERVED_US_CMS_NPI_E01",
+  "earliest_observed_qualifying": {
+    "end": "2026-10-18",
+    "href": "https://download.cms.gov/nppes/NPPES_Data_Dissemination_101226_101826_Weekly_V2.zip",
+    "label": "NPPES Data Dissemination V.2 - Weekly Update - 101226_101826",
+    "start": "2026-10-12",
+    "token": "101226_101826"
+  },
+  "future_membership_opened": false,
+  "historical_anchor_confirmed_by_preflight03": true,
+  "historical_anchor_still_visible": true,
+  "immutable_anchor": "100526_101126",
+  "incremental_monetary_cost_usd": 0,
+  "qualifying_count": 1,
+  "requires_explicit_issue_marker_before_experiment": true,
+  "research": "US-CMS-NPI-E01",
+  "scientific_first_published_weekly_adjudicated": false,
+  "source_page": {
+    "byte_count": 7093,
+    "content_type": "text/html",
+    "etag": "\"b0c0fb67b3bc26825eb6c70e4021ef10:1792393329.929484\"",
+    "http_date": "Mon, 19 Oct 2026 13:51:21 GMT",
+    "http_status": 200,
+    "last_modified": "Mon, 19 Oct 2026 07:02:09 GMT",
+    "sha256": "b87118ec38baca7ebef00a423a488b241a1814dbb66d18dececdec3e01f582a6",
+    "url": "https://download.cms.gov/nppes/NPI_Files.html"
+  },
+  "type": "FIRST_OBSERVED_SOURCE_CANDIDATE_METADATA_ONLY",
+  "weekly_listings": [
+    {
+      "end": "2026-10-11",
+      "href": "https://download.cms.gov/nppes/NPPES_Data_Dissemination_100526_101126_Weekly_V2.zip",
+      "label": "NPPES Data Dissemination V.2 - Weekly Update - 100526_101126",
+      "start": "2026-10-05",
+      "token": "100526_101126"
+    },
+    {
+      "end": "2026-10-18",
+      "href": "https://download.cms.gov/nppes/NPPES_Data_Dissemination_101226_101826_Weekly_V2.zip",
+      "label": "NPPES Data Dissemination V.2 - Weekly Update - 101226_101826",
+      "start": "2026-10-12",
+      "token": "101226_101826"
+    }
+  ],
+  "zip_body_opened": false
+}
