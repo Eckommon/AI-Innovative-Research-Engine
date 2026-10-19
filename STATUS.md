@@ -5,7 +5,7 @@ active_research: US-CMS-NPI-E01
 last_completed_issue: 202
 last_completed_research: US-CMS-NPI-N01
 last_decision: DEC-318
-updated: 2026-10-18
+updated: 2026-10-19
 ---
 
 # Project Status / 프로젝트 상태
@@ -57,3 +57,14 @@ Do not execute E01 yet. Rely on the guarded scheduled metadata-only source watch
 No monthly substitution or later-week selection is permitted.
 
 Incremental monetary cost remains **0 USD**.
+
+## Two-track verified checkpoint — 2026-10-19 / 두 트랙 추가 실증
+
+**Track A / CMS E01:** [Run 39165726998](https://github.com/Eckommon/AI-Innovative-Research-Engine/actions/runs/39165726998) at 05:58 KST passed 39/39 offline regression tests, latest observed official CMS listing still `WAIT_SOURCE_US_CMS_NPI_E01 qualifying=0` with unchanged SHA; no future ZIP opened. After the frozen 09:00 KST threshold, independent **one-time HTTP HEAD-only** [Run 39180911699](https://github.com/Eckommon/AI-Innovative-Research-Engine/actions/runs/39180911699) probed the exact *hypothetical* `101226_101826` V2 URL at **09:28 KST**, returned **HTTP 404 / NOT_ESTABLISHED**, as persisted in [immutable HEAD receipt](research/US-CMS-NPI-E01/HEAD_ADVISORY_ATTEMPT01_RESULT.md). A guessed URL 404 **does not demonstrate CMS official non-publication**. First qualifying official CMS HTML listing, independent publication lineage review and explicit E01 approval are still required. **E01 `DEC-318`, 346,859 pairs, Issue #203 unchanged.**
+
+**Track B / independent Q02:** Original county-AQI **Q01 remains terminal `HOLD_SOURCE_ACCESS_OR_SCHEMA`**. New product-specific prospective Q02 contract was frozen first at `5afdbf003d5fc423c0bc9fa78b5b4461f4d41f38`, prior to first access. [Q02 Run 39181178342](https://github.com/Eckommon/AI-Innovative-Research-Engine/actions/runs/39181178342) then passed **8/8 synthetic offline safeguards**, retrieved only EPA **2024 annual concentration-by-monitor ZIP**, original HTTP 200 / **3,979,542 bytes** / full SHA `8af92d1ec8ac9271babc84e3512cb2068e6a8849af438448c4170fd9e99ea5bb` and verified the required 7/7 literal header labels from its 55-column CSV without opening records. Reused FEMA previous immutable full-body D2 receipt without another FEMA request. [Independent Q02 RESULT](research/SOURCE-REGISTRY-S01/qualifications/FEMA-EPA-Q02/RESULT.md): `DUAL_D2_SOURCE_HEADERS_ONLY_Q02` **source qualification, not a county-key join PASS or science authorization**.
+
+**Exact next permitted Track B gate:** independent preregistered FEMA special-county semantics × EPA monitor-grain/2024 temporal/representativeness support design *before opening any source identity rows*. Must not infer D3 or create a new F01/R60 from a D2 header receipt. S01 Issue #244 remains operational-only. The original 8-resource S01 registry 12/12 proof stays immutable and is not silently rewritten. No third open Issue.
+
+**Incremental monetary cost / 추가 금전비용: 0 USD.**
+
