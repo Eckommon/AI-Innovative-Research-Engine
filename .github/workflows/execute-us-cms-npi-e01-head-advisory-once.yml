@@ -1,0 +1,106 @@
+name: CMS E01 one-time hypothetical weekly HEAD advisory receipt
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/execute-us-cms-npi-e01-head-advisory-once.yml'
+permissions:
+  contents: write
+concurrency:
+  group: us-cms-npi-e01-head-advisory-attempt-01
+  cancel-in-progress: false
+jobs:
+  one-time-head-metadata-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Fail closed on contract and two-track guard
+        id: gate
+        run: |
+          set -euo pipefail
+          git cat-file -e 5afdbf003d5fc423c0bc9fa78b5b4461f4d41f38^{commit}
+          test -f research/US-CMS-NPI-E01/HEAD_ADVISORY_EXECUTION01_CONTRACT.md
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from datetime import datetime,timezone
+          cp=json.loads(Path("context/checkpoint.json").read_text())
+          secondary=json.loads(Path("context/SECONDARY_TRACKS.json").read_text())
+          assert cp["active_issue"]==203 and cp["last_decision"]=="DEC-318"
+          assert secondary["parallel_issue"]==244 and secondary["cost_usd"]==0
+          assert datetime.now(timezone.utc).isoformat()>="2026-10-19T00:00:00+00:00"
+          assert not Path("research/US-CMS-NPI-E01/evidence/source-candidate-01.json").exists()
+          assert not Path("research/US-CMS-NPI-E01/evidence/attempt-01.json").exists()
+          assert not Path("research/US-CMS-NPI-E01/evidence/head-advisory-attempt-01.json").exists()
+          PY
+      - name: Existing offline HEAD-only boundary regressions
+        run: |
+          python -m py_compile tools/probe_us_cms_npi_e01_weekly_head.py
+          python -m unittest discover -s tests -p 'test_us_cms_npi_e01_head_advisory.py' -v
+      - name: Exactly one hypothetical official URL HEAD; never GET or ZIP body
+        env:
+          HEAD_RUN_ID: ${{ github.run_id }}
+        run: |
+          python - <<'PY'
+          import json,os
+          from datetime import datetime,timezone
+          from pathlib import Path
+          from tools import probe_us_cms_npi_e01_weekly_head as head
+          out=Path("research/US-CMS-NPI-E01/evidence/head-advisory-attempt-01.json")
+          assert not out.exists()
+          observed=datetime.now(timezone.utc)
+          # The existing source module checks release time, exact URL and no redirects.
+          try:
+              result=head.probe(now=observed)
+              verdict="ADVISORY_ONLY_NOT_E01_RELEASE"
+              error_type=None
+          except Exception as error:
+              # No second request or retry; no traceback/source data in receipt.
+              result=head.classify(None,{})
+              verdict="HOLD_HEAD_TRANSPORT_UNVERIFIED"
+              error_type=type(error).__name__
+          proof={
+              "id":"US-CMS-NPI-E01-HEAD-ADVISORY-ATTEMPT01",
+              "contract_commit":"5afdbf003d5fc423c0bc9fa78b5b4461f4d41f38",
+              "github_run_id":os.environ["HEAD_RUN_ID"],
+              "observed_utc":observed.isoformat(),
+              "disposition":verdict,
+              "transport_error_type":error_type,
+              **result,
+              "authoritative_listing_candidate_exists":False,
+              "original_issue_marker_written":False,
+              "canonical_watcher_unchanged":True,
+              "scientific_runner_unchanged":True,
+              "source_release_authorized":False,
+              "empirical_e01_attempt_executed":False,
+          }
+          assert proof["zip_body_opened"] is False
+          assert proof["provider_outcomes_opened"] is False
+          assert proof["e01_experiment_authorized"] is False
+          out.write_text(json.dumps(proof,sort_keys=True,indent=2)+"\n",encoding="utf-8")
+          md=out.with_suffix(".md")
+          md.write_text(
+              "# CMS HEAD attempt 01 / CMS 최초 주차 HEAD 단독 실증\n\n"
+              f"- Verdict / 판정: `{verdict}`\n"
+              f"- Run: `{proof['github_run_id']}`\n"
+              f"- Observed UTC: `{proof['observed_utc']}`\n"
+              f"- Method / 방식: `HEAD` only; exact hypothetical official URL\n"
+              f"- HTTP status: `{proof['http_status']}`\n"
+              f"- Error type (if any): `{error_type}`\n"
+              f"- Signal (not publication): `{proof['signal']}`\n"
+              "- Original CMS source watcher and independent first-publication lineage remain exclusive.\n"
+              "- 기존 CMS 공식 목록 감시와 독립 공개 계보승인만 최초 출처판정의 근거가 됩니다.\n"
+              "- ZIP/provider data opened: **false**; E01 experiment: **not authorized**.\n"
+              "- Incremental monetary cost: **0 USD**.\n",encoding="utf-8")
+          print("HEAD_ADVISORY_VERDICT",verdict,"HTTP",proof["http_status"],"ERROR",error_type)
+          PY
+      - name: Persist immutable metadata-only advisory receipt
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-CMS-NPI-E01/evidence/head-advisory-attempt-01.json research/US-CMS-NPI-E01/evidence/head-advisory-attempt-01.md
+          git commit -m 'Record immutable one-time CMS E01 hypothetical HEAD metadata receipt'
+          git push origin HEAD:main
