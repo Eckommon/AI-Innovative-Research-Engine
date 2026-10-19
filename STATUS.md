@@ -5,7 +5,7 @@ active_research: US-CMS-NPI-E01
 last_completed_issue: 202
 last_completed_research: US-CMS-NPI-N01
 last_decision: DEC-318
-updated: 2026-10-19
+updated: 2026-10-18
 ---
 
 # Project Status / 프로젝트 상태
