@@ -1,0 +1,50 @@
+name: FEMA-EPA-Q02 independent monitor-product source-header qualification
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/source-qual-fema-epa-q02.yml'
+permissions:
+  contents: write
+concurrency:
+  group: source-qual-fema-epa-q02-once
+  cancel-in-progress: false
+jobs:
+  verified-epa-monitor-source-once:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Confirm prospective contract and unchanged canonical primary
+        run: |
+          set -euo pipefail
+          git cat-file -e 5afdbf003d5fc423c0bc9fa78b5b4461f4d41f38^{commit}
+          test -f research/SOURCE-REGISTRY-S01/qualifications/FEMA-EPA-Q02/CONTRACT.md
+          test ! -e research/SOURCE-REGISTRY-S01/qualifications/FEMA-EPA-Q02/evidence/source-qualification-01.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          cp=json.loads(Path("context/checkpoint.json").read_text())
+          parallel=json.loads(Path("context/SECONDARY_TRACKS.json").read_text())
+          assert cp["active_issue"]==203 and cp["last_decision"]=="DEC-318"
+          assert parallel["parallel_issue"]==244 and parallel["cost_usd"]==0
+          assert not Path("research/US-CMS-NPI-E01/evidence/attempt-01.json").exists()
+          assert not Path("research/US-CMS-NPI-E01/evidence/source-candidate-01.json").exists()
+          from tools.qualify_source_fema_epa_q02 import verify_existing_q01
+          verify_existing_q01()
+          PY
+      - name: Eight synthetic offline Q02 header/data-firewall tests
+        run: |
+          python -m py_compile tools/qualify_source_fema_epa_q02.py
+          python -m unittest discover -s tests -p 'test_source_qual_fema_epa_q02.py' -v
+      - name: Download exact frozen EPA annual concentration ZIP; read only CSV header
+        run: python -m tools.qualify_source_fema_epa_q02
+      - name: Preserve immutable Q02 new-product qualification only
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/SOURCE-REGISTRY-S01/qualifications/FEMA-EPA-Q02/evidence/source-qualification-01.json research/SOURCE-REGISTRY-S01/qualifications/FEMA-EPA-Q02/evidence/source-qualification-01.md
+          git commit -m 'Record independent EPA monitor Q02 official full-byte and header qualification'
+          git push origin HEAD:main
