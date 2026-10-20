@@ -1,0 +1,339 @@
+{
+  "attempt": 1,
+  "attempt_valid": true,
+  "baseline_deactivation": {
+    "bytes": 2679243,
+    "content_length_header": "2679243",
+    "content_type": "application/zip",
+    "etag": "\"1d9e99cc49dfeebcb4a67b9b8a9f9d2c:1791788469.859903\"",
+    "final_url": "https://download.cms.gov/nppes/NPPES_Deactivated_NPI_Report_101226_V2.zip",
+    "last_modified": "Mon, 12 Oct 2026 07:01:10 GMT",
+    "requested_url": "https://download.cms.gov/nppes/NPPES_Deactivated_NPI_Report_101226_V2.zip",
+    "sha256": "fcceb74b2cc99e5e64582edefbb2f891128dc7d1ee7268eb52a961b1b1b998a1",
+    "status": 200
+  },
+  "baseline_full": {
+    "bytes": 1159720219,
+    "content_length_header": "1159720219",
+    "content_type": "application/zip",
+    "etag": "\"dffc19807a2ffc7300b104b66732e994:1791790182.261161\"",
+    "final_url": "https://download.cms.gov/nppes/NPPES_Data_Dissemination_October_2026_V2.zip",
+    "last_modified": "Mon, 12 Oct 2026 07:31:11 GMT",
+    "requested_url": "https://download.cms.gov/nppes/NPPES_Data_Dissemination_October_2026_V2.zip",
+    "sha256": "45b17c5fbfb919c4fa4878c0bbbeca979c4fa3bc87a6d733682b61a3e63c662e",
+    "status": 200
+  },
+  "causal_claim_made": false,
+  "chosen_future_source": {
+    "end": "2026-10-18",
+    "href": "https://download.cms.gov/nppes/NPPES_Data_Dissemination_101226_101826_Weekly_V2.zip",
+    "label": "NPPES Data Dissemination V.2 - Weekly Update - 101226_101826",
+    "start": "2026-10-12",
+    "token": "101226_101826"
+  },
+  "closure_quality_interpretation_made": false,
+  "contract_sha": "48843c9979336dcd10fdff984f458277062d6f20",
+  "disposition": "INCONCLUSIVE_US_CMS_NPI_E01",
+  "failed_gates": [],
+  "future_deactivation_membership_opened": true,
+  "future_update_body_opened": true,
+  "future_weekly_zip": {
+    "bytes": 6642415,
+    "content_length_header": "6642415",
+    "content_type": "application/zip",
+    "etag": "\"d3294db5c433ee5f677bf9d4a8327084:1792393329.262554\"",
+    "final_url": "https://download.cms.gov/nppes/NPPES_Data_Dissemination_101226_101826_Weekly_V2.zip",
+    "last_modified": "Mon, 19 Oct 2026 07:02:09 GMT",
+    "requested_url": "https://download.cms.gov/nppes/NPPES_Data_Dissemination_101226_101826_Weekly_V2.zip",
+    "sha256": "cc5a3c9d833e4e107ae92e20f7ccb575998e6596caae60a5ffcdba1e4c763398",
+    "status": 200
+  },
+  "gates": [
+    {
+      "gate": 1,
+      "observed": {
+        "active_issue": 203,
+        "active_research": "US-CMS-NPI-E01",
+        "checkpoint_id": "CHK-20261013-US-CMS-NPI-E01-ACTIVE",
+        "last_completed_issue": 202,
+        "last_completed_research": "US-CMS-NPI-N01",
+        "last_decision": "DEC-318",
+        "updated": "2026-10-18"
+      },
+      "pass": true
+    },
+    {
+      "gate": 2,
+      "observed": {
+        "contract_sha": "48843c9979336dcd10fdff984f458277062d6f20",
+        "issue": 203
+      },
+      "pass": true
+    },
+    {
+      "gate": 3,
+      "observed": {
+        "deactivation_sha256": "fcceb74b2cc99e5e64582edefbb2f891128dc7d1ee7268eb52a961b1b1b998a1",
+        "expected_deactivation": "fcceb74b2cc99e5e64582edefbb2f891128dc7d1ee7268eb52a961b1b1b998a1",
+        "expected_full": "45b17c5fbfb919c4fa4878c0bbbeca979c4fa3bc87a6d733682b61a3e63c662e",
+        "full_sha256": "45b17c5fbfb919c4fa4878c0bbbeca979c4fa3bc87a6d733682b61a3e63c662e"
+      },
+      "pass": true
+    },
+    {
+      "gate": 4,
+      "observed": {
+        "age_smd": 0.008089949330951387,
+        "common_strata": 31791,
+        "control": 1568503,
+        "eligible": 1978439,
+        "exposed": 409936,
+        "location_smd": 0.01358494151547246,
+        "pairs": 346859,
+        "unique_controls": 346859,
+        "unique_exposed": 346859
+      },
+      "pass": true
+    },
+    {
+      "gate": 5,
+      "observed": {
+        "expected": 346859,
+        "pairs": 346859,
+        "unique_controls": 346859,
+        "unique_exposed": 346859
+      },
+      "pass": true
+    },
+    {
+      "gate": 6,
+      "observed": {
+        "age_smd": 0.008089949330951387,
+        "expected_age_smd": 0.008089949330951387,
+        "expected_location_smd": 0.01358494151547246,
+        "location_smd": 0.01358494151547246,
+        "tolerance": 1e-06
+      },
+      "pass": true
+    },
+    {
+      "gate": 7,
+      "observed": {
+        "anchor_present": true,
+        "anchor_token": "100526_101126",
+        "preflight_commit": "0e81620e9cbea5dcddb558791e786d1565dfaf0f",
+        "preflight_zip_body_opened": false
+      },
+      "pass": true
+    },
+    {
+      "gate": 8,
+      "observed": {
+        "chosen_token": "101226_101826",
+        "earliest": true,
+        "end": "2026-10-18",
+        "qualifying_count": 1,
+        "start": "2026-10-12"
+      },
+      "pass": true
+    },
+    {
+      "gate": 9,
+      "observed": {
+        "bytes": 6642415,
+        "content_length_header": "6642415",
+        "content_type": "application/zip",
+        "etag": "\"d3294db5c433ee5f677bf9d4a8327084:1792393329.262554\"",
+        "final_url": "https://download.cms.gov/nppes/NPPES_Data_Dissemination_101226_101826_Weekly_V2.zip",
+        "last_modified": "Mon, 19 Oct 2026 07:02:09 GMT",
+        "requested_url": "https://download.cms.gov/nppes/NPPES_Data_Dissemination_101226_101826_Weekly_V2.zip",
+        "sha256": "cc5a3c9d833e4e107ae92e20f7ccb575998e6596caae60a5ffcdba1e4c763398",
+        "status": 200,
+        "zip_members": [
+          "endpoint_pfile_20261012-20261018.csv",
+          "endpoint_pfile_20261012-20261018_fileheader.csv",
+          "othername_pfile_20261012-20261018.csv",
+          "othername_pfile_20261012-20261018_fileheader.csv",
+          "pl_pfile_20261012-20261018.csv",
+          "pl_pfile_20261012-20261018_fileheader.csv",
+          "npidata_pfile_20261012-20261018.csv",
+          "npidata_pfile_20261012-20261018_fileheader.csv",
+          "NPPES_Data_Dissemination_CodeValues.pdf",
+          "NPPES_Data_Dissemination_Readme_v.2.pdf"
+        ]
+      },
+      "pass": true
+    },
+    {
+      "gate": 10,
+      "observed": {
+        "deactivation": "NPI Deactivation Date",
+        "entity": "Entity Type Code",
+        "main_member": "npidata_pfile_20261012-20261018.csv",
+        "npi": "NPI",
+        "reactivation": "NPI Reactivation Date"
+      },
+      "pass": true
+    },
+    {
+      "gate": 11,
+      "observed": {
+        "future_nonblank_npis": 32691,
+        "rate": 1.0,
+        "threshold": 0.99999,
+        "valid_exact_npis": 32691
+      },
+      "pass": true
+    },
+    {
+      "gate": 12,
+      "observed": {
+        "all_exact_join_locked": true,
+        "counted_event_npis": 202,
+        "identity_repair": false
+      },
+      "pass": true
+    },
+    {
+      "gate": 13,
+      "observed": {
+        "counted_in_window": 202,
+        "event_window_end": "2026-10-18",
+        "event_window_start": "2026-10-12",
+        "locked_candidate_deactivation_rows": 202,
+        "outside_window_or_unparsed": 0,
+        "parse_rate": 1.0,
+        "parseable_dates": 202,
+        "threshold": 0.999
+      },
+      "pass": true
+    },
+    {
+      "gate": 14,
+      "observed": {
+        "a_both": 0,
+        "b_exposed_only": 30,
+        "c_control_only": 42,
+        "d_neither": 346787,
+        "expected": 346859,
+        "sum": 346859
+      },
+      "pass": true
+    },
+    {
+      "gate": 15,
+      "observed": {
+        "reactivation_erases_event": false,
+        "same_update_reactivation_control": 0,
+        "same_update_reactivation_exposed": 0
+      },
+      "pass": true
+    },
+    {
+      "gate": 16,
+      "observed": {
+        "control_events": 42,
+        "control_risk": 0.00012108666633992487,
+        "discordant_pairs": 72,
+        "exposed_events": 30,
+        "exposed_risk": 8.649047595708919e-05,
+        "marginal_risk_ratio": 0.7142857142857143,
+        "matched_odds_ratio": 0.7142857142857143,
+        "mcnemar_exact_p": 0.1945051658673991,
+        "minimum_event_support_satisfied": true,
+        "mor_ci95": [
+          0.43168261444288,
+          1.168664599840469
+        ],
+        "risk_difference_per_100k": -3.4596190382835683,
+        "total_deactivated_matched_npis": 72
+      },
+      "pass": true
+    },
+    {
+      "gate": 17,
+      "observed": {
+        "causal_claim": false,
+        "closure_quality_interpretation": false,
+        "identity_repair": false,
+        "later_week_selected": false,
+        "monthly_substitution": false,
+        "provider_ranking": false
+      },
+      "pass": true
+    },
+    {
+      "gate": 18,
+      "observed": {
+        "baseline_deactivation_sha": "fcceb74b2cc99e5e64582edefbb2f891128dc7d1ee7268eb52a961b1b1b998a1",
+        "baseline_full_sha": "45b17c5fbfb919c4fa4878c0bbbeca979c4fa3bc87a6d733682b61a3e63c662e",
+        "contract_sha": "48843c9979336dcd10fdff984f458277062d6f20",
+        "cost_usd": 0,
+        "future_weekly_sha": "cc5a3c9d833e4e107ae92e20f7ccb575998e6596caae60a5ffcdba1e4c763398",
+        "runner_sha": "a67fdf7df8e3e48be246c239f6cd8daf52e3135e4973009a2c29e934b4fd627f"
+      },
+      "pass": true
+    }
+  ],
+  "github_run_id": "39349516324",
+  "identity_repair_used": false,
+  "incremental_monetary_cost_usd": 0,
+  "issue": 203,
+  "later_week_selected": false,
+  "monthly_substitution_used": false,
+  "pair_table": {
+    "a_both": 0,
+    "b_exposed_only": 30,
+    "c_control_only": 42,
+    "d_neither": 346787
+  },
+  "pass_count": 18,
+  "provider_ranking_computed": false,
+  "research": "US-CMS-NPI-E01",
+  "runner_sha256": "a67fdf7df8e3e48be246c239f6cd8daf52e3135e4973009a2c29e934b4fd627f",
+  "source_discovery": {
+    "listings": [
+      {
+        "end": "2026-10-11",
+        "href": "https://download.cms.gov/nppes/NPPES_Data_Dissemination_100526_101126_Weekly_V2.zip",
+        "label": "NPPES Data Dissemination V.2 - Weekly Update - 100526_101126",
+        "start": "2026-10-05",
+        "token": "100526_101126"
+      },
+      {
+        "end": "2026-10-18",
+        "href": "https://download.cms.gov/nppes/NPPES_Data_Dissemination_101226_101826_Weekly_V2.zip",
+        "label": "NPPES Data Dissemination V.2 - Weekly Update - 101226_101826",
+        "start": "2026-10-12",
+        "token": "101226_101826"
+      }
+    ],
+    "page": {
+      "bytes": 7093,
+      "content_type": "text/html",
+      "etag": "\"b0c0fb67b3bc26825eb6c70e4021ef10:1792393329.929484\"",
+      "final_url": "https://download.cms.gov/nppes/NPI_Files.html",
+      "last_modified": "Mon, 19 Oct 2026 07:02:09 GMT",
+      "requested_url": "https://download.cms.gov/nppes/NPI_Files.html",
+      "sha256": "b87118ec38baca7ebef00a423a488b241a1814dbb66d18dececdec3e01f582a6",
+      "status": 200
+    }
+  },
+  "statistics": {
+    "control_events": 42,
+    "control_risk": 0.00012108666633992487,
+    "discordant_pairs": 72,
+    "exposed_events": 30,
+    "exposed_risk": 8.649047595708919e-05,
+    "marginal_risk_ratio": 0.7142857142857143,
+    "matched_odds_ratio": 0.7142857142857143,
+    "mcnemar_exact_p": 0.1945051658673991,
+    "minimum_event_support_satisfied": true,
+    "mor_ci95": [
+      0.43168261444288,
+      1.168664599840469
+    ],
+    "risk_difference_per_100k": -3.4596190382835683,
+    "total_deactivated_matched_npis": 72
+  }
+}
