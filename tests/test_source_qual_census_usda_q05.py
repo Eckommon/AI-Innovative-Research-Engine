@@ -88,10 +88,6 @@ class TestSourceQ05(unittest.TestCase):
             def fetch(label,url):
                 raw=bodies[label]
                 return raw,{"full_body_bytes":len(raw),"full_body_sha256":hashlib.sha256(raw).hexdigest()}
-            def parse_census(raw):return q.read_census_keys(raw,expected_uncompressed=n)
-            with mock.patch.object(q,"EXPECTED",expected),mock.patch.object(q,"verify_context"),mock.patch.object(q,"read_census_keys",side_effect=parse_census):
-                # call the unbound implementation to avoid patched self-recursion
-                pass
             original=q.read_census_keys
             with mock.patch.object(q,"EXPECTED",expected),mock.patch.object(q,"verify_context"),mock.patch.object(q,"read_census_keys",side_effect=lambda raw:original(raw,expected_uncompressed=n)):
                 result=q.run(fetch=fetch,out=target)
