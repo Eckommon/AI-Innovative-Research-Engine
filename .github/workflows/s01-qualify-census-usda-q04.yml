@@ -1,0 +1,52 @@
+name: S01-Q04 first-party Census USDA originals and immutable per-run source branch
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/s01-qualify-census-usda-q04.yml'
+permissions:
+  contents: write
+concurrency:
+  group: s01-census-usda-q04-single-attempt
+  cancel-in-progress: false
+jobs:
+  frozen-dual-source-header:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Confirm prospective Q04 contract precedes source GET and no terminal-route rescue
+        run: |
+          set -euo pipefail
+          git cat-file -e 2dff1a76c99d5ac0699d21ddd0e0fa0a796eb1b5^{commit}
+          test ! -e research/SOURCE-REGISTRY-S01/qualifications/CENSUS-USDA-Q04/evidence/attempt-01.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from tools.qualify_source_census_usda_q04 import verify_context, CONTRACT_COMMIT
+          assert CONTRACT_COMMIT=="2dff1a76c99d5ac0699d21ddd0e0fa0a796eb1b5"
+          verify_context()
+          assert Path('research/US-CMS-NPI-E01/RESULT.md').is_file()
+          assert Path('research/SOURCE-REGISTRY-S01/qualifications/FEMA-EPA-Q03/RESULT.md').is_file()
+          PY
+      - name: Eleven offline source-boundary tests BEFORE source access
+        run: |
+          python -m py_compile tools/qualify_source_census_usda_q04.py tools/persist_s01_evidence_branch.py
+          python -m unittest discover -s tests -p 'test_source_qual_census_usda_q04.py' -v
+          python -m unittest discover -s tests -p 'test_persist_s01_evidence_branch.py' -v
+      - name: First bounded Census and USDA original-byte GET; inspect headers only
+        run: python -m tools.qualify_source_census_usda_q04
+      - name: Publish terminal PASS or HOLD receipt to unique protected per-run evidence branch
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          python -m tools.persist_s01_evidence_branch \
+            --qualification CENSUS-USDA-Q04 \
+            --run-id "${GITHUB_RUN_ID}" \
+            --json attempt-01.json \
+            --md attempt-01.md --publish
+          echo "Evidence branch is independent; no direct main push, no automatic Q05/F01."
