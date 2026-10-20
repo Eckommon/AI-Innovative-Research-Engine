@@ -1,18 +1,28 @@
 ---
-checkpoint_id: CHK-20261013-US-CMS-NPI-E01-ACTIVE
-active_issue: 203
-active_research: US-CMS-NPI-E01
-last_completed_issue: 202
-last_completed_research: US-CMS-NPI-N01
-last_decision: DEC-318
-updated: 2026-10-18
+checkpoint_id: CHK-20261020-SOURCE-REGISTRY-S01-ACTIVE
+active_issue: 244
+active_research: SOURCE-REGISTRY-S01
+last_completed_issue: 203
+last_completed_research: US-CMS-NPI-E01
+last_decision: DEC-324
+updated: 2026-10-20
 ---
 
 # Project Status / 프로젝트 상태
 
-**State / 상태:** `US_CMS_NPI_E01_ACTIVE__SOURCE_CANDIDATE_REVIEWED__LIVE_RELEASE_VERIFICATION_PENDING`
+## 2026-10-20 canonical terminal and S01 sole-active handoff / E01 종결·S01 단독 운영 전환
 
-US-CMS-NPI-E01 remains active under pre-Issue contract `48843c9979336dcd10fdff984f458277062d6f20`.
+**Latest authority / 최신 정본:** `CHK-20261020-SOURCE-REGISTRY-S01-ACTIVE`, `DEC-324`, only open operations Issue **#244**. Completed science Issue **#203 CLOSED** with frozen first-weekly outcome `INCONCLUSIVE_US_CMS_NPI_E01`. [E01 terminal RESULT](research/US-CMS-NPI-E01/RESULT.md); [original immutable Attempt 01](research/US-CMS-NPI-E01/evidence/attempt-01.json), [actual Actions Run 39349516324](https://github.com/Eckommon/AI-Innovative-Research-Engine/actions/runs/39349516324), **18/18 PASS** at **0 USD**. Exactly **346,859** matched pairs: exposed-only **30**, control-only **42**, both **0**, neither **346,787**; exact McNemar `p=0.1945051658673991`, MOR `0.7142857142857143`, exact 95% CI `[0.43168261444288,1.168664599840469]`. Material difference not validated; equivalence/no-material-difference also not established. No provider closure, clinical-quality or causal claim. The single E01 future-week attempt is spent: **NO additional weekly re-use or re-opening**.
+
+**Historical two-track governance / 지난 병렬 운영 규약:** The old `DEC-318` first-week contract and user-authorized dual-Issue #203/#244 manifest are retained as historical scientific/operational authorities in `registry/DEC-318.md`, `registry/DEC-323.md` and the archived `context/SECONDARY_TRACKS.json`. The sole active research ID `SOURCE-REGISTRY-S01` is an **operational data-source evidence capability**, not a new scientific hypothesis/F01 or license to revive terminal studies. Original S01 12/12 operational registration PASS remains historical.
+
+**Track B exact future work / 후속 재개점:** Preserve original Q01 `HOLD_SOURCE_ACCESS_OR_SCHEMA` and independent Q02 `DUAL_D2_SOURCE_HEADERS_ONLY_Q02`. Q03 source native syntax preflight observed **1,047** overlapping county-format IDs, but original evidence push failed; its immutable [terminal Q03 RESULT](research/SOURCE-REGISTRY-S01/qualifications/FEMA-EPA-Q03/RESULT.md) is **`HOLD_Q03_OPERATIONAL_INTEGRITY`**, NOT F01 PASS. [PERSIST-R01 safety workflow Run 39350611701](https://github.com/Eckommon/AI-Innovative-Research-Engine/actions/runs/39350611701) SUCCESS demonstrated future source evidence can be preserved in unique per-run refs without direct main push, **offline tests only**. Any new source qualification needs an independently prospective contract before row access, and subsequent source evidence requires independent promotion/verification; no Q03 near-miss rescue.
+
+**Next allowed action / 정확한 후속:** Validate final State Integrity with **only Issue #244 OPEN**, terminal #203 closed, decision `DEC-324`, and seven mirrored checkpoint fields. Then under S01, source-first independent candidate qualification, cost 0 USD, no new Issue until strict source/key eligibility. The preceding older dated sections below remain historical context, **not** a second active E01 instruction.
+
+**State / 상태:** `SOURCE_REGISTRY_S01_SOLE_ACTIVE__E01_INCONCLUSIVE_TERMINAL`
+
+**Historical entry / 지난 기록:** US-CMS-NPI-E01 was active under pre-Issue contract `48843c9979336dcd10fdff984f458277062d6f20` before its valid terminal inconclusive result.
 
 Metadata-only Source Preflight 02 is immutable at `a479ce80c25ef13db37d46940aa7d4e14fe8f9c9` and returned `WAIT_SOURCE_US_CMS_NPI_E01`.
 
