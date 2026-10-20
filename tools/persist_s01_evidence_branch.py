@@ -50,7 +50,7 @@ def validate_receipts(root, qualification, json_name, md_name):
         "future_outcome_values_emitted":False,
         "individual_identifiers_emitted":False,
     }.items():
-        if payload.get(field) is not expected and payload.get(field)!=expected:
+        if type(payload.get(field)) is not type(expected) or payload.get(field) != expected:
             raise ValueError("source-only evidence envelope missing: "+field)
     if payload.get("qualification") != qualification:
         raise ValueError("qualification source/evidence ID mismatch")
