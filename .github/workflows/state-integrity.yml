@@ -5,6 +5,7 @@ name: State Integrity / 상태 무결성
 # US-IRS-EO-F01 terminal-state recheck: verify canonical PASS/N01-authorized state after bot-authored finalizer push suppression.
 # Verification trigger: terminal-state push recheck after the Issue-event run remained queued.
 # E01 terminal-state recheck: verify canonical post-finalization state after bot-authored push suppression.
+# DEC-324: terminal CMS E01 #203 closed; only S01 #244 open, archived dual-track mode.
 # US-MINE-F01 terminal-state recheck: verify canonical post-finalization state after bot-authored push suppression.
 # C-EU-F01 terminal-state recheck: verify canonical post-finalization state after bot-authored push/issue suppression.
 # PORTFOLIO-R30 terminal-state recheck: verify canonical post-finalization state after bot-authored push/issue suppression.
@@ -154,33 +155,73 @@ jobs:
               secondary_path = Path('context/SECONDARY_TRACKS.json')
               if secondary_path.exists():
                   secondary = json.loads(secondary_path.read_text(encoding='utf-8'))
-                  if (secondary.get('mode') != 'EXPLICIT_TWO_TRACK_PARALLEL'
-                          or secondary.get('canonical_active_issue') != 203
-                          or active_number != 203
-                          or status.get('active_research') != 'US-CMS-NPI-E01'
-                          or secondary.get('parallel_issue') != 244
-                          or secondary.get('parallel_research') != 'SOURCE-REGISTRY-S01'
-                          or secondary.get('frozen_contract_commit') != '6370bbd5a8f3bdedba3e84ec2e296b9a05eb04d5'
-                          or secondary.get('frozen_contract_path') != 'research/SOURCE-REGISTRY-S01/README.md'
-                          or secondary.get('terminal_predecessor_issue') != 237
-                          or secondary.get('cost_usd') != 0
-                          or secondary.get('max_parallel_open_issues') != 1
+                  mode = secondary.get('mode')
+                  frozen_s01 = '6370bbd5a8f3bdedba3e84ec2e296b9a05eb04d5'
+                  prior = api('/issues/237')
+                  if prior.get('state') != 'closed':
+                      raise SystemExit('STATE_DRIFT_DETECTED: R59 #237 must be closed')
+                  auxiliary = api('/issues/244')
+                  if (auxiliary.get('state') != 'open'
+                          or not auxiliary.get('title', '').startswith('SOURCE-REGISTRY-S01')
+                          or frozen_s01 not in auxiliary.get('body', '')
                           or not Path('research/SOURCE-REGISTRY-S01/README.md').is_file()
                           or not Path('research/PORTFOLIO-R59/RESULT.md').is_file()):
-                      raise SystemExit('STATE_DRIFT_DETECTED: S01 secondary preregistration invalid')
-                  prior=api('/issues/237')
-                  if prior.get('state')!='closed':
-                      raise SystemExit('STATE_DRIFT_DETECTED: R59 #237 must be closed')
-                  auxiliary=api('/issues/244')
-                  if (auxiliary.get('state')!='open'
-                          or not auxiliary.get('title','').startswith('SOURCE-REGISTRY-S01')
-                          or '6370bbd5a8f3bdedba3e84ec2e296b9a05eb04d5' not in auxiliary.get('body','')):
-                      raise SystemExit('STATE_DRIFT_DETECTED: S01 Issue #244 does not match frozen contract')
-                  permitted.add(244)
+                      raise SystemExit('STATE_DRIFT_DETECTED: S01 Issue #244 / contract invalid')
+                  if mode == 'EXPLICIT_TWO_TRACK_PARALLEL':
+                      if (secondary.get('canonical_active_issue') != 203
+                              or active_number != 203
+                              or status.get('active_research') != 'US-CMS-NPI-E01'
+                              or secondary.get('parallel_issue') != 244
+                              or secondary.get('parallel_research') != 'SOURCE-REGISTRY-S01'
+                              or secondary.get('frozen_contract_commit') != frozen_s01
+                              or secondary.get('frozen_contract_path') != 'research/SOURCE-REGISTRY-S01/README.md'
+                              or secondary.get('terminal_predecessor_issue') != 237
+                              or secondary.get('cost_usd') != 0
+                              or secondary.get('max_parallel_open_issues') != 1):
+                          raise SystemExit('STATE_DRIFT_DETECTED: active dual-track authority invalid')
+                      permitted.add(244)
+                  elif mode == 'ARCHIVED_AFTER_E01_TERMINAL_S01_SOLE_ACTIVE':
+                      if (active_number != 244
+                              or status.get('active_research') != 'SOURCE-REGISTRY-S01'
+                              or status.get('last_completed_issue') != '203'
+                              or status.get('last_completed_research') != 'US-CMS-NPI-E01'
+                              or status.get('last_decision') != 'DEC-324'
+                              or secondary.get('sole_active_issue') != 244
+                              or secondary.get('sole_active_research') != 'SOURCE-REGISTRY-S01'
+                              or secondary.get('historical_primary_issue') != 203
+                              or secondary.get('historical_parallel_issue') != 244
+                              or secondary.get('historical_primary_scientific_decision') != 'DEC-318'
+                              or secondary.get('historical_s01_preissue_contract_commit') != frozen_s01
+                              or secondary.get('last_completed_issue') != 203
+                              or secondary.get('terminal_science_disposition') != 'INCONCLUSIVE_US_CMS_NPI_E01'
+                              or secondary.get('terminal_science_decision') != 'DEC-324'
+                              or secondary.get('cost_usd') != 0
+                              or secondary.get('max_parallel_open_issues') != 0
+                              or secondary.get('no_automatic_new_scientific_project') is not True):
+                          raise SystemExit('STATE_DRIFT_DETECTED: archived E01 to S01-only authority invalid')
+                      e01 = api('/issues/203')
+                      if e01.get('state') != 'closed':
+                          raise SystemExit('STATE_DRIFT_DETECTED: E01 terminal Issue #203 not closed')
+                      result_path = Path('research/US-CMS-NPI-E01/RESULT.md')
+                      evidence_path = Path('research/US-CMS-NPI-E01/evidence/attempt-01.json')
+                      if not result_path.is_file() or not evidence_path.is_file():
+                          raise SystemExit('STATE_DRIFT_DETECTED: E01 terminal evidence missing')
+                      original = json.loads(evidence_path.read_text(encoding='utf-8'))
+                      if (original.get('disposition') != 'INCONCLUSIVE_US_CMS_NPI_E01'
+                              or original.get('attempt_valid') is not True
+                              or original.get('pass_count') != 18
+                              or original.get('failed_gates') != []
+                              or original.get('github_run_id') != '39349516324'
+                              or original.get('incremental_monetary_cost_usd') != 0
+                              or 'INCONCLUSIVE_US_CMS_NPI_E01' not in result_path.read_text(encoding='utf-8')):
+                          raise SystemExit('STATE_DRIFT_DETECTED: E01 terminal science not proven')
+                      # Only #244 remains permitted; do not add a third or revive E01.
+                  else:
+                      raise SystemExit('STATE_DRIFT_DETECTED: unknown two-track governance mode')
               if open_numbers != permitted:
                   raise SystemExit(
                       f'STATE_DRIFT_DETECTED: open Issue set {sorted(open_numbers)} '
-                      f'not equal to authorized primary+secondary {sorted(permitted)}'
+                      f'not equal to strictly authorized open issue set {sorted(permitted)}'
                   )
 
           try:
