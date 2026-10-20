@@ -1,0 +1,46 @@
+{
+  "research": "US-CMS-NPI-E01",
+  "type": "RECOVERED_FROM_SUCCESSFUL_LIVE_CHECK_STEP_AFTER_FAILED_NONFASTFORWARD_PERSIST",
+  "parent_issue": 203,
+  "original_run_id": 39347949718,
+  "original_job_id": 118385026041,
+  "source_contract_sha": "48843c9979336dcd10fdff984f458277062d6f20",
+  "source_release_review_commit": "8238ec8637ea20a5a2f71250f294c8962a541231",
+  "source_authorization_commit": "d0d5685552ace1007241ebaf39dd5698fec38df9",
+  "checked_utc_window": {
+    "earliest": "2026-10-20T00:37:36Z",
+    "latest": "2026-10-20T00:37:37Z"
+  },
+  "original_validation_stdout": "CMS_E01_RELEASE_LOCK PASS_US_CMS_NPI_E01_SOURCE_RELEASE_LOCK",
+  "independent_release_check_result": "PASS_US_CMS_NPI_E01_SOURCE_RELEASE_LOCK",
+  "offline_tests": [
+    {
+      "suite": "source_release",
+      "passed": 11
+    },
+    {
+      "suite": "source_watcher",
+      "passed": 7
+    },
+    {
+      "suite": "transport_lock",
+      "passed": 13
+    }
+  ],
+  "original_run_conclusion": "failure",
+  "failure_only_during_step": "Commit one immutable observed source-release lock verdict",
+  "failure_cause": "git push origin HEAD:main rejected non-fast-forward after main changed while run was queued",
+  "original_local_unpushed_commit_prefix": "9da8232",
+  "original_unsaved_artifact_contents_cannot_be_claimed_identical": true,
+  "this_record": "A newly reconstructed independently reviewed report based on exact GitHub Actions job log; not falsely represented as original runner-persisted JSON",
+  "reviewed_first_official_weekly": "101226_101826",
+  "candidate_sha256": "0e8fb61239f40cbc17be31ba41bf7da0680cdabd073a6958ef09db8418f430f5",
+  "later_source_check_required_by_transport_wrapper": true,
+  "scientific_frozen_runner_unchanged": true,
+  "e01_issue_execution_marker_added": false,
+  "e01_scientific_attempt_executed": false,
+  "zip_body_opened": false,
+  "provider_deactivation_outcomes_opened": false,
+  "recovery_does_not_override_original_run_failure": true,
+  "incremental_monetary_cost_usd": 0
+}
