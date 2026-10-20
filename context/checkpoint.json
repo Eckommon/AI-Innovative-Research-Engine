@@ -1,9 +1,9 @@
 {
-  "checkpoint_id": "CHK-20261013-US-CMS-NPI-E01-ACTIVE",
-  "active_issue": 203,
-  "active_research": "US-CMS-NPI-E01",
-  "last_completed_issue": 202,
-  "last_completed_research": "US-CMS-NPI-N01",
-  "last_decision": "DEC-318",
-  "updated": "2026-10-18"
+  "checkpoint_id": "CHK-20261020-SOURCE-REGISTRY-S01-ACTIVE",
+  "active_issue": 244,
+  "active_research": "SOURCE-REGISTRY-S01",
+  "last_completed_issue": 203,
+  "last_completed_research": "US-CMS-NPI-E01",
+  "last_decision": "DEC-324",
+  "updated": "2026-10-20"
 }
