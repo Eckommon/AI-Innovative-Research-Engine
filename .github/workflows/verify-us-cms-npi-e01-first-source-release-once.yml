@@ -1,0 +1,111 @@
+name: CMS E01 first-weekly independent source-release verification once
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/verify-us-cms-npi-e01-first-source-release-once.yml'
+permissions:
+  contents: write
+concurrency:
+  group: cms-e01-source-release-review-once
+  cancel-in-progress: false
+jobs:
+  exact-official-html-source-lock:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify reviewed release is on canonical main with no prior attempt
+        run: |
+          set -euo pipefail
+          git cat-file -e d0d5685552ace1007241ebaf39dd5698fec38df9^{commit}
+          test ! -e research/US-CMS-NPI-E01/evidence/source-release-verification-01.json
+          test ! -e research/US-CMS-NPI-E01/evidence/attempt-01.json
+          python - <<'PY'
+          from pathlib import Path
+          import json,hashlib
+          cp=json.loads(Path("context/checkpoint.json").read_text())
+          assert cp["active_issue"]==203 and cp["last_decision"]=="DEC-318"
+          side=json.loads(Path("context/SECONDARY_TRACKS.json").read_text())
+          assert side["parallel_issue"]==244 and side["cost_usd"]==0
+          evidence=Path("research/US-CMS-NPI-E01/evidence")
+          src=json.loads((evidence/"source-release-authorization-01.json").read_text())
+          candidate=(evidence/"source-candidate-01.json").read_bytes()
+          assert hashlib.sha256(candidate).hexdigest()==src["candidate_sha256"]
+          assert src["first_publication_adjudication"]=="PASS"
+          assert src["experiment_marker_added"] is False
+          assert src["zip_body_opened"] is False and src["future_membership_opened"] is False
+          assert (evidence/"source-lineage-review-01.md").exists()
+          PY
+      - name: Offline independent release, source-watch and transport guard tests
+        run: |
+          python -m py_compile tools/verify_us_cms_npi_e01_source_release.py
+          python -m unittest discover -s tests -p 'test_us_cms_npi_e01_source_release.py' -v
+          python -m unittest discover -s tests -p 'test_us_cms_npi_e01_first_weekly_watch.py' -v
+          python -m unittest discover -s tests -p 'test_us_cms_npi_e01_transport_locked.py' -v
+      - name: Verify exact CMS HTML listing and release identity once - never ZIP
+        env:
+          E01_RUN_ID: ${{ github.run_id }}
+        run: |
+          python - <<'PY'
+          import json,os
+          from datetime import datetime,timezone
+          from pathlib import Path
+          from tools.verify_us_cms_npi_e01_source_release import main as verify
+          root=Path('research/US-CMS-NPI-E01/evidence')
+          out=root/'source-release-verification-01.json'
+          assert not out.exists()
+          try:
+              # This implementation only fetches the official HTML listing.
+              import contextlib,io
+              stdout=io.StringIO()
+              with contextlib.redirect_stdout(stdout):
+                  verify()
+              outcome=json.loads(stdout.getvalue().strip())
+              assert outcome["disposition"]=="PASS_US_CMS_NPI_E01_SOURCE_RELEASE_LOCK"
+              verdict="PASS_US_CMS_NPI_E01_SOURCE_RELEASE_LOCK"
+              failure_type=None
+          except Exception as exc:
+              # Fail closed, keep receipt without source body/exception details.
+              outcome=None
+              verdict="HOLD_US_CMS_NPI_E01_SOURCE_RELEASE_VERIFICATION"
+              failure_type=type(exc).__name__
+          receipt={
+              "research":"US-CMS-NPI-E01",
+              "parent_issue":203,
+              "run_id":os.environ["E01_RUN_ID"],
+              "checked_utc":datetime.now(timezone.utc).isoformat(),
+              "disposition":verdict,
+              "verified_source":outcome,
+              "error_type":failure_type,
+              "html_listing_only":True,
+              "zip_body_opened":False,
+              "future_npi_outcomes_opened":False,
+              "e01_issue_execution_marker_created":False,
+              "e01_experiment_attempt_executed":False,
+              "requires_separate_issue_marker":True,
+              "incremental_monetary_cost_usd":0
+          }
+          out.write_text(json.dumps(receipt,sort_keys=True,indent=2)+"\n",encoding="utf-8")
+          (root/'source-release-verification-01.md').write_text(
+              "# CMS E01 first-source operational lock check / 최초 출처 운영검증\n\n"
+              f"- Result / 판정: `{verdict}`\n"
+              f"- GitHub Run: `{receipt['run_id']}`\n"
+              f"- Observed UTC: `{receipt['checked_utc']}`\n"
+              f"- Failure category: `{failure_type}`\n"
+              "- Official CMS HTML only; no ZIP or NPI outcome rows.\n"
+              "- 출처 계보 검증과 정본 후보의 실시간 일치만 확인, E01 실험 미개시.\n"
+              "- Explicit Issue #203 execution marker still required.\n"
+              "- Incremental monetary cost: **0 USD**.\n",
+              encoding='utf-8')
+          print("CMS_E01_RELEASE_LOCK",verdict)
+          PY
+      - name: Commit one immutable observed source-release lock verdict
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/US-CMS-NPI-E01/evidence/source-release-verification-01.json research/US-CMS-NPI-E01/evidence/source-release-verification-01.md
+          git commit -m 'Record immutable independent CMS E01 first weekly live source-release verification'
+          git push origin HEAD:main
