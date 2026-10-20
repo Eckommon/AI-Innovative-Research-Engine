@@ -24,7 +24,7 @@ jobs:
           code=Path('tools/persist_s01_evidence_branch.py').read_text()
           assert 'urllib' not in code and 'requests' not in code
           assert 'git","push","origin",f"HEAD:{ref}' in code
-          assert 'force' not in code.lower().split('runner(["git","push"')[0]
+          assert '--force' not in code and '--force-with-lease' not in code
           assert 'refs/heads/evidence/s01/' in code
           print('PASS_S01_PERSIST_R01_OFFLINE_ONLY__NO_SOURCE_DATA_OPENED')
           PY
