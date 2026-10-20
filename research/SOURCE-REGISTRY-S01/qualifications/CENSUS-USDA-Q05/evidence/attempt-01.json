@@ -1,0 +1,59 @@
+{
+  "aggregated_source_native_support": {
+    "census_2024_unique_5digit_geoid": 3222,
+    "census_duplicate_key_rows": 0,
+    "census_keys_not_present_in_usda": 0,
+    "distinct_key_overlap": 3222,
+    "distinct_state_prefixes_in_overlap": 52,
+    "invalid_census_key_rows": 0,
+    "invalid_usda_key_rows": 0,
+    "overlap_share_of_usda_keys": 0.99598145,
+    "usda_2023_unique_5digit_fips": 3235,
+    "usda_duplicate_fips_rows": 6468,
+    "usda_keys_not_present_in_2024_census": 13
+  },
+  "attempt": 1,
+  "checked_utc": "2026-10-20T16:14:05.786033+00:00",
+  "contract_commit": "b46760beb68b8b6db2ae667e90e0191673f1706b",
+  "disposition": "PASS_Q05_SOURCE_NATIVE_FIPS_SYNTAX_SUPPORT_ONLY__GEOGRAPHY_VINTAGE_UNVERIFIED",
+  "failure_type": null,
+  "future_outcome_values_emitted": false,
+  "geographic_vintage_2023_2024_equivalent_verified": false,
+  "geography_names_areas_coordinates_opened": false,
+  "github_run_id": "39455607752",
+  "incremental_monetary_cost_usd": 0,
+  "individual_identifiers_emitted": false,
+  "parent_issue": 244,
+  "qualification": "CENSUS-USDA-Q05",
+  "science_f01_authorized": false,
+  "scientific_inference_performed": false,
+  "source_case_rows_emitted": false,
+  "source_native_exact_semantic_county_join_verified": false,
+  "source_receipts": {
+    "CENSUS_2024_COUNTIES": {
+      "content_type": "application/zip",
+      "etag": null,
+      "first_publication_time_verified": false,
+      "full_body_bytes": 141679,
+      "full_body_sha256": "3c337402b5c6e8d5aa26b4278ccf4edc8989f2683765b3ffbf22296cdb2df3a0",
+      "last_modified_http": "Fri, 30 Aug 2024 18:40:41 GMT",
+      "observed_utc": "2026-10-20T16:14:05.867479+00:00",
+      "rows_opened": false,
+      "status": 200,
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2024_Gazetteer/2024_Gaz_counties_national.zip"
+    },
+    "USDA_2023_RUCC": {
+      "content_type": "text/csv; charset=utf-8",
+      "etag": null,
+      "first_publication_time_verified": false,
+      "full_body_bytes": 629322,
+      "full_body_sha256": "ec455ee2a8bc5fc8e070575ea5bee7dce46fc6037f8c3449cbf56e8b45331fa7",
+      "last_modified_http": null,
+      "observed_utc": "2026-10-20T16:14:06.175844+00:00",
+      "rows_opened": false,
+      "status": 200,
+      "url": "https://www.ers.usda.gov/media/5768/2023-rural-urban-continuum-codes.csv?v=89142"
+    }
+  },
+  "usda_attribute_or_rucc_value_opened": false
+}
