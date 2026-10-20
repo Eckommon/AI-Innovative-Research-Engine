@@ -1,0 +1,50 @@
+name: FEMA-EPA-Q03 frozen source-native FIPS support (no outcome values)
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/source-qual-fema-epa-q03.yml'
+permissions:
+  contents: write
+concurrency:
+  group: source-qual-fema-epa-q03-one-attempt
+  cancel-in-progress: false
+jobs:
+  outcome-blind-source-identity:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Confirm Q03 contract preceded any row-ID access and A/B separation
+        run: |
+          set -euo pipefail
+          git cat-file -e 931bbcdfb0097c4a6b80051743812f275ec6bd43^{commit}
+          test -f research/SOURCE-REGISTRY-S01/qualifications/FEMA-EPA-Q03/CONTRACT.md
+          test ! -e research/SOURCE-REGISTRY-S01/qualifications/FEMA-EPA-Q03/evidence/source-structure-01.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          cp=json.loads(Path('context/checkpoint.json').read_text())
+          second=json.loads(Path('context/SECONDARY_TRACKS.json').read_text())
+          assert cp['active_issue']==203 and cp['last_decision']=='DEC-318'
+          assert second['parallel_issue']==244 and second['cost_usd']==0
+          assert Path('research/US-CMS-NPI-E01/evidence/source-candidate-01.json').exists()
+          from tools.qualify_source_fema_epa_q03 import verify_priors, CONTRACT_COMMIT
+          assert CONTRACT_COMMIT=='931bbcdfb0097c4a6b80051743812f275ec6bd43'
+          verify_priors()
+          PY
+      - name: Offline 8 no-network source-identity and no-outcome regressions
+        run: |
+          python -m py_compile tools/qualify_source_fema_epa_q03.py
+          python -m unittest discover -s tests -p 'test_source_qual_fema_epa_q03.py' -v
+      - name: Exactly one first-party GET for each SHA-locked historic source, ID/time only
+        run: python -m tools.qualify_source_fema_epa_q03
+      - name: Persist single immutable operational-only Q03 evidence
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add research/SOURCE-REGISTRY-S01/qualifications/FEMA-EPA-Q03/evidence/source-structure-01.json research/SOURCE-REGISTRY-S01/qualifications/FEMA-EPA-Q03/evidence/source-structure-01.md
+          git commit -m 'Record immutable outcome-sealed Q03 native FIPS support verdict'
+          git push origin HEAD:main
