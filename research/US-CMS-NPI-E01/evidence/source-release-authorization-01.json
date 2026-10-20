@@ -1,0 +1,31 @@
+{
+  "research": "US-CMS-NPI-E01",
+  "issue": 203,
+  "contract_sha": "48843c9979336dcd10fdff984f458277062d6f20",
+  "candidate_sha256": "0e8fb61239f40cbc17be31ba41bf7da0680cdabd073a6958ef09db8418f430f5",
+  "decision": "PASS_US_CMS_NPI_E01_SOURCE_RELEASE_LOCK",
+  "first_publication_adjudication": "PASS",
+  "prior_week_exclusion_reviewed": true,
+  "approved_source": {
+    "token": "101226_101826",
+    "start": "2026-10-12",
+    "end": "2026-10-18",
+    "href": "https://download.cms.gov/nppes/NPPES_Data_Dissemination_101226_101826_Weekly_V2.zip"
+  },
+  "evidence_refs": [
+    "research/US-CMS-NPI-E01/evidence/source-preflight-03.json",
+    "research/US-CMS-NPI-E01/evidence/source-candidate-01.json",
+    "research/US-CMS-NPI-E01/evidence/source-lineage-review-01.md"
+  ],
+  "review_notes": "Independent comparison of immutable CMS official listing Preflight 03 (2026-10-13T23:27Z, prior week only), actual latest pre-candidate scheduled watcher Run 39203210254 (2026-10-19T05:11Z, qualifying 0 and same prior listing hash), and first candidate watcher Run 39263705919 (2026-10-19T13:51Z, one qualifying week). The official V2 covered weeks 100526_101126 (October 5-11) and 101226_101826 (October 12-18) are consecutive; only October 12-18 meets the frozen first eligible weekly coverage rule. The 404 advisory and Last-Modified do not prove any publication time; exact server first-upload timestamp remains unknown. No evidence of a skipped earlier eligible V2 covered week was found, while an observed HTML chronology is not a continuous publication archive. This approval covers first eligible week identity, not a claim of exact publication timestamp, and remains subject to mandatory live HTML source release verification before ZIP transport.",
+  "lineage_review_commit": "8238ec8637ea20a5a2f71250f294c8962a541231",
+  "candidate_immutable_commit": "8cfdea12b5953a2b6a14c24a0c0a43f9ebb7a2d4",
+  "pre_candidate_official_wait_run": 39203210254,
+  "first_observed_official_candidate_run": 39263705919,
+  "review_scope": "FIRST_ELIGIBLE_COVERED_WEEK_IDENTITY_NOT_PUBLISH_CLOCK_TIME",
+  "zip_body_opened": false,
+  "future_membership_opened": false,
+  "experiment_marker_added": false,
+  "empirical_attempt_executed": false,
+  "incremental_monetary_cost_usd": 0
+}
