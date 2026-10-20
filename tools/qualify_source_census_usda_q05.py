@@ -53,12 +53,12 @@ def require_original(label,raw,receipt):
     if len(raw)!=expected_len or actual!=expected_sha or receipt.get("full_body_sha256")!=expected_sha or receipt.get("full_body_bytes")!=expected_len:
         raise RotatedSource("exact frozen source SHA or length changed")
 
-def read_census_keys(raw):
+def read_census_keys(raw, *, expected_uncompressed=647830):
     if not raw.startswith(b"PK\x03\x04"):
         raise ValueError("Census ZIP signature changed")
     with zipfile.ZipFile(io.BytesIO(raw)) as archive:
         files=[i for i in archive.infolist() if not i.is_dir()]
-        if len(files)!=1 or files[0].filename!=CENSUS_MEMBER or files[0].flag_bits&1 or files[0].file_size!=647830:
+        if len(files)!=1 or files[0].filename!=CENSUS_MEMBER or files[0].flag_bits&1 or files[0].file_size!=expected_uncompressed:
             raise ValueError("Census expected ZIP member/header/vintage changed")
         keys=set()
         invalid=0
