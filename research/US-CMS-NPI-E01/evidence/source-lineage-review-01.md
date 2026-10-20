@@ -1,0 +1,23 @@
+# US-CMS-NPI-E01 — independent first-source lineage adjudication 01 / 최초 출처 공개 계보 독립 판정
+
+**Review type / 심사범위:** retrospective review of prospectively collected **official CMS listing metadata only**, separately from automated candidate observation. **NOT** an E01 data/outcome or causal review. Scientific `DEC-318`, `346,859` matched pairs and 18 frozen gates are unchanged.
+
+**Reviewed 2026-10-20 KST; outcome / 판정: `PASS_FIRST_QUALIFYING_CMS_WEEKLY_LINEAGE_EVIDENCE`**, for **weekly covered range identity/order**, *not* the exact instant of server publication.
+
+## Evidence in chronological order / 공식 증거 연혁
+
+1. **Original frozen source contract** `48843c9979336dcd10fdff984f458277062d6f20`, dated before future event. Rule: earliest official V.2 *weekly* with covered start `>= 2026-10-12` and end `> 2026-10-12`.
+2. **Immutable original preflight 03:** [source-preflight-03.json](source-preflight-03.json) at `2026-10-13T23:27:50Z`. Official `https://download.cms.gov/nppes/NPI_Files.html` returned HTTP 200, SHA-256 `f00a6c37989e58ad6f227a89a102ae9c176cdebe5ea15e71eb07bdc356b15bdc`; only `100526_101126` (2026-10-05..11) present, qualifying 0, no ZIP opened.
+3. **Most recent pre-candidate actual scheduled official HTML watcher:** [Run #39203210254](https://github.com/Eckommon/AI-Innovative-Research-Engine/actions/runs/39203210254) raw job log at `2026-10-19T05:11:11Z`: 39/39 safety regressions succeeded; `WAIT_SOURCE_US_CMS_NPI_E01 qualifying=0`, same official listing SHA-256 `f00a6c37...d356b15bdc`. This is an actual observed *no-listed-weekly* state, not proof of absence outside the observed interval.
+4. **First qualifying scheduled official HTML capture:** [Run #39263705919](https://github.com/Eckommon/AI-Innovative-Research-Engine/actions/runs/39263705919), immutable [source-candidate-01.json](source-candidate-01.json), checked `2026-10-19T13:51:21Z`. HTTP 200, official listing byte SHA-256 `b87118ec38baca7ebef00a423a488b241a1814dbb66d18dececdec3e01f582a6`, exact two V2 weekly links: older anchor `100526_101126` (Oct 5–11), then `101226_101826` (Oct 12–18), **one** weekly meeting frozen baseline range. No competing or skipped interval appears between consecutive 7-day covered ranges. The selected token and official HTTPS path equal the sole first eligible V2 week.
+5. **Advisory cannot replace listing:** [HEAD attempt-01](head-advisory-attempt-01.json) HTTP 404 at `2026-10-19T00:28:19Z`; guessed URL 404 **does not establish** absence or first-publication date. Official listing Last-Modified `2026-10-19T07:02:09Z` is an HTTP timestamp only; it is **not** asserted to be source file creation/publication instant.
+6. **Post-candidate operation:** [Run #39335990684](https://github.com/Eckommon/AI-Innovative-Research-Engine/actions/runs/39335990684) confirms watcher dormant after immutable candidate, not a second independent publication probe.
+
+## Independent judgment / 독립 판정
+
+- The first *eligible coverage period* is mathematically **2026-10-12..2026-10-18**, directly following frozen previous week **2026-10-05..2026-10-11**. Original contract forbids a monthly replacement or later weekly. No evidence of a missing earlier *eligible weekly* appears in the official recorded listings or monitor logs; the two successive observed HTML states bracket publication without inventing a precise date/time.
+- CMS does not provide a cryptographic, per-file historical publication timestamp in the observed artifacts. Accordingly, this is a decision that **the observed official V2 week is the first coverage-qualified release in the chronological official listing** with no earlier intervening V2 weekly, **not** that first upload occurred at the scheduled observation timestamp. Any reliable, contradictory official archival publication evidence discovered prior to release/attempt must supersede this with a new HOLD (never revise the original candidate).
+- The source identifier is `101226_101826`, covered start `2026-10-12`, covered end `2026-10-18`, URL `https://download.cms.gov/nppes/NPPES_Data_Dissemination_101226_101826_Weekly_V2.zip`. No ZIP or future NPI deactivation member has been opened.
+- Separate exact candidate-file SHA-256 must be computed from committed raw UTF-8 JSON bytes and matched by the release verifier; live official HTML identity MUST still match before transport. This judgment alone is **NOT** E01 authorization.
+
+**Risk boundary / 남은 제약:** first-publication *clock time* unknown; no zero-gap guarantee between observation times; even with this lineage PASS, the execution-time live source-release lock can HOLD. **0 USD, no new science criteria.**
