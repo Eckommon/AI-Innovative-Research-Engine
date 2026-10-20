@@ -1,0 +1,78 @@
+{
+  "attempt": 1,
+  "census_area_coordinates_or_names_opened": false,
+  "checked_utc": "2026-10-20T16:04:21.698832+00:00",
+  "contract_commit": "2dff1a76c99d5ac0699d21ddd0e0fa0a796eb1b5",
+  "disposition": "PASS_Q04_DUAL_D2_HEADERS_ONLY__KEY_BRIDGE_UNPROVEN",
+  "failure_category": null,
+  "future_outcome_values_emitted": false,
+  "geography_vintage_same_verified": false,
+  "incremental_monetary_cost_usd": 0,
+  "individual_identifiers_emitted": false,
+  "original_source_body_sha_before_header": true,
+  "parent_issue": 244,
+  "qualification": "CENSUS-USDA-Q04",
+  "run_id": "39454161182",
+  "science_f01_authorized": false,
+  "source_case_rows_emitted": false,
+  "source_native_county_key_bridge_verified": false,
+  "source_receipts": {
+    "CENSUS_2024_COUNTIES": {
+      "content_type": "application/zip",
+      "etag": null,
+      "first_publication_time_verified": false,
+      "full_body_bytes": 141679,
+      "full_body_sha256": "3c337402b5c6e8d5aa26b4278ccf4edc8989f2683765b3ffbf22296cdb2df3a0",
+      "header": {
+        "header_fields": [
+          "USPS",
+          "GEOID",
+          "ANSICODE",
+          "NAME",
+          "ALAND",
+          "AWATER",
+          "ALAND_SQMI",
+          "AWATER_SQMI",
+          "INTPTLAT",
+          "INTPTLONG                                                                                                               "
+        ],
+        "literal_geoid_present": true,
+        "member_data_values_opened": false,
+        "member_filename": "2024_Gaz_counties_national.txt",
+        "member_uncompressed_bytes": 647830,
+        "row_count_computed": false
+      },
+      "last_modified_http": "Fri, 30 Aug 2024 18:40:41 GMT",
+      "observed_utc": "2026-10-20T16:04:21.843422+00:00",
+      "rows_opened": false,
+      "status": 200,
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2024_Gazetteer/2024_Gaz_counties_national.zip"
+    },
+    "USDA_2023_RUCC": {
+      "content_type": "text/csv; charset=utf-8",
+      "etag": null,
+      "first_publication_time_verified": false,
+      "full_body_bytes": 629322,
+      "full_body_sha256": "ec455ee2a8bc5fc8e070575ea5bee7dce46fc6037f8c3449cbf56e8b45331fa7",
+      "header": {
+        "county_rucc_codes_opened": false,
+        "header_fields": [
+          "FIPS",
+          "State",
+          "County_Name",
+          "Attribute",
+          "Value"
+        ],
+        "literal_fips_present": true,
+        "row_count_computed": false
+      },
+      "last_modified_http": null,
+      "observed_utc": "2026-10-20T16:04:22.764074+00:00",
+      "rows_opened": false,
+      "status": 200,
+      "url": "https://www.ers.usda.gov/media/5768/2023-rural-urban-continuum-codes.csv?v=89142"
+    }
+  },
+  "statistical_analysis_authorized": false,
+  "usda_rucc_value_opened": false
+}
