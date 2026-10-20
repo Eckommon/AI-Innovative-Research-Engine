@@ -1,0 +1,30 @@
+name: S01-PERSIST-R01 per-run source evidence branch safety
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/validate-s01-persist-r01.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  offline-source-evidence-persistence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile and run collision-safe no-network persistence regressions
+        run: |
+          python -m py_compile tools/persist_s01_evidence_branch.py
+          python -m unittest discover -s tests -p 'test_persist_s01_evidence_branch.py' -v
+      - name: Assert none of the tests have an original-source fetch path
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          code=Path('tools/persist_s01_evidence_branch.py').read_text()
+          assert 'urllib' not in code and 'requests' not in code
+          assert 'git","push","origin",f"HEAD:{ref}' in code
+          assert '--force' not in code and '--force-with-lease' not in code
+          assert 'refs/heads/evidence/s01/' in code
+          print('PASS_S01_PERSIST_R01_OFFLINE_ONLY__NO_SOURCE_DATA_OPENED')
+          PY
