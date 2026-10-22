@@ -22,12 +22,20 @@ jobs:
           set -euo pipefail
           git cat-file -e 42ec3673a00a62fceaa7812868e79a38a4ee8456^{commit}
           test ! -e research/SOURCE-REGISTRY-S01/qualifications/CENSUS-USDA-Q07/evidence/attempt-01.json
+          # The previous run 39843043780 stopped during synthetic tests, BEFORE the
+          # first source GET. The first real Q07 attempt must not overwrite any
+          # previously published Q07 evidence branch.
+          PREVIOUS_REF="$(git ls-remote --heads origin 'refs/heads/evidence/s01/census-usda-q07/*')"
+          if [ -n "$PREVIOUS_REF" ]; then
+            echo "HOLD_Q07_ALREADY_PUBLISHED_EVIDENCE_BRANCH"
+            exit 1
+          fi
           python - <<'PY'
           from tools.qualify_source_census_usda_q07 import CONTRACT_COMMIT,verify_context
           assert CONTRACT_COMMIT=="42ec3673a00a62fceaa7812868e79a38a4ee8456"
           verify_context()
           PY
-      - name: Offline 12 new header guards and 9 persistence protections BEFORE first original GET
+      - name: Offline 13 header guards and 9 persistence protections BEFORE first original GET
         run: |
           python -m py_compile tools/qualify_source_census_usda_q07.py
           python -m unittest discover -s tests -p 'test_source_qual_census_usda_q07.py' -v
