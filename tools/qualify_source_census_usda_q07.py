@@ -137,7 +137,7 @@ def run(*,source_fetch=fetch,out=OUT):
         "- Original source request 1 only, 0 USD.\n",
         encoding="utf-8")
     print("CENSUS_USDA_Q07",receipt["disposition"],"SOURCE_BYTES",
-          receipt["source_receipt"]["source_body_bytes"] if receipt["source_receipt"] else None,
+          receipt["source_receipt"].get("source_body_bytes") if receipt["source_receipt"] else None,
           "ERROR",receipt["failure_type"])
     return receipt
 
