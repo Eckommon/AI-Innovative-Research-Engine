@@ -86,4 +86,17 @@ class Q07Tests(unittest.TestCase):
             self.assertNotIn("SECRET_COUNTY",out.read_text())
             self.assertIsNone(result["original_header_only"])
 
+    def test13_transport_exception_is_holding_and_redacted(self):
+        with TemporaryDirectory() as directory:
+            target=Path(directory)/"evidence/attempt-01.json"
+            with mock.patch.object(q,"verify_context"):
+                def fail():
+                    raise RuntimeError("PRIVATE_SYNTHETIC_SECRET_01001")
+                result=q.run(source_fetch=fail,out=target)
+            self.assertEqual(result["disposition"],"HOLD_Q07_SOURCE_ACCESS_OR_SCHEMA")
+            self.assertEqual(result["failure_type"],"RuntimeError")
+            self.assertNotIn("PRIVATE_SYNTHETIC_SECRET",target.read_text())
+            self.assertIsNone(result["source_receipt"])
+            self.assertFalse(result["source_case_rows_emitted"])
+
 if __name__=="__main__":unittest.main()
