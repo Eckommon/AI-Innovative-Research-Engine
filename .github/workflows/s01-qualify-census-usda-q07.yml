@@ -1,0 +1,48 @@
+name: S01-Q07 independent Census 2023 county vintage D2 original header
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/s01-qualify-census-usda-q07.yml'
+permissions:
+  contents: write
+concurrency:
+  group: s01-census-usda-q07-one-original
+  cancel-in-progress: false
+jobs:
+  first-party-2023-header-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 9
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify first-party 2023 contract already on main and no previous Q07 run
+        run: |
+          set -euo pipefail
+          git cat-file -e 42ec3673a00a62fceaa7812868e79a38a4ee8456^{commit}
+          test ! -e research/SOURCE-REGISTRY-S01/qualifications/CENSUS-USDA-Q07/evidence/attempt-01.json
+          python - <<'PY'
+          from tools.qualify_source_census_usda_q07 import CONTRACT_COMMIT,verify_context
+          assert CONTRACT_COMMIT=="42ec3673a00a62fceaa7812868e79a38a4ee8456"
+          verify_context()
+          PY
+      - name: Offline 12 new header guards and 9 persistence protections BEFORE first original GET
+        run: |
+          python -m py_compile tools/qualify_source_census_usda_q07.py
+          python -m unittest discover -s tests -p 'test_source_qual_census_usda_q07.py' -v
+          python -m unittest discover -s tests -p 'test_persist_s01_evidence_branch.py' -v
+      - name: Exactly one 2023 official Census Gazetteer original-body SHA and TXT header
+        run: python -m tools.qualify_source_census_usda_q07
+      - name: Preserve original Q07 PASS or HOLD on run-unique branch, never direct main
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          python -m tools.persist_s01_evidence_branch \
+            --qualification CENSUS-USDA-Q07 \
+            --run-id "${GITHUB_RUN_ID}" \
+            --json attempt-01.json \
+            --md attempt-01.md --publish
+          echo "Q07 independent original source/header receipt saved; Q08 join not authorized."
