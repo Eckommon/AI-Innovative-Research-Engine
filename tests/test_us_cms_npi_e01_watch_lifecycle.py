@@ -11,8 +11,11 @@ class WatchLifecycleTests(unittest.TestCase):
     def setUpClass(cls):
         cls.content = WORKFLOW.read_text(encoding="utf-8")
 
-    def test_six_hour_utc_distribution(self):
-        self.assertIn("cron: '37 0,6,12,18 * * *'", self.content)
+    def test_terminal_e01_has_no_recurring_polling(self):
+        self.assertNotIn("  schedule:", self.content)
+        self.assertNotIn("    - cron:", self.content)
+        self.assertIn("workflow_dispatch:", self.content)
+        self.assertIn("E01 terminal; recurring source watch retired", self.content)
 
     def test_still_only_free_standard_runner(self):
         self.assertIn("runs-on: ubuntu-latest", self.content)
