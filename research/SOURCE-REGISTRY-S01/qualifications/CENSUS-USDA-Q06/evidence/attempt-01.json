@@ -1,0 +1,88 @@
+{
+  "attempt": 1,
+  "census_county_names_coordinates_areas_opened": false,
+  "contract_commit": "120930e4bb234ba0c6e652df1c9713fc94e3a2a6",
+  "county_2023_2024_boundary_equivalence_verified": false,
+  "disposition": "PASS_Q06_ALL_13_EXPLAINED_BY_DOCUMENTED_ISLAND_AREA_SCOPE__BOUNDARY_EQUIVALENCE_UNVERIFIED",
+  "documentation": {
+    "census_ansi_state_fips": "https://www.census.gov/library/reference/code-lists/ansi.html",
+    "census_gazetteer_2024_scope": "https://www.census.gov/geographies/reference-files/time-series/geo/gazetteer-files.2024.html",
+    "census_substantial_county_changes": "https://www.census.gov/programs-surveys/geography/technical-documentation/county-changes.html",
+    "usda_2023_rucc_scope": "https://www.ers.usda.gov/data-products/rural-urban-continuum-codes/documentation"
+  },
+  "failure_type": null,
+  "frozen_q05_comparison_totals": {
+    "census_2024_unique_5digit_geoid": 3222,
+    "census_duplicate_key_rows": 0,
+    "census_keys_not_present_in_usda": 0,
+    "distinct_key_overlap": 3222,
+    "distinct_state_prefixes_in_overlap": 52,
+    "invalid_census_key_rows": 0,
+    "invalid_usda_key_rows": 0,
+    "usda_2023_unique_5digit_fips": 3235,
+    "usda_duplicate_fips_rows": 6468,
+    "usda_keys_not_present_in_2024_census": 13
+  },
+  "future_outcome_values_emitted": false,
+  "github_run_id": "39837664450",
+  "incremental_monetary_cost_usd": 0,
+  "individual_identifiers_emitted": false,
+  "observed_utc": "2026-10-22T19:22:01.643213+00:00",
+  "original_q05_disposition": "PASS_Q05_SOURCE_NATIVE_FIPS_SYNTAX_SUPPORT_ONLY__GEOGRAPHY_VINTAGE_UNVERIFIED",
+  "parent_issue": 244,
+  "prospectively_excluded_area_prefix_codes": [
+    "60",
+    "66",
+    "69",
+    "78"
+  ],
+  "qualification": "CENSUS-USDA-Q06",
+  "science_f01_authorized": false,
+  "scientific_f01_authorized": false,
+  "scope_provenance_aggregates": {
+    "census_keys_in_excluded_island_area_prefixes": 0,
+    "different_geographic_vintages_equivalent_proven": false,
+    "excluded_island_area_prefix_count_total": 13,
+    "individual_county_keys_saved": false,
+    "nonexcluded_usda_only_fips_count": 0,
+    "original_q05_key_count_reconciliation": {
+      "census_2024_unique_5digit_geoid": 3222,
+      "census_duplicate_key_rows": 0,
+      "census_keys_not_present_in_usda": 0,
+      "distinct_key_overlap": 3222,
+      "distinct_state_prefixes_in_overlap": 52,
+      "invalid_census_key_rows": 0,
+      "invalid_usda_key_rows": 0,
+      "usda_2023_unique_5digit_fips": 3235,
+      "usda_duplicate_fips_rows": 6468,
+      "usda_keys_not_present_in_2024_census": 13
+    },
+    "prospectively_documented_island_area_prefix_totals": {
+      "American Samoa": 5,
+      "Guam": 1,
+      "Northern Mariana Islands": 4,
+      "U.S. Virgin Islands": 3
+    },
+    "unmatched_key_geography_classification_only": true
+  },
+  "source_case_rows_emitted": false,
+  "source_transport": {
+    "CENSUS_2024_COUNTIES": {
+      "full_body_bytes": 141679,
+      "full_body_sha256": "3c337402b5c6e8d5aa26b4278ccf4edc8989f2683765b3ffbf22296cdb2df3a0",
+      "http_status": 200,
+      "observed_utc": "2026-10-22T19:22:01.748649+00:00",
+      "source_record_identifiers_not_emitted": true,
+      "url": "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2024_Gazetteer/2024_Gaz_counties_national.zip"
+    },
+    "USDA_2023_RUCC": {
+      "full_body_bytes": 629322,
+      "full_body_sha256": "ec455ee2a8bc5fc8e070575ea5bee7dce46fc6037f8c3449cbf56e8b45331fa7",
+      "http_status": 200,
+      "observed_utc": "2026-10-22T19:22:02.088991+00:00",
+      "source_record_identifiers_not_emitted": true,
+      "url": "https://www.ers.usda.gov/media/5768/2023-rural-urban-continuum-codes.csv?v=89142"
+    }
+  },
+  "usda_attribute_rucc_value_opened": false
+}
