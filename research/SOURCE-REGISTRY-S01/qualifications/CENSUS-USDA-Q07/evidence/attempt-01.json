@@ -1,0 +1,49 @@
+{
+  "contract_commit": "42ec3673a00a62fceaa7812868e79a38a4ee8456",
+  "county_2023_2024_geography_equivalent_verified": false,
+  "disposition": "PASS_Q07_2023_CENSUS_GAZETTEER_D2_HEADERS_ONLY__GEOGRAPHY_BRIDGE_UNPROVEN",
+  "failure_type": null,
+  "future_outcome_values_emitted": false,
+  "github_run_id": "39857822969",
+  "incremental_monetary_cost_usd": 0,
+  "individual_identifiers_emitted": false,
+  "observed_utc": "2026-10-22T22:50:45.819789+00:00",
+  "official_catalog": "https://www.census.gov/geographies/reference-files/time-series/geo/gazetteer-files.2023.html",
+  "original_attempt": 1,
+  "original_header_only": {
+    "area_or_latlong_fields_opened": false,
+    "county_row_count_computed": false,
+    "county_rows_opened": false,
+    "geoid_literal_present": true,
+    "tab_header_fields": [
+      "USPS",
+      "GEOID",
+      "ANSICODE",
+      "NAME",
+      "ALAND",
+      "AWATER",
+      "ALAND_SQMI",
+      "AWATER_SQMI",
+      "INTPTLAT",
+      "INTPTLONG                                                                                                               "
+    ],
+    "zip_member": "2023_Gaz_counties_national.txt",
+    "zip_member_uncompressed_bytes": 647830
+  },
+  "parent_issue": 244,
+  "qualification": "CENSUS-USDA-Q07",
+  "science_f01_authorized": false,
+  "source_case_rows_emitted": false,
+  "source_receipt": {
+    "content_type": "application/zip",
+    "http_date_is_publication_time": false,
+    "http_etag": null,
+    "http_last_modified": "Tue, 26 Sep 2023 13:32:24 GMT",
+    "http_status": 200,
+    "observed_utc": "2026-10-22T22:50:45.992112+00:00",
+    "source_body_bytes": 141650,
+    "source_body_sha256": "919df59ba90759cce85468c0337e898e4b39c08eaffce86ddd88fa41f1f7f0c8",
+    "source_url": "https://www2.census.gov/geo/docs/maps-data/data/gazetteer/2023_Gazetteer/2023_Gaz_counties_national.zip"
+  },
+  "usda_rucc_attribute_or_value_read": false
+}
