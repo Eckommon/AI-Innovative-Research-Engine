@@ -1,0 +1,42 @@
+{
+  "archive_bodies_opened": false,
+  "contract_commit": "7d1bfb8e03e4c7eb253748c1293029b08d088de8",
+  "disposition": "PASS_Q09_OFFICIAL_TIGER_2023_2024_COUNTY_ARCHIVES_LISTED__GEOMETRY_UNOPENED",
+  "failure_type": null,
+  "future_outcome_values_emitted": false,
+  "geographic_boundary_equivalence_verified": false,
+  "incremental_monetary_cost_usd": 0,
+  "individual_identifiers_emitted": false,
+  "observed_utc": "2026-10-26T09:41:39.430331+00:00",
+  "parent_issue": 244,
+  "qualification": "CENSUS-USDA-Q09",
+  "run_id": "40301507671",
+  "science_f01_authorized": false,
+  "source_case_rows_emitted": false,
+  "source_catalog_receipts": {
+    "2023": {
+      "archive_body_downloaded": false,
+      "exact_relative_href_count": 1,
+      "first_publication_timestamp_verified": false,
+      "http_status": 200,
+      "listing_bytes": 15098,
+      "listing_sha256": "2ec0effe65de4a9613fe5c9544391c096ce0cfa53236036c5f9848b9942d7e77",
+      "observed_utc": "2026-10-26T09:41:39.597490+00:00",
+      "official_listing_url": "https://www2.census.gov/geo/tiger/TIGER2023/COUNTY/",
+      "polygon_geometry_read": false,
+      "required_archive_basename": "tl_2023_us_county.zip"
+    },
+    "2024": {
+      "archive_body_downloaded": false,
+      "exact_relative_href_count": 1,
+      "first_publication_timestamp_verified": false,
+      "http_status": 200,
+      "listing_bytes": 15098,
+      "listing_sha256": "2e2fa869024af0042dc49d1598dabb4818bdba389f694925a2da4081df3195d0",
+      "observed_utc": "2026-10-26T09:41:39.839170+00:00",
+      "official_listing_url": "https://www2.census.gov/geo/tiger/TIGER2024/COUNTY/",
+      "polygon_geometry_read": false,
+      "required_archive_basename": "tl_2024_us_county.zip"
+    }
+  }
+}
