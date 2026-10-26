@@ -1,0 +1,50 @@
+name: S01-Q09 Census TIGER 2023 2024 county listing-only D0 proof
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/s01-qualify-census-usda-q09.yml'
+permissions:
+  contents: write
+concurrency:
+  group: s01-census-q09-first-listing
+  cancel-in-progress: false
+jobs:
+  official-geometry-listing-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check prospective Q09 contract and no previous original evidence
+        run: |
+          set -euo pipefail
+          git cat-file -e 7d1bfb8e03e4c7eb253748c1293029b08d088de8^{commit}
+          test ! -e research/SOURCE-REGISTRY-S01/qualifications/CENSUS-USDA-Q09/evidence/attempt-01.json
+          PREVIOUS="$(git ls-remote --heads origin 'refs/heads/evidence/s01/census-usda-q09/*')"
+          test -z "$PREVIOUS" || { echo "HOLD_Q09_EXISTING_ORIGINAL_EVIDENCE"; exit 1; }
+          python - <<'PY'
+          from tools.qualify_source_census_usda_q09 import verify_context,CONTRACT_COMMIT
+          assert CONTRACT_COMMIT=='7d1bfb8e03e4c7eb253748c1293029b08d088de8'
+          verify_context()
+          PY
+      - name: Twelve source-only and nine persistence offline tests before first listing GET
+        run: |
+          python -m py_compile tools/qualify_source_census_usda_q09.py
+          python -m unittest discover -s tests -p 'test_source_qual_census_usda_q09.py' -v
+          python -m unittest discover -s tests -p 'test_persist_s01_evidence_branch.py' -v
+      - name: Fetch only two small official HTML directory listings, never geometry archives
+        run: python -m tools.qualify_source_census_usda_q09
+      - name: Persist one Q09 source catalog receipt to run-only immutable branch
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          python -m tools.persist_s01_evidence_branch \
+            --qualification CENSUS-USDA-Q09 \
+            --run-id "${GITHUB_RUN_ID}" \
+            --json attempt-01.json \
+            --md attempt-01.md --publish
+          echo "Q09 metadata listing only; no geometry, county-value or F01 access."
