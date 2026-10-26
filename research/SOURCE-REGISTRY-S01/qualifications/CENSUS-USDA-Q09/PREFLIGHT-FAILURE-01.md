@@ -1,0 +1,7 @@
+# Q09 pre-source offline guard failure, not a source observation / 원본 접근 전 오류
+
+- [Original Actions Run #40301235132](https://github.com/Eckommon/AI-Innovative-Research-Engine/actions/runs/40301235132) ended **FAILURE** in the offline synthetic step: 11/12 tests PASS, `test06_unapproved_year_denied` raised unhandled `KeyError: '2025'` because `check_listing` indexed the frozen year map before validating an unapproved year.
+- The **two real Census official directory GET steps and original evidence-branch persistence were SKIPPED**. No archive source was downloaded; no Q09 catalog listing or source SHA was actually observed. No D0 PASS or HOLD for real sources can be claimed.
+- Corrected the fail-closed branch by rejecting any year outside frozen {2023,2024} as `ValueError` before dictionary indexing. The prospective Q09 contract, exact official URLs, `tl_2023_us_county.zip`/`tl_2024_us_county.zip`, two 256KiB HTML GET limits, no geometry ZIP reads, and scientific boundary firewall remain **unchanged**.
+- A subsequent workflow run is allowed to make the first original directory GET **only if** all 12 synthetic and 9 persistence tests pass and no earlier Q09 evidence branch exists. If the original source step executes, the attempt is then consumed and may not be retried merely to rescue an unfavorable result.
+- E01 Issue #203 terminal, S01 Issue #244 sole active, `DEC-324`. Cost 0 USD.
