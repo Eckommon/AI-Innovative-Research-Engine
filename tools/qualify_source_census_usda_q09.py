@@ -49,6 +49,7 @@ def source_fetch(year,opener=None):
                     "first_publication_timestamp_verified":False}
 
 def check_listing(year,raw):
+    if year not in SOURCES:raise ValueError("year not frozen")
     _,required=SOURCES[year]
     text=raw.decode("utf-8",errors="strict")
     if "<a" not in text.lower():raise ValueError("no official hyperlinks")
