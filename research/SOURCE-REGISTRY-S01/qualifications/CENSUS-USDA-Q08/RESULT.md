@@ -1,0 +1,11 @@
+# Q08 — Census 2023/2024 county GEOID syntax-only terminal result / 최종 판정
+
+**Decision / 판정:** `PASS_Q08_CENSUS_2023_2024_GEOID_SYNTAX_SUPPORT_ONLY__BOUNDARY_EQUIVALENCE_UNVERIFIED`
+
+- Frozen independent Q08 preaccess contract: `f46c0a1b5989c44de803f6466866fb0b9ba0be6b`, before Q08 record-ID access.
+- Actual [GitHub Actions Run #40300230080](https://github.com/Eckommon/AI-Innovative-Research-Engine/actions/runs/40300230080): SUCCESS; 12/12 Q08 and 9/9 PERSIST offline tests before original GET and GEOID-only projection.
+- First-party original 2023 Census county ZIP, frozen **141650 bytes**, SHA256 `919df59ba90759cce85468c0337e898e4b39c08eaffce86ddd88fa41f1f7f0c8`; 2024 original ZIP **141679 bytes**, SHA256 `3c337402b5c6e8d5aa26b4278ccf4edc8989f2683765b3ffbf22296cdb2df3a0`. Both validated before GEOID row projection; no original raw ZIP retained.
+- **Observed source-native ID syntax metrics:** 2023 distinct 5-character GEOIDs **3222**; 2024 distinct **3222**; intersection **3222**; 2023-only **0**; 2024-only **0**; string-key overlap **100%**; 52 shared jurisdiction prefixes; invalid keys **0**, repeated keys **0**.
+- Original JSON/MD persist on per-run immutable evidence ref commit `5d004e82e90817f6b59edc1e36651e1fd74d70d9`, parent `8a26569ecaa6a5c53216364dc25f1bc2675d1351`, promoted unchanged via evidence-only [PR #294](https://github.com/Eckommon/AI-Innovative-Research-Engine/pull/294) to main `f9c2680e33e7f7fe6af4ab53edee0d2259e3e3e0`. See [original JSON](evidence/attempt-01.json).
+- **Interpretation / 미검증:** Equal Census GEOID strings **do not prove equal county boundary geometry**, administrative-unit continuity, noncoverage bias, comparability of geography-dependent denominators, or interpretability of USDA RUCC `Attribute`/`Value`. Census annually updates its reference geography and explicitly warns that code/name relationships need not be one-to-one across years. No county IDs, names, geometry, ALAND/coordinates, or rurality effect published.
+- Next separate Q09 official geography-vintage provenance must be frozen before any spatial/crosswalk original row access. No F01, cross-data causal outcome, new scientific Issue or R60 authority. Q06 Island Area coverage reconciliation remains unchanged; Q01/Q03 HOLDs preserved; E01 #203 INCONCLUSIVE CLOSED and sole S01 #244 OPEN. Cost **0 USD**.
