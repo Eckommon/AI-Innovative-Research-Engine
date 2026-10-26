@@ -1,4 +1,5 @@
 name: S01-Q09 Census TIGER 2023 2024 county listing-only D0 proof
+# Previous run 40301235132: synthetic KeyError before any directory GET; corrected in PR #298.
 on:
   push:
     branches: [main]
