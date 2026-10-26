@@ -1,0 +1,31 @@
+{
+  "aggregate_syntax_metrics": {
+    "census_2023_unique_geoid": 3222,
+    "census_2024_unique_geoid": 3222,
+    "distinct_geoid_overlap": 3222,
+    "duplicate_2023_rows": 0,
+    "duplicate_2024_rows": 0,
+    "invalid_2023_rows": 0,
+    "invalid_2024_rows": 0,
+    "only_2023_unique_geoid": 0,
+    "only_2024_unique_geoid": 0,
+    "overlap_share_smaller_vintage": 1.0,
+    "shared_jurisdiction_prefixes": 52
+  },
+  "contract_commit": "f46c0a1b5989c44de803f6466866fb0b9ba0be6b",
+  "disposition": "PASS_Q08_CENSUS_2023_2024_GEOID_SYNTAX_SUPPORT_ONLY__BOUNDARY_EQUIVALENCE_UNVERIFIED",
+  "failure_type": null,
+  "future_outcome_values_emitted": false,
+  "geography_boundary_equivalence_verified": false,
+  "incremental_monetary_cost_usd": 0,
+  "individual_identifiers_emitted": false,
+  "names_area_coordinates_read": false,
+  "observed_utc": "2026-10-26T09:31:39.422156+00:00",
+  "parent_issue": 244,
+  "qualification": "CENSUS-USDA-Q08",
+  "raw_original_shas_verified": true,
+  "rucc_attribute_value_read": false,
+  "run_id": "40300230080",
+  "science_f01_authorized": false,
+  "source_case_rows_emitted": false
+}
