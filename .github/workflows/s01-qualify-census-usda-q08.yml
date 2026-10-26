@@ -1,0 +1,50 @@
+name: S01-Q08 Census 2023 2024 exact GEOID syntax only
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/s01-qualify-census-usda-q08.yml'
+permissions:
+  contents: write
+concurrency:
+  group: s01-census-q08-first-original
+  cancel-in-progress: false
+jobs:
+  geoid-prospective-syntax:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify frozen Q08 contract, sole issue, no previous original evidence
+        run: |
+          set -euo pipefail
+          git cat-file -e f46c0a1b5989c44de803f6466866fb0b9ba0be6b^{commit}
+          test ! -e research/SOURCE-REGISTRY-S01/qualifications/CENSUS-USDA-Q08/evidence/attempt-01.json
+          PRIOR="$(git ls-remote --heads origin 'refs/heads/evidence/s01/census-usda-q08/*')"
+          test -z "$PRIOR" || { echo "HOLD_Q08_PREVIOUS_EVIDENCE_BRANCH"; exit 1; }
+          python - <<'PY'
+          from tools.qualify_source_census_usda_q08 import verify_context, CONTRACT_COMMIT
+          assert CONTRACT_COMMIT == 'f46c0a1b5989c44de803f6466866fb0b9ba0be6b'
+          verify_context()
+          PY
+      - name: Offline 12 Q08 and 9 persistence tests BEFORE reading original GEOID rows
+        run: |
+          python -m py_compile tools/qualify_source_census_usda_q08.py
+          python -m unittest discover -s tests -p 'test_source_qual_census_usda_q08.py' -v
+          python -m unittest discover -s tests -p 'test_persist_s01_evidence_branch.py' -v
+      - name: Exactly two pre-verified original SHA GETs then GEOID-only ephemeral projection
+        run: python -m tools.qualify_source_census_usda_q08
+      - name: Preserve one terminal Q08 source-only receipt outside moving main
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          python -m tools.persist_s01_evidence_branch \
+            --qualification CENSUS-USDA-Q08 \
+            --run-id "${GITHUB_RUN_ID}" \
+            --json attempt-01.json \
+            --md attempt-01.md --publish
+          echo "Q08 operational syntax only, no county boundary equivalence or F01."
