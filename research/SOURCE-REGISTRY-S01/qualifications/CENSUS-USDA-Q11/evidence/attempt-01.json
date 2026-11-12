@@ -1,0 +1,78 @@
+{
+  "aggregate_geoid_support": {
+    "distinct_geoid_overlap": 3235,
+    "island_areas_2023_group_total": 0,
+    "island_areas_2024_group_total": 0,
+    "only_2023_geoid_count": 0,
+    "only_2024_geoid_count": 0,
+    "overlap_share_smaller_vintage": 1.0,
+    "raw_individual_geoid_emitted": false,
+    "shared_jurisdiction_prefix_count": 56,
+    "unique_2023_geoid": 3235,
+    "unique_2024_geoid": 3235
+  },
+  "contract_commit": "a5163a861a23538cd48e3d635acb0fe31be67ecd",
+  "crs_exact_wkt_sha_equal": true,
+  "dbf_non_geoid_columns_parsed": false,
+  "disposition": "PASS_Q11_TIGER_DBF_GEOID_AND_PRJ_CRS_SUPPORT_ONLY__POLYGON_UNOPENED",
+  "failure_type": null,
+  "future_outcome_values_emitted": false,
+  "geographic_boundary_equivalence_verified": false,
+  "github_run_id": "43137367711",
+  "incremental_monetary_cost_usd": 0,
+  "individual_identifiers_emitted": false,
+  "observed_utc": "2026-11-12T02:07:13.581229+00:00",
+  "parent_issue": 244,
+  "qualification": "CENSUS-USDA-Q11",
+  "science_f01_authorized": false,
+  "shp_shx_or_polygon_payload_read": false,
+  "source_case_rows_emitted": false,
+  "source_receipts": {
+    "2023": {
+      "dbf_non_geoid_columns_parsed": false,
+      "dbf_projection": {
+        "declared_record_count": 3235,
+        "geoid_field_length": 5,
+        "geoid_field_type": "C",
+        "other_dbf_value_columns_interpreted": false,
+        "unique_geoid_count": 3235
+      },
+      "http_status": 200,
+      "observed_utc": "2026-11-12T02:07:14.173062+00:00",
+      "official_original_url": "https://www2.census.gov/geo/tiger/TIGER2023/COUNTY/tl_2023_us_county.zip",
+      "original_zip_bytes_verified": 83451409,
+      "original_zip_sha256_verified": "692e12c30c83adcaabdbac0d3954fafa55e1c89a24b36d95e72e02dff938652e",
+      "prj": {
+        "prj_bytes": 165,
+        "prj_sha256": "0b9041e921d9ebb43247d314608fe9e38a0b008ee793067fc1806199ea1fb9dd",
+        "prj_wkt_syntax_verified": true,
+        "prj_wkt_text_emitted": false
+      },
+      "q10_original_source_sha_and_manifest_matched": true,
+      "shp_shx_or_polygon_payload_read": false
+    },
+    "2024": {
+      "dbf_non_geoid_columns_parsed": false,
+      "dbf_projection": {
+        "declared_record_count": 3235,
+        "geoid_field_length": 5,
+        "geoid_field_type": "C",
+        "other_dbf_value_columns_interpreted": false,
+        "unique_geoid_count": 3235
+      },
+      "http_status": 200,
+      "observed_utc": "2026-11-12T02:07:14.956358+00:00",
+      "official_original_url": "https://www2.census.gov/geo/tiger/TIGER2024/COUNTY/tl_2024_us_county.zip",
+      "original_zip_bytes_verified": 83913260,
+      "original_zip_sha256_verified": "04e668d3502757c837c13444730547cd967f28a2c49aeffb873d1792ab2cb97b",
+      "prj": {
+        "prj_bytes": 165,
+        "prj_sha256": "0b9041e921d9ebb43247d314608fe9e38a0b008ee793067fc1806199ea1fb9dd",
+        "prj_wkt_syntax_verified": true,
+        "prj_wkt_text_emitted": false
+      },
+      "q10_original_source_sha_and_manifest_matched": true,
+      "shp_shx_or_polygon_payload_read": false
+    }
+  }
+}
