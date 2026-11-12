@@ -1,0 +1,55 @@
+name: S01-Q11 SHA-locked county DBF GEOID and PRJ CRS only
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/s01-qualify-census-usda-q11.yml'
+permissions:
+  contents: write
+concurrency:
+  group: s01-census-usda-q11-first-member-access
+  cancel-in-progress: false
+jobs:
+  source-native-id-and-crs-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check preaccess contract commit, Q10 fixed source SHA, and no prior Q11 attempt
+        run: |
+          set -euo pipefail
+          git cat-file -e 'a5163a861a23538cd48e3d635acb0fe31be67ecd^{commit}'
+          test ! -e research/SOURCE-REGISTRY-S01/qualifications/CENSUS-USDA-Q11/evidence/attempt-01.json
+          PREVIOUS="$(git ls-remote --heads origin 'refs/heads/evidence/s01/census-usda-q11/*')"
+          test -z "$PREVIOUS" || { echo "HOLD_Q11_PREEXISTING_IMMUTABLE_ATTEMPT"; exit 1; }
+          python - <<'PY'
+          from tools.qualify_source_census_usda_q11 import CONTRACT_COMMIT,verify_context
+          assert CONTRACT_COMMIT=='a5163a861a23538cd48e3d635acb0fe31be67ecd'
+          verify_context()
+          print('Q11_SOURCE_AND_Q10_SHA_PREACCESS_CONTEXT_PASS')
+          PY
+      - name: Twenty-one Q11 no-network safety tests and nine immutable persistence tests
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/qualify_source_census_usda_q11.py tests/test_source_qual_census_usda_q11.py
+          python -m unittest discover -s tests -p 'test_source_qual_census_usda_q11.py' -v
+          python -m unittest discover -s tests -p 'test_persist_s01_evidence_branch.py' -v
+      - name: Reverify only two original full ZIP SHAs then open DBF GEOID and PRJ WKT only
+        run: |
+          set -euo pipefail
+          python -m tools.qualify_source_census_usda_q11
+          echo "Q11 safe ID/CRS source receipt generated. No SHP/SHX or USDA fields."
+      - name: Preserve original Q11 source-ID-and-CRS aggregate receipt in run-unique branch
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          python -m tools.persist_s01_evidence_branch \
+            --qualification CENSUS-USDA-Q11 \
+            --run-id "$GITHUB_RUN_ID" \
+            --json attempt-01.json \
+            --md attempt-01.md --publish
+          echo "Never write main directly or promote F01 from Q11."
