@@ -1,0 +1,55 @@
+name: S01-Q10 Census 2023 2024 official TIGER ZIP byte and member provenance
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/s01-qualify-census-usda-q10.yml'
+permissions:
+  contents: write
+concurrency:
+  group: s01-census-q10-first-official-original
+  cancel-in-progress: false
+jobs:
+  official-two-zip-fingerprint-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify Q10 independent frozen-before-source contract and no old original
+        run: |
+          set -euo pipefail
+          git cat-file -e '2a9575dbad00c95325f52f437493df9dce5fcef7^{commit}'
+          test ! -e research/SOURCE-REGISTRY-S01/qualifications/CENSUS-USDA-Q10/evidence/attempt-01.json
+          PREVIOUS="$(git ls-remote --heads origin 'refs/heads/evidence/s01/census-usda-q10/*')"
+          test -z "$PREVIOUS" || { echo "HOLD_Q10_EXISTING_ORIGINAL_EVIDENCE"; exit 1; }
+          python - <<'PY'
+          from tools.qualify_source_census_usda_q10 import CONTRACT_COMMIT, verify_context
+          assert CONTRACT_COMMIT == '2a9575dbad00c95325f52f437493df9dce5fcef7'
+          verify_context()
+          print('Q10_SOURCE_PREACCESS_CONTEXT_PASS')
+          PY
+      - name: Twenty no-network synthetic source safeguards and nine evidence-branch safeguards
+        run: |
+          set -euo pipefail
+          python -m py_compile tools/qualify_source_census_usda_q10.py tests/test_source_qual_census_usda_q10.py
+          python -m unittest discover -s tests -p 'test_source_qual_census_usda_q10.py' -v
+          python -m unittest discover -s tests -p 'test_persist_s01_evidence_branch.py' -v
+      - name: Fetch each exact official ZIP once, hash full original bytes and inspect central directories only
+        run: |
+          set -euo pipefail
+          python -m tools.qualify_source_census_usda_q10
+          echo "Q10 source receipt created. No shapefile member opened or extracted."
+      - name: Preserve original Q10 source-only receipt on unique immutable evidence branch
+        env:
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GITHUB_RUN_ID: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          python -m tools.persist_s01_evidence_branch \
+            --qualification CENSUS-USDA-Q10 \
+            --run-id "$GITHUB_RUN_ID" \
+            --json attempt-01.json \
+            --md attempt-01.md --publish
+          echo "No direct main push. Q10 PASS/HOLD requires independent evidence PR."
